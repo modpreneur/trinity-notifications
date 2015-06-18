@@ -13,8 +13,6 @@ class SendNotificationTest extends WebTestCase{
     /** @var  NotificationManager */
     protected $sender;
 
-
-
     /**
      * @test
      */
