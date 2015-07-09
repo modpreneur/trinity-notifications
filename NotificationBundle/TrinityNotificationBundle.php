@@ -1,19 +1,20 @@
 <?php
 
-namespace Trinity\NotificationBundle;
+	/*
+	 * This file is part of the Trinity project.
+	 *
+	 */
+	namespace Trinity\NotificationBundle;
 
-use Trinity\FrameworkBundle\Bundle\TrinityBundle;
-
-
-
-/**
- * Class NecktieNotificationBundle
- * @package Trinity\NotificationBundle
- *
- */
-class TrinityNotificationBundle extends TrinityBundle{
+	use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 
+	/**
+	 * Class NecktieNotificationBundle
+	 * @package Trinity\NotificationBundle
+	 *
+	 */
+	class TrinityNotificationBundle extends Bundle {
 
 
-}
+	}

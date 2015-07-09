@@ -12,21 +12,24 @@
     "require": {
       "php": ">=5.3.3",
       "symfony/symfony": "~2",
-      "phpunit/phpunit": "4.7.*"
+      "phpunit/phpunit": "4.7.*",
+      "guzzlehttp/guzzle": "~5.0",
+      "nette/utils": "~2.3",
+        "sensio/framework-extra-bundle": "~3.0"
     },
 
     "require-dev": {
-      "sensio/generator-bundle": "~2.3"
+      "sensio/generator-bundle": "~2.3",
+      "trinity/framework": "1.*",
+      "braincrafted/testing-bundle": "@stable"
     },
 
     "autoload": {
-      "classmap": ["NotificationBundle/"]
+        "classmap": ["NotificationBundle/"]
     },
 
     "repositories": [
-      {"type": "composer", "url": "https://tp.corp.modpreneur.com/repo/private/"},
-      {"type": "composer", "url": "https://tp.corp.modpreneur.com/repo/packagist/"},
-      {"packagist": false}
+      {"type": "composer", "url": "https://tp.corp.modpreneur.com/repo/private/"}
     ],
 
     "minimum-stability": "dev",
@@ -34,5 +37,7 @@
       "branch-alias": {
         "dev-master": "1.0-dev"
       }
-    }
+    },
+    "target-dir": "NotificationBundle"
+
 }

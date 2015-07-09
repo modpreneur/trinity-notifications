@@ -1,28 +1,21 @@
 services:
 
-    necktie_notification.json_extension:
-        class: Trinity\NotificationBundle\Resources\twig\JsonExtension
-        tags:
-            - { name: twig.extension }
+    trinity.notification.processor:
+        class: Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor
 
 
-    notification_processor:
-        class: Trinity\FrameworkBundle\Notification\Annotations\NotificationProcessor
-        arguments:
-            - "@annotation_reader"
-
-    necktie_notification.client_sender:
+    trinity.notification.client_sender:
             class: Trinity\NotificationBundle\Services\NotificationManager
             arguments:
                 - "@event_dispatcher"
-                - "@notification_processor"
+                - "@trinity.notification.processor"
 
 
-    necktie_notification.entity_listener:
+    trinity.notification.entity_listener:
           class: Trinity\NotificationBundle\EventListener\EntityListener
           arguments:
-              - "@necktie_notification.client_sender"
-              - "@notification_processor"
+              - "@trinity.notification.client_sender"
+              - "@trinity.notification.processor"
           tags:
               - { name: doctrine.event_listener, event: postUpdate,  priority: 255 }
               - { name: doctrine.event_listener, event: postPersist, priority: 255 }
@@ -31,12 +24,6 @@ services:
           calls:
               - [setRequest, [@request_stack]]
 
-    notification.routing:
-        class: Trinity\FrameworkBundle\Routing\TrinityLoader
-        arguments:
-            - "TrinityNotificationBundle/Controller"
-        tags:
-            - { name: routing.loader }
 
 
 
