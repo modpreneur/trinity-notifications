@@ -12,7 +12,6 @@
 	use Symfony\Component\Config\Definition\Exception\Exception;
 	use Symfony\Component\EventDispatcher\EventDispatcher;
 	use Symfony\Component\HttpKernel\Exception\HttpException;
-	use Trinity\NotificationBundle\Entity\IEntityNotification;
 	use Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor;
 	use Trinity\NotificationBundle\Event\Events;
 	use Trinity\NotificationBundle\Event\SendEvent;
@@ -124,9 +123,7 @@
 			if(!$class->hasMethod("getClients")){
 				throw new ClientException("Entity has no method 'getClass'");
 			}
-
 			$clients = $entity->getClients();
-
 
 			if ( ! $clients ) {
 				return null;
@@ -135,7 +132,6 @@
 
 				return $clients;
 			} elseif ( ! is_array( $clients ) ) {
-
 				$cl        = $clients;
 				$clients   = [ ];
 				$clients[] = $cl;
@@ -166,8 +162,8 @@
 				throw new MethodException( "Method '$clientMethod' not exists in entity." );
 			}
 
-			if ( $url == null || empty( $url ) ) {
-				throw new ClientException( "Notification error: Client has not set notification URL. Please use IEntityNotification." );
+			if ( $url === NULL || empty( $url ) ) {
+				throw new ClientException( "Notification error: Client has not set notification URL." );
 			}
 
 			$class = $this->processor->getUrlPostfix( $entity, $method );
@@ -235,7 +231,7 @@
 				if ( $pass < 5 ) {
 					sleep( rand( 1, 10 ) );
 
-					return $this->createJsonRequest( $data, $url, $pass ++, true );
+					return $this->createJsonRequest( $data, $url, $pass++, true );
 				} else {
 					throw new HttpException( $response->getStatusCode(), "Notification error. {$response->getBody()}" );
 				}

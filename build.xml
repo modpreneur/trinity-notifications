@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Necktie" default="build">
-    <property name="workspace" value="${basedir}/.."/>
-    <property name="sourcedir" value="${basedir}/../"/>
-    <property name="builddir" value="${workspace}/NotificationBundle/Tests/app/build"/>
+    <property name="workspace" value="${basedir}/../"/>
+    <property name="sourcedir" value="${basedir}/../NotificationBundle/"/>
+    <property name="builddir" value="${workspace}/NotificationBundle/Tests/app/"/>
 
     <target name="build"
-            depends="prepare,composerget,vendors,lint,phpunit"/>
+            depends="prepare,composerget,vendors,lint,phpunit,phpcb,pdepend,phpdoc"/>
 
     <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit"/>
 
@@ -51,6 +51,10 @@
     <target name="lint" description="Perform syntax check of sourcecode files">
         <apply executable="php" failonerror="true">
             <arg value="-l"/>
+            <fileset dir="${sourcedir}/">
+                <include name="**/*.php"/>
+                <modified/>
+            </fileset>
             <fileset dir="${basedir}/NotificationBundle/">
                 <include name="**/*Test.php"/>
                 <modified/>
@@ -123,7 +127,7 @@
 
     <target name="phpdoc" description="Generate API documentation using phpDox">
         <exec executable="phpdoc">
-            <arg line="-d '${sourcedir}/NotificationBundle' -t '${builddir}/docs' --title='Necktie Documentation' "/>
+            <arg line="-d '${sourcedir}' -t '${builddir}/docs' --title='Necktie Documentation' "/>
         </exec>
     </target>
 
