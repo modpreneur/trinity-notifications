@@ -6,7 +6,7 @@
     <property name="builddir" value="${workspace}/NotificationBundle/Tests/app/build"/>
 
     <target name="build"
-            depends="prepare,composerget,vendors,lint,phpdoc,phpunit"/>
+            depends="prepare,composerget,vendors,lint,phpunit"/>
 
     <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit"/>
 
