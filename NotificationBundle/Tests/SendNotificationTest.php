@@ -24,6 +24,11 @@ class SendNotificationTest extends WebTestCase{
         $this->container = $this->getContainer();
 	}
 
+
+	public function testUrl(){
+
+    }
+
 	public function testServiceIsDefinedInContainer()
 	{
 		$service = $this->container->get('trinity.notification.client_sender');
