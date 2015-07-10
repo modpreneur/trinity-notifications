@@ -8,7 +8,7 @@
     <target name="build"
             depends="prepare,composerget,vendors,lint,phpunit,phpcb,pdepend,phpdoc,phpcpd,phpcs-ci,phpmd"/>
 
-    <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit"/>
+    <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">
@@ -84,7 +84,7 @@
         <exec executable="phpmd">
             <arg path="${basedir}/NotificationBundle"/>
             <arg value="text"/>
-            <arg value="${workspace}/app/phpmd.xml"/>
+            <arg value="${workspace}/phpmd.xml"/>
         </exec>
     </target>
 
@@ -93,7 +93,7 @@
         <exec executable="phpmd">
             <arg path="${sourcedir}"/>
             <arg value="xml"/>
-            <arg value="${workspace}/app/phpmd.xml"/>
+            <arg value="${workspace}/phpmd.xml"/>
             <arg value="--reportfile"/>
             <arg value="${builddir}/logs/pmd.xml"/>
         </exec>
