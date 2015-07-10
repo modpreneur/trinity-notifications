@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Necktie" default="build">
-    <property name="workspace" value="${basedir}/.."/>
+    <property name="workspace" value="${basedir}/../"/>
     <property name="sourcedir" value="${basedir}/../NotificationBundle/"/>
-    <property name="builddir" value="${workspace}"/>
+    <property name="builddir" value="${basedir}/../build"/>
 
     <target name="build"
             depends="prepare,composerget,vendors,lint,phpunit,phpcb,pdepend,phpdoc,phpcpd,phpcs-ci,phpmd"/>
