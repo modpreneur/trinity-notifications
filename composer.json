@@ -12,15 +12,15 @@
     "require": {
       "php": ">=5.3.3",
       "symfony/symfony": "~2",
-      "phpunit/phpunit": "4.7.*",
       "guzzlehttp/guzzle": "~5.0",
       "nette/utils": "~2.3",
-        "sensio/framework-extra-bundle": "~3.0"
+      "sensio/framework-extra-bundle": "~3.0"
     },
 
     "require-dev": {
       "sensio/generator-bundle": "~2.3",
       "trinity/framework": "1.*",
+      "phpunit/phpunit": "4.7.*",
       "braincrafted/testing-bundle": "@stable"
     },
 
