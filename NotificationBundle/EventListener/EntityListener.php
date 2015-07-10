@@ -24,7 +24,8 @@
      *
      * @author Tomáš Jančar
      */
-    class EntityListener {
+    class EntityListener
+    {
         const DELETE = 'DELETE';
         const POST = 'POST';
         const PUT = 'PUT';
@@ -54,20 +55,24 @@
         protected $request;
 
 
+
         function __construct(
             NotificationManager $notificationSender,
             NotificationProcessor $annotationProcessor
         ) {
             $this->notificationSender = $notificationSender;
-            $this->processor          = $annotationProcessor;
+            $this->processor = $annotationProcessor;
         }
 
 
-        public function setRequest( RequestStack $request_stack ) {
+
+        public function setRequest(RequestStack $request_stack)
+        {
             $this->request = $request_stack->getCurrentRequest();
         }
 
 
+
         /**
          * Def in service.yml
          *
@@ -75,20 +80,22 @@
          *
          * @throws \Exception
          */
-        public function postUpdate( LifecycleEventArgs $args ) {
+        public function postUpdate(LifecycleEventArgs $args)
+        {
             $this->em = $args->getEntityManager();
 
             $entity = $args->getObject();
             // @todo trait type
-            $traits = class_uses( $entity );
+            $traits = class_uses($entity);
 
             $enable = $this->isNotificationEnable();
-            if ( $enable ) {
-                $this->sendNotification( $args->getEntityManager(), $args->getObject(), self::PUT );
+            if ($enable) {
+                $this->sendNotification($args->getEntityManager(), $args->getObject(), self::PUT);
             }
         }
 
 
+
         /**
          * Def in service.yml
          *
@@ -96,12 +103,14 @@
          *
          * @throws \Exception
          */
-        public function postPersist( LifecycleEventArgs $args ) {
+        public function postPersist(LifecycleEventArgs $args)
+        {
             $this->em = $args->getEntityManager();
-            $this->sendNotification( $args->getEntityManager(), $args->getObject(), self::POST );
+            $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
         }
 
 
+
         /**
          * Def in service.yml
          *
@@ -109,10 +118,12 @@
          *
          * @throws \Exception
          */
-        public function preRemove( LifecycleEventArgs $args ) {
-            $this->em     = $args->getEntityManager();
+        public function preRemove(LifecycleEventArgs $args)
+        {
+            $this->em = $args->getEntityManager();
             $this->entity = $args->getObject();
         }
+
 
 
         /**
@@ -120,14 +131,16 @@
          *
          * @param PreFlushEventArgs $args
          */
-        public function preFlush( PreFlushEventArgs $args ) {
-            $entity       = $this->entity;
+        public function preFlush(PreFlushEventArgs $args)
+        {
+            $entity = $this->entity;
             $this->entity = null;
 
-            if ( $entity ) {
-                $this->sendNotification( $args->getEntityManager(), $entity, self::DELETE );
+            if ($entity) {
+                $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
             }
         }
+
 
 
         /**
@@ -137,44 +150,45 @@
          *
          * @return bool
          */
-        private function sendNotification( EntityManager $em, $entity, $method ) {
+        private function sendNotification(EntityManager $em, $entity, $method)
+        {
 
-            if ( ! $this->processor->isNotificationEntity( $entity ) ) {
+            if (!$this->processor->isNotificationEntity($entity)) {
                 return;
             }
 
             $uow = $em->getUnitOfWork();
             $uow->computeChangeSets();
-            $changeset = $uow->getEntityChangeSet( $entity );
-            $list      = [ ];
+            $changeset = $uow->getEntityChangeSet($entity);
+            $list = [];
 
-            foreach ( $changeset as $index => $value ) {
-                if ( $this->processor->hasSource( $entity, $index ) ) {
+            foreach ($changeset as $index => $value) {
+                if ($this->processor->hasSource($entity, $index)) {
                     $list[] = $index;
                 }
             }
 
-            if ( $this->processor->isMethodEnabled( $entity,
-                    $method ) && ( ( count( $list ) > 0 ) || $method === "DELETE" )
-            ) {
-                $this->notificationSender->send( $entity, $method );
+            if ($this->processor->isMethodEnabled($entity, $method) && ((count($list) > 0) || $method === "DELETE")) {
+                $this->notificationSender->send($entity, $method);
             }
         }
+
 
 
         /**
          * @return bool
          */
-        private function isNotificationEnable() {
+        private function isNotificationEnable()
+        {
 
-            if ( $this->request ) {
-                $_controller = $this->request->get( '_controller' );
-                $split       = explode( '::', $_controller );
+            if ($this->request) {
+                $_controller = $this->request->get('_controller');
+                $split = explode('::', $_controller);
 
                 $controller = $split[0];
-                $action     = $split[1];
+                $action = $split[1];
 
-                return ! $this->processor->isControllerOrActionDisabled( $controller, $action );
+                return !$this->processor->isControllerOrActionDisabled($controller, $action);
             }
 
             return true;

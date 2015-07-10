@@ -16,13 +16,15 @@
      *
      * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
      */
-    class Configuration implements ConfigurationInterface {
+    class Configuration implements ConfigurationInterface
+    {
         /**
          * {@inheritdoc}
          */
-        public function getConfigTreeBuilder() {
+        public function getConfigTreeBuilder()
+        {
             $treeBuilder = new TreeBuilder();
-            $rootNode    = $treeBuilder->root( 'necktie_notification' );
+            $rootNode = $treeBuilder->root('necktie_notification');
 
             // Here you should define the parameters that are allowed to
             // configure your bundle. See the documentation linked above for
@@ -30,4 +32,4 @@
 
             return $treeBuilder;
         }
-}
+    }

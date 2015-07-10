@@ -15,7 +15,8 @@
      *
      * @package Trinity\NotificationBundle\Event
      */
-    class StatusEvent extends Event {
+    class StatusEvent extends Event
+    {
 
         const NULL_MESSAGE = "No messages";
 
@@ -44,6 +45,7 @@
         protected $entityId;
 
 
+
         function __construct(
             $client,
             $entityName,
@@ -54,15 +56,15 @@
             \Exception $exception = null,
             $message = self::NULL_MESSAGE
         ) {
-            $this->exception  = $exception;
+            $this->exception = $exception;
             $this->entityName = $entityName;
-            $this->method     = $method;
-            $this->url        = $url;
-            $this->json       = $json;
-            $this->client     = $client;
-            $this->entityId   = $entityId;
+            $this->method = $method;
+            $this->url = $url;
+            $this->json = $json;
+            $this->client = $client;
+            $this->entityId = $entityId;
 
-            if ( $exception && $message === null ) {
+            if ($exception && $message === null) {
                 $this->message = $exception->getMessage();
             } else {
                 $this->message = $message;
@@ -70,82 +72,102 @@
         }
 
 
+
         /**
          * @return \Exception
          */
-        public function getException() {
+        public function getException()
+        {
             return $this->exception;
         }
 
 
+
         /**
          * @return string
          */
-        public function getMessage() {
+        public function getMessage()
+        {
             return $this->message;
         }
 
 
+
         /**
          * @return string
          */
-        public function getEntityName() {
+        public function getEntityName()
+        {
             return $this->entityName;
         }
 
 
+
         /**
          * @return string
          */
-        public function getUrl() {
+        public function getUrl()
+        {
             return $this->url;
         }
 
 
+
         /**
          * @return string
          */
-        public function getMethod() {
+        public function getMethod()
+        {
             return $this->method;
         }
 
 
+
         /**
          * @return string
          */
-        public function getJson() {
+        public function getJson()
+        {
             return $this->json;
         }
+
 
 
         /**
          * @return bool
          */
-        public function hasError() {
+        public function hasError()
+        {
             return $this->exception !== null;
         }
+
 
 
         /**
          * @return IClient
          */
-        public function getClient() {
+        public function getClient()
+        {
             return $this->client;
         }
+
 
 
         /**
          * @return int
          */
-        public function getEntityId() {
+        public function getEntityId()
+        {
             return $this->entityId;
         }
+
 
 
         /**
          * @param int $entityId
          */
-        public function setEntityId( $entityId ) {
+        public function setEntityId($entityId)
+        {
             $this->entityId = $entityId;
         }
 

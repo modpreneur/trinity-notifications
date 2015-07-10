@@ -10,6 +10,8 @@
     use Doctrine\ORM\Mapping as ORM;
     use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
+
+
     /**
      * Class TestEntity
      * @package Trinity\NotificationBundle\Tests\Entity
@@ -20,21 +22,25 @@
      * @Notification\Methods(types={"put", "post", "delete"})
      *
      */
-    class Product {
+    class Product
+    {
 
 
         /** @return int */
-        public function getId() {
+        public function getId()
+        {
             return 1;
         }
 
 
+
         /** @return Client[] */
-        public function getClients() {
+        public function getClients()
+        {
 
             $c = new Client();
-            $c->setEnableNotification( true );
+            $c->setEnableNotification(true);
 
-            return [ $c ];
+            return [$c];
         }
-}
+    }

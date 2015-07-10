@@ -13,7 +13,8 @@
      * @package Trinity\NotificationBundle\Event
      *
      */
-    final class Events {
+    final class Events
+    {
 
         const BEFORE_NOTIFICATION_SEND = "notification.beforeNotificationSend";
 
