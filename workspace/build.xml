@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Necktie" default="build">
-    <property name="workspace" value="${basedir}/.."/>
-    <property name="sourcedir" value="${basedir}/../"/>
-    <property name="builddir" value="${workspace}/NotificationBundle/Tests/app/build"/>
+    <property name="workspace" value="${basedir}/../"/>
+    <property name="sourcedir" value="${basedir}/../NotificationBundle/"/>
+    <property name="builddir" value="${workspace}/NotificationBundle/Tests/app/"/>
 
     <target name="build"
-            depends="prepare,composerget,vendors,lint,phpunit"/>
+            depends="prepare,composerget,vendors,lint,phpunit,phpcb,pdepend,phpdoc,phpcpd,phpcs-ci,phpmd"/>
 
-    <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit"/>
+    <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">
@@ -51,6 +51,10 @@
     <target name="lint" description="Perform syntax check of sourcecode files">
         <apply executable="php" failonerror="true">
             <arg value="-l"/>
+            <fileset dir="${sourcedir}/">
+                <include name="**/*.php"/>
+                <modified/>
+            </fileset>
             <fileset dir="${basedir}/NotificationBundle/">
                 <include name="**/*Test.php"/>
                 <modified/>
@@ -80,7 +84,7 @@
         <exec executable="phpmd">
             <arg path="${basedir}/NotificationBundle"/>
             <arg value="text"/>
-            <arg value="${workspace}/app/phpmd.xml"/>
+            <arg value="${workspace}/phpmd.xml"/>
         </exec>
     </target>
 
@@ -89,7 +93,7 @@
         <exec executable="phpmd">
             <arg path="${sourcedir}"/>
             <arg value="xml"/>
-            <arg value="${workspace}/app/phpmd.xml"/>
+            <arg value="${workspace}/phpmd.xml"/>
             <arg value="--reportfile"/>
             <arg value="${builddir}/logs/pmd.xml"/>
         </exec>
@@ -123,7 +127,7 @@
 
     <target name="phpdoc" description="Generate API documentation using phpDox">
         <exec executable="phpdoc">
-            <arg line="-d '${sourcedir}/NotificationBundle' -t '${builddir}/docs' --title='Necktie Documentation' "/>
+            <arg line="-d '${sourcedir}' -t '${builddir}/docs' --title='Necktie Documentation' "/>
         </exec>
     </target>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Necktie" default="build">
-    <property name="workspace" value="${basedir}/../"/>
+    <property name="workspace" value="${basedir}/.."/>
     <property name="sourcedir" value="${basedir}/../NotificationBundle/"/>
     <property name="builddir" value="${workspace}/NotificationBundle/Tests/app/"/>
 
