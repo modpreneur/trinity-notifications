@@ -19,7 +19,8 @@
 
     "require-dev": {
       "sensio/generator-bundle": "~2.3",
-      "trinity/framework": "1.*",
+      "trinity/framework": "1.0.*",
+      "trinity/annotations": "0.0.*",
       "phpunit/phpunit": "4.7.*",
       "braincrafted/testing-bundle": "@stable"
     },

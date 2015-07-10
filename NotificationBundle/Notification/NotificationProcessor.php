@@ -9,7 +9,7 @@
 
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\Common\Annotations\Reader;
-    use Trinity\FrameworkBundle\Notification\Annotations\SourceAnnotation;
+    use Trinity\AnnotationsBundle\Annotations\Notification\SourceAnnotation;
     use Trinity\NotificationBundle\Exception\MethodException;
     use Trinity\NotificationBundle\Exception\SourceException;
 
@@ -18,10 +18,10 @@
     class NotificationProcessor {
 
 
-        const ANNOTATION_CLASS = "\\Trinity\\FrameworkBundle\\Notification\\Annotations\\Source";
-        const ANNOTATION_METHOD_CLASS = "\\Trinity\\FrameworkBundle\\Notification\\AnnotationsMethods";
-        const ANNOTATION_URL_CLASS = "\\Trinity\\FrameworkBundle\\Notification\\Annotations\\Url";
-        const DISABLE_ANNOTATION_CLASS = "\\Trinity\\FrameworkBundle\\Notification\\Annotations\\DisableNotification";
+        const ANNOTATION_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Source";
+        const ANNOTATION_METHOD_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Methods";
+        const ANNOTATION_URL_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Url";
+        const DISABLE_ANNOTATION_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\DisableNotification";
         const SERIALIZED_NAME = "\\JMS\\Serializer\\Annotation\\SerializedName";
         const FIX_NAMESPACE = "Proxies\\__CG__\\";
 
@@ -214,6 +214,7 @@
             $class       = $this->getEntityClass( $entity );
 
             $rc                    = new \ReflectionClass( $class );
+
             $classSourceAnnotation = $this->getClassSourceAnnotation( $entity, $class );
 
             if ( $classSourceAnnotation->hasColumns() ) {
@@ -280,9 +281,13 @@
          * @throws SourceException
          */
         public function getClassSourceAnnotation( $entity, $class ) {
+            var_dump(
+                $this->getClassAnnotations($entity, self::ANNOTATION_CLASS )
+            );
+
             $classSourceAnnotation = $this->getEntityAnnotation( $entity, self::ANNOTATION_CLASS );
             if ( ! $classSourceAnnotation ) {
-                throw new SourceException( "Class $class has not 'DisableNotification\\Source' annotation." );
+                throw new SourceException( "Class $class has not annotations source." );
             }
 
             return $classSourceAnnotation;

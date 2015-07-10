@@ -8,8 +8,7 @@
 
 
     use Doctrine\ORM\Mapping as ORM;
-    use Trinity\FrameworkBundle\Notification\Annotations as Notification;
-
+    use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
     /**
      * Class TestEntity
