@@ -1,12 +1,12 @@
 <?php
-	/*
-	 * This file is part of the Trinity project.
-	 *
-	 */
+    /*
+     * This file is part of the Trinity project.
+     *
+     */
 
-	namespace Trinity\NotificationBundle\Exception;
+    namespace Trinity\NotificationBundle\Exception;
 
 
-	class ClientException extends \Exception{
+    class ClientException extends \Exception{
 
-	}
+    }

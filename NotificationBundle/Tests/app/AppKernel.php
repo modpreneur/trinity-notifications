@@ -1,24 +1,24 @@
 <?php
 
 
-	use Symfony\Component\HttpKernel\Kernel;
-	use Symfony\Component\Config\Loader\LoaderInterface;
+    use Symfony\Component\HttpKernel\Kernel;
+    use Symfony\Component\Config\Loader\LoaderInterface;
 
-	class AppKernel extends Kernel
-	{
-		public function registerBundles()
-		{
-			return array(
+    class AppKernel extends Kernel
+    {
+        public function registerBundles()
+        {
+            return array(
                 new Braincrafted\Bundle\TestingBundle\BraincraftedTestingBundle($this),
-				new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+                new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
                 new \Trinity\NotificationBundle\TrinityNotificationBundle()
-			);
-		}
+            );
+        }
 
-		public function registerContainerConfiguration(LoaderInterface $loader)
-		{
-			$loader->load(__DIR__.'/config.yml');
-		}
+        public function registerContainerConfiguration(LoaderInterface $loader)
+        {
+            $loader->load(__DIR__.'/config.yml');
+        }
 
         /**
          * @return string
@@ -35,4 +35,4 @@
         {
             return sys_get_temp_dir().'/./logs';
         }
-	}
+    }

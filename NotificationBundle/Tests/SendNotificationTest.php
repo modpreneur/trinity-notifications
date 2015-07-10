@@ -18,15 +18,15 @@ use Braincrafted\Bundle\TestingBundle\Test\WebTestCase;
  */
 class SendNotificationTest extends WebTestCase{
 
-	/** @var  Container */
-	private $container;
+    /** @var  Container */
+    private $container;
 
 
-	public function setUp()
-	{
-		$this->setUpKernel();
+    public function setUp()
+    {
+        $this->setUpKernel();
         $this->container = $this->getContainer();
-	}
+    }
 
 
     public function testEntityToArray(){
@@ -55,7 +55,7 @@ class SendNotificationTest extends WebTestCase{
     }
 
 
-	public function testUrl(){
+    public function testUrl(){
         $service = $this->container->get('trinity.notification.client_sender');
         $class = (get_class($service));
         $e = new Product();
@@ -88,11 +88,11 @@ class SendNotificationTest extends WebTestCase{
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\ClientException
      */
-	public function testSendEntity()
-	{
-		$service = $this->container->get('trinity.notification.client_sender');
-		$entity = new Product();
-		$res = $service->send($entity, "PUT");
+    public function testSendEntity()
+    {
+        $service = $this->container->get('trinity.notification.client_sender');
+        $entity = new Product();
+        $res = $service->send($entity, "PUT");
         $this->assertTrue(is_array($res));
 
         $res = $service->send($entity, "GET");
@@ -101,7 +101,7 @@ class SendNotificationTest extends WebTestCase{
 
         // Error
         $service->send(new \stdClass(), "Put");
-	}
+    }
 
 
 
