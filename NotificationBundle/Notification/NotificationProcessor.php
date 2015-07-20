@@ -72,7 +72,7 @@
             $class = $this->getEntityClass($entity);
             $reflectionObject = new \ReflectionClass($class);
             $classSourceAnnotation = $this->reader->getClassAnnotation($reflectionObject,
-                SourceAnnotation::ANNOTATION_CLASS);
+                self::ANNOTATION_CLASS);
 
             return ($classSourceAnnotation !== null);
         }
