@@ -1,7 +1,7 @@
 services:
 
     trinity.notification.processor:
-        class: Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor
+        class: Trinity\NotificationBundle\Notification\Annotations\NotificationUtils
 
 
     trinity.notification.client_sender:

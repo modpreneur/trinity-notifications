@@ -18,7 +18,7 @@
     use Trinity\NotificationBundle\Event\StatusEvent;
     use Trinity\NotificationBundle\Exception\ClientException;
     use Trinity\NotificationBundle\Exception\MethodException;
-    use Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor;
+    use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 
 
 
@@ -29,7 +29,7 @@
         const PUT = 'PUT';
 
 
-        /** @var  NotificationProcessor */
+        /** @var  NotificationUtils */
         protected $processor;
 
         /** @var  EventDispatcher */
@@ -39,7 +39,7 @@
 
         function __construct(
             $eventDispatcher,
-            NotificationProcessor $annotationProcessor
+            NotificationUtils $annotationProcessor
         ) {
             $this->eventDispatcher = $eventDispatcher;
             $this->processor = $annotationProcessor;

@@ -3,7 +3,7 @@
     namespace Trinity\NotificationBundle\Tests;
 
 
-    use Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor;
+    use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
     use Trinity\NotificationBundle\Tests\Entity\EEntity;
     use Trinity\NotificationBundle\Tests\Entity\Product;
 
@@ -62,8 +62,8 @@
         public function testClassAnnotations(){
             $processor = $this->container->get("trinity.notification.processor");
 
-            $class = NotificationProcessor::ANNOTATION_CLASS;
-            $this->assertTrue( ($processor->getClassAnnotations(new Product(), NotificationProcessor::ANNOTATION_CLASS)[0] instanceof $class ) );
+            $class = NotificationUtils::ANNOTATION_CLASS;
+            $this->assertTrue( ($processor->getClassAnnotations(new Product(), NotificationUtils::ANNOTATION_CLASS)[0] instanceof $class ) );
         }
 
 

@@ -16,7 +16,7 @@
 
 
 
-    class NotificationProcessor
+    class NotificationUtils
     {
 
 
@@ -106,40 +106,6 @@
         {
             $class = $this->getEntityClass($entity);
             return $this->getClassAnnotation($class, $annotationClass);
-        }
-
-
-
-        /**
-         * @param string $class
-         * @param string $action
-         * @param string $annotationClass
-         *
-         * @return null|object
-         */
-        public function getControllerActionAnnotation($class, $action, $annotationClass)
-        {
-            foreach ($this->getControllerActionAnnotations($class, $action) as $annotations) {
-
-                if ($annotations instanceof $annotationClass) {
-                    return $annotations;
-                }
-            }
-
-            return null;
-        }
-
-
-
-        public function getControllerActionAnnotations($controller, $action)
-        {
-            $obj = new \ReflectionClass($controller);
-
-            foreach ($obj->getMethods() as $method) {
-                if ($action == $method->getName()) {
-                    return $this->reader->getMethodAnnotations($method);
-                }
-            }
         }
 
 
@@ -323,8 +289,37 @@
         public function hasSource($entity, $source)
         {
             $classSourceAnnotation = $this->getClassSourceAnnotation($entity);
-
             return $classSourceAnnotation->hasColumn($source);
+        }
+
+
+
+        /**
+         * @param string $class
+         * @param string $action
+         * @param string $annotationClass
+         *
+         * @return null|object
+         */
+        public function getControllerActionAnnotation($class, $action, $annotationClass)
+        {
+            $annotationsSource = NULL;
+            $obj = new \ReflectionClass($class);
+
+            foreach ($obj->getMethods() as $method) {
+                if ($action == $method->getName()) {
+                    $annotationsSource =  $this->reader->getMethodAnnotations($method);
+                    break;
+                }
+            }
+
+            foreach ($annotationsSource as $annotations) {
+                if ($annotations instanceof $annotationClass) {
+                    return $annotations;
+                }
+            }
+
+            return null;
         }
 
 

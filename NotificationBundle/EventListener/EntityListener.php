@@ -12,7 +12,7 @@
     use Symfony\Component\DependencyInjection\ContainerInterface;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\RequestStack;
-    use Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor;
+    use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
     use Trinity\NotificationBundle\Services\NotificationManager;
 
 
@@ -48,7 +48,7 @@
         /** @var  NotificationManager */
         protected $notificationSender;
 
-        /** @var  NotificationProcessor */
+        /** @var  NotificationUtils */
         protected $processor;
 
         /** @var  Request */
@@ -58,7 +58,7 @@
 
         function __construct(
             NotificationManager $notificationSender,
-            NotificationProcessor $annotationProcessor
+            NotificationUtils $annotationProcessor
         ) {
             $this->notificationSender = $notificationSender;
             $this->processor = $annotationProcessor;
