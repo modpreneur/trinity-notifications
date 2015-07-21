@@ -3,6 +3,8 @@
     namespace Trinity\NotificationBundle\Tests;
 
 
+    use Trinity\NotificationBundle\Notification\Annotations\NotificationProcessor;
+    use Trinity\NotificationBundle\Tests\Entity\EEntity;
     use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -56,4 +58,24 @@
             $this->assertTrue($processor->hasHTTPMethod(new \stdClass(), "Blah"));
         }
 
+
+        public function testClassAnnotations(){
+            $processor = $this->container->get("trinity.notification.processor");
+
+            $class = NotificationProcessor::ANNOTATION_CLASS;
+            $this->assertTrue( ($processor->getClassAnnotations(new Product(), NotificationProcessor::ANNOTATION_CLASS)[0] instanceof $class ) );
+        }
+
+
+        public function testURLPostfix(){
+            $processor = $this->container->get("trinity.notification.processor");
+
+            $this->assertEquals('std-class', $processor->getUrlPostfix(new \stdClass(), 'DELETE'));
+            $this->assertEquals('product', $processor->getUrlPostfix(new Product()));
+
+            $this->assertEquals( 'no-name-e-entity', $processor->getUrlPostfix(new EEntity()) );
+            $this->assertEquals( 'put-e-entity', $processor->getUrlPostfix(new EEntity(), 'put') );
+            $this->assertEquals( 'delete-e-entity', $processor->getUrlPostfix(new EEntity(), 'delete') );
+            $this->assertEquals( 'post-e-entity', $processor->getUrlPostfix(new EEntity(), 'post') );
+        }
     }

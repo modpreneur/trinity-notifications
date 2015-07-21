@@ -9,6 +9,7 @@
 
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\Common\Annotations\Reader;
+    use Trinity\AnnotationsBundle\Annotations\Notification\Methods;
     use Trinity\AnnotationsBundle\Annotations\Notification\SourceAnnotation;
     use Trinity\NotificationBundle\Exception\MethodException;
     use Trinity\NotificationBundle\Exception\SourceException;
@@ -73,8 +74,10 @@
         {
             $class = $this->getEntityClass($entity);
             $reflectionObject = new \ReflectionClass($class);
-            $classSourceAnnotation = $this->reader->getClassAnnotation($reflectionObject,
-                self::ANNOTATION_CLASS);
+            $classSourceAnnotation = $this->reader->getClassAnnotation(
+                $reflectionObject,
+                self::ANNOTATION_CLASS
+            );
 
             return ($classSourceAnnotation !== null);
         }
@@ -116,10 +119,10 @@
          */
         public function getControllerActionAnnotation($class, $action, $annotationClass)
         {
-            foreach ($this->getControllerActionAnnotations($class, $action) as $annotion) {
+            foreach ($this->getControllerActionAnnotations($class, $action) as $annotations) {
 
-                if ($annotion instanceof $annotationClass) {
-                    return $annotion;
+                if ($annotations instanceof $annotationClass) {
+                    return $annotations;
                 }
             }
 
@@ -150,7 +153,6 @@
         public function getClassAnnotation($class, $annotationClass)
         {
             $reflectionObject = new \ReflectionClass($class);
-
             return $this->reader->getClassAnnotation($reflectionObject, $annotationClass);
         }
 
@@ -186,17 +188,15 @@
          *
          * @return mixed|null|string
          */
-        public function getUrlPostfix($entity, $method = null)
+        public function getUrlPostfix($entity, $method = NULL)
         {
-
             $annotations = $this->getClassAnnotations($entity, self::ANNOTATION_URL_CLASS);
-            $postfix = null;
+            $postfix = NULL;
 
             if (!empty($annotations)) {
-
-                if ($method === null) {
-                    foreach ($annotations as $annotation) {
-                        if ($annotation->isWithoutMethods()) {
+                if ($method === NULL) {
+                    foreach ( $annotations as $annotation ) {
+                        if ( $annotation->isWithoutMethods() ) {
                             $postfix = $annotation->getPostfix();
                             break;
                         }
@@ -205,13 +205,12 @@
                     foreach ($annotations as $annotation) {
                         if ($annotation->hasMethod($method)) {
                             $postfix = $annotation->getPostfix();
-                            break;
                         }
                     }
                 }
             }
 
-            if ($postfix === null) {
+            if ($postfix === NULL) {
                 $reflectionClass = new \ReflectionClass($entity);
                 $className = strtolower(preg_replace('/([A-Z])/', '-$1', lcfirst($reflectionClass->getShortName())));
                 $postfix = $className;
@@ -323,7 +322,6 @@
          */
         public function hasSource($entity, $source)
         {
-            $class = $this->getEntityClass($entity);
             $classSourceAnnotation = $this->getClassSourceAnnotation($entity);
 
             return $classSourceAnnotation->hasColumn($source);
@@ -345,9 +343,7 @@
                 return true;
             }
 
-            $annotations = $this->getControllerActionAnnotation($controller, $action, self::DISABLE_ANNOTATION_CLASS);
-
-            return $annotations != null;
+            return $this->getControllerActionAnnotation($controller, $action, self::DISABLE_ANNOTATION_CLASS) != null;
         }
 
 
