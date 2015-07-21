@@ -10,7 +10,6 @@
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\Common\Annotations\Reader;
     use Trinity\AnnotationsBundle\Annotations\Notification\Methods;
-    use Trinity\AnnotationsBundle\Annotations\Notification\SourceAnnotation;
     use Trinity\NotificationBundle\Exception\MethodException;
     use Trinity\NotificationBundle\Exception\SourceException;
 
@@ -33,6 +32,9 @@
 
 
 
+        /**
+         * @param Reader|null $reader
+         */
         function __construct(Reader $reader = null)
         {
             $this->reader = $reader;
@@ -105,6 +107,7 @@
         public function getEntityAnnotation($entity, $annotationClass)
         {
             $class = $this->getEntityClass($entity);
+
             return $this->getClassAnnotation($class, $annotationClass);
         }
 
@@ -119,6 +122,7 @@
         public function getClassAnnotation($class, $annotationClass)
         {
             $reflectionObject = new \ReflectionClass($class);
+
             return $this->reader->getClassAnnotation($reflectionObject, $annotationClass);
         }
 
@@ -154,15 +158,15 @@
          *
          * @return mixed|null|string
          */
-        public function getUrlPostfix($entity, $method = NULL)
+        public function getUrlPostfix($entity, $method = null)
         {
             $annotations = $this->getClassAnnotations($entity, self::ANNOTATION_URL_CLASS);
-            $postfix = NULL;
+            $postfix = null;
 
             if (!empty($annotations)) {
-                if ($method === NULL) {
-                    foreach ( $annotations as $annotation ) {
-                        if ( $annotation->isWithoutMethods() ) {
+                if ($method === null) {
+                    foreach ($annotations as $annotation) {
+                        if ($annotation->isWithoutMethods()) {
                             $postfix = $annotation->getPostfix();
                             break;
                         }
@@ -176,7 +180,7 @@
                 }
             }
 
-            if ($postfix === NULL) {
+            if ($postfix === null) {
                 $reflectionClass = new \ReflectionClass($entity);
                 $className = strtolower(preg_replace('/([A-Z])/', '-$1', lcfirst($reflectionClass->getShortName())));
                 $postfix = $className;
@@ -218,14 +222,16 @@
                 foreach ($columns as $property) {
                     $name = ucfirst($property);
                     //@todo is method
-                    $methodName = "get" . $name;
+                    $methodName = "get".$name;
 
                     if (is_callable(array($entity, $methodName))) {
 
                         if (property_exists($class, $property)) {
                             $reflectionProperty = new \ReflectionProperty($class, $property);
-                            $annotation = ($this->reader->getPropertyAnnotation($reflectionProperty,
-                                self::SERIALIZED_NAME));
+                            $annotation = ($this->reader->getPropertyAnnotation(
+                                $reflectionProperty,
+                                self::SERIALIZED_NAME
+                            ));
                         } else {
                             $reflectionMethod = new \ReflectionMethod($class, $methodName);
                             $annotation = $this->reader->getMethodAnnotation($reflectionMethod, self::SERIALIZED_NAME);
@@ -289,6 +295,7 @@
         public function hasSource($entity, $source)
         {
             $classSourceAnnotation = $this->getClassSourceAnnotation($entity);
+
             return $classSourceAnnotation->hasColumn($source);
         }
 
@@ -303,12 +310,12 @@
          */
         public function getControllerActionAnnotation($class, $action, $annotationClass)
         {
-            $annotationsSource = NULL;
+            $annotationsSource = null;
             $obj = new \ReflectionClass($class);
 
             foreach ($obj->getMethods() as $method) {
                 if ($action == $method->getName()) {
-                    $annotationsSource =  $this->reader->getMethodAnnotations($method);
+                    $annotationsSource = $this->reader->getMethodAnnotations($method);
                     break;
                 }
             }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7dac1a66f1a06bd49b023ada5821abbd",
+    "hash": "2bebec95f6e23470fd8a9c23f8128bc2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -611,19 +611,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "f319c51324c3425d87e56b35fa2ed2f5f8c6d958"
+                "reference": "4ba1a325a4377fde3dab73897f140f99561c7f2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/f319c51324c3425d87e56b35fa2ed2f5f8c6d958",
-                "reference": "f319c51324c3425d87e56b35fa2ed2f5f8c6d958",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/nette/utils/zipball/4ba1a325a4377fde3dab73897f140f99561c7f2f",
+                "reference": "4ba1a325a4377fde3dab73897f140f99561c7f2f",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.4.4"
@@ -669,7 +663,7 @@
             ],
             "description": "Nette Utility Classes",
             "homepage": "http://nette.org",
-            "time": "2015-07-01 11:22:43"
+            "time": "2015-07-13 22:13:33"
         },
         {
             "name": "psr/log",
@@ -779,12 +773,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "0616fd568da051adc19ca63006cc808531ba2da4"
+                "reference": "28265b487cf2ef664db13c1ebcf94140b22ba854"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/0616fd568da051adc19ca63006cc808531ba2da4",
-                "reference": "0616fd568da051adc19ca63006cc808531ba2da4",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/28265b487cf2ef664db13c1ebcf94140b22ba854",
+                "reference": "28265b487cf2ef664db13c1ebcf94140b22ba854",
                 "shasum": ""
             },
             "require": {
@@ -826,7 +820,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2015-06-05 13:59:21"
+            "time": "2015-07-16 12:03:59"
         },
         {
             "name": "symfony/symfony",
@@ -834,12 +828,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "aefd16d4f3e33ce5e83ca061c74d73e0d1b6ba2c"
+                "reference": "5626d73992cf7fabe4e7be5f2c07cee34dab6e81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/aefd16d4f3e33ce5e83ca061c74d73e0d1b6ba2c",
-                "reference": "aefd16d4f3e33ce5e83ca061c74d73e0d1b6ba2c",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/5626d73992cf7fabe4e7be5f2c07cee34dab6e81",
+                "reference": "5626d73992cf7fabe4e7be5f2c07cee34dab6e81",
                 "shasum": ""
             },
             "require": {
@@ -948,7 +942,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-07-10 04:28:50"
+            "time": "2015-07-16 12:22:14"
         },
         {
             "name": "twig/twig",
@@ -1054,56 +1048,6 @@
                 "transliterator"
             ],
             "time": "2014-09-04 13:06:40"
-        },
-        {
-            "name": "braincrafted/testing-bundle",
-            "version": "v0.4.1",
-            "target-dir": "Braincrafted/Bundle/TestingBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/braincrafted/testing-bundle.git",
-                "reference": "cc0bdd04c414ec41a6059103f738cf1344ef1c85"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/braincrafted/testing-bundle/zipball/cc0bdd04c414ec41a6059103f738cf1344ef1c85",
-                "reference": "cc0bdd04c414ec41a6059103f738cf1344ef1c85",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/symfony": ">=2.6"
-            },
-            "require-dev": {
-                "doctrine/data-fixtures": ">=1.0-dev",
-                "doctrine/doctrine-bundle": "~1.0",
-                "doctrine/doctrine-fixtures-bundle": "dev-master",
-                "symfony/doctrine-bridge": "2.3.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "Braincrafted\\Bundle\\TestingBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Florian Eckerstorfer",
-                    "email": "florian@eckerstorfer.co",
-                    "homepage": "http://braincrafted.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Tools for testing Symfony2 bundles",
-            "homepage": "http://github.com/braincrafted/testing-bundle",
-            "keywords": [
-                "testing"
-            ],
-            "time": "2015-04-20 13:39:19"
         },
         {
             "name": "dmishh/settings-bundle",
@@ -1468,19 +1412,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/DoctrineBehaviors.git",
-                "reference": "17b4cfe48df6e39f7456cbf465db71ab0930818b"
+                "reference": "d411af325ed2636f0cf2012bc5ccd0974d189fc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/17b4cfe48df6e39f7456cbf465db71ab0930818b",
-                "reference": "17b4cfe48df6e39f7456cbf465db71ab0930818b",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/KnpLabs/DoctrineBehaviors/zipball/d411af325ed2636f0cf2012bc5ccd0974d189fc4",
+                "reference": "d411af325ed2636f0cf2012bc5ccd0974d189fc4",
+                "shasum": ""
             },
             "require": {
                 "behat/transliterator": "~1.0",
@@ -1532,7 +1470,140 @@
                 "translatable",
                 "tree"
             ],
-            "time": "2015-07-03 18:37:57"
+            "time": "2015-07-14 06:34:56"
+        },
+        {
+            "name": "liip/functional-test-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/liip/LiipFunctionalTestBundle.git",
+                "reference": "6c93769642bc50aecc6c766a7ea43aa22e4985fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/liip/LiipFunctionalTestBundle/zipball/6c93769642bc50aecc6c766a7ea43aa22e4985fc",
+                "reference": "6c93769642bc50aecc6c766a7ea43aa22e4985fc",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "2.*",
+                "php": ">=5.3.2",
+                "symfony/browser-kit": "~2.0",
+                "symfony/framework-bundle": "~2.0"
+            },
+            "suggest": {
+                "doctrine/dbal": "Required when using the fixture loading functionality with an ORM and SQLite",
+                "doctrine/doctrine-fixtures-bundle": "Required when using the fixture loading functionality",
+                "doctrine/orm": "Required when using the fixture loading functionality with an ORM and SQLite",
+                "nelmio/alice": "Required when using loadFixtureFiles functionality"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liip\\FunctionalTestBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Liip AG",
+                    "homepage": "http://www.liip.ch/"
+                },
+                {
+                    "name": "Community contributions",
+                    "homepage": "https://github.com/liip/LiipFunctionalTestBundle/contributors"
+                }
+            ],
+            "description": "This bundles provides additional functional test-cases for Symfony2 applications",
+            "keywords": [
+                "Symfony2"
+            ],
+            "time": "2015-07-17 06:02:24"
+        },
+        {
+            "name": "monolog/monolog",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "e4f45be5dcfeb54c45f85b50cdbb3ef8a2bfbd81"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e4f45be5dcfeb54c45f85b50cdbb3ef8a2bfbd81",
+                "reference": "e4f45be5dcfeb54c45f85b50cdbb3ef8a2bfbd81",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "provide": {
+                "psr/log-implementation": "1.0.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "^2.4.9",
+                "doctrine/couchdb": "~1.0@dev",
+                "graylog2/gelf-php": "~1.0",
+                "php-console/php-console": "^3.1.3",
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "2.3.0",
+                "raven/raven": "~0.8",
+                "ruflin/elastica": ">=0.90 <3.0",
+                "swiftmailer/swiftmailer": "~5.3",
+                "videlalvaro/php-amqplib": "~2.4"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
+                "raven/raven": "Allow sending log messages to a Sentry server",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.15.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+            "homepage": "http://github.com/Seldaek/monolog",
+            "keywords": [
+                "log",
+                "logging",
+                "psr-3"
+            ],
+            "time": "2015-07-20 18:31:46"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1661,19 +1732,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "df88fdf48a61af29cc309545f9c8d425c63b8852"
+                "reference": "1ba1290e47c3275be779967de1516e2989b6e130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/df88fdf48a61af29cc309545f9c8d425c63b8852",
-                "reference": "df88fdf48a61af29cc309545f9c8d425c63b8852",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1ba1290e47c3275be779967de1516e2989b6e130",
+                "reference": "1ba1290e47c3275be779967de1516e2989b6e130",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
@@ -1721,7 +1786,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-21 07:51:27"
+            "time": "2015-07-13 11:25:16"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1931,12 +1996,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4676c084d0a1cb3efa43e03c41bcdcb615fda1b2"
+                "reference": "9b97f9d807b862c2de2a36e86690000801c85724"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4676c084d0a1cb3efa43e03c41bcdcb615fda1b2",
-                "reference": "4676c084d0a1cb3efa43e03c41bcdcb615fda1b2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9b97f9d807b862c2de2a36e86690000801c85724",
+                "reference": "9b97f9d807b862c2de2a36e86690000801c85724",
                 "shasum": ""
             },
             "require": {
@@ -1995,7 +2060,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-07-06 05:45:04"
+            "time": "2015-07-13 11:28:34"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -2059,19 +2124,13 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "abd05e77d364138c0532a1b78a13c4d78311f546"
+                "reference": "dee3fd1828677b2182c076ad2caecbb5c7bdbf1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/abd05e77d364138c0532a1b78a13c4d78311f546",
-                "reference": "abd05e77d364138c0532a1b78a13c4d78311f546",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/dee3fd1828677b2182c076ad2caecbb5c7bdbf1c",
+                "reference": "dee3fd1828677b2182c076ad2caecbb5c7bdbf1c",
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
@@ -2121,7 +2180,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2015-06-21 07:54:35"
+            "time": "2015-07-19 12:54:49"
         },
         {
             "name": "sebastian/diff",
@@ -2521,6 +2580,65 @@
             "time": "2015-05-05 01:52:20"
         },
         {
+            "name": "symfony/monolog-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/MonologBundle.git",
+                "reference": "5cf613f52558d47648485f0828612533165603af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/5cf613f52558d47648485f0828612533165603af",
+                "reference": "5cf613f52558d47648485f0828612533165603af",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": "~1.8",
+                "php": ">=5.3.2",
+                "symfony/config": "~2.3",
+                "symfony/dependency-injection": "~2.3",
+                "symfony/http-kernel": "~2.3",
+                "symfony/monolog-bridge": "~2.3"
+            },
+            "require-dev": {
+                "symfony/console": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bundle\\MonologBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony MonologBundle",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "log",
+                "logging"
+            ],
+            "time": "2015-07-04 11:05:59"
+        },
+        {
             "name": "trinity/annotations",
             "version": "v0.0.1",
             "source": {
@@ -2579,12 +2697,12 @@
             "source": {
                 "type": "git",
                 "url": "git@git.corp.modpreneur.com:trinity/trinity.git",
-                "reference": "7812c49884a9579e7cd27ce4b922e88bd8fbafd1"
+                "reference": "042fb717b6b19bd685732081d757f4b04847e275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://tp.corp.modpreneur.com/repo/private/dists/trinity/framework/9999999-dev/7812c49884a9579e7cd27ce4b922e88bd8fbafd1.zip",
-                "reference": "7812c49884a9579e7cd27ce4b922e88bd8fbafd1",
+                "url": "https://tp.corp.modpreneur.com/repo/private/dists/trinity/framework/9999999-dev/042fb717b6b19bd685732081d757f4b04847e275.zip",
+                "reference": "042fb717b6b19bd685732081d757f4b04847e275",
                 "shasum": null,
                 "mirrors": [
                     {
@@ -2598,10 +2716,13 @@
                 "friendsofsymfony/user-bundle": "dev-master",
                 "knplabs/doctrine-behaviors": "~1.1",
                 "php": ">=5.6.6",
-                "phpunit/phpunit": "4.7.*",
-                "symfony/symfony": "~2.7"
+                "symfony/monolog-bundle": "~2.4",
+                "symfony/symfony": "~2.7",
+                "trinity/annotations": "0.0.*"
             },
             "require-dev": {
+                "braincrafted/testing-bundle": "@stable",
+                "phpunit/phpunit": "4.7.*",
                 "sensio/generator-bundle": "~2.3"
             },
             "type": "symfony-bundle",
@@ -2625,13 +2746,13 @@
                 }
             ],
             "description": "Trinity Framework",
-            "time": "2015-07-08 12:41:41"
+            "time": "2015-07-21 08:07:40"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "braincrafted/testing-bundle": 0
+        "liip/functional-test-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
