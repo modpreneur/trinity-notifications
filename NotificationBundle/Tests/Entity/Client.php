@@ -1,5 +1,5 @@
 <?php
-    namespace Trinity\NotificationBundle\Tests;
+    namespace Trinity\NotificationBundle\Tests\Entity;
 
 
     use Trinity\FrameworkBundle\Entity\IClient;

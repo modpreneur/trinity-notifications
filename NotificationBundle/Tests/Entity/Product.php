@@ -4,7 +4,7 @@
      *
      */
 
-    namespace Trinity\NotificationBundle\Tests;
+    namespace Trinity\NotificationBundle\Tests\Entity;
 
 
     use Doctrine\ORM\Mapping as ORM;

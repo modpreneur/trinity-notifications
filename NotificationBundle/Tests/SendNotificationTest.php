@@ -1,9 +1,9 @@
 <?php
     namespace Trinity\NotificationBundle\Tests;
 
-    use Braincrafted\Bundle\TestingBundle\Test\WebTestCase;
+    use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
     use ReflectionClass;
-    use Symfony\Component\DependencyInjection\Container;
+    use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
 
@@ -15,22 +15,8 @@
      * For (http://api.dev.clickandcoach.com/)
      *
      */
-    class SendNotificationTest extends WebTestCase
+    class SendNotificationTest extends BaseTest
     {
-
-        /** @var  Container */
-        private $container;
-
-
-
-        public function setUp()
-        {
-            $this->setUpKernel();
-            $this->container = $this->getContainer();
-        }
-
-
-
         public function testEntityToArray()
         {
             $service = $this->container->get('trinity.notification.client_sender');
@@ -70,10 +56,14 @@
             $urlWithoutEndSlash = "http://seznam.cz";
 
             $method = self::getMethod($class, "prepareURLs");
-            $this->assertSame("http://seznam.cz/product",
-                $method->invokeArgs($service, [$urlWithEndSlash, $e, "POST"]));
-            $this->assertSame("http://seznam.cz/product",
-                $method->invokeArgs($service, [$urlWithoutEndSlash, $e, "POST"]));
+            $this->assertSame(
+                "http://seznam.cz/product",
+                $method->invokeArgs($service, [$urlWithEndSlash, $e, "POST"])
+            );
+            $this->assertSame(
+                "http://seznam.cz/product",
+                $method->invokeArgs($service, [$urlWithoutEndSlash, $e, "POST"])
+            );
         }
 
 
@@ -114,20 +104,12 @@
 
 
 
-        public function tearDown()
-        {
-            $this->tearDownKernel();
-        }
-
-
-
         protected static function getMethod($class, $name)
         {
             $class = new ReflectionClass($class);
             $method = $class->getMethod($name);
             $method->setAccessible(true);
+
             return $method;
         }
-
-
     }

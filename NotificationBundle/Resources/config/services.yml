@@ -23,7 +23,3 @@ services:
               - { name: doctrine.event_listener, event: preFlush,    priority: 255 }
           calls:
               - [setRequest, [@request_stack]]
-
-
-
-

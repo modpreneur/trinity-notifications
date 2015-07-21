@@ -44,12 +44,14 @@
 
 
         /**
+         * Check GET, POST, PUT, ...
+         *
          * @param Object $entity
          * @param string $method
          *
          * @return bool
          */
-        public function isMethodEnabled($entity, $method)
+        public function hasHTTPMethod($entity, $method)
         {
             /** @var Methods $classAnnotation */
             $classAnnotation = $this->getEntityAnnotation($entity, self::ANNOTATION_METHOD_CLASS);
@@ -100,7 +102,6 @@
         public function getEntityAnnotation($entity, $annotationClass)
         {
             $class = $this->getEntityClass($entity);
-
             return $this->getClassAnnotation($class, $annotationClass);
         }
 
@@ -115,10 +116,10 @@
          */
         public function getControllerActionAnnotation($class, $action, $annotationClass)
         {
-            foreach ($this->getControllerActionAnnotations($class, $action) as $annot) {
+            foreach ($this->getControllerActionAnnotations($class, $action) as $annotion) {
 
-                if ($annot instanceof $annotationClass) {
-                    return $annot;
+                if ($annotion instanceof $annotationClass) {
+                    return $annotion;
                 }
             }
 
@@ -237,7 +238,7 @@
 
             $rc = new \ReflectionClass($class);
 
-            $classSourceAnnotation = $this->getClassSourceAnnotation($entity, $class);
+            $classSourceAnnotation = $this->getClassSourceAnnotation($entity);
 
             if ($classSourceAnnotation->hasColumns()) {
 
@@ -297,17 +298,15 @@
 
         /**
          * @param Object $entity
-         * @param $class
          *
          * @return null|object
          * @throws SourceException
          */
-        public function getClassSourceAnnotation($entity, $class)
+        public function getClassSourceAnnotation($entity)
         {
-
             $classSourceAnnotation = $this->getEntityAnnotation($entity, self::ANNOTATION_CLASS);
             if (!$classSourceAnnotation) {
-                throw new SourceException("Class $class has not annotations source.");
+                throw new SourceException("Entity has not annotations source.");
             }
 
             return $classSourceAnnotation;
@@ -325,7 +324,7 @@
         public function hasSource($entity, $source)
         {
             $class = $this->getEntityClass($entity);
-            $classSourceAnnotation = $this->getClassSourceAnnotation($entity, $class);
+            $classSourceAnnotation = $this->getClassSourceAnnotation($entity);
 
             return $classSourceAnnotation->hasColumn($source);
         }

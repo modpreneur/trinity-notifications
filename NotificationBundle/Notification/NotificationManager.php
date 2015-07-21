@@ -62,46 +62,38 @@
         {
             $response = "";
 
-
             // before send event
             $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
-
             $clients = $this->clientsToArray($entity);
 
-
-            if (!$clients) {
-                throw new Exception("Client/s has not found.");
-            }
+            if ($clients) {
+                foreach ($clients as $client) {
 
 
-            foreach ($clients as $client) {
+                    if (!$client->isNotificationEnabled()) {
+                        continue;
+                    }
 
+                    $url = $this->prepareURLs($client->getNotifyUrl(), $entity, $method);
+                    $json = $this->json_encode_object($entity, $client->getSecret());
 
-                if (!$client->isNotificationEnabled()) {
-                    continue;
-                }
+                    try {
+                        $response = $this->createJsonRequest($json, $url, $method, true);
+                        $this->eventDispatcher->dispatch(Events::SUCCESS_NOTIFICATION,
+                            new StatusEvent($client, $entity, $entity->getId(), $url, $json, $method, null, null));
 
+                    } catch (\Exception $ex) {
+                        $message = "$method: URL: " . $url . " returns error: " . $ex->getMessage() . ".";
 
-                $url = $this->prepareURLs($client->getNotifyUrl(), $entity, $method);
-                $json = $this->json_encode_object($entity, $client->getSecret());
+                        $this->eventDispatcher->dispatch(Events::ERROR_NOTIFICATION,
+                            new StatusEvent($client, $entity, $entity->getId(), $url, $json, $method, $ex, $message));
 
-                try {
-                    $response = $this->createJsonRequest($json, $url, $method, true);
-                    $this->eventDispatcher->dispatch(Events::SUCCESS_NOTIFICATION,
-                        new StatusEvent($client, $entity, $entity->getId(), $url, $json, $method, null, null));
-
-                } catch (\Exception $ex) {
-                    $message = "$method: URL: " . $url . " returns error: " . $ex->getMessage() . ".";
-
-                    $this->eventDispatcher->dispatch(Events::ERROR_NOTIFICATION,
-                        new StatusEvent($client, $entity, $entity->getId(), $url, $json, $method, $ex, $message));
-
-                    $response = "ERROR - $message";
+                        $response = "ERROR - $message";
+                    }
                 }
             }
 
             $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
-
             return $response;
         }
 

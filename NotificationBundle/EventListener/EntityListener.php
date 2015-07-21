@@ -168,7 +168,7 @@
                 }
             }
 
-            if ($this->processor->isMethodEnabled($entity, $method) && ((count($list) > 0) || $method === "DELETE")) {
+            if ($this->processor->hasHTTPMethod($entity, $method) && ((count($list) > 0) || $method === "DELETE")) {
                 $this->notificationSender->send($entity, $method);
             }
         }

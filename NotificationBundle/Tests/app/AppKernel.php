@@ -11,7 +11,7 @@
         public function registerBundles()
         {
             return array(
-                new Braincrafted\Bundle\TestingBundle\BraincraftedTestingBundle($this),
+                new \Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
                 new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
                 new \Trinity\NotificationBundle\TrinityNotificationBundle()
             );
