@@ -1,29 +1,29 @@
 <?php
 
-    namespace Trinity\NotificationBundle\Tests\Controllers;
+namespace Trinity\NotificationBundle\Tests\Controllers;
 
-    use Trinity\AnnotationsBundle\Annotations\Notification\DisableNotification;
+use Trinity\AnnotationsBundle\Annotations\Notification\DisableNotification;
 
 
 
-    class ActiveController
+class ActiveController
+{
+
+    /**
+     *
+     * @DisableNotification()
+     *
+     */
+    public function disableNotificationAction()
     {
 
-        /**
-         *
-         * @DisableNotification()
-         *
-         */
-        public function disableNotificationAction()
-        {
-
-        }
+    }
 
 
 
-        public function activeNotificationAction()
-        {
-
-        }
+    public function activeNotificationAction()
+    {
 
     }
+
+}
