@@ -25,6 +25,14 @@
     class Product
     {
 
+        private $id;
+
+        private $name;
+
+        private $description;
+
+
+
 
         /** @return int */
         public function getId()
@@ -32,6 +40,17 @@
             return 1;
         }
 
+
+
+        public function getName(){
+            return "Someone's name";
+        }
+
+
+
+        public function getDescription(){
+            return "Lorem impsu";
+        }
 
 
         /** @return Client[] */

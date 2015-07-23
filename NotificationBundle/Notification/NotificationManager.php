@@ -6,19 +6,18 @@
     namespace Trinity\NotificationBundle\Services;
 
 
-    use Doctrine\ORM\PersistentCollection;
+    use Doctrine\Common\Collections\Collection;
     use GuzzleHttp\Client;
     use Nette\Utils\Strings;
-    use ReflectionClass;
-    use Symfony\Component\Config\Definition\Exception\Exception;
     use Symfony\Component\EventDispatcher\EventDispatcher;
-    use Symfony\Component\HttpKernel\Exception\HttpException;
+    use Trinity\FrameworkBundle\Entity\IClient;
     use Trinity\NotificationBundle\Event\Events;
     use Trinity\NotificationBundle\Event\SendEvent;
     use Trinity\NotificationBundle\Event\StatusEvent;
     use Trinity\NotificationBundle\Exception\ClientException;
     use Trinity\NotificationBundle\Exception\MethodException;
     use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+    use Trinity\NotificationBundle\Notification\EntityConverter;
 
 
 
@@ -30,19 +29,24 @@
 
 
         /** @var  NotificationUtils */
-        protected $processor;
+        protected $notificationUtils;
 
         /** @var  EventDispatcher */
         protected $eventDispatcher;
+
+        /** @var  EntityConverter */
+        protected $entityConverter;
 
 
 
         function __construct(
             $eventDispatcher,
-            NotificationUtils $annotationProcessor
+            NotificationUtils $annotationProcessor,
+            EntityConverter $entityConverter
         ) {
             $this->eventDispatcher = $eventDispatcher;
-            $this->processor = $annotationProcessor;
+            $this->notificationUtils = $annotationProcessor;
+            $this->entityConverter = $entityConverter;
         }
 
 
@@ -52,19 +56,19 @@
          *
          *
          * @param Object $entity
-         * @param string $method
+         * @param string $HTTPMethod
          *
          * @return mixed|string|void
          * @throws ClientException
          * @throws MethodException
          */
-        public function send($entity, $method = "GET")
+        public function send($entity, $HTTPMethod = "GET")
         {
             $response = "";
 
             // before send event
             $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
-            $clients = $this->clientsToArray($entity);
+            $clients = $this->clientsToArray($entity->getClients());
 
             if ($clients) {
                 foreach ($clients as $client) {
@@ -74,19 +78,23 @@
                         continue;
                     }
 
-                    $url = $this->prepareURLs($client->getNotifyUrl(), $entity, $method);
-                    $json = $this->json_encode_object($entity, $client->getSecret());
+                    $url = $this->prepareURL($client->getNotifyUrl(), $entity, $HTTPMethod);
+                    $json = $this->JSONEncodeObject($entity, $client->getSecret());
 
                     try {
-                        $response = $this->createJsonRequest($json, $url, $method, true);
-                        $this->eventDispatcher->dispatch(Events::SUCCESS_NOTIFICATION,
-                            new StatusEvent($client, $entity, $entity->getId(), $url, $json, $method, null, null));
+                        $response = $this->createRequest($json, $url, $HTTPMethod, true);
+                        $this->eventDispatcher->dispatch(
+                            Events::SUCCESS_NOTIFICATION,
+                            new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
+                        );
 
                     } catch (\Exception $ex) {
-                        $message = "$method: URL: " . $url . " returns error: " . $ex->getMessage() . ".";
+                        $message = "$HTTPMethod: URL: ".$url." returns error: ".$ex->getMessage().".";
 
-                        $this->eventDispatcher->dispatch(Events::ERROR_NOTIFICATION,
-                            new StatusEvent($client, $entity, $entity->getId(), $url, $json, $method, $ex, $message));
+                        $this->eventDispatcher->dispatch(
+                            Events::ERROR_NOTIFICATION,
+                            new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
+                        );
 
                         $response = "ERROR - $message";
                     }
@@ -94,6 +102,7 @@
             }
 
             $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
+
             return $response;
         }
 
@@ -102,32 +111,21 @@
         /**
          * Transform clients collection to array.
          *
-         * @param $entity
+         * @param Client|Collection|array $clientsCollection
          *
-         * @return NULL|\Object[]
+         * @return Object[]
          * @throws ClientException
          */
-        protected function clientsToArray($entity)
+        protected function clientsToArray($clientsCollection)
         {
-            $class = new ReflectionClass($entity);
+            $clients = [];
 
-            if (!$class->hasMethod("getClients")) {
-                throw new ClientException("Entity has no method 'getClass'");
-            }
-            $clients = $entity->getClients();
-
-            if (!$clients) {
-                return null;
-            } elseif ($clients instanceof PersistentCollection) {
-                $clients = $clients->toArray();
-
-                return $clients;
-            } elseif (!is_array($clients)) {
-                $cl = $clients;
-                $clients = [];
-                $clients[] = $cl;
-
-                return $clients;
+            if ($clientsCollection instanceof Collection) {
+                $clients = $clientsCollection->toArray();
+            } elseif ($clientsCollection instanceof IClient) {
+                $clients[] = $clientsCollection;
+            } elseif (is_array($clientsCollection)) {
+                $clients = $clientsCollection;
             }
 
             return $clients;
@@ -136,9 +134,16 @@
 
 
         /**
+         *
+         * Join client URL with entity url.
+         *
+         * Example: Client URL => "http://example.com"
+         *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
+         *          result: http://example.com/product
+         *
          * @param string $url
          * @param $entity
-         * @param $method
+         * @param $HTTPMethod
          *
          * @return array
          * @throws ClientException
@@ -148,24 +153,25 @@
          * @internal param $method
          * @internal param $url
          */
-        private function prepareURLs($url, $entity, $method)
+        private function prepareURL($url, $entity, $HTTPMethod)
         {
-            $clientMethod = "getClients";
-            if (!is_callable([$entity, $clientMethod])) {
-                throw new MethodException("Method '$clientMethod' not exists in entity.");
+            $methodName = "getClients";
+            if (!is_callable([$entity, $methodName])) {
+                throw new MethodException("Method '$methodName' not exists in entity.");
             }
 
             if ($url === null || empty($url)) {
-                throw new ClientException("Notification error: Client has not set notification URL.");
+                throw new ClientException("Notification: NULL client URL.");
             }
 
-            $class = $this->processor->getUrlPostfix($entity, $method);
+            $class = $this->notificationUtils->getUrlPostfix($entity, $HTTPMethod);
+
             // add / to url
             if (!Strings::endsWith($url, "/")) {
                 $url .= "/";
             }
 
-            return $url . $class;
+            return $url.$class;
         }
 
 
@@ -174,17 +180,17 @@
          * Returns object encoded in json.
          * Encode only first level (FK are expressed as ID strings)
          *
-         * @param $data object
+         * @param $entity object
          * @param $secret
          *
          * @return string
          * @internal param string $hash
          */
-        private function json_encode_object($data, $secret)
+        private function JSONEncodeObject($entity, $secret)
         {
-            $result = $this->processor->convertJson($data);
+            $result = $this->entityConverter->toArray($entity);
             $result['timestamp'] = (new \DateTime())->getTimestamp();
-            $result['hash'] = hash("sha256", $secret . (implode(",", $result)));
+            $result['hash'] = hash("sha256", $secret.(implode(",", $result)));
 
             return json_encode($result);
         }
@@ -192,48 +198,47 @@
 
 
         /**
+         *
+         * Send request to client.
+         * Client = web application (http:example.com)
+         *
          * @param $data
          * @param $url
          * @param string $method
          * @param bool $is_encoded
          * @param null $secret
-         * @param int $pass
          *
          * @return mixed
          */
-        private function createJsonRequest(
+        private function createRequest(
             $data,
             $url,
             $method = self::POST,
             $is_encoded = false,
-            $secret = null,
-            $pass = 1
+            $secret = null
         ) {
+
             if (!$is_encoded) {
-                $data = is_object($data) ? $this->json_encode_object($data, $secret) : json_encode($data);
+                $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
             }
 
-            $client = new Client();
-            $request = $client->createRequest($method, $url, [
-                'headers' => ['Content-type' => 'application/json'],
-                'body' => $data,
-                'future' => true
-            ]);
+            $httpClient = new Client();
 
+            $request = $httpClient->createRequest(
+                $method,
+                $url,
+                [
+                    'headers' => ['Content-type' => 'application/json'],
+                    'body' => $data,
+                    'future' => true
+                ]
+            );
+
+            // throw ClientException
             /** @var \GuzzleHttp\Message\FutureResponse $response */
-            $response = $client->send($request);
+            $response = $httpClient->send($request);
 
-            if (!$response || !$response->getStatusCode() || $response->getStatusCode() != '200') {
-                if ($pass < 5) {
-                    sleep(rand(1, 10));
-
-                    return $this->createJsonRequest($data, $url, $pass++, true);
-                } else {
-                    throw new HttpException($response->getStatusCode(), "Notification error. {$response->getBody()}");
-                }
-            } else {
-                return $response->json();
-            }
+            return $response->json();
         }
 
     }

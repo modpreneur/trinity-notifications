@@ -2,6 +2,7 @@
     namespace Trinity\NotificationBundle\Tests;
 
     use Liip\FunctionalTestBundle\Test\WebTestCase;
+    use ReflectionClass;
     use Symfony\Bundle\FrameworkBundle\Client;
     use Symfony\Component\DependencyInjection\Container;
     use Symfony\Component\HttpKernel\KernelInterface;
@@ -36,5 +37,16 @@
         public function tearDown()
         {
             $this->kernelObject->shutdown();
+        }
+
+
+
+        protected static function getMethod($class, $name)
+        {
+            $class = new ReflectionClass($class);
+            $method = $class->getMethod($name);
+            $method->setAccessible(true);
+
+            return $method;
         }
     }

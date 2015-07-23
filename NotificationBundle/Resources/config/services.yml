@@ -1,25 +1,37 @@
 services:
 
-    trinity.notification.processor:
+    trinity.notification.entityConverter:
+        arguments:
+            - "@trinity.notification.annotations.utils"
+        class: Trinity\NotificationBundle\Notification\EntityConverter
+
+    trinity.notification.annotations.utils:
+        class: Trinity\NotificationBundle\Notification\AnnotationsUtils
+
+
+    trinity.notification.utils:
+        arguments:
+            - "@trinity.notification.annotations.utils"
         class: Trinity\NotificationBundle\Notification\Annotations\NotificationUtils
 
 
     trinity.notification.client_sender:
-            class: Trinity\NotificationBundle\Services\NotificationManager
-            arguments:
-                - "@event_dispatcher"
-                - "@trinity.notification.processor"
+        class: Trinity\NotificationBundle\Services\NotificationManager
+        arguments:
+            - "@event_dispatcher"
+            - "@trinity.notification.utils"
+            - "@trinity.notification.entityConverter"
 
 
     trinity.notification.entity_listener:
-          class: Trinity\NotificationBundle\EventListener\EntityListener
-          arguments:
-              - "@trinity.notification.client_sender"
-              - "@trinity.notification.processor"
-          tags:
-              - { name: doctrine.event_listener, event: postUpdate,  priority: 255 }
-              - { name: doctrine.event_listener, event: postPersist, priority: 255 }
-              - { name: doctrine.event_listener, event: preRemove,   priority: 255 }
-              - { name: doctrine.event_listener, event: preFlush,    priority: 255 }
-          calls:
-              - [setRequest, [@request_stack]]
+        class: Trinity\NotificationBundle\EventListener\EntityListener
+        arguments:
+            - "@trinity.notification.client_sender"
+            - "@trinity.notification.utils"
+        tags:
+            - { name: doctrine.event_listener, event: postUpdate,  priority: 255 }
+            - { name: doctrine.event_listener, event: postPersist, priority: 255 }
+            - { name: doctrine.event_listener, event: preRemove,   priority: 255 }
+            - { name: doctrine.event_listener, event: preFlush,    priority: 255 }
+        calls:
+            - [setRequest, [@request_stack]]
