@@ -1,8 +1,6 @@
 <?php
     namespace Trinity\NotificationBundle\Tests;
 
-    use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
-    use ReflectionClass;
     use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -69,7 +67,6 @@
 
 
         /**
-
          */
         public function testSendEntity()
         {

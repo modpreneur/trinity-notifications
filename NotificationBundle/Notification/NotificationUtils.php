@@ -35,7 +35,7 @@
         /**
          * Check GET, POST, PUT, ...
          *
-         * @param Object $entity
+         * @param object $entity
          * @param string $method
          *
          * @return bool
@@ -57,7 +57,7 @@
 
 
         /**
-         * @param Object $entity
+         * @param object $entity
          *
          * @return bool
          */
@@ -76,7 +76,7 @@
 
 
         /**
-         * @param Object $entity
+         * @param object $entity
          * @param null $method
          *
          * @return mixed|null|string
@@ -120,7 +120,7 @@
 
 
         /**
-         * @param Object $entity
+         * @param object $entity
          * @param $source
          *
          * @return mixed

@@ -1,4 +1,7 @@
 <?php
+    /*
+     * This file is part of the Trinity project.
+     */
 
     namespace Trinity\NotificationBundle\Notification;
 
@@ -63,21 +66,22 @@
 
         /**
          * @param Object $entity
-         * @param $annotationClass
+         * @param string $annotationClass
          *
          * @return null|object
          */
         public function getEntityAnnotation($entity, $annotationClass)
         {
             $class = $this->getEntityClass($entity);
+
             return $this->getClassAnnotation($class, $annotationClass);
         }
 
 
 
         /**
-         * @param $class
-         * @param $annotationClass
+         * @param Object $class
+         * @param string $annotationClass
          *
          * @return null|object
          */
@@ -92,7 +96,7 @@
 
         /**
          * @param Object $entity
-         * @param $annotationClass
+         * @param string $annotationClass
          *
          * @return array
          */
@@ -117,7 +121,7 @@
         /**
          * @param Object $entity
          *
-         * @return null|object
+         * @return NULL|object
          * @throws SourceException
          */
         public function getClassSourceAnnotation($entity)

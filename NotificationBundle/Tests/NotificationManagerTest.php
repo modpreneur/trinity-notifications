@@ -118,11 +118,12 @@
             $manager = $this->container->get("trinity.notification.client_sender");
             $method = $this->getMethod($manager, "JSONEncodeObject");
 
-            $data = $method->invokeArgs($manager, [ new Product(), "KJHGHJKKJHJKJHJH" ]);
+            $data = $method->invokeArgs($manager, [new Product(), "KJHGHJKKJHJKJHJH"]);
 
             $method = $this->getMethod($manager, "createRequest");
             $result = $method->invokeArgs($manager, [$data, "http://example.com/product", "POST", true]);
         }
+
 
 
         /**
@@ -135,13 +136,16 @@
             $manager = $this->container->get("trinity.notification.client_sender");
             $method = $this->getMethod($manager, "JSONEncodeObject");
 
-            $data = $method->invokeArgs($manager, [ new Product(), "KJHGHJKKJHJKJHJH" ]);
+            $data = $method->invokeArgs($manager, [new Product(), "KJHGHJKKJHJKJHJH"]);
 
             $method = $this->getMethod($manager, "createRequest");
             $result = $method->invokeArgs($manager, [$data, "http://example.com/product", "POST", false]);
         }
 
-        public function testSend(){
+
+
+        public function testSend()
+        {
             $manager = $this->container->get("trinity.notification.client_sender");
 
         }

@@ -14,12 +14,15 @@
          * @DisableNotification()
          *
          */
-        public function disableNotificationAction(){
+        public function disableNotificationAction()
+        {
 
         }
 
 
-        public function activeNotificationAction(){
+
+        public function activeNotificationAction()
+        {
 
         }
 

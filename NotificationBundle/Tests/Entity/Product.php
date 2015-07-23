@@ -33,7 +33,6 @@
 
 
 
-
         /** @return int */
         public function getId()
         {
@@ -42,15 +41,18 @@
 
 
 
-        public function getName(){
+        public function getName()
+        {
             return "Someone's name";
         }
 
 
 
-        public function getDescription(){
+        public function getDescription()
+        {
             return "Lorem impsu";
         }
+
 
 
         /** @return Client[] */

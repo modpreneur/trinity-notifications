@@ -54,10 +54,6 @@
                 <include name="**/*.php"/>
                 <modified/>
             </fileset>
-            <fileset dir="${basedir}/NotificationBundle/">
-                <include name="**/*Test.php"/>
-                <modified/>
-            </fileset>
         </apply>
     </target>
 

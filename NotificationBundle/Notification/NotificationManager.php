@@ -1,8 +1,8 @@
 <?php
     /*
      * This file is part of the Trinity project.
-     *
      */
+
     namespace Trinity\NotificationBundle\Services;
 
 
@@ -55,7 +55,7 @@
          *  Send notification to client (App).
          *
          *
-         * @param Object $entity
+         * @param object $entity
          * @param string $HTTPMethod
          *
          * @return mixed|string|void
@@ -142,16 +142,13 @@
          *          result: http://example.com/product
          *
          * @param string $url
-         * @param $entity
-         * @param $HTTPMethod
+         * @param object $entity
+         * @param string $HTTPMethod
          *
          * @return array
          * @throws ClientException
          * @throws MethodException
-         * @internal param $client
-         * @internal param $entity
-         * @internal param $method
-         * @internal param $url
+         *
          */
         private function prepareURL($url, $entity, $HTTPMethod)
         {
@@ -180,8 +177,8 @@
          * Returns object encoded in json.
          * Encode only first level (FK are expressed as ID strings)
          *
-         * @param $entity object
-         * @param $secret
+         * @param object $entity
+         * @param string $secret
          *
          * @return string
          * @internal param string $hash
@@ -202,8 +199,8 @@
          * Send request to client.
          * Client = web application (http:example.com)
          *
-         * @param $data
-         * @param $url
+         * @param object|string $data
+         * @param string $url
          * @param string $method
          * @param bool $is_encoded
          * @param null $secret
@@ -230,7 +227,7 @@
                 [
                     'headers' => ['Content-type' => 'application/json'],
                     'body' => $data,
-                    'future' => true
+                    'future' => true,
                 ]
             );
 

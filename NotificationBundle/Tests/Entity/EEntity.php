@@ -2,8 +2,9 @@
     namespace Trinity\NotificationBundle\Tests\Entity;
 
     use Doctrine\ORM\Mapping as ORM;
-    use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
     use JMS\Serializer\Annotation\SerializedName;
+    use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
+
 
 
     /**

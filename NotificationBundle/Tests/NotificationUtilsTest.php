@@ -147,10 +147,12 @@
 
 
             $this->assertEquals(['id' => 1], $propertyArray);
-            $propertyArray = $method->invokeArgs($utils, [
+            $propertyArray = $method->invokeArgs(
+                $utils,
+                [
                     $p,
                     'id',
-                    'getNoExistsProperty'
+                    'getNoExistsProperty',
                 ]
             );
 
@@ -173,7 +175,7 @@
                 "id" => 1,
                 "name" => "EE Entity",
                 "description" => "Description for entity.",
-                'date' => "2010-11-12 00:00:00"
+                'date' => "2010-11-12 00:00:00",
             ];
 
             $arrayEE = $utils->toArray($p);
