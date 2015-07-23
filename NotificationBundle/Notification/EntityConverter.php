@@ -6,11 +6,14 @@
 namespace Trinity\NotificationBundle\Notification;
 
 
-use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Exception\SourceException;
 
 
 
+/**
+ * Class EntityConverter
+ * @package Trinity\NotificationBundle\Notification
+ */
 class EntityConverter
 {
 
@@ -85,10 +88,9 @@ class EntityConverter
      * ]
      *
      * @param object $entity
-     *
      * @return array
-     * @throws MethodException
      * @throws SourceException
+     * @throws \Exception
      */
     public function toArray($entity)
     {
@@ -110,14 +112,65 @@ class EntityConverter
         foreach ($columns as $property) {
             $methodName = "get".ucfirst($property);
             if (in_array($methodName, $methods)) {
+
+                if (property_exists($entity, $property)) {
+                    $array = $this->processProperty($entity, $property, $methodName);
+                } elseif (method_exists($entity, $methodName)) {
+                    $array = $this->processMethod($entity, $property, $methodName);
+                } else {
+                    throw new \Exception("No method or property $property.");
+                }
+
+                //dump($array);
+
                 $entityArray = array_merge(
                     $entityArray,
-                    $this->processProperty($entity, $property, $methodName, $entityArray)
+                    $array
                 );
             }
         }
 
         return $entityArray;
+    }
+
+
+
+    /**
+     * @param object $entity
+     * @param string $methodName
+     * @param string $methodName
+     *
+     * @return array
+     */
+    private function processMethod($entity, $method, $methodName)
+    {
+        $resultArray = [];
+
+        if(method_exists($entity, $method)){
+            $methodName = $method;
+        }
+
+        $reflectionMethod = new \ReflectionMethod($entity, $methodName);
+
+        $annotation = $this->annotationsUtils->getReader()->getMethodAnnotation(
+            $reflectionMethod,
+            AnnotationsUtils::SERIALIZED_NAME
+        );
+
+        if ($annotation) {
+            $method = $annotation->name;
+        }
+
+        try {
+            $resultArray[$method] = call_user_func_array(array($entity, $methodName), []);
+            if ($resultArray[$method] instanceof \DateTime) {
+                $resultArray[$method] = $resultArray[$method]->format('Y-m-d H:i:s');
+            }
+        } catch (\Exception $ex) {
+            $resultArray[$method] = null;
+        }
+
+        return $resultArray;
     }
 
 }

@@ -13,7 +13,7 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
  *
  * @ORM\Entity()
  *
- * @Notification\Source(columns="id, name, desc, date")
+ * @Notification\Source(columns="id, name, desc, date, fullPrice")
  * @Notification\Methods(types={"put", "post", "delete"})
  *
  * @Notification\Url(postfix="no-name-e-entity")
@@ -125,6 +125,11 @@ class EEntity
     public function setDate($date)
     {
         $this->date = $date;
+    }
+
+
+    public function getFullPrice(){
+        return "10$";
     }
 
 }

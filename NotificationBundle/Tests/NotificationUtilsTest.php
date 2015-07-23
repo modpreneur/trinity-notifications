@@ -171,11 +171,14 @@ class NotificationUtilsTest extends BaseTest
 
         $p = new EEntity();
 
+        //dump($p);
+
         $sourceEE = [
             "id" => 1,
             "name" => "EE Entity",
             "description" => "Description for entity.",
             'date' => "2010-11-12 00:00:00",
+            'fullPrice' => '10$'
         ];
 
         $arrayEE = $utils->toArray($p);

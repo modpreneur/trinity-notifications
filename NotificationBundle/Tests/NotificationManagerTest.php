@@ -6,6 +6,7 @@ use Closure;
 use Doctrine\Common\Collections\Collection;
 use Traversable;
 use Trinity\NotificationBundle\Tests\Entity\Client;
+use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -143,10 +144,13 @@ class NotificationManagerTest extends BaseTest
 
 
 
-    public function testSend()
+    public function testSendWithoutClient()
     {
         $manager = $this->container->get("trinity.notification.client_sender");
 
+        $entity = new EntityWithoutClient();
+
+        $manager->send($entity);
     }
 
 }

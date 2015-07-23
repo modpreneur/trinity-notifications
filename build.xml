@@ -41,9 +41,9 @@
 
     <target name="fixtures" depends="clean" description="Update fixtures">
         <exec executable="php" failonerror="true">
-            <arg value='app/console' />
-            <arg value="doctrine:fixtures:load" />
-            <arg value='-n' />
+            <arg value='app/console'/>
+            <arg value="doctrine:fixtures:load"/>
+            <arg value='-n'/>
         </exec>
     </target>
 

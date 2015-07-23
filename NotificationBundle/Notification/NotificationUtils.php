@@ -13,6 +13,10 @@ use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 
 
 
+/**
+ * Class NotificationUtils
+ * @package Trinity\NotificationBundle\Notification\Annotations
+ */
 class NotificationUtils
 {
 

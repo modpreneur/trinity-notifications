@@ -18,11 +18,14 @@ use Symfony\Component\EventDispatcher\Event;
 class SendEvent extends Event
 {
 
-    /** @var  Object */
+    /** @var  object */
     protected $entity;
 
 
 
+    /**
+     * @param object $entity
+     */
     function __construct($entity)
     {
         $this->entity = $entity;
@@ -31,7 +34,7 @@ class SendEvent extends Event
 
 
     /**
-     * @return Object
+     * @return object
      */
     public function getEntity()
     {

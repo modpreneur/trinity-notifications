@@ -12,6 +12,10 @@ use Trinity\NotificationBundle\Exception\SourceException;
 
 
 
+/**
+ * Class AnnotationsUtils
+ * @package Trinity\NotificationBundle\Notification
+ */
 class AnnotationsUtils
 {
 

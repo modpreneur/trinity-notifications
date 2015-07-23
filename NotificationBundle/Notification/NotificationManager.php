@@ -21,6 +21,10 @@ use Trinity\NotificationBundle\Notification\EntityConverter;
 
 
 
+/**
+ * Class NotificationManager
+ * @package Trinity\NotificationBundle\Services
+ */
 class NotificationManager
 {
     const DELETE = 'DELETE';
@@ -39,6 +43,11 @@ class NotificationManager
 
 
 
+    /**
+     * @param $eventDispatcher
+     * @param NotificationUtils $annotationProcessor
+     * @param EntityConverter $entityConverter
+     */
     function __construct(
         $eventDispatcher,
         NotificationUtils $annotationProcessor,
