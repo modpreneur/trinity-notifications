@@ -5,6 +5,8 @@ namespace Trinity\NotificationBundle\Tests;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Tests\Entity\AllSourceEntity;
 use Trinity\NotificationBundle\Tests\Entity\EEntity;
+use Trinity\NotificationBundle\Tests\Entity\EntityErrorArray;
+use Trinity\NotificationBundle\Tests\Entity\EntityMethodDate;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
@@ -136,6 +138,13 @@ class NotificationUtilsTest extends BaseTest
 
 
 
+    /**
+     * @throws \Exception
+     *
+     * @expectedException \Exception
+     *
+     * @expectedExceptionMessage No method or property error
+     */
     public function testEntityToArray()
     {
         $utils = $this->container->get("trinity.notification.entityConverter");
@@ -144,7 +153,6 @@ class NotificationUtilsTest extends BaseTest
 
         $p = new Product();
         $propertyArray = $method->invokeArgs($utils, [$p, 'id', 'getId']);
-
 
         $this->assertEquals(['id' => 1], $propertyArray);
         $propertyArray = $method->invokeArgs(
@@ -171,17 +179,47 @@ class NotificationUtilsTest extends BaseTest
 
         $p = new EEntity();
 
-        //dump($p);
-
         $sourceEE = [
             "id" => 1,
             "name" => "EE Entity",
             "description" => "Description for entity.",
             'date' => "2010-11-12 00:00:00",
-            'fullPrice' => '10$'
+            'fullPrice' => '10$',
+            'test-method' => 'test'
         ];
 
         $arrayEE = $utils->toArray($p);
         $this->assertEquals($sourceEE, $arrayEE);
+
+
+        $errorEntity = new EntityErrorArray();
+        $utils->toArray($errorEntity);
     }
+
+
+    public function testEntityToArrayMethodDate(){
+        $utils = $this->container->get("trinity.notification.entityConverter");
+        $class = (get_class($utils));
+        $method = $this->getMethod($class, "processMethod");
+
+        $entity = new EntityMethodDate();
+
+        $array = $method->invokeArgs( $utils, [$entity, 'date', 'getDate'] );
+
+        $this->assertEquals([ 'date' => '2010-11-12 00:00:00'], $array );
+    }
+
+    /*
+    public function testEntityToArrayMethodDateError(){
+        $utils = $this->container->get("trinity.notification.entityConverter");
+        $class = (get_class($utils));
+        $method = $this->getMethod($class, "processMethod");
+
+        $entity = new EntityErrorArray();
+
+        $array = $method->invokeArgs( $utils, [$entity, 'date', 'getDate'] );
+
+        $this->assertEquals([ 'date' => '2010-11-12 00:00:00'], $array );
+    }
+    */
 }

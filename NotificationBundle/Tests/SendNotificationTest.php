@@ -1,6 +1,7 @@
 <?php
 namespace Trinity\NotificationBundle\Tests;
 
+use Trinity\NotificationBundle\Tests\Entity\EntityErrorArray;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 

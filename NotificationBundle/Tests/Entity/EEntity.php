@@ -13,7 +13,7 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
  *
  * @ORM\Entity()
  *
- * @Notification\Source(columns="id, name, desc, date, fullPrice")
+ * @Notification\Source(columns="id, name, desc, date, fullPrice, testMethod")
  * @Notification\Methods(types={"put", "post", "delete"})
  *
  * @Notification\Url(postfix="no-name-e-entity")
@@ -30,6 +30,7 @@ class EEntity
     private $id = 1;
 
     private $name = "EE Entity";
+
 
 
     /**
@@ -130,6 +131,14 @@ class EEntity
 
     public function getFullPrice(){
         return "10$";
+    }
+
+
+    /**
+     * @SerializedName("test-method")
+     */
+    public function testMethod(){
+        return 'test';
     }
 
 }

@@ -111,23 +111,21 @@ class EntityConverter
 
         foreach ($columns as $property) {
             $methodName = "get".ucfirst($property);
-            if (in_array($methodName, $methods)) {
 
-                if (property_exists($entity, $property)) {
-                    $array = $this->processProperty($entity, $property, $methodName);
-                } elseif (method_exists($entity, $methodName)) {
-                    $array = $this->processMethod($entity, $property, $methodName);
-                } else {
-                    throw new \Exception("No method or property $property.");
-                }
+            if($property === "*") continue;
 
-                //dump($array);
-
-                $entityArray = array_merge(
-                    $entityArray,
-                    $array
-                );
+            if (property_exists($entity, $property)) {
+                $array = $this->processProperty($entity, $property, $methodName);
+            } elseif (method_exists($entity, $methodName) || method_exists($entity, $property)) {
+                $array = $this->processMethod($entity, $property, $methodName);
+            } else {
+                throw new \Exception("No method or property $property.");
             }
+
+            $entityArray = array_merge(
+                $entityArray,
+                $array
+            );
         }
 
         return $entityArray;
@@ -137,7 +135,7 @@ class EntityConverter
 
     /**
      * @param object $entity
-     * @param string $methodName
+     * @param string $method
      * @param string $methodName
      *
      * @return array
