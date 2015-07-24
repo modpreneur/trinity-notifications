@@ -23,6 +23,9 @@ abstract class BaseTest extends WebTestCase
 
 
 
+    /**
+     * Create kernel
+     */
     public function setUp()
     {
         $this->kernelObject = self::createKernel();
@@ -34,6 +37,9 @@ abstract class BaseTest extends WebTestCase
 
 
 
+    /**
+     * shutdown kernel
+     */
     public function tearDown()
     {
         $this->kernelObject->shutdown();
@@ -41,6 +47,11 @@ abstract class BaseTest extends WebTestCase
 
 
 
+    /**
+     * @param string|object $class
+     * @param string $name
+     * @return \ReflectionMethod
+     */
     protected static function getMethod($class, $name)
     {
         $class = new ReflectionClass($class);

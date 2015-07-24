@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
 
-
 /**
  * Class TestEntity
  * @package Trinity\NotificationBundle\Tests\Entity

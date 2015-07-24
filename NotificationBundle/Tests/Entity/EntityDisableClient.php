@@ -1,7 +1,10 @@
 <?php
 
-
 namespace Trinity\NotificationBundle\Tests\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
+
 
 /**
  * Class TestEntity
@@ -9,15 +12,14 @@ namespace Trinity\NotificationBundle\Tests\Entity;
  *
  * @ORM\Entity()
  *
- * @Notification\Source(columns="id, name, desc, date")
+ * @Notification\Source(columns="id, name, description")
  * @Notification\Methods(types={"put", "post", "delete"})
  *
  */
-class EntityWithoutClient
+class EntityDisableClient
 {
-
     /** @var  int */
-    private $id;
+    private $id = 1;
 
     /** @var  string */
     private $name;
@@ -40,7 +42,7 @@ class EntityWithoutClient
      */
     public function getName()
     {
-        return "Someone's name";
+        return "Disable Client";
     }
 
 
@@ -50,7 +52,7 @@ class EntityWithoutClient
      */
     public function getDescription()
     {
-        return "Lorem impsu";
+        return "Disable client description.";
     }
 
 
@@ -58,7 +60,9 @@ class EntityWithoutClient
     /** @return Client[] */
     public function getClients()
     {
-        return [];
-    }
+        $c = new Client();
+        $c->setEnableNotification(false);
 
+        return [$c];
+    }
 }

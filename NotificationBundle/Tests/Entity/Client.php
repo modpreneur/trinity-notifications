@@ -6,9 +6,13 @@ use Trinity\FrameworkBundle\Entity\IClient;
 
 
 
+/**
+ * Class Client
+ * @package Trinity\NotificationBundle\Tests\Entity
+ */
 class Client implements IClient
 {
-
+    /** @var  bool */
     private $enable;
 
 
@@ -21,6 +25,9 @@ class Client implements IClient
 
 
 
+    /**
+     * @param bool $e
+     */
     public function setEnableNotification($e)
     {
         $this->enable = $e;
@@ -28,6 +35,9 @@ class Client implements IClient
 
 
 
+    /**
+     * @return bool
+     */
     public function isNotificationEnabled()
     {
         return $this->enable;
@@ -35,6 +45,9 @@ class Client implements IClient
 
 
 
+    /**
+     * @return string
+     */
     public function getSecret()
     {
         return "8rsxbgk63b40k8g0cs00ks0s8s0co0884sk4swgk04s8sk8ck";

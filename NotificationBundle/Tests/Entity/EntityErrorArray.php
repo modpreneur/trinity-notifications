@@ -7,7 +7,6 @@ use JMS\Serializer\Annotation\SerializedName;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
 
-
 /**
  * Class TestEntity
  * @package Trinity\NotificationBundle\Tests\Entity

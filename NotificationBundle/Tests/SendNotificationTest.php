@@ -1,7 +1,6 @@
 <?php
 namespace Trinity\NotificationBundle\Tests;
 
-use Trinity\NotificationBundle\Tests\Entity\EntityErrorArray;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -30,6 +29,9 @@ class SendNotificationTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testUrl()
     {
         $service = $this->container->get('trinity.notification.client_sender');
@@ -68,6 +70,7 @@ class SendNotificationTest extends BaseTest
 
 
     /**
+     * @test
      */
     public function testSendEntity()
     {

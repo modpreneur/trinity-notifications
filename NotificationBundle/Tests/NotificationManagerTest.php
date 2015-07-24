@@ -6,14 +6,20 @@ use Closure;
 use Doctrine\Common\Collections\Collection;
 use Traversable;
 use Trinity\NotificationBundle\Tests\Entity\Client;
+use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
-
+/**
+ * Class NotificationManagerTest
+ * @package Trinity\NotificationBundle\Tests
+ */
 class NotificationManagerTest extends BaseTest
 {
-
+    /**
+     * @test
+     */
     public function testClientToArray()
     {
         $manager = $this->container->get("trinity.notification.client_sender");
@@ -75,6 +81,9 @@ class NotificationManagerTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testPrepareURLs()
     {
 
@@ -92,6 +101,9 @@ class NotificationManagerTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testJsonEncodeObject()
     {
         $manager = $this->container->get("trinity.notification.client_sender");
@@ -144,13 +156,30 @@ class NotificationManagerTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testSendWithoutClient()
     {
         $manager = $this->container->get("trinity.notification.client_sender");
 
         $entity = new EntityWithoutClient();
 
-        $manager->send($entity);
+        $result = $manager->send($entity);
+        $this->assertEmpty($result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function testSendWithDisableClient()
+    {
+        $manager = $this->container->get("trinity.notification.client_sender");
+        $entity = new EntityDisableClient();
+        $result = $manager->send($entity);
+
+        $this->assertEmpty($result);
     }
 
 }

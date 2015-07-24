@@ -11,11 +11,16 @@ use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
-
+/**
+ * Class NotificationUtilsTest
+ * @package Trinity\NotificationBundle\Tests
+ */
 class NotificationUtilsTest extends BaseTest
 {
 
-
+    /**
+     * @test
+     */
     public function testCheckIsObjectEntity()
     {
         $utils = $this->container->get("trinity.notification.utils");
@@ -43,6 +48,9 @@ class NotificationUtilsTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testHasSource()
     {
         $utils = $this->container->get("trinity.notification.utils");
@@ -56,6 +64,9 @@ class NotificationUtilsTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testHTTPMethodForEntity()
     {
         $utils = $this->container->get("trinity.notification.utils");
@@ -69,6 +80,9 @@ class NotificationUtilsTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testClassAnnotations()
     {
         $utils = $this->container->get("trinity.notification.annotations.utils");
@@ -81,6 +95,9 @@ class NotificationUtilsTest extends BaseTest
 
 
 
+    /**
+     * @test
+     */
     public function testURLPostfix()
     {
         $utils = $this->container->get("trinity.notification.utils");
@@ -197,6 +214,10 @@ class NotificationUtilsTest extends BaseTest
     }
 
 
+
+    /**
+     * @test
+     */
     public function testEntityToArrayMethodDate(){
         $utils = $this->container->get("trinity.notification.entityConverter");
         $class = (get_class($utils));

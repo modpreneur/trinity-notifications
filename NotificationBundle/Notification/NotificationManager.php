@@ -82,7 +82,6 @@ class NotificationManager
         if ($clients) {
             foreach ($clients as $client) {
 
-
                 if (!$client->isNotificationEnabled()) {
                     continue;
                 }

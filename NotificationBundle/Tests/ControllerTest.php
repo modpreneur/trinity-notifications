@@ -2,10 +2,16 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
-
+/**
+ * Class ControllerTest
+ * @package Trinity\NotificationBundle\Tests
+ */
 class ControllerTest extends BaseTest
 {
 
+    /**
+     *  Controller
+     */
     public function testController()
     {
         $processor = $this->container->get("trinity.notification.utils");

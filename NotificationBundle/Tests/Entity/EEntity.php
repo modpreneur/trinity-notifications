@@ -6,7 +6,6 @@ use JMS\Serializer\Annotation\SerializedName;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
 
-
 /**
  * Class TestEntity
  * @package Trinity\NotificationBundle\Tests\Entity
@@ -26,19 +25,24 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 class EEntity
 {
 
-
+    /**
+     * @var int
+     */
     private $id = 1;
 
+    /**
+     * @var string
+     */
     private $name = "EE Entity";
-
-
 
     /**
      * @SerializedName("description")
      */
     private $desc = "Description for entity.";
 
-
+    /**
+     * @var \DateTime
+     */
     private $date;
 
 
@@ -93,6 +97,9 @@ class EEntity
 
 
 
+    /**
+     * @return string
+     */
     public function getDesc()
     {
         return $this->desc;

@@ -49,7 +49,6 @@ class EntityConverter
      */
     private function processProperty($entity, $property, $methodName)
     {
-        $resultArray = [];
         $reflectionProperty = new \ReflectionProperty($entity, $property);
 
         $annotation = $this->annotationsUtils->getReader()->getPropertyAnnotation(
@@ -61,16 +60,7 @@ class EntityConverter
             $property = $annotation->name;
         }
 
-        try {
-            $resultArray[$property] = call_user_func_array(array($entity, $methodName), []);
-
-            if ($resultArray[$property] instanceof \DateTime) {
-                $resultArray[$property] = $resultArray[$property]->format('Y-m-d H:i:s');
-            }
-        } catch (\Exception $ex) {
-            $resultArray[$property] = null;
-        }
-
+        $resultArray = $this->processGetMethod($entity, $property, $methodName);
         return $resultArray;
     }
 
@@ -142,8 +132,6 @@ class EntityConverter
      */
     private function processMethod($entity, $method, $methodName)
     {
-        $resultArray = [];
-
         if(method_exists($entity, $method)){
             $methodName = $method;
         }
@@ -159,13 +147,28 @@ class EntityConverter
             $method = $annotation->name;
         }
 
+        $resultArray = $this->processGetMethod($entity, $method, $methodName);
+        return $resultArray;
+    }
+
+
+
+    /**
+     * @param object $entity
+     * @param string $name
+     * @param string $longName (getName)
+     *
+     * @return array
+     */
+    private function processGetMethod($entity, $name, $longName){
+
         try {
-            $resultArray[$method] = call_user_func_array(array($entity, $methodName), []);
-            if ($resultArray[$method] instanceof \DateTime) {
-                $resultArray[$method] = $resultArray[$method]->format('Y-m-d H:i:s');
+            $resultArray[$name] = call_user_func_array(array($entity, $longName), []);
+            if ($resultArray[$name] instanceof \DateTime) {
+                $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
             }
         } catch (\Exception $ex) {
-            $resultArray[$method] = null;
+            $resultArray[$name] = null;
         }
 
         return $resultArray;

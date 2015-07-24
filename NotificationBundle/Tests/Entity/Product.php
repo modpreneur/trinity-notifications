@@ -6,10 +6,8 @@
 
 namespace Trinity\NotificationBundle\Tests\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
-
 
 
 /**
@@ -25,10 +23,13 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 class Product
 {
 
+    /** @var  int */
     private $id;
 
+    /** @var  string */
     private $name;
 
+    /** @var  string */
     private $description;
 
 
@@ -41,6 +42,9 @@ class Product
 
 
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return "Someone's name";
@@ -48,6 +52,9 @@ class Product
 
 
 
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         return "Lorem impsu";
