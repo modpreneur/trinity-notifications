@@ -2,9 +2,8 @@
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\SerializedName;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
+
 
 
 /**
@@ -20,7 +19,8 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 class EntityMethodDate
 {
 
-    public function getDate(){
+    public function getDate()
+    {
         return new \DateTime('2010-11-12');
     }
 

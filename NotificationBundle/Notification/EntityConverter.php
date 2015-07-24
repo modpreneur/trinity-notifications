@@ -61,6 +61,7 @@ class EntityConverter
         }
 
         $resultArray = $this->processGetMethod($entity, $property, $methodName);
+
         return $resultArray;
     }
 
@@ -102,7 +103,9 @@ class EntityConverter
         foreach ($columns as $property) {
             $methodName = "get".ucfirst($property);
 
-            if($property === "*") continue;
+            if ($property === "*") {
+                continue;
+            }
 
             if (property_exists($entity, $property)) {
                 $array = $this->processProperty($entity, $property, $methodName);
@@ -132,7 +135,7 @@ class EntityConverter
      */
     private function processMethod($entity, $method, $methodName)
     {
-        if(method_exists($entity, $method)){
+        if (method_exists($entity, $method)) {
             $methodName = $method;
         }
 
@@ -148,6 +151,7 @@ class EntityConverter
         }
 
         $resultArray = $this->processGetMethod($entity, $method, $methodName);
+
         return $resultArray;
     }
 
@@ -160,7 +164,8 @@ class EntityConverter
      *
      * @return array
      */
-    private function processGetMethod($entity, $name, $longName){
+    private function processGetMethod($entity, $name, $longName)
+    {
 
         try {
             $resultArray[$name] = call_user_func_array(array($entity, $longName), []);

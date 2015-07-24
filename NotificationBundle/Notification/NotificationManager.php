@@ -109,6 +109,8 @@ class NotificationManager
             }
         }
 
+        //dump($url);
+
         $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
 
         return $response;

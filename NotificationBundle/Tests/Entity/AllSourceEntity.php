@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
 
+
 /**
  * Class TestEntity
  * @package Trinity\NotificationBundle\Tests\Entity
@@ -18,16 +19,16 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
  */
 class AllSourceEntity
 {
-    /** @var int  */
+    /** @var int */
     private $id = 1;
 
-    /** @var string  */
+    /** @var string */
     private $name = "All source";
 
-    /** @var string  */
+    /** @var string */
     private $description = "Description text.";
 
-    /** @var string  */
+    /** @var string */
     private $price = "10$";
 
 

@@ -11,6 +11,7 @@ use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
+
 /**
  * Class NotificationManagerTest
  * @package Trinity\NotificationBundle\Tests
@@ -168,6 +169,7 @@ class NotificationManagerTest extends BaseTest
         $result = $manager->send($entity);
         $this->assertEmpty($result);
     }
+
 
 
     /**

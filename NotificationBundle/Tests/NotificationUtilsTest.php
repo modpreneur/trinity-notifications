@@ -11,6 +11,7 @@ use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
+
 /**
  * Class NotificationUtilsTest
  * @package Trinity\NotificationBundle\Tests
@@ -202,7 +203,7 @@ class NotificationUtilsTest extends BaseTest
             "description" => "Description for entity.",
             'date' => "2010-11-12 00:00:00",
             'fullPrice' => '10$',
-            'test-method' => 'test'
+            'test-method' => 'test',
         ];
 
         $arrayEE = $utils->toArray($p);
@@ -218,16 +219,17 @@ class NotificationUtilsTest extends BaseTest
     /**
      * @test
      */
-    public function testEntityToArrayMethodDate(){
+    public function testEntityToArrayMethodDate()
+    {
         $utils = $this->container->get("trinity.notification.entityConverter");
         $class = (get_class($utils));
         $method = $this->getMethod($class, "processMethod");
 
         $entity = new EntityMethodDate();
 
-        $array = $method->invokeArgs( $utils, [$entity, 'date', 'getDate'] );
+        $array = $method->invokeArgs($utils, [$entity, 'date', 'getDate']);
 
-        $this->assertEquals([ 'date' => '2010-11-12 00:00:00'], $array );
+        $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
 
     /*

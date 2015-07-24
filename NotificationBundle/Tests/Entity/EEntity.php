@@ -6,6 +6,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
 
+
 /**
  * Class TestEntity
  * @package Trinity\NotificationBundle\Tests\Entity
@@ -136,15 +137,19 @@ class EEntity
     }
 
 
-    public function getFullPrice(){
+
+    public function getFullPrice()
+    {
         return "10$";
     }
+
 
 
     /**
      * @SerializedName("test-method")
      */
-    public function testMethod(){
+    public function testMethod()
+    {
         return 'test';
     }
 
