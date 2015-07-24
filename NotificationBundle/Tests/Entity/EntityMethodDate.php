@@ -19,6 +19,9 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 class EntityMethodDate
 {
 
+    /**
+     * @return \DateTime
+     */
     public function getDate()
     {
         return new \DateTime('2010-11-12');

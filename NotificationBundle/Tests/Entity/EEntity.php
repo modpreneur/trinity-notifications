@@ -138,6 +138,9 @@ class EEntity
 
 
 
+    /**
+     * @return string
+     */
     public function getFullPrice()
     {
         return "10$";
@@ -147,6 +150,8 @@ class EEntity
 
     /**
      * @SerializedName("test-method")
+     *
+     * @return string
      */
     public function testMethod()
     {

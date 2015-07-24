@@ -90,7 +90,7 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::PUT);
         }
 
-        return FALSE;
+        return false;
     }
 
 
@@ -106,6 +106,7 @@ class EntityListener
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->em = $args->getEntityManager();
+
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
 
@@ -159,9 +160,9 @@ class EntityListener
 
         $uow = $em->getUnitOfWork();
         $list = [];
-        $doSendNotification = FALSE;
+        $doSendNotification = false;
 
-        if($uow){
+        if ($uow) {
             $uow->computeChangeSets();
             $changeset = $uow->getEntityChangeSet($entity);
 
@@ -172,17 +173,16 @@ class EntityListener
             }
 
             $doSendNotification = count($list) > 0;
-        }else{
-            $doSendNotification = TRUE;
+        } else {
+            $doSendNotification = true;
         }
 
-        if ( $this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === "DELETE" ) {
+        if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === "DELETE") {
             return $this->notificationSender->send($entity, $method);
         }
 
-        return FALSE;
+        return false;
     }
-
 
 
 
