@@ -2,7 +2,11 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\UnitOfWork;
+use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
@@ -14,21 +18,6 @@ use Trinity\NotificationBundle\Tests\Entity\Product;
  */
 class EventListenerTest extends BaseTest
 {
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    private function getEM()
-    {
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')->setMethods(
-                array('getRepository')
-            )->disableOriginalConstructor()->getMock();
-
-        return $em;
-    }
-
-
-
     /**
      * @test
      */
@@ -52,10 +41,19 @@ class EventListenerTest extends BaseTest
             $ev->postUpdate($args)
         );
 
+
         $object = new EntityDisableClient();
         $args = new LifecycleEventArgs(
             $object, $em
         );
+
+        $this->assertEmpty($ev->postUpdate($args));
+
+        $request = new Request();
+        $request->query->add(
+            ["_controller" => "\\Trinity\\NotificationBundle\\Tests\\Controllers\\ActiveController::disableNotification"]
+        );
+        $ev->setRequest($request);
 
         $this->assertEmpty($ev->postUpdate($args));
     }
@@ -97,6 +95,85 @@ class EventListenerTest extends BaseTest
         $this->assertContains("ERROR", $result);
     }
 
+
+
+    /**
+     * @test
+     */
+    public function testPreFlush()
+    {
+        $em = $this->getEM();
+        $ev = $this->container->get("trinity.notification.entity_listener");
+
+        $object = new Product();
+
+        $refProp = new \ReflectionProperty($ev, 'entity');
+        $refProp->setAccessible(true);
+        $refProp->setValue($ev, $object);
+
+        $args = new PreFlushEventArgs(
+            $em
+        );
+
+        $this->assertSame(
+            [
+                "code" => 200,
+                "statusCode" => 200,
+                "message" => "OK",
+            ],
+            $ev->preFlush($args)
+        );
+
+        $refProp->setValue($ev, NULL);
+
+        $this->assertSame(
+            NULL,
+            $ev->preFlush($args)
+        );
+    }
+
+
+
+    /**
+     * @test
+     */
+    public function testSendNotification()
+    {
+        $em = $this->getEM();
+        $ev = $this->container->get("trinity.notification.entity_listener");
+
+        $sendNotification = $this->getMethod($ev, "sendNotification");
+
+        $entity = new Product();
+
+        $this->assertEquals(FALSE, $sendNotification->invokeArgs($ev, [$em, new \stdClass(), "no-method"]));
+        $this->assertEquals(FALSE, $sendNotification->invokeArgs($ev, [$em, new Product(), "no-method"]));
+
+
+        $refPropConf = new \ReflectionProperty( "\\Doctrine\\ORM\\EntityManager", "config" );
+        $refPropConf->setAccessible(TRUE);
+        $refPropConf->setValue($em, new Configuration());
+
+        $refPropUnitOfWork = new \ReflectionProperty( "\\Doctrine\\ORM\\EntityManager", "unitOfWork" );
+        $refPropUnitOfWork->setAccessible(TRUE);
+
+        $unitOfWork = $this->getMock(
+            "\\Doctrine\\ORM\\UnitOfWork",
+            [], [$em]
+        );
+
+        $unitOfWork->expects($this->any())
+            ->method('getEntityChangeSet')
+            ->willReturn(['name' => 'New Name', 'description' => 'New description.' ]);
+
+        $refPropUnitOfWork->setValue($em, $unitOfWork);
+        $this->assertEquals([
+            "code" => 200,
+            "statusCode" => 200,
+            "message" => "OK"
+
+        ], $sendNotification->invokeArgs($ev, [$em, $entity, "POST"]));
+    }
 }
 
 

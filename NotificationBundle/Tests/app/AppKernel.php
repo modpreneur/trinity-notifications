@@ -5,8 +5,14 @@ use Symfony\Component\HttpKernel\Kernel;
 
 
 
+/**
+ * Class AppKernel
+ */
 class AppKernel extends Kernel
 {
+    /**
+     * @return array
+     */
     public function registerBundles()
     {
         return array(
@@ -18,6 +24,9 @@ class AppKernel extends Kernel
 
 
 
+    /**
+     * @param LoaderInterface $loader
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config.yml');
@@ -30,7 +39,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return sys_get_temp_dir().'/./cache';
+        return __DIR__ . '/./cache';
     }
 
 
@@ -40,6 +49,6 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return sys_get_temp_dir().'/./logs';
+        return  __DIR__ . '/./logs';
     }
 }

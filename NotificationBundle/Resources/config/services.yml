@@ -34,4 +34,4 @@ services:
             - { name: doctrine.event_listener, event: preRemove,   priority: 255 }
             - { name: doctrine.event_listener, event: preFlush,    priority: 255 }
         calls:
-            - [setRequest, [@request_stack]]
+            - [setRequestStack, [@request_stack]]

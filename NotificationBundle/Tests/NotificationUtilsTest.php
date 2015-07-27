@@ -232,7 +232,7 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
 
-    /*
+    /* ?? 
     public function testEntityToArrayMethodDateError(){
         $utils = $this->container->get("trinity.notification.entityConverter");
         $class = (get_class($utils));

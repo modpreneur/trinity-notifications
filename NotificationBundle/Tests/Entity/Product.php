@@ -25,20 +25,20 @@ class Product
 {
 
     /** @var  int */
-    private $id;
+    private $id = 1;
 
     /** @var  string */
-    private $name;
+    private $name = "Someone's name";
 
     /** @var  string */
-    private $description;
+    private $description = "Lorem impsu";
 
 
 
     /** @return int */
     public function getId()
     {
-        return 1;
+        return $this->id;
     }
 
 
@@ -48,7 +48,7 @@ class Product
      */
     public function getName()
     {
-        return "Someone's name";
+        return $this->name;
     }
 
 
@@ -58,7 +58,7 @@ class Product
      */
     public function getDescription()
     {
-        return "Lorem impsu";
+        return $this->description;
     }
 
 

@@ -20,7 +20,8 @@ class ControllerTest extends BaseTest
         $this->assertTrue($processor->isControllerOrActionDisabled($controller));
         $controller = new Controllers\ActiveController();
 
-        $this->assertTrue($processor->isControllerOrActionDisabled($controller, "disableNotificationAction"));
-        $this->assertFalse($processor->isControllerOrActionDisabled($controller, "activeNotificationAction"));
+        $this->assertFalse($processor->isControllerOrActionDisabled($controller, "disableNotificationAction"));
+        $this->assertTrue($processor->isControllerOrActionDisabled($controller, "activeNotificationAction"));
     }
+
 }

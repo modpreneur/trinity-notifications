@@ -1,4 +1,5 @@
 <?php
+
 namespace Trinity\NotificationBundle\Tests;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -9,6 +10,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 
 
+/**
+ * Class BaseTest
+ * @package Trinity\NotificationBundle\Tests
+ */
 abstract class BaseTest extends WebTestCase
 {
 
@@ -60,4 +65,20 @@ abstract class BaseTest extends WebTestCase
 
         return $method;
     }
+
+
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected function getEM()
+    {
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')->setMethods(
+                ['getRepository']
+            )->disableOriginalConstructor()->getMock();
+
+        return $em;
+    }
+
+
 }
