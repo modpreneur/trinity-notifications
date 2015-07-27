@@ -26,7 +26,7 @@ class SendEvent extends Event
     /**
      * @param object $entity
      */
-    function __construct($entity)
+    public function __construct($entity)
     {
         $this->entity = $entity;
     }

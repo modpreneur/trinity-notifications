@@ -39,7 +39,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return __DIR__ . '/./cache';
+        return __DIR__.'/./cache';
     }
 
 
@@ -49,6 +49,6 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return  __DIR__ . '/./logs';
+        return __DIR__.'/./logs';
     }
 }

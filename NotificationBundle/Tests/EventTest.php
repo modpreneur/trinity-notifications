@@ -8,6 +8,7 @@ use Trinity\NotificationBundle\Tests\Entity\Client;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
+
 /**
  * Class EventTest
  * @package Trinity\NotificationBundle\Tests

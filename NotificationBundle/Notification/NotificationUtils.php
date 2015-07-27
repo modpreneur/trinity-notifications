@@ -51,8 +51,8 @@ class NotificationUtils
             $entity,
             AnnotationsUtils::ANNOTATION_METHOD_CLASS
         );
-        if ($classAnnotation === NULL) {
-            return TRUE;
+        if ($classAnnotation === null) {
+            return true;
         }
 
         return $classAnnotation->hasType($method);
@@ -74,7 +74,7 @@ class NotificationUtils
             AnnotationsUtils::ANNOTATION_CLASS
         );
 
-        return ($classSourceAnnotation !== NULL);
+        return ($classSourceAnnotation !== null);
     }
 
 
@@ -85,16 +85,16 @@ class NotificationUtils
      *
      * @return mixed|null|string
      */
-    public function getUrlPostfix($entity, $method = NULL)
+    public function getUrlPostfix($entity, $method = null)
     {
         $annotations = $this->annotationsUtils->getClassAnnotations(
             $entity,
             AnnotationsUtils::ANNOTATION_URL_CLASS
         );
-        $postfix = NULL;
+        $postfix = null;
 
         if (!empty($annotations)) {
-            if ($method === NULL) {
+            if ($method === null) {
                 foreach ($annotations as $annotation) {
                     if ($annotation->isWithoutMethods()) {
                         $postfix = $annotation->getPostfix();
@@ -110,7 +110,7 @@ class NotificationUtils
             }
         }
 
-        if ($postfix === NULL) {
+        if ($postfix === null) {
             $reflectionClass = new \ReflectionClass($entity);
             $className = strtolower(preg_replace('/([A-Z])/', '-$1', lcfirst($reflectionClass->getShortName())));
             $postfix = $className;
@@ -146,23 +146,19 @@ class NotificationUtils
      */
     public function getControllerActionAnnotation($class, $action, $annotationClass)
     {
-        $annotationsSource = NULL;
+        $annotationsSource = null;
         $obj = new \ReflectionClass($class);
 
         foreach ($obj->getMethods() as $method) {
             if ($action == $method->getName()) {
-                $annotationsSource =
-                    $this
-                        ->annotationsUtils
-                        ->getReader()
-                        ->getMethodAnnotations($method);
+                $annotationsSource = $this->annotationsUtils->getReader()->getMethodAnnotations($method);
                 break;
             }
         }
 
         $actionAnnotations = [];
 
-        if($annotationsSource) {
+        if ($annotationsSource) {
             foreach ($annotationsSource as $annotations) {
                 if ($annotations instanceof $annotationClass) {
                     $actionAnnotations[] = $annotations;
@@ -172,10 +168,11 @@ class NotificationUtils
 
         //dump(reset($actionAnnotations));
 
-        if(!empty($actionAnnotations))
+        if (!empty($actionAnnotations)) {
             $result = reset($actionAnnotations);
-        else
-            $result = NULL;
+        } else {
+            $result = null;
+        }
 
         return $result;
     }
@@ -195,15 +192,15 @@ class NotificationUtils
             AnnotationsUtils::DISABLE_ANNOTATION_CLASS
         );
 
-        if ($annotations !== NULL) {
-            return TRUE;
+        if ($annotations !== null) {
+            return true;
         }
 
         return ($this->getControllerActionAnnotation(
             $controller,
             $action,
             AnnotationsUtils::DISABLE_ANNOTATION_CLASS
-        )) === NULL;
+        )) === null;
     }
 
 }

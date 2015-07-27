@@ -74,8 +74,8 @@ abstract class BaseTest extends WebTestCase
     protected function getEM()
     {
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')->setMethods(
-                ['getRepository']
-            )->disableOriginalConstructor()->getMock();
+            ['getRepository']
+        )->disableOriginalConstructor()->getMock();
 
         return $em;
     }

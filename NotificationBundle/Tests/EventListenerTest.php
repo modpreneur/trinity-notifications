@@ -5,7 +5,6 @@ namespace Trinity\NotificationBundle\Tests;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
-use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
@@ -124,10 +123,10 @@ class EventListenerTest extends BaseTest
             $ev->preFlush($args)
         );
 
-        $refProp->setValue($ev, NULL);
+        $refProp->setValue($ev, null);
 
         $this->assertSame(
-            NULL,
+            null,
             $ev->preFlush($args)
         );
     }
@@ -146,33 +145,37 @@ class EventListenerTest extends BaseTest
 
         $entity = new Product();
 
-        $this->assertEquals(FALSE, $sendNotification->invokeArgs($ev, [$em, new \stdClass(), "no-method"]));
-        $this->assertEquals(FALSE, $sendNotification->invokeArgs($ev, [$em, new Product(), "no-method"]));
+        $this->assertEquals(false, $sendNotification->invokeArgs($ev, [$em, new \stdClass(), "no-method"]));
+        $this->assertEquals(false, $sendNotification->invokeArgs($ev, [$em, new Product(), "no-method"]));
 
 
-        $refPropConf = new \ReflectionProperty( "\\Doctrine\\ORM\\EntityManager", "config" );
-        $refPropConf->setAccessible(TRUE);
+        $refPropConf = new \ReflectionProperty("\\Doctrine\\ORM\\EntityManager", "config");
+        $refPropConf->setAccessible(true);
         $refPropConf->setValue($em, new Configuration());
 
-        $refPropUnitOfWork = new \ReflectionProperty( "\\Doctrine\\ORM\\EntityManager", "unitOfWork" );
-        $refPropUnitOfWork->setAccessible(TRUE);
+        $refPropUnitOfWork = new \ReflectionProperty("\\Doctrine\\ORM\\EntityManager", "unitOfWork");
+        $refPropUnitOfWork->setAccessible(true);
 
         $unitOfWork = $this->getMock(
             "\\Doctrine\\ORM\\UnitOfWork",
-            [], [$em]
+            [],
+            [$em]
         );
 
-        $unitOfWork->expects($this->any())
-            ->method('getEntityChangeSet')
-            ->willReturn(['name' => 'New Name', 'description' => 'New description.' ]);
+        $unitOfWork->expects($this->any())->method('getEntityChangeSet')->willReturn(
+                ['name' => 'New Name', 'description' => 'New description.']
+            );
 
         $refPropUnitOfWork->setValue($em, $unitOfWork);
-        $this->assertEquals([
-            "code" => 200,
-            "statusCode" => 200,
-            "message" => "OK"
+        $this->assertEquals(
+            [
+                "code" => 200,
+                "statusCode" => 200,
+                "message" => "OK",
 
-        ], $sendNotification->invokeArgs($ev, [$em, $entity, "POST"]));
+            ],
+            $sendNotification->invokeArgs($ev, [$em, $entity, "POST"])
+        );
     }
 }
 

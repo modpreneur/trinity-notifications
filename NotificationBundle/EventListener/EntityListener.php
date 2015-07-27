@@ -60,10 +60,8 @@ class EntityListener
      * @param NotificationManager $notificationSender
      * @param NotificationUtils $annotationProcessor
      */
-    function __construct(
-        NotificationManager $notificationSender,
-        NotificationUtils $annotationProcessor
-    ) {
+    public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
+    {
         $this->notificationSender = $notificationSender;
         $this->processor = $annotationProcessor;
     }
@@ -71,11 +69,11 @@ class EntityListener
 
 
     /**
-     * @param RequestStack $request_stack
+     * @param RequestStack $requestStack
      */
-    public function setRequestStack(RequestStack $request_stack)
+    public function setRequestStack(RequestStack $requestStack)
     {
-        $this->request = $request_stack->getCurrentRequest();
+        $this->request = $requestStack->getCurrentRequest();
     }
 
 
@@ -87,6 +85,7 @@ class EntityListener
     {
         $this->request = $request;
     }
+
 
 
     /**
@@ -106,7 +105,7 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::PUT);
         }
 
-        return FALSE;
+        return false;
     }
 
 
@@ -152,7 +151,7 @@ class EntityListener
     public function preFlush(PreFlushEventArgs $args)
     {
         $entity = $this->entity;
-        $this->entity = NULL;
+        $this->entity = null;
 
         if ($entity) {
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
@@ -171,14 +170,14 @@ class EntityListener
     private function sendNotification(EntityManager $em, $entity, $method)
     {
         if (!$this->processor->isNotificationEntity($entity)) {
-            return FALSE;
+            return false;
         }
 
         $uow = $em->getUnitOfWork();
         $list = [];
-        $doSendNotification = FALSE;
+        $doSendNotification = false;
 
-        if ( $uow ) {
+        if ($uow) {
             $uow->computeChangeSets();
             $changeset = $uow->getEntityChangeSet($entity);
 
@@ -187,16 +186,16 @@ class EntityListener
                     $list[] = $index;
                 }
             }
-            $doSendNotification = ( count($list) > 0 );
+            $doSendNotification = (count($list) > 0);
         } else {
-            $doSendNotification = TRUE;
+            $doSendNotification = true;
         }
 
-        if ( $this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === "DELETE" ) {
+        if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === "DELETE") {
             return $this->notificationSender->send($entity, $method);
         }
 
-        return FALSE;
+        return false;
     }
 
 
@@ -205,7 +204,7 @@ class EntityListener
      * @param bool $default (if request not set)
      * @return bool
      */
-    private function isNotificationEnabledForController($default = TRUE)
+    private function isNotificationEnabledForController($default = true)
     {
         if ($this->request) {
             $_controller = $this->request->get('_controller');

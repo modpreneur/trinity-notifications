@@ -35,7 +35,7 @@ class AnnotationsUtils
     /**
      * @param Reader|null $reader
      */
-    function __construct(Reader $reader = null)
+    public function __construct(Reader $reader = null)
     {
         $this->reader = $reader;
 
