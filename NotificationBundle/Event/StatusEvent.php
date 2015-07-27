@@ -47,14 +47,16 @@ class StatusEvent extends Event
 
 
     /**
-     * @param $client
-     * @param $entityName
-     * @param $entityId
-     * @param $url
-     * @param $json
-     * @param $method
+     *
+     * @param IClient $client
+     * @param string $entityName
+     * @param int $entityId
+     * @param string $url
+     * @param string $json
+     * @param string $method
      * @param \Exception|null $exception
      * @param string $message
+     *
      */
     public function __construct(
         $client,
@@ -65,7 +67,8 @@ class StatusEvent extends Event
         $method,
         \Exception $exception = null,
         $message = self::NULL_MESSAGE
-    ){
+    )
+    {
         $this->exception = $exception;
         $this->entityName = $entityName;
         $this->method = $method;

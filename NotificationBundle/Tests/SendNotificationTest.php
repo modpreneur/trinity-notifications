@@ -1,4 +1,8 @@
 <?php
+/**
+ *  This file is part of the Trinity project.
+ */
+
 namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Tests\Entity\Product;
@@ -7,6 +11,7 @@ use Trinity\NotificationBundle\Tests\Entity\Product;
 
 /**
  * Class SendNotificationTest
+ *
  * @package Trinity\NotificationBundle\Tests
  *
  *
@@ -15,6 +20,9 @@ use Trinity\NotificationBundle\Tests\Entity\Product;
  */
 class SendNotificationTest extends BaseTest
 {
+    /**
+     * @test
+     */
     public function testEntityToArray()
     {
         $service = $this->container->get('trinity.notification.client_sender');
