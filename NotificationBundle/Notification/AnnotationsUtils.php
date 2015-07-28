@@ -1,5 +1,7 @@
 <?php
 /*
+ *
+ *
  * This file is part of the Trinity project.
  */
 
@@ -14,6 +16,7 @@ use Trinity\NotificationBundle\Exception\SourceException;
 
 /**
  * Class AnnotationsUtils
+ *
  * @package Trinity\NotificationBundle\Notification
  */
 class AnnotationsUtils
