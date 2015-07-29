@@ -149,8 +149,8 @@ class EventListenerTest extends BaseTest
         );
 
         $unitOfWork->expects($this->any())->method('getEntityChangeSet')->willReturn(
-                ['name' => 'New Name', 'description' => 'New description.']
-            );
+            ['name' => 'New Name', 'description' => 'New description.']
+        );
 
         $refPropUnitOfWork->setValue($em, $unitOfWork);
         $this->assertEquals(

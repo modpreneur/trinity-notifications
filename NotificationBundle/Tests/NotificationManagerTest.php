@@ -163,7 +163,11 @@ class NotificationManagerTest extends BaseTest
     }
 }
 
-// Test collection
+
+/**
+ * Class TestCollection
+ * @package Trinity\NotificationBundle\Tests
+ */
 class TestCollection implements Collection
 {
     /**
