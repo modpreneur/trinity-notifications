@@ -91,6 +91,7 @@
             <arg value="${workspace}/phpmd.xml"/>
             <arg value="--reportfile"/>
             <arg value="${builddir}/logs/pmd.xml"/>
+            <arg value="--exclude=${sourcedir}/Tests/"/>
         </exec>
     </target>
 
