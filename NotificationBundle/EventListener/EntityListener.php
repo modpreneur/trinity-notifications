@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
-
-
 /**
  * Class EntityListener.
  *
@@ -56,7 +54,7 @@ class EntityListener
 
     /**
      * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationSender
-     * @param NotificationUtils   $annotationProcessor
+     * @param NotificationUtils                                            $annotationProcessor
      */
     public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
     {

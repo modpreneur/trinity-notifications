@@ -1,17 +1,16 @@
 <?php
+
 /*
  * This file is part of the Trinity project.
  */
 
 namespace Trinity\NotificationBundle\Tests;
+
 use Doctrine\Common\Collections\Collection;
 use Trinity\NotificationBundle\Tests\Entity\Client;
 
-
-
 /**
- * Class TestCollection
- * @package Trinity\NotificationBundle\Tests
+ * Class TestCollection.
  */
 class TestCollection implements Collection
 {

@@ -2,9 +2,7 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
-use Closure;
 use Doctrine\Common\Collections\Collection;
-use Traversable;
 use Trinity\NotificationBundle\Tests\Entity\Client;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;

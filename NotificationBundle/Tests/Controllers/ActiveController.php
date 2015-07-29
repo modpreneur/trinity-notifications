@@ -1,15 +1,14 @@
 <?php
+
 /**
  * This file is part of the Trinity project.
  */
-
 namespace Trinity\NotificationBundle\Tests\Controllers;
-use Trinity\AnnotationsBundle\Annotations\Notification\DisableNotification;
 
+use Trinity\NotificationBundle\Annotations\DisableNotification;
 
 /**
- * Class ActiveController
- * @package Trinity\NotificationBundle\Tests\Controllers
+ * Class ActiveController.
  */
 class ActiveController
 {
@@ -20,10 +19,8 @@ class ActiveController
     {
     }
 
-
-
     /**
-     * Test action
+     * Test action.
      */
     public function activeNotificationAction()
     {

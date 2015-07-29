@@ -7,7 +7,7 @@
 
 namespace Trinity\NotificationBundle\Notification\Annotations;
 
-use Trinity\AnnotationsBundle\Annotations\Notification\Methods;
+use Trinity\NotificationBundle\Annotations\Methods;
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 

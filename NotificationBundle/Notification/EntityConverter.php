@@ -77,7 +77,7 @@ class EntityConverter
     {
         $entityArray = [];
 
-        /** @var \Trinity\AnnotationsBundle\Annotations\Notification\Source $entityDataSource */
+        /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
         $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
         $columns = $entityDataSource->getColumns();
 

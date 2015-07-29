@@ -15,10 +15,10 @@ use Trinity\NotificationBundle\Exception\SourceException;
  */
 class AnnotationsUtils
 {
-    const ANNOTATION_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Source';
-    const ANNOTATION_METHOD_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Methods';
-    const ANNOTATION_URL_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Url';
-    const DISABLE_ANNOTATION_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\DisableNotification';
+    const ANNOTATION_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\Source';
+    const ANNOTATION_METHOD_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\Methods';
+    const ANNOTATION_URL_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\Url';
+    const DISABLE_ANNOTATION_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DisableNotification';
     const SERIALIZED_NAME = '\\JMS\\Serializer\\Annotation\\SerializedName';
     const FIX_NAMESPACE = 'Proxies\\__CG__\\';
 

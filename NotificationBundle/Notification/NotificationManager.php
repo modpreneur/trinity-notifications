@@ -18,8 +18,6 @@ use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 
-
-
 /**
  * Class NotificationManager.
  */
@@ -38,14 +36,12 @@ class NotificationManager
     /** @var  EntityConverter */
     protected $entityConverter;
 
-
-
     /**
-     * NotificationManager constructor
+     * NotificationManager constructor.
      *
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcher   $eventDispatcher
      * @param NotificationUtils $annotationProcessor
-     * @param EntityConverter $entityConverter
+     * @param EntityConverter   $entityConverter
      */
     public function __construct(
         $eventDispatcher,
@@ -56,8 +52,6 @@ class NotificationManager
         $this->notificationUtils = $annotationProcessor;
         $this->entityConverter = $entityConverter;
     }
-
-
 
     /**
      *  Send notification to client (App).
@@ -114,8 +108,6 @@ class NotificationManager
         return $response;
     }
 
-
-
     /**
      * Transform clients collection to array.
      *
@@ -139,8 +131,6 @@ class NotificationManager
 
         return $clients;
     }
-
-
 
     /**
      * Join client URL with entity url.
@@ -179,8 +169,6 @@ class NotificationManager
         return $url.$class;
     }
 
-
-
     /**
      * Returns object encoded in json.
      * Encode only first level (FK are expressed as ID strings).
@@ -201,17 +189,15 @@ class NotificationManager
         return json_encode($result);
     }
 
-
-
     /**
      * Send request to client.
      * Client = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string $url
-     * @param string $method
-     * @param bool $isEncoded
-     * @param null $secret
+     * @param string        $url
+     * @param string        $method
+     * @param bool          $isEncoded
+     * @param null          $secret
      *
      * @return mixed
      */
