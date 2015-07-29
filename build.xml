@@ -118,7 +118,6 @@
             <arg value="--log-pmd"/>
             <arg value="${builddir}/logs/pmd-cpd.xml"/>
             <arg path="${sourcedir}"/>
-            <arg value="--ignore=${sourcedir}/Tests/app/" />
         </exec>
     </target>
 
