@@ -22,7 +22,7 @@ class NotificationUtils
     /**
      * NotificationUtils constructor.
      *
-     * @param $annotationsUtils
+     * @param AnnotationsUtils $annotationsUtils
      */
     public function __construct($annotationsUtils)
     {
@@ -112,7 +112,7 @@ class NotificationUtils
 
     /**
      * @param object $entity
-     * @param $source
+     * @param string $source
      *
      * @return mixed
      *
@@ -151,8 +151,6 @@ class NotificationUtils
                 }
             }
         }
-
-        //dump(reset($actionAnnotations));
 
         if (!empty($actionAnnotations)) {
             $result = reset($actionAnnotations);

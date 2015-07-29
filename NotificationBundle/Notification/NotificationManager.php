@@ -4,7 +4,7 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Services;
+namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
 use GuzzleHttp\Client;
@@ -17,7 +17,8 @@ use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
-use Trinity\NotificationBundle\Notification\EntityConverter;
+
+
 
 /**
  * Class NotificationManager.
@@ -37,21 +38,26 @@ class NotificationManager
     /** @var  EntityConverter */
     protected $entityConverter;
 
+
+
     /**
+     * NotificationManager constructor
+     *
      * @param EventDispatcher $eventDispatcher
      * @param NotificationUtils $annotationProcessor
-     * @param EntityConverter   $entityConverter
+     * @param EntityConverter $entityConverter
      */
     public function __construct(
         $eventDispatcher,
         NotificationUtils $annotationProcessor,
         EntityConverter $entityConverter
-    )
-    {
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->notificationUtils = $annotationProcessor;
         $this->entityConverter = $entityConverter;
     }
+
+
 
     /**
      *  Send notification to client (App).
@@ -108,6 +114,8 @@ class NotificationManager
         return $response;
     }
 
+
+
     /**
      * Transform clients collection to array.
      *
@@ -131,6 +139,8 @@ class NotificationManager
 
         return $clients;
     }
+
+
 
     /**
      * Join client URL with entity url.
@@ -169,6 +179,8 @@ class NotificationManager
         return $url.$class;
     }
 
+
+
     /**
      * Returns object encoded in json.
      * Encode only first level (FK are expressed as ID strings).
@@ -189,15 +201,17 @@ class NotificationManager
         return json_encode($result);
     }
 
+
+
     /**
      * Send request to client.
      * Client = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string        $url
-     * @param string        $method
-     * @param bool          $isEncoded
-     * @param null          $secret
+     * @param string $url
+     * @param string $method
+     * @param bool $isEncoded
+     * @param null $secret
      *
      * @return mixed
      */
@@ -207,8 +221,7 @@ class NotificationManager
         $method = self::POST,
         $isEncoded = false,
         $secret = null
-    )
-    {
+    ) {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }

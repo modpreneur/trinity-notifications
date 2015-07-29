@@ -81,14 +81,12 @@ class EntityConverter
         $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
         $columns = $entityDataSource->getColumns();
 
-        $rc = new \ReflectionClass($entity);
+        $refCLass = new \ReflectionClass($entity);
         if ($entityDataSource->isAllColumnsSelected()) {
-            foreach ($rc->getProperties() as $prop) {
+            foreach ($refCLass->getProperties() as $prop) {
                 $columns[] = $prop->getName();
             }
         }
-
-        $methods = get_class_methods($entity);
 
         foreach ($columns as $property) {
             $methodName = 'get'.ucfirst($property);

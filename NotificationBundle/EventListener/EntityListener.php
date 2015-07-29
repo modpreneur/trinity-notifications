@@ -14,7 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
-use Trinity\NotificationBundle\Services\NotificationManager;
+use Trinity\NotificationBundle\Notification\NotificationManager;
+
+
 
 /**
  * Class EntityListener.
@@ -41,9 +43,9 @@ class EntityListener
     protected $containerInterface;
 
     /** @var  EntityManager */
-    protected $em;
+    protected $entityManager;
 
-    /** @var  NotificationManager */
+    /** @var  \Trinity\NotificationBundle\Notification\NotificationManager */
     protected $notificationSender;
 
     /** @var  NotificationUtils */
@@ -53,7 +55,7 @@ class EntityListener
     protected $request;
 
     /**
-     * @param NotificationManager $notificationSender
+     * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationSender
      * @param NotificationUtils   $annotationProcessor
      */
     public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
@@ -89,7 +91,7 @@ class EntityListener
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
-        $this->em = $args->getEntityManager();
+        $this->entityManager = $args->getEntityManager();
         $enable = $this->isNotificationEnabledForController();
 
         if ($enable) {
@@ -110,7 +112,7 @@ class EntityListener
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        $this->em = $args->getEntityManager();
+        $this->entityManager = $args->getEntityManager();
 
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
@@ -124,7 +126,7 @@ class EntityListener
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-        $this->em = $args->getEntityManager();
+        $this->entityManager = $args->getEntityManager();
         $this->entity = $args->getObject();
     }
 
@@ -146,21 +148,20 @@ class EntityListener
     }
 
     /**
-     * @param EntityManager $em
+     * @param EntityManager $entityManager
      * @param $entity
      * @param $method
      *
      * @return bool
      */
-    private function sendNotification(EntityManager $em, $entity, $method)
+    private function sendNotification(EntityManager $entityManager, $entity, $method)
     {
         if (!$this->processor->isNotificationEntity($entity)) {
             return false;
         }
 
-        $uow = $em->getUnitOfWork();
+        $uow = $entityManager->getUnitOfWork();
         $list = [];
-        $doSendNotification = false;
 
         if ($uow) {
             $uow->computeChangeSets();

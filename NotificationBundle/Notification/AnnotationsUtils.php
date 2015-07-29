@@ -112,11 +112,11 @@ class AnnotationsUtils
      */
     public function getClassSourceAnnotation($entity)
     {
-        $classSourceAnnotation = $this->getEntityAnnotation($entity, self::ANNOTATION_CLASS);
-        if (!$classSourceAnnotation) {
+        $classAnn = $this->getEntityAnnotation($entity, self::ANNOTATION_CLASS);
+        if (!$classAnn) {
             throw new SourceException('Entity has not annotations source.');
         }
 
-        return $classSourceAnnotation;
+        return $classAnn;
     }
 }

@@ -16,7 +16,7 @@ services:
 
 
     trinity.notification.client_sender:
-        class: Trinity\NotificationBundle\Services\NotificationManager
+        class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.utils"
