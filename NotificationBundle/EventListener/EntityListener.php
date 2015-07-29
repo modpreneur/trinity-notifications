@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Trinity project.
  *
@@ -15,10 +16,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Services\NotificationManager;
 
-
-
 /**
- * Class EntityListener
+ * Class EntityListener.
  *
  * Function name - config.
  *
@@ -29,7 +28,6 @@ class EntityListener
     const DELETE = 'DELETE';
     const POST = 'POST';
     const PUT = 'PUT';
-
 
     /**
      * @var ContainerInterface
@@ -54,19 +52,15 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
-
-
     /**
      * @param NotificationManager $notificationSender
-     * @param NotificationUtils $annotationProcessor
+     * @param NotificationUtils   $annotationProcessor
      */
     public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
     {
         $this->notificationSender = $notificationSender;
         $this->processor = $annotationProcessor;
     }
-
-
 
     /**
      * @param RequestStack $requestStack
@@ -76,8 +70,6 @@ class EntityListener
         $this->request = $requestStack->getCurrentRequest();
     }
 
-
-
     /**
      * @param Request $request
      */
@@ -86,14 +78,13 @@ class EntityListener
         $this->request = $request;
     }
 
-
-
     /**
-     * Def in service.yml
+     * Def in service.yml.
      *
      * @param LifecycleEventArgs $args
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function postUpdate(LifecycleEventArgs $args)
@@ -108,14 +99,13 @@ class EntityListener
         return false;
     }
 
-
-
     /**
-     * Def in service.yml
+     * Def in service.yml.
      *
      * @param LifecycleEventArgs $args
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function postPersist(LifecycleEventArgs $args)
@@ -125,10 +115,8 @@ class EntityListener
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
 
-
-
     /**
-     * Def in service.yml
+     * Def in service.yml.
      *
      * @param LifecycleEventArgs $args
      *
@@ -140,12 +128,11 @@ class EntityListener
         $this->entity = $args->getObject();
     }
 
-
-
     /**
-     * Def in service.yml
+     * Def in service.yml.
      *
      * @param PreFlushEventArgs $args
+     *
      * @return bool|NULL
      */
     public function preFlush(PreFlushEventArgs $args)
@@ -157,8 +144,6 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }
     }
-
-
 
     /**
      * @param EntityManager $em
@@ -191,17 +176,16 @@ class EntityListener
             $doSendNotification = true;
         }
 
-        if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === "DELETE") {
+        if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === 'DELETE') {
             return $this->notificationSender->send($entity, $method);
         }
 
         return false;
     }
 
-
-
     /**
      * @param bool $default (if request not set)
+     *
      * @return bool
      */
     private function isNotificationEnabledForController($default = true)
@@ -218,6 +202,4 @@ class EntityListener
 
         return $default;
     }
-
 }
-

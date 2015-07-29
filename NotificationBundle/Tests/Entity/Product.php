@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Trinity project.
  *
@@ -9,21 +10,16 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
-
-
 /**
- * Class TestEntity
- * @package Trinity\NotificationBundle\Tests\Entity
+ * Class TestEntity.
  *
  * @ORM\Entity()
  *
  * @Notification\Source(columns="id, name, description")
  * @Notification\Methods(types={"put", "post", "delete"})
- *
  */
 class Product
 {
-
     /** @var  int */
     private $id = 1;
 
@@ -31,17 +27,13 @@ class Product
     private $name = "Someone's name";
 
     /** @var  string */
-    private $description = "Lorem impsu";
-
-
+    private $description = 'Lorem impsu';
 
     /** @return int */
     public function getId()
     {
         return $this->id;
     }
-
-
 
     /**
      * @return string
@@ -51,8 +43,6 @@ class Product
         return $this->name;
     }
 
-
-
     /**
      * @return string
      */
@@ -61,12 +51,9 @@ class Product
         return $this->description;
     }
 
-
-
     /** @return Client[] */
     public function getClients()
     {
-
         $c = new Client();
         $c->setEnableNotification(true);
 

@@ -1,27 +1,23 @@
 <?php
+
 /*
  * This file is part of the Trinity project.
  *
  */
+
 namespace Trinity\NotificationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-
-
 /**
- * Class NotificationEvent
- * @author Tomáš Jančar
+ * Class NotificationEvent.
  *
- * @package Trinity\NotificationBundle\Event
+ * @author Tomáš Jančar
  */
 class SendEvent extends Event
 {
-
     /** @var  object */
     protected $entity;
-
-
 
     /**
      * @param object $entity
@@ -30,8 +26,6 @@ class SendEvent extends Event
     {
         $this->entity = $entity;
     }
-
-
 
     /**
      * @return object

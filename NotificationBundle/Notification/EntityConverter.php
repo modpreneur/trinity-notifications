@@ -1,26 +1,20 @@
 <?php
+
 /*
  * This file is part of the Trinity project.
  */
 
 namespace Trinity\NotificationBundle\Notification;
 
-
 use Trinity\NotificationBundle\Exception\SourceException;
 
-
-
 /**
- * Class EntityConverter
- * @package Trinity\NotificationBundle\Notification
+ * Class EntityConverter.
  */
 class EntityConverter
 {
-
     /** @var  AnnotationsUtils */
     private $annotationsUtils;
-
-
 
     /**
      * EntityConverter constructor.
@@ -32,10 +26,7 @@ class EntityConverter
         $this->annotationsUtils = $annotationsUtils;
     }
 
-
-
     /**
-     *
      * Transform property to array.
      *
      * ([ 'property-name' => 'property-value' ]).
@@ -65,10 +56,7 @@ class EntityConverter
         return $resultArray;
     }
 
-
-
     /**
-     *
      * Return entity convert to array.
      * Property can be rename via SerializedName annotations.
      *
@@ -79,7 +67,9 @@ class EntityConverter
      * ]
      *
      * @param object $entity
+     *
      * @return array
+     *
      * @throws SourceException
      * @throws \Exception
      */
@@ -101,9 +91,9 @@ class EntityConverter
         $methods = get_class_methods($entity);
 
         foreach ($columns as $property) {
-            $methodName = "get".ucfirst($property);
+            $methodName = 'get'.ucfirst($property);
 
-            if ($property === "*") {
+            if ($property === '*') {
                 continue;
             }
 
@@ -123,8 +113,6 @@ class EntityConverter
 
         return $entityArray;
     }
-
-
 
     /**
      * @param object $entity
@@ -155,8 +143,6 @@ class EntityConverter
         return $resultArray;
     }
 
-
-
     /**
      * @param object $entity
      * @param string $name
@@ -166,7 +152,6 @@ class EntityConverter
      */
     private function processGetMethod($entity, $name, $longName)
     {
-
         try {
             $resultArray[$name] = call_user_func_array(array($entity, $longName), []);
             if ($resultArray[$name] instanceof \DateTime) {
@@ -178,5 +163,4 @@ class EntityConverter
 
         return $resultArray;
     }
-
 }

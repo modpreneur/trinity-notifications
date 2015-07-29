@@ -1,39 +1,29 @@
 <?php
+
 /*
- *
- *
  * This file is part of the Trinity project.
  */
 
 namespace Trinity\NotificationBundle\Notification;
 
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Trinity\NotificationBundle\Exception\SourceException;
 
-
-
 /**
- * Class AnnotationsUtils
- *
- * @package Trinity\NotificationBundle\Notification
+ * Class AnnotationsUtils.
  */
 class AnnotationsUtils
 {
-
-    const ANNOTATION_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Source";
-    const ANNOTATION_METHOD_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Methods";
-    const ANNOTATION_URL_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Url";
-    const DISABLE_ANNOTATION_CLASS = "\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\DisableNotification";
-    const SERIALIZED_NAME = "\\JMS\\Serializer\\Annotation\\SerializedName";
-    const FIX_NAMESPACE = "Proxies\\__CG__\\";
-
+    const ANNOTATION_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Source';
+    const ANNOTATION_METHOD_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Methods';
+    const ANNOTATION_URL_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\Url';
+    const DISABLE_ANNOTATION_CLASS = '\\Trinity\\AnnotationsBundle\\Annotations\\Notification\\DisableNotification';
+    const SERIALIZED_NAME = '\\JMS\\Serializer\\Annotation\\SerializedName';
+    const FIX_NAMESPACE = 'Proxies\\__CG__\\';
 
     /** @var  AnnotationReader */
     protected $reader;
-
-
 
     /**
      * @param Reader|null $reader
@@ -47,8 +37,6 @@ class AnnotationsUtils
         }
     }
 
-
-
     /**
      * @return AnnotationReader
      */
@@ -57,8 +45,6 @@ class AnnotationsUtils
         return $this->reader;
     }
 
-
-
     /**
      * @param Object $entity
      *
@@ -66,10 +52,8 @@ class AnnotationsUtils
      */
     public function getEntityClass($entity)
     {
-        return str_replace(self::FIX_NAMESPACE, "", get_class($entity));
+        return str_replace(self::FIX_NAMESPACE, '', get_class($entity));
     }
-
-
 
     /**
      * @param Object $entity
@@ -84,8 +68,6 @@ class AnnotationsUtils
         return $this->getClassAnnotation($class, $annotationClass);
     }
 
-
-
     /**
      * @param Object $class
      * @param string $annotationClass
@@ -98,8 +80,6 @@ class AnnotationsUtils
 
         return $this->reader->getClassAnnotation($reflectionObject, $annotationClass);
     }
-
-
 
     /**
      * @param Object $entity
@@ -123,22 +103,20 @@ class AnnotationsUtils
         return $ants;
     }
 
-
-
     /**
      * @param Object $entity
      *
      * @return NULL|object
+     *
      * @throws SourceException
      */
     public function getClassSourceAnnotation($entity)
     {
         $classSourceAnnotation = $this->getEntityAnnotation($entity, self::ANNOTATION_CLASS);
         if (!$classSourceAnnotation) {
-            throw new SourceException("Entity has not annotations source.");
+            throw new SourceException('Entity has not annotations source.');
         }
 
         return $classSourceAnnotation;
     }
-
 }

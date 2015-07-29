@@ -1,29 +1,22 @@
 <?php
-namespace Trinity\NotificationBundle\Tests\Entity;
 
+namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Trinity\FrameworkBundle\Entity\IClient;
 
-
-
 /**
- * Class Client
- * @package Trinity\NotificationBundle\Tests\Entity
+ * Class Client.
  */
 class Client implements IClient
 {
     /** @var  bool */
     private $enable;
 
-
-
     /** @return string */
     public function getNotifyUrl()
     {
-        return "http://api.dev.clickandcoach.com/notify/";
+        return 'http://api.dev.clickandcoach.com/notify/';
     }
-
-
 
     /**
      * @param bool $e
@@ -33,8 +26,6 @@ class Client implements IClient
         $this->enable = $e;
     }
 
-
-
     /**
      * @return bool
      */
@@ -43,14 +34,11 @@ class Client implements IClient
         return $this->enable;
     }
 
-
-
     /**
      * @return string
      */
     public function getSecret()
     {
-        return "8rsxbgk63b40k8g0cs00ks0s8s0co0884sk4swgk04s8sk8ck";
+        return '8rsxbgk63b40k8g0cs00ks0s8s0co0884sk4swgk04s8sk8ck';
     }
-
 }

@@ -8,15 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-
-
 /**
- * Class BaseTest
- * @package Trinity\NotificationBundle\Tests
+ * Class BaseTest.
  */
 abstract class BaseTest extends WebTestCase
 {
-
     /** @var  Container */
     protected $container;
 
@@ -26,10 +22,8 @@ abstract class BaseTest extends WebTestCase
     /** @var  Client */
     protected $clientObject;
 
-
-
     /**
-     * Create kernel
+     * Create kernel.
      */
     public function setUp()
     {
@@ -40,21 +34,18 @@ abstract class BaseTest extends WebTestCase
         $this->clientObject = self::createClient();
     }
 
-
-
     /**
-     * shutdown kernel
+     * shutdown kernel.
      */
     public function tearDown()
     {
         $this->kernelObject->shutdown();
     }
 
-
-
     /**
      * @param string|object $class
-     * @param string $name
+     * @param string        $name
+     *
      * @return \ReflectionMethod
      */
     protected static function getMethod($class, $name)
@@ -65,8 +56,6 @@ abstract class BaseTest extends WebTestCase
 
         return $method;
     }
-
-
 
     /**
      * @return \Doctrine\ORM\EntityManager
@@ -79,6 +68,4 @@ abstract class BaseTest extends WebTestCase
 
         return $em;
     }
-
-
 }

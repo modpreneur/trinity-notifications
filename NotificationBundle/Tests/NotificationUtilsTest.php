@@ -10,27 +10,21 @@ use Trinity\NotificationBundle\Tests\Entity\EntityMethodDate;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
- * Class NotificationUtilsTest
- * @package Trinity\NotificationBundle\Tests
+ * Class NotificationUtilsTest.
  */
 class NotificationUtilsTest extends BaseTest
 {
-
     /**
      * @test
      */
     public function testCheckIsObjectEntity()
     {
-        $utils = $this->container->get("trinity.notification.utils");
+        $utils = $this->container->get('trinity.notification.utils');
 
         $this->assertTrue($utils->isNotificationEntity(new Product()));
         $this->assertFalse($utils->isNotificationEntity(new \stdClass()));
     }
-
-
 
     /**
      * @throws \Trinity\NotificationBundle\Exception\SourceException
@@ -39,7 +33,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testClassAnnotationSource()
     {
-        $utils = $this->container->get("trinity.notification.annotations.utils");
+        $utils = $this->container->get('trinity.notification.annotations.utils');
 
         $this->assertNotEmpty($utils->getClassSourceAnnotation(new Product()));
 
@@ -47,14 +41,12 @@ class NotificationUtilsTest extends BaseTest
         $this->assertNotEmpty($utils->getClassSourceAnnotation(new \stdClass()));
     }
 
-
-
     /**
      * @test
      */
     public function testHasSource()
     {
-        $utils = $this->container->get("trinity.notification.utils");
+        $utils = $this->container->get('trinity.notification.utils');
 
         $this->assertTrue($utils->hasSource(new Product(), 'id'));
         $this->assertTrue($utils->hasSource(new Product(), 'name'));
@@ -63,30 +55,26 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->hasSource(new Product(), 'blah'));
     }
 
-
-
     /**
      * @test
      */
     public function testHTTPMethodForEntity()
     {
-        $utils = $this->container->get("trinity.notification.utils");
+        $utils = $this->container->get('trinity.notification.utils');
 
-        $this->assertTrue($utils->hasHTTPMethod(new Product(), "PUT"));
-        $this->assertTrue($utils->hasHTTPMethod(new Product(), "DeleTE"));
-        $this->assertFalse($utils->hasHTTPMethod(new Product(), "Blah"));
+        $this->assertTrue($utils->hasHTTPMethod(new Product(), 'PUT'));
+        $this->assertTrue($utils->hasHTTPMethod(new Product(), 'DeleTE'));
+        $this->assertFalse($utils->hasHTTPMethod(new Product(), 'Blah'));
 
-        $this->assertTrue($utils->hasHTTPMethod(new \stdClass(), "Blah"));
+        $this->assertTrue($utils->hasHTTPMethod(new \stdClass(), 'Blah'));
     }
-
-
 
     /**
      * @test
      */
     public function testClassAnnotations()
     {
-        $utils = $this->container->get("trinity.notification.annotations.utils");
+        $utils = $this->container->get('trinity.notification.annotations.utils');
 
         $class = AnnotationsUtils::ANNOTATION_CLASS;
         $this->assertTrue(
@@ -94,14 +82,12 @@ class NotificationUtilsTest extends BaseTest
         );
     }
 
-
-
     /**
      * @test
      */
     public function testURLPostfix()
     {
-        $utils = $this->container->get("trinity.notification.utils");
+        $utils = $this->container->get('trinity.notification.utils');
 
         $this->assertEquals('std-class', $utils->getUrlPostfix(new \stdClass(), 'DELETE'));
         $this->assertEquals('product', $utils->getUrlPostfix(new Product()));
@@ -112,8 +98,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals('post-e-entity', $utils->getUrlPostfix(new EEntity(), 'post'));
     }
 
-
-
     /**
      * @throws \Trinity\NotificationBundle\Exception\MethodException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
@@ -122,25 +106,21 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArrayError()
     {
-        $utils = $this->container->get("trinity.notification.entityConverter");
+        $utils = $this->container->get('trinity.notification.entityConverter');
 
         // Error
         $utils->toArray(new EntityWithoutSource());
     }
 
-
-
     /**
-     *
-     * Notification\Source(columns="*")
+     * Notification\Source(columns="*").
      *
      * @throws \Trinity\NotificationBundle\Exception\MethodException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
-     *
      */
     public function testEntityToArrayAllSource()
     {
-        $utils = $this->container->get("trinity.notification.entityConverter");
+        $utils = $this->container->get('trinity.notification.entityConverter');
 
         $allSourceEntity = new AllSourceEntity();
         $allSourceArrayExpected = [
@@ -154,8 +134,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals($allSourceArrayExpected, $allSourceArrayResult);
     }
 
-
-
     /**
      * @throws \Exception
      *
@@ -165,9 +143,9 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArray()
     {
-        $utils = $this->container->get("trinity.notification.entityConverter");
+        $utils = $this->container->get('trinity.notification.entityConverter');
         $class = (get_class($utils));
-        $method = $this->getMethod($class, "processProperty");
+        $method = $this->getMethod($class, 'processProperty');
 
         $p = new Product();
         $propertyArray = $method->invokeArgs($utils, [$p, 'id', 'getId']);
@@ -198,10 +176,10 @@ class NotificationUtilsTest extends BaseTest
         $p = new EEntity();
 
         $sourceEE = [
-            "id" => 1,
-            "name" => "EE Entity",
-            "description" => "Description for entity.",
-            'date' => "2010-11-12 00:00:00",
+            'id' => 1,
+            'name' => 'EE Entity',
+            'description' => 'Description for entity.',
+            'date' => '2010-11-12 00:00:00',
             'fullPrice' => '10$',
             'test-method' => 'test',
         ];
@@ -209,21 +187,18 @@ class NotificationUtilsTest extends BaseTest
         $arrayEE = $utils->toArray($p);
         $this->assertEquals($sourceEE, $arrayEE);
 
-
         $errorEntity = new EntityErrorArray();
         $utils->toArray($errorEntity);
     }
-
-
 
     /**
      * @test
      */
     public function testEntityToArrayMethodDate()
     {
-        $utils = $this->container->get("trinity.notification.entityConverter");
+        $utils = $this->container->get('trinity.notification.entityConverter');
         $class = (get_class($utils));
-        $method = $this->getMethod($class, "processMethod");
+        $method = $this->getMethod($class, 'processMethod');
 
         $entity = new EntityMethodDate();
 

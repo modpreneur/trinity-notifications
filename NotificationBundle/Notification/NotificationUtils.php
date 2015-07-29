@@ -11,30 +11,23 @@ use Trinity\AnnotationsBundle\Annotations\Notification\Methods;
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 
-
-
 /**
- * Class NotificationUtils
- * @package Trinity\NotificationBundle\Notification\Annotations
+ * Class NotificationUtils.
  */
 class NotificationUtils
 {
-
     /** @var  AnnotationsUtils */
     private $annotationsUtils;
 
-
-
     /**
      * NotificationUtils constructor.
+     *
      * @param $annotationsUtils
      */
     public function __construct($annotationsUtils)
     {
         $this->annotationsUtils = $annotationsUtils;
     }
-
-
 
     /**
      * Check GET, POST, PUT, ...
@@ -58,8 +51,6 @@ class NotificationUtils
         return $classAnnotation->hasType($method);
     }
 
-
-
     /**
      * @param object $entity
      *
@@ -77,11 +68,9 @@ class NotificationUtils
         return ($classSourceAnnotation !== null);
     }
 
-
-
     /**
      * @param object $entity
-     * @param null $method
+     * @param null   $method
      *
      * @return mixed|null|string
      */
@@ -116,26 +105,23 @@ class NotificationUtils
             $postfix = $className;
         }
 
-        $postfix = str_replace("/", "", $postfix);
+        $postfix = str_replace('/', '', $postfix);
 
         return $postfix;
     }
-
-
 
     /**
      * @param object $entity
      * @param $source
      *
      * @return mixed
+     *
      * @throws SourceException
      */
     public function hasSource($entity, $source)
     {
         return $this->annotationsUtils->getClassSourceAnnotation($entity)->hasColumn($source);
     }
-
-
 
     /**
      * @param string $class
@@ -177,8 +163,6 @@ class NotificationUtils
         return $result;
     }
 
-
-
     /**
      * @param string $controller
      * @param string $action
@@ -202,5 +186,4 @@ class NotificationUtils
             AnnotationsUtils::DISABLE_ANNOTATION_CLASS
         )) === null;
     }
-
 }

@@ -1,10 +1,10 @@
 <?php
+
 /*
  * This file is part of the Trinity project.
  */
 
 namespace Trinity\NotificationBundle\Services;
-
 
 use Doctrine\Common\Collections\Collection;
 use GuzzleHttp\Client;
@@ -19,18 +19,14 @@ use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 
-
-
 /**
- * Class NotificationManager
- * @package Trinity\NotificationBundle\Services
+ * Class NotificationManager.
  */
 class NotificationManager
 {
     const DELETE = 'DELETE';
     const POST = 'POST';
     const PUT = 'PUT';
-
 
     /** @var  NotificationUtils */
     protected $notificationUtils;
@@ -41,14 +37,12 @@ class NotificationManager
     /** @var  EntityConverter */
     protected $entityConverter;
 
-
-
     /**
      * @param $eventDispatcher
      * @param NotificationUtils $annotationProcessor
-     * @param EntityConverter $entityConverter
+     * @param EntityConverter   $entityConverter
      */
-    function __construct(
+    public function __construct(
         $eventDispatcher,
         NotificationUtils $annotationProcessor,
         EntityConverter $entityConverter
@@ -58,8 +52,6 @@ class NotificationManager
         $this->entityConverter = $entityConverter;
     }
 
-
-
     /**
      *  Send notification to client (App).
      *
@@ -68,12 +60,13 @@ class NotificationManager
      * @param string $HTTPMethod
      *
      * @return mixed|string|void
+     *
      * @throws ClientException
      * @throws MethodException
      */
-    public function send($entity, $HTTPMethod = "GET")
+    public function send($entity, $HTTPMethod = 'GET')
     {
-        $response = "";
+        $response = '';
 
         // before send event
         $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
@@ -81,7 +74,6 @@ class NotificationManager
 
         if ($clients) {
             foreach ($clients as $client) {
-
                 if (!$client->isNotificationEnabled()) {
                     continue;
                 }
@@ -95,9 +87,8 @@ class NotificationManager
                         Events::SUCCESS_NOTIFICATION,
                         new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
                     );
-
                 } catch (\Exception $ex) {
-                    $message = "$HTTPMethod: URL: ".$url." returns error: ".$ex->getMessage().".";
+                    $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
 
                     $this->eventDispatcher->dispatch(
                         Events::ERROR_NOTIFICATION,
@@ -116,14 +107,13 @@ class NotificationManager
         return $response;
     }
 
-
-
     /**
      * Transform clients collection to array.
      *
      * @param Client|Collection|array $clientsCollection
      *
      * @return Object[]
+     *
      * @throws ClientException
      */
     protected function clientsToArray($clientsCollection)
@@ -141,10 +131,7 @@ class NotificationManager
         return $clients;
     }
 
-
-
     /**
-     *
      * Join client URL with entity url.
      *
      * Example: Client URL => "http://example.com"
@@ -156,64 +143,60 @@ class NotificationManager
      * @param string $HTTPMethod
      *
      * @return array
+     *
      * @throws ClientException
      * @throws MethodException
-     *
      */
     private function prepareURL($url, $entity, $HTTPMethod)
     {
-        $methodName = "getClients";
+        $methodName = 'getClients';
         if (!is_callable([$entity, $methodName])) {
             throw new MethodException("Method '$methodName' not exists in entity.");
         }
 
         if ($url === null || empty($url)) {
-            throw new ClientException("Notification: NULL client URL.");
+            throw new ClientException('Notification: NULL client URL.');
         }
 
         $class = $this->notificationUtils->getUrlPostfix($entity, $HTTPMethod);
 
         // add / to url
-        if (!Strings::endsWith($url, "/")) {
-            $url .= "/";
+        if (!Strings::endsWith($url, '/')) {
+            $url .= '/';
         }
 
         return $url.$class;
     }
 
-
-
     /**
      * Returns object encoded in json.
-     * Encode only first level (FK are expressed as ID strings)
+     * Encode only first level (FK are expressed as ID strings).
      *
      * @param object $entity
      * @param string $secret
      *
      * @return string
+     *
      * @internal param string $hash
      */
     private function JSONEncodeObject($entity, $secret)
     {
         $result = $this->entityConverter->toArray($entity);
         $result['timestamp'] = (new \DateTime())->getTimestamp();
-        $result['hash'] = hash("sha256", $secret.(implode(",", $result)));
+        $result['hash'] = hash('sha256', $secret.(implode(',', $result)));
 
         return json_encode($result);
     }
 
-
-
     /**
-     *
      * Send request to client.
-     * Client = web application (http:example.com)
+     * Client = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string $url
-     * @param string $method
-     * @param bool $is_encoded
-     * @param null $secret
+     * @param string        $url
+     * @param string        $method
+     * @param bool          $is_encoded
+     * @param null          $secret
      *
      * @return mixed
      */
@@ -224,7 +207,6 @@ class NotificationManager
         $is_encoded = false,
         $secret = null
     ) {
-
         if (!$is_encoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }
@@ -247,5 +229,4 @@ class NotificationManager
 
         return $response->json();
     }
-
 }

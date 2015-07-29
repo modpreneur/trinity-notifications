@@ -1,15 +1,13 @@
 <?php
+
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\SerializedName;
 use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
 
-
-
 /**
- * Class TestEntity
- * @package Trinity\NotificationBundle\Tests\Entity
+ * Class TestEntity.
  *
  * @ORM\Entity()
  *
@@ -20,12 +18,9 @@ use Trinity\AnnotationsBundle\Annotations\Notification as Notification;
  * @Notification\Url(methods={"put"}, postfix="put-e-entity")
  * @Notification\Url(methods={"delete"}, postfix="delete-e-entity")
  * @Notification\Url(methods={"post"}, postfix="post-e-entity")
- *
- *
  */
 class EEntity
 {
-
     /**
      * @var int
      */
@@ -34,29 +29,25 @@ class EEntity
     /**
      * @var string
      */
-    private $name = "EE Entity";
+    private $name = 'EE Entity';
 
     /**
      * @SerializedName("description")
      */
-    private $desc = "Description for entity.";
+    private $desc = 'Description for entity.';
 
     /**
      * @var \DateTime
      */
     private $date;
 
-
-
     /**
      * EEntity constructor.
      */
     public function __construct()
     {
-        $this->date = new \DateTime("2010-11-12");
+        $this->date = new \DateTime('2010-11-12');
     }
-
-
 
     /**
      * @return mixed
@@ -66,8 +57,6 @@ class EEntity
         return $this->id;
     }
 
-
-
     /**
      * @param mixed $id
      */
@@ -75,8 +64,6 @@ class EEntity
     {
         $this->id = $id;
     }
-
-
 
     /**
      * @return mixed
@@ -86,8 +73,6 @@ class EEntity
         return $this->name;
     }
 
-
-
     /**
      * @param mixed $name
      */
@@ -95,8 +80,6 @@ class EEntity
     {
         $this->name = $name;
     }
-
-
 
     /**
      * @return string
@@ -106,8 +89,6 @@ class EEntity
         return $this->desc;
     }
 
-
-
     /**
      * @param mixed $desc
      */
@@ -115,8 +96,6 @@ class EEntity
     {
         $this->desc = $desc;
     }
-
-
 
     /**
      * @return mixed
@@ -126,8 +105,6 @@ class EEntity
         return $this->date;
     }
 
-
-
     /**
      * @param mixed $date
      */
@@ -136,17 +113,13 @@ class EEntity
         $this->date = $date;
     }
 
-
-
     /**
      * @return string
      */
     public function getFullPrice()
     {
-        return "10$";
+        return '10$';
     }
-
-
 
     /**
      * @SerializedName("test-method")
@@ -157,5 +130,4 @@ class EEntity
     {
         return 'test';
     }
-
 }

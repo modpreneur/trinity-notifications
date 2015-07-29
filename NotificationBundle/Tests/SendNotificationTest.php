@@ -1,22 +1,18 @@
 <?php
+
 /**
  *  This file is part of the Trinity project.
  */
-
 namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
- * Class SendNotificationTest
+ * Class SendNotificationTest.
  *
- * @package Trinity\NotificationBundle\Tests
  *
  *
  * For (http://api.dev.clickandcoach.com/)
- *
  */
 class SendNotificationTest extends BaseTest
 {
@@ -27,15 +23,13 @@ class SendNotificationTest extends BaseTest
     {
         $service = $this->container->get('trinity.notification.client_sender');
         $class = (get_class($service));
-        $method = self::getMethod($class, "clientsToArray");
+        $method = self::getMethod($class, 'clientsToArray');
         $e = new Product();
 
         $array = $method->invokeArgs($service, [$e]);
 
         $this->assertTrue(is_array($array));
     }
-
-
 
     /**
      * @test
@@ -46,21 +40,19 @@ class SendNotificationTest extends BaseTest
         $class = (get_class($service));
         $e = new Product();
 
-        $urlWithEndSlash = "http://seznam.cz/";
-        $urlWithoutEndSlash = "http://seznam.cz";
+        $urlWithEndSlash = 'http://seznam.cz/';
+        $urlWithoutEndSlash = 'http://seznam.cz';
 
-        $method = self::getMethod($class, "prepareURL");
+        $method = self::getMethod($class, 'prepareURL');
         $this->assertSame(
-            "http://seznam.cz/product",
-            $method->invokeArgs($service, [$urlWithEndSlash, $e, "POST"])
+            'http://seznam.cz/product',
+            $method->invokeArgs($service, [$urlWithEndSlash, $e, 'POST'])
         );
         $this->assertSame(
-            "http://seznam.cz/product",
-            $method->invokeArgs($service, [$urlWithoutEndSlash, $e, "POST"])
+            'http://seznam.cz/product',
+            $method->invokeArgs($service, [$urlWithoutEndSlash, $e, 'POST'])
         );
     }
-
-
 
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\ClientException
@@ -71,11 +63,9 @@ class SendNotificationTest extends BaseTest
         $class = (get_class($service));
         $e = new Product();
 
-        $method = self::getMethod($class, "prepareURL");
-        $method->invokeArgs($service, [null, $e, "NoExistMethod"]);
+        $method = self::getMethod($class, 'prepareURL');
+        $method->invokeArgs($service, [null, $e, 'NoExistMethod']);
     }
-
-
 
     /**
      * @test
@@ -84,12 +74,11 @@ class SendNotificationTest extends BaseTest
     {
         $service = $this->container->get('trinity.notification.client_sender');
         $entity = new Product();
-        $res = $service->send($entity, "PUT");
+        $res = $service->send($entity, 'PUT');
 
         $this->assertTrue(is_array($res));
 
-        $res = $service->send($entity, "GET");
+        $res = $service->send($entity, 'GET');
         $this->assertTrue(is_string($res));
     }
-
 }

@@ -10,11 +10,8 @@ use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
- * Class NotificationManagerTest
- * @package Trinity\NotificationBundle\Tests
+ * Class NotificationManagerTest.
  */
 class NotificationManagerTest extends BaseTest
 {
@@ -23,8 +20,8 @@ class NotificationManagerTest extends BaseTest
      */
     public function testClientToArray()
     {
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "clientsToArray");
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'clientsToArray');
 
         $p = new Product();
         $clients = $method->invokeArgs(
@@ -52,74 +49,61 @@ class NotificationManagerTest extends BaseTest
         $this->assertEquals([$client], $method->invokeArgs($manager, [[$client]]));
     }
 
-
-
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\MethodException
      */
     public function testPrepareURLsError()
     {
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'prepareURL');
 
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "prepareURL");
-
-        $method->invokeArgs($manager, ["http://example.com", new \stdClass(), "POST"]);
+        $method->invokeArgs($manager, ['http://example.com', new \stdClass(), 'POST']);
     }
-
-
 
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\ClientException
      */
     public function testPrepareURLsClientError()
     {
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'prepareURL');
 
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "prepareURL");
-
-        $method->invokeArgs($manager, [null, new Product(), "POST"]);
+        $method->invokeArgs($manager, [null, new Product(), 'POST']);
     }
-
-
 
     /**
      * @test
      */
     public function testPrepareURLs()
     {
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'prepareURL');
 
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "prepareURL");
-
-        $expected = "http://example.com/product";
-        $result = ($method->invokeArgs($manager, ["http://example.com", new Product(), "POST"]));
+        $expected = 'http://example.com/product';
+        $result = ($method->invokeArgs($manager, ['http://example.com', new Product(), 'POST']));
         $this->assertEquals($expected, $result);
 
-        $expected = "http://example.com/product";
-        $result = ($method->invokeArgs($manager, ["http://example.com/", new Product(), "POST"]));
+        $expected = 'http://example.com/product';
+        $result = ($method->invokeArgs($manager, ['http://example.com/', new Product(), 'POST']));
         $this->assertEquals($expected, $result);
     }
-
-
 
     /**
      * @test
      */
     public function testJsonEncodeObject()
     {
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "JSONEncodeObject");
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'JSONEncodeObject');
 
         $expected = "{\"id\":1,\"name\":\"Someone's name\",\"description\":\"Lorem impsu\"";
-        $result = $method->invokeArgs($manager, [new Product(), "KJHGHJKKJHJKJHJH"]);
+        $result = $method->invokeArgs($manager, [new Product(), 'KJHGHJKKJHJKJHJH']);
 
         $this->assertStringStartsWith($expected, $result);
 
-        $this->assertContains("\"hash\":", $result);
-        $this->assertContains("\"timestamp\":", $result);
+        $this->assertContains('"hash":', $result);
+        $this->assertContains('"timestamp":', $result);
     }
-
-
 
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
@@ -128,16 +112,14 @@ class NotificationManagerTest extends BaseTest
      */
     public function testCreateJSONRequestError()
     {
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "JSONEncodeObject");
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'JSONEncodeObject');
 
-        $data = $method->invokeArgs($manager, [new Product(), "KJHGHJKKJHJKJHJH"]);
+        $data = $method->invokeArgs($manager, [new Product(), 'KJHGHJKKJHJKJHJH']);
 
-        $method = $this->getMethod($manager, "createRequest");
-        $result = $method->invokeArgs($manager, [$data, "http://example.com/product", "POST", true]);
+        $method = $this->getMethod($manager, 'createRequest');
+        $result = $method->invokeArgs($manager, [$data, 'http://example.com/product', 'POST', true]);
     }
-
-
 
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
@@ -146,23 +128,21 @@ class NotificationManagerTest extends BaseTest
      */
     public function testCreateJSONRequestError_()
     {
-        $manager = $this->container->get("trinity.notification.client_sender");
-        $method = $this->getMethod($manager, "JSONEncodeObject");
+        $manager = $this->container->get('trinity.notification.client_sender');
+        $method = $this->getMethod($manager, 'JSONEncodeObject');
 
-        $data = $method->invokeArgs($manager, [new Product(), "KJHGHJKKJHJKJHJH"]);
+        $data = $method->invokeArgs($manager, [new Product(), 'KJHGHJKKJHJKJHJH']);
 
-        $method = $this->getMethod($manager, "createRequest");
-        $result = $method->invokeArgs($manager, [$data, "http://example.com/product", "POST", false]);
+        $method = $this->getMethod($manager, 'createRequest');
+        $result = $method->invokeArgs($manager, [$data, 'http://example.com/product', 'POST', false]);
     }
-
-
 
     /**
      * @test
      */
     public function testSendWithoutClient()
     {
-        $manager = $this->container->get("trinity.notification.client_sender");
+        $manager = $this->container->get('trinity.notification.client_sender');
 
         $entity = new EntityWithoutClient();
 
@@ -170,52 +150,41 @@ class NotificationManagerTest extends BaseTest
         $this->assertEmpty($result);
     }
 
-
-
     /**
      * @test
      */
     public function testSendWithDisableClient()
     {
-        $manager = $this->container->get("trinity.notification.client_sender");
+        $manager = $this->container->get('trinity.notification.client_sender');
         $entity = new EntityDisableClient();
         $result = $manager->send($entity);
 
         $this->assertEmpty($result);
     }
-
 }
-
 
 // Test collection
 class TestCollection implements Collection
 {
-
     /**
      * Adds an element at the end of the collection.
      *
      * @param mixed $element The element to add.
      *
-     * @return boolean Always TRUE.
+     * @return bool Always TRUE.
      */
     public function add($element)
     {
         // TODO: Implement add() method.
     }
 
-
-
     /**
      * Clears the collection, removing all elements.
-     *
-     * @return void
      */
     public function clear()
     {
         // TODO: Implement clear() method.
     }
-
-
 
     /**
      * Checks whether an element is contained in the collection.
@@ -223,31 +192,27 @@ class TestCollection implements Collection
      *
      * @param mixed $element The element to search for.
      *
-     * @return boolean TRUE if the collection contains the element, FALSE otherwise.
+     * @return bool TRUE if the collection contains the element, FALSE otherwise.
      */
     public function contains($element)
     {
         // TODO: Implement contains() method.
     }
 
-
-
     /**
      * Checks whether the collection is empty (contains no elements).
      *
-     * @return boolean TRUE if the collection is empty, FALSE otherwise.
+     * @return bool TRUE if the collection is empty, FALSE otherwise.
      */
     public function isEmpty()
     {
         // TODO: Implement isEmpty() method.
     }
 
-
-
     /**
      * Removes the element at the specified index from the collection.
      *
-     * @param string|integer $key The kex/index of the element to remove.
+     * @param string|int $key The kex/index of the element to remove.
      *
      * @return mixed The removed element or NULL, if the collection did not contain the element.
      */
@@ -256,41 +221,35 @@ class TestCollection implements Collection
         // TODO: Implement remove() method.
     }
 
-
-
     /**
      * Removes the specified element from the collection, if it is found.
      *
      * @param mixed $element The element to remove.
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
     public function removeElement($element)
     {
         // TODO: Implement removeElement() method.
     }
 
-
-
     /**
      * Checks whether the collection contains an element with the specified key/index.
      *
-     * @param string|integer $key The key/index to check for.
+     * @param string|int $key The key/index to check for.
      *
-     * @return boolean TRUE if the collection contains an element with the specified key/index,
-     *                 FALSE otherwise.
+     * @return bool TRUE if the collection contains an element with the specified key/index,
+     *              FALSE otherwise.
      */
     public function containsKey($key)
     {
         // TODO: Implement containsKey() method.
     }
 
-
-
     /**
      * Gets the element at the specified key/index.
      *
-     * @param string|integer $key The key/index of the element to retrieve.
+     * @param string|int $key The key/index of the element to retrieve.
      *
      * @return mixed
      */
@@ -298,8 +257,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement get() method.
     }
-
-
 
     /**
      * Gets all keys/indices of the collection.
@@ -312,8 +269,6 @@ class TestCollection implements Collection
         // TODO: Implement getKeys() method.
     }
 
-
-
     /**
      * Gets all values of the collection.
      *
@@ -325,22 +280,16 @@ class TestCollection implements Collection
         // TODO: Implement getValues() method.
     }
 
-
-
     /**
      * Sets an element in the collection at the specified key/index.
      *
-     * @param string|integer $key The key/index of the element to set.
-     * @param mixed $value The element to set.
-     *
-     * @return void
+     * @param string|int $key   The key/index of the element to set.
+     * @param mixed      $value The element to set.
      */
     public function set($key, $value)
     {
         // TODO: Implement set() method.
     }
-
-
 
     /**
      * Gets a native PHP array representation of the collection.
@@ -352,8 +301,6 @@ class TestCollection implements Collection
         return [new Client()];
     }
 
-
-
     /**
      * Sets the internal iterator to the first element in the collection and returns this element.
      *
@@ -363,8 +310,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement first() method.
     }
-
-
 
     /**
      * Sets the internal iterator to the last element in the collection and returns this element.
@@ -376,8 +321,6 @@ class TestCollection implements Collection
         // TODO: Implement last() method.
     }
 
-
-
     /**
      * Gets the key/index of the element at the current iterator position.
      *
@@ -387,8 +330,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement key() method.
     }
-
-
 
     /**
      * Gets the element of the collection at the current iterator position.
@@ -400,8 +341,6 @@ class TestCollection implements Collection
         // TODO: Implement current() method.
     }
 
-
-
     /**
      * Moves the internal iterator position to the next element and returns this element.
      *
@@ -412,21 +351,17 @@ class TestCollection implements Collection
         // TODO: Implement next() method.
     }
 
-
-
     /**
      * Tests for the existence of an element that satisfies the given predicate.
      *
      * @param Closure $p The predicate.
      *
-     * @return boolean TRUE if the predicate is TRUE for at least one element, FALSE otherwise.
+     * @return bool TRUE if the predicate is TRUE for at least one element, FALSE otherwise.
      */
     public function exists(Closure $p)
     {
         // TODO: Implement exists() method.
     }
-
-
 
     /**
      * Returns all the elements of this collection that satisfy the predicate p.
@@ -441,21 +376,17 @@ class TestCollection implements Collection
         // TODO: Implement filter() method.
     }
 
-
-
     /**
      * Tests whether the given predicate p holds for all elements of this collection.
      *
      * @param Closure $p The predicate.
      *
-     * @return boolean TRUE, if the predicate yields TRUE for all elements, FALSE otherwise.
+     * @return bool TRUE, if the predicate yields TRUE for all elements, FALSE otherwise.
      */
     public function forAll(Closure $p)
     {
         // TODO: Implement forAll() method.
     }
-
-
 
     /**
      * Applies the given function to each element in the collection and returns
@@ -469,8 +400,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement map() method.
     }
-
-
 
     /**
      * Partitions this collection in two collections according to a predicate.
@@ -487,8 +416,6 @@ class TestCollection implements Collection
         // TODO: Implement partition() method.
     }
 
-
-
     /**
      * Gets the index/key of a given element. The comparison of two elements is strict,
      * that means not only the value but also the type must match.
@@ -503,8 +430,6 @@ class TestCollection implements Collection
         // TODO: Implement indexOf() method.
     }
 
-
-
     /**
      * Extracts a slice of $length elements starting at position $offset from the Collection.
      *
@@ -512,7 +437,7 @@ class TestCollection implements Collection
      * Keys have to be preserved by this method. Calling this method will only return the
      * selected slice and NOT change the elements contained in the collection slice is called on.
      *
-     * @param int $offset The offset to start from.
+     * @param int      $offset The offset to start from.
      * @param int|null $length The maximum number of elements to return, or null for no limit.
      *
      * @return array
@@ -522,48 +447,50 @@ class TestCollection implements Collection
         // TODO: Implement slice() method.
     }
 
-
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
+     *
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     *
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     *                     <b>Traversable</b>
      */
     public function getIterator()
     {
         // TODO: Implement getIterator() method.
     }
 
-
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
+     * Whether a offset exists.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
      * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     *                      An offset to check for.
+     *                      </p>
+     *
+     * @return bool true on success or false on failure.
+     *              </p>
+     *              <p>
+     *              The return value will be casted to boolean if non-boolean was returned.
      */
     public function offsetExists($offset)
     {
         // TODO: Implement offsetExists() method.
     }
 
-
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to retrieve
+     * Offset to retrieve.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     *
      * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
+     *                      The offset to retrieve.
+     *                      </p>
+     *
      * @return mixed Can return all value types.
      */
     public function offsetGet($offset)
@@ -571,51 +498,49 @@ class TestCollection implements Collection
         // TODO: Implement offsetGet() method.
     }
 
-
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to set
+     * Offset to set.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     *
      * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
+     *                      The offset to assign the value to.
+     *                      </p>
+     * @param mixed $value  <p>
+     *                      The value to set.
+     *                      </p>
      */
     public function offsetSet($offset, $value)
     {
         // TODO: Implement offsetSet() method.
     }
 
-
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
+     * Offset to unset.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
      * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
+     *                      The offset to unset.
+     *                      </p>
      */
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
     }
 
-
-
     /**
      * (PHP 5 &gt;= 5.1.0)<br/>
-     * Count elements of an object
+     * Count elements of an object.
+     *
      * @link http://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     *             </p>
+     *             <p>
+     *             The return value is cast to an integer.
      */
     public function count()
     {

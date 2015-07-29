@@ -9,11 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
- * Class EventListenerTest
- * @package Trinity\NotificationBundle\Tests
+ * Class EventListenerTest.
  */
 class EventListenerTest extends BaseTest
 {
@@ -22,9 +19,8 @@ class EventListenerTest extends BaseTest
      */
     public function testPostUpdate()
     {
-
         $em = $this->getEM();
-        $ev = $this->container->get("trinity.notification.entity_listener");
+        $ev = $this->container->get('trinity.notification.entity_listener');
 
         $object = new Product();
         $args = new LifecycleEventArgs(
@@ -33,13 +29,12 @@ class EventListenerTest extends BaseTest
 
         $this->assertSame(
             [
-                "code" => 200,
-                "statusCode" => 200,
-                "message" => "OK",
+                'code' => 200,
+                'statusCode' => 200,
+                'message' => 'OK',
             ],
             $ev->postUpdate($args)
         );
-
 
         $object = new EntityDisableClient();
         $args = new LifecycleEventArgs(
@@ -50,14 +45,12 @@ class EventListenerTest extends BaseTest
 
         $request = new Request();
         $request->query->add(
-            ["_controller" => "\\Trinity\\NotificationBundle\\Tests\\Controllers\\ActiveController::disableNotification"]
+            ['_controller' => '\\Trinity\\NotificationBundle\\Tests\\Controllers\\ActiveController::disableNotification']
         );
         $ev->setRequest($request);
 
         $this->assertEmpty($ev->postUpdate($args));
     }
-
-
 
     /**
      * @test
@@ -65,7 +58,7 @@ class EventListenerTest extends BaseTest
     public function testPreRemove()
     {
         $em = $this->getEM();
-        $ev = $this->container->get("trinity.notification.entity_listener");
+        $ev = $this->container->get('trinity.notification.entity_listener');
 
         $object = new Product();
         $args = new LifecycleEventArgs(
@@ -75,15 +68,13 @@ class EventListenerTest extends BaseTest
         $ev->preRemove($args);
     }
 
-
-
     /**
      * @test
      */
     public function testPostPersist()
     {
         $em = $this->getEM();
-        $ev = $this->container->get("trinity.notification.entity_listener");
+        $ev = $this->container->get('trinity.notification.entity_listener');
 
         $object = new Product();
         $args = new LifecycleEventArgs(
@@ -91,10 +82,8 @@ class EventListenerTest extends BaseTest
         );
 
         $result = $ev->postPersist($args);
-        $this->assertContains("ERROR", $result);
+        $this->assertContains('ERROR', $result);
     }
-
-
 
     /**
      * @test
@@ -102,7 +91,7 @@ class EventListenerTest extends BaseTest
     public function testPreFlush()
     {
         $em = $this->getEM();
-        $ev = $this->container->get("trinity.notification.entity_listener");
+        $ev = $this->container->get('trinity.notification.entity_listener');
 
         $object = new Product();
 
@@ -116,9 +105,9 @@ class EventListenerTest extends BaseTest
 
         $this->assertSame(
             [
-                "code" => 200,
-                "statusCode" => 200,
-                "message" => "OK",
+                'code' => 200,
+                'statusCode' => 200,
+                'message' => 'OK',
             ],
             $ev->preFlush($args)
         );
@@ -131,33 +120,30 @@ class EventListenerTest extends BaseTest
         );
     }
 
-
-
     /**
      * @test
      */
     public function testSendNotification()
     {
         $em = $this->getEM();
-        $ev = $this->container->get("trinity.notification.entity_listener");
+        $ev = $this->container->get('trinity.notification.entity_listener');
 
-        $sendNotification = $this->getMethod($ev, "sendNotification");
+        $sendNotification = $this->getMethod($ev, 'sendNotification');
 
         $entity = new Product();
 
-        $this->assertEquals(false, $sendNotification->invokeArgs($ev, [$em, new \stdClass(), "no-method"]));
-        $this->assertEquals(false, $sendNotification->invokeArgs($ev, [$em, new Product(), "no-method"]));
+        $this->assertEquals(false, $sendNotification->invokeArgs($ev, [$em, new \stdClass(), 'no-method']));
+        $this->assertEquals(false, $sendNotification->invokeArgs($ev, [$em, new Product(), 'no-method']));
 
-
-        $refPropConf = new \ReflectionProperty("\\Doctrine\\ORM\\EntityManager", "config");
+        $refPropConf = new \ReflectionProperty('\\Doctrine\\ORM\\EntityManager', 'config');
         $refPropConf->setAccessible(true);
         $refPropConf->setValue($em, new Configuration());
 
-        $refPropUnitOfWork = new \ReflectionProperty("\\Doctrine\\ORM\\EntityManager", "unitOfWork");
+        $refPropUnitOfWork = new \ReflectionProperty('\\Doctrine\\ORM\\EntityManager', 'unitOfWork');
         $refPropUnitOfWork->setAccessible(true);
 
         $unitOfWork = $this->getMock(
-            "\\Doctrine\\ORM\\UnitOfWork",
+            '\\Doctrine\\ORM\\UnitOfWork',
             [],
             [$em]
         );
@@ -169,14 +155,12 @@ class EventListenerTest extends BaseTest
         $refPropUnitOfWork->setValue($em, $unitOfWork);
         $this->assertEquals(
             [
-                "code" => 200,
-                "statusCode" => 200,
-                "message" => "OK",
+                'code' => 200,
+                'statusCode' => 200,
+                'message' => 'OK',
 
             ],
-            $sendNotification->invokeArgs($ev, [$em, $entity, "POST"])
+            $sendNotification->invokeArgs($ev, [$em, $entity, 'POST'])
         );
     }
 }
-
-
