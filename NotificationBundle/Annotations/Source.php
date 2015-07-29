@@ -28,7 +28,7 @@ class Source
     public function __construct($metadata = array())
     {
         $this->columns = (isset($metadata['columns']) && $metadata['columns'] != '') ? array_map('trim',
-            explode(',', $metadata['columns'])) : array();
+        explode(',', $metadata['columns'])) : array();
 
         foreach ($this->getColumns() as &$column) {
             if ($column == '*') {

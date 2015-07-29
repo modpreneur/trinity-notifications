@@ -47,7 +47,8 @@ class NotificationManager
         $eventDispatcher,
         NotificationUtils $annotationProcessor,
         EntityConverter $entityConverter
-    ) {
+    )
+    {
         $this->eventDispatcher = $eventDispatcher;
         $this->notificationUtils = $annotationProcessor;
         $this->entityConverter = $entityConverter;
@@ -207,7 +208,8 @@ class NotificationManager
         $method = self::POST,
         $isEncoded = false,
         $secret = null
-    ) {
+    )
+    {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }

@@ -35,7 +35,7 @@ class Methods
     }
 
     /**
-     * @param $typeName
+     * @param string $typeName
      *
      * @return bool
      */
