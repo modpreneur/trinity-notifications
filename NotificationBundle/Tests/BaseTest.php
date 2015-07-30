@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * This file is part of the Trinity project.
+ */
+
 namespace Trinity\NotificationBundle\Tests;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -7,6 +11,8 @@ use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\KernelInterface;
+
+
 
 /**
  * Class BaseTest.
@@ -22,6 +28,8 @@ abstract class BaseTest extends WebTestCase
     /** @var  Client */
     protected $clientObject;
 
+
+
     /**
      * Create kernel.
      */
@@ -34,17 +42,21 @@ abstract class BaseTest extends WebTestCase
         $this->clientObject = self::createClient();
     }
 
+
+
     /**
-     * shutdown kernel.
+     * Shutdown kernel.
      */
     public function tearDown()
     {
         $this->kernelObject->shutdown();
     }
 
+
+
     /**
      * @param string|object $class
-     * @param string        $name
+     * @param string $name
      *
      * @return \ReflectionMethod
      */
@@ -56,6 +68,22 @@ abstract class BaseTest extends WebTestCase
 
         return $method;
     }
+
+
+
+    /**
+     * @param object $class
+     * @param string $property
+     * @param $value
+     */
+    protected function setPropertyValue($class, $property, $value)
+    {
+        $property = new \ReflectionProperty($class, $property);
+        $property->setAccessible(true);
+        $property->setValue($class, $value);
+    }
+
+
 
     /**
      * @return \Doctrine\ORM\EntityManager

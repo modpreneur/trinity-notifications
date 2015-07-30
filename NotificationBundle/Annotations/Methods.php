@@ -18,6 +18,8 @@ class Methods
     /** @var  array */
     protected $types;
 
+
+
     /**
      * @param array $metadata
      */
@@ -26,6 +28,8 @@ class Methods
         $this->types = (isset($metadata['types']) && $metadata['types'] != '') ? ($metadata['types']) : array();
     }
 
+
+
     /**
      * @return array
      */
@@ -33,6 +37,8 @@ class Methods
     {
         return $this->types;
     }
+
+
 
     /**
      * @param string $typeName

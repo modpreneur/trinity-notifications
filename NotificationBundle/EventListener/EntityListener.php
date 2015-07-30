@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
+
+
 /**
  * Class EntityListener.
  *
@@ -52,15 +54,19 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
+
+
     /**
      * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationSender
-     * @param NotificationUtils                                            $annotationProcessor
+     * @param NotificationUtils $annotationProcessor
      */
     public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
     {
         $this->notificationSender = $notificationSender;
         $this->processor = $annotationProcessor;
     }
+
+
 
     /**
      * @param RequestStack $requestStack
@@ -70,6 +76,8 @@ class EntityListener
         $this->request = $requestStack->getCurrentRequest();
     }
 
+
+
     /**
      * @param Request $request
      */
@@ -77,6 +85,8 @@ class EntityListener
     {
         $this->request = $request;
     }
+
+
 
     /**
      * Def in service.yml.
@@ -99,6 +109,8 @@ class EntityListener
         return false;
     }
 
+
+
     /**
      * Def in service.yml.
      *
@@ -115,6 +127,8 @@ class EntityListener
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
 
+
+
     /**
      * Def in service.yml.
      *
@@ -127,6 +141,8 @@ class EntityListener
         $this->entityManager = $args->getEntityManager();
         $this->entity = $args->getObject();
     }
+
+
 
     /**
      * Def in service.yml.
@@ -144,6 +160,8 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }
     }
+
+
 
     /**
      * @param EntityManager $entityManager
@@ -181,6 +199,8 @@ class EntityListener
 
         return false;
     }
+
+
 
     /**
      * @param bool $default (if request not set)

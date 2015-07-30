@@ -8,6 +8,8 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Trinity\NotificationBundle\Exception\SourceException;
 
+
+
 /**
  * Class EntityConverter.
  */
@@ -15,6 +17,8 @@ class EntityConverter
 {
     /** @var  AnnotationsUtils */
     private $annotationsUtils;
+
+
 
     /**
      * EntityConverter constructor.
@@ -25,6 +29,8 @@ class EntityConverter
     {
         $this->annotationsUtils = $annotationsUtils;
     }
+
+
 
     /**
      * Transform property to array.
@@ -55,6 +61,8 @@ class EntityConverter
 
         return $resultArray;
     }
+
+
 
     /**
      * Return entity convert to array.
@@ -112,6 +120,8 @@ class EntityConverter
         return $entityArray;
     }
 
+
+
     /**
      * @param object $entity
      * @param string $method
@@ -140,6 +150,8 @@ class EntityConverter
 
         return $resultArray;
     }
+
+
 
     /**
      * @param object $entity

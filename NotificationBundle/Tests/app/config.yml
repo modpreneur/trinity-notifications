@@ -6,3 +6,5 @@ framework:
     session:
         storage_id: session.storage.filesystem
 
+trinity_notification:
+    driver: api_driver

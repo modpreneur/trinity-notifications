@@ -21,11 +21,15 @@ class EntityWithoutClient
     /** @var  string */
     private $description;
 
+
+
     /** @return int */
     public function getId()
     {
         return $this->id;
     }
+
+
 
     /**
      * @return string
@@ -35,6 +39,8 @@ class EntityWithoutClient
         return "Someone's name";
     }
 
+
+
     /**
      * @return string
      */
@@ -42,6 +48,8 @@ class EntityWithoutClient
     {
         return 'Lorem impsu';
     }
+
+
 
     /** @return Client[] */
     public function getClients()

@@ -15,18 +15,16 @@ services:
         class: Trinity\NotificationBundle\Notification\Annotations\NotificationUtils
 
 
-    trinity.notification.client_sender:
+    trinity.notification.manager:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
-            - "@event_dispatcher"
-            - "@trinity.notification.utils"
-            - "@trinity.notification.entityConverter"
+            - "%trinity.notification.driver_name%"
 
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
         arguments:
-            - "@trinity.notification.client_sender"
+            - "@trinity.notification.manager"
             - "@trinity.notification.utils"
         tags:
             - { name: doctrine.event_listener, event: postUpdate,  priority: 255 }
@@ -35,3 +33,14 @@ services:
             - { name: doctrine.event_listener, event: preFlush,    priority: 255 }
         calls:
             - [setRequestStack, [@request_stack]]
+
+
+
+    trinity.notification.driver.api:
+        class: Trinity\NotificationBundle\Driver\ApiDriver
+        arguments:
+            - "@event_dispatcher"
+            - "@trinity.notification.entityConverter"
+            - "@trinity.notification.utils"
+        tags:
+            - { name: trinity.notification.driver }

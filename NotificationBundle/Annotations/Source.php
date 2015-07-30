@@ -22,13 +22,17 @@ class Source
     /** @var bool */
     protected $allColumnsSelected = false;
 
+
+
     /**
      * @param array $metadata
      */
     public function __construct($metadata = array())
     {
-        $this->columns = (isset($metadata['columns']) && $metadata['columns'] != '') ? array_map('trim',
-        explode(',', $metadata['columns'])) : array();
+        $this->columns = (isset($metadata['columns']) && $metadata['columns'] != '') ? array_map(
+            'trim',
+            explode(',', $metadata['columns'])
+        ) : array();
 
         foreach ($this->getColumns() as &$column) {
             if ($column == '*') {
@@ -40,6 +44,8 @@ class Source
         }
     }
 
+
+
     /**
      * @return bool
      */
@@ -48,6 +54,8 @@ class Source
         return !empty($this->columns);
     }
 
+
+
     /**
      * @return array|null
      */
@@ -55,6 +63,8 @@ class Source
     {
         return $this->columns;
     }
+
+
 
     /**
      * Rename?
@@ -65,6 +75,8 @@ class Source
     {
         return $this->allColumnsSelected;
     }
+
+
 
     /**
      * @param string $column

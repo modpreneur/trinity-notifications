@@ -10,6 +10,8 @@ use Trinity\NotificationBundle\Tests\Entity\EntityMethodDate;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
+
+
 /**
  * Class NotificationUtilsTest.
  */
@@ -26,6 +28,8 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->isNotificationEntity(new \stdClass()));
     }
 
+
+
     /**
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      *
@@ -41,6 +45,8 @@ class NotificationUtilsTest extends BaseTest
         $this->assertNotEmpty($utils->getClassSourceAnnotation(new \stdClass()));
     }
 
+
+
     /**
      * @test
      */
@@ -54,6 +60,8 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertFalse($utils->hasSource(new Product(), 'blah'));
     }
+
+
 
     /**
      * @test
@@ -69,6 +77,8 @@ class NotificationUtilsTest extends BaseTest
         $this->assertTrue($utils->hasHTTPMethod(new \stdClass(), 'Blah'));
     }
 
+
+
     /**
      * @test
      */
@@ -81,6 +91,8 @@ class NotificationUtilsTest extends BaseTest
             ($utils->getClassAnnotations(new Product(), AnnotationsUtils::ANNOTATION_CLASS)[0] instanceof $class)
         );
     }
+
+
 
     /**
      * @test
@@ -98,6 +110,8 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals('post-e-entity', $utils->getUrlPostfix(new EEntity(), 'post'));
     }
 
+
+
     /**
      * @throws \Trinity\NotificationBundle\Exception\MethodException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
@@ -111,6 +125,8 @@ class NotificationUtilsTest extends BaseTest
         // Error
         $utils->toArray(new EntityWithoutSource());
     }
+
+
 
     /**
      * Notification\Source(columns="*").
@@ -133,6 +149,8 @@ class NotificationUtilsTest extends BaseTest
         $allSourceArrayResult = $utils->toArray($allSourceEntity);
         $this->assertEquals($allSourceArrayExpected, $allSourceArrayResult);
     }
+
+
 
     /**
      * @throws \Exception
@@ -190,6 +208,8 @@ class NotificationUtilsTest extends BaseTest
         $errorEntity = new EntityErrorArray();
         $utils->toArray($errorEntity);
     }
+
+
 
     /**
      * @test

@@ -10,6 +10,8 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
 
+
+
 /**
  * Class TestEntity.
  *
@@ -29,11 +31,15 @@ class Product
     /** @var  string */
     private $description = 'Lorem impsu';
 
+
+
     /** @return int */
     public function getId()
     {
         return $this->id;
     }
+
+
 
     /**
      * @return string
@@ -43,6 +49,8 @@ class Product
         return $this->name;
     }
 
+
+
     /**
      * @return string
      */
@@ -50,6 +58,8 @@ class Product
     {
         return $this->description;
     }
+
+
 
     /** @return Client[] */
     public function getClients()
