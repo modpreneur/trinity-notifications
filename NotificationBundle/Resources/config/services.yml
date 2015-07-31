@@ -18,8 +18,8 @@ services:
     trinity.notification.manager:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
+            - "@event_dispatcher"
             - "%trinity.notification.driver_name%"
-
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener

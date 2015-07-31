@@ -9,7 +9,6 @@ namespace Trinity\NotificationBundle\Driver;
 use GuzzleHttp\Client;
 use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Event\Events;
-use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Event\StatusEvent;
 
 
@@ -19,56 +18,48 @@ use Trinity\NotificationBundle\Event\StatusEvent;
  */
 class ApiDriver extends BaseDriver
 {
+    const DELETE = 'DELETE';
+    const POST = 'POST';
+    const PUT = 'PUT';
+
+
+
     /**
      * @param object $entity
+     * @param IClient $client
      * @param array $params
-     *
-     * @return mixed|string
+     * @return string
      */
-    public function execute($entity, $params = [])
+    public function execute($entity, $client, $params = [])
     {
-        // before send event
-        $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
-
         $response = '';
-        $HTTPMethod = 'POST';
+        $HTTPMethod = self::POST;
 
-        if (array_key_exists('HTTPMethod', $params)) {
-            $HTTPMethod = $params['HTTPMethod'];
-        }
+        if ($client->isNotificationEnabled()) {
+            if (array_key_exists('HTTPMethod', $params)) {
+                $HTTPMethod = $params['HTTPMethod'];
+            }
 
-        /** @var IClient[] $clients */
-        $clients = $this->clientsToArray($entity->getClients());
+            $url = $this->prepareURL($client->getNotifyUrl(), $entity, $HTTPMethod);
+            $json = $this->JSONEncodeObject($entity, $client->getSecret());
 
-        if ($clients) {
-            foreach ($clients as $client) {
-                if (!$client->isNotificationEnabled()) {
-                    continue;
-                }
+            try {
+                $response = $this->createRequest($json, $url, $HTTPMethod, true);
+                $this->eventDispatcher->dispatch(
+                    Events::SUCCESS_NOTIFICATION,
+                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
+                );
+            } catch (\Exception $ex) {
+                $message = "$HTTPMethod: URL: " . $url . ' returns error: ' . $ex->getMessage() . '.';
 
-                $url = $this->prepareURL($client->getNotifyUrl(), $entity, $HTTPMethod);
-                $json = $this->JSONEncodeObject($entity, $client->getSecret());
+                $this->eventDispatcher->dispatch(
+                    Events::ERROR_NOTIFICATION,
+                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
+                );
 
-                try {
-                    $response = $this->createRequest($json, $url, $HTTPMethod, true);
-                    $this->eventDispatcher->dispatch(
-                        Events::SUCCESS_NOTIFICATION,
-                        new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
-                    );
-                } catch (\Exception $ex) {
-                    $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
-
-                    $this->eventDispatcher->dispatch(
-                        Events::ERROR_NOTIFICATION,
-                        new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
-                    );
-
-                    $response = "ERROR - $message";
-                }
+                $response = "ERROR - $message";
             }
         }
-
-        $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
 
         return $response;
     }
@@ -90,10 +81,11 @@ class ApiDriver extends BaseDriver
     private function createRequest(
         $data,
         $url,
-        $method = 'POST',
+        $method = self::POST,
         $isEncoded = false,
         $secret = null
-    ) {
+    )
+    {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }
@@ -128,4 +120,5 @@ class ApiDriver extends BaseDriver
     {
         return 'api_driver';
     }
+
 }

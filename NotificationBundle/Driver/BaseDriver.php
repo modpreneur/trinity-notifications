@@ -73,32 +73,6 @@ abstract class BaseDriver implements INotificationDriver
 
 
     /**
-     * Transform clients collection to array.
-     *
-     * @param IClient|Collection|array $clientsCollection
-     *
-     * @return Object[]
-     *
-     * @throws ClientException
-     */
-    protected function clientsToArray($clientsCollection)
-    {
-        $clients = [];
-
-        if ($clientsCollection instanceof Collection) {
-            $clients = $clientsCollection->toArray();
-        } elseif ($clientsCollection instanceof IClient) {
-            $clients[] = $clientsCollection;
-        } elseif (is_array($clientsCollection)) {
-            $clients = $clientsCollection;
-        }
-
-        return $clients;
-    }
-
-
-
-    /**
      * Join client URL with entity url.
      *
      * Example: Client URL => "http://example.com"

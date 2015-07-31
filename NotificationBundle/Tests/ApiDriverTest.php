@@ -37,43 +37,6 @@ class ApiDriverTest extends BaseTest
     /**
      * @test
      */
-    public function testClientToArray()
-    {
-        $driver = $driver = $this->getDriver();
-
-        $method = $this->getMethod($driver, 'clientsToArray');
-
-        $p = new Product();
-        $clients = $method->invokeArgs(
-            $driver,
-            [$p->getClients()]
-        );
-
-        $this->assertNotEmpty($clients);
-
-        foreach ($clients as $client) {
-            $this->assertTrue($client instanceof IClient);
-        }
-
-        // NULL
-        $this->assertEquals([], $method->invokeArgs($driver, [null]));
-
-        // Client
-        $client = new Client();
-        $this->assertEquals([$client], $method->invokeArgs($driver, [$client]));
-
-        // Collection
-        $this->assertEquals([$client], $method->invokeArgs($driver, [new TestCollection()]));
-
-        // Array
-        $this->assertEquals([$client], $method->invokeArgs($driver, [[$client]]));
-    }
-
-
-
-    /**
-     * @test
-     */
     public function testJsonEncodeObject()
     {
         $driver = $driver = $this->getDriver();

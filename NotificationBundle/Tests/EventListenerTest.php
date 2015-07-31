@@ -35,9 +35,11 @@ class EventListenerTest extends BaseTest
 
         $this->assertSame(
             [
-                'code' => 200,
-                'statusCode' => 200,
-                'message' => 'OK',
+                [
+                    'code' => 200,
+                    'statusCode' => 200,
+                    'message' => 'OK',
+                ],
             ],
             $ev->postUpdate($args)
         );
@@ -54,7 +56,6 @@ class EventListenerTest extends BaseTest
             ['_controller' => '\\Trinity\\NotificationBundle\\Tests\\Controllers\\ActiveController::disableNotification']
         );
         $ev->setRequest($request);
-
         $this->assertEmpty($ev->postUpdate($args));
     }
 
@@ -92,7 +93,7 @@ class EventListenerTest extends BaseTest
         );
 
         $result = $ev->postPersist($args);
-        $this->assertContains('ERROR', $result);
+        $this->assertContains('ERROR', reset($result));
     }
 
 
@@ -117,9 +118,11 @@ class EventListenerTest extends BaseTest
 
         $this->assertSame(
             [
-                'code' => 200,
-                'statusCode' => 200,
-                'message' => 'OK',
+                [
+                    'code' => 200,
+                    'statusCode' => 200,
+                    'message' => 'OK',
+                ],
             ],
             $ev->preFlush($args)
         );
@@ -169,10 +172,11 @@ class EventListenerTest extends BaseTest
         $refPropUnitOfWork->setValue($em, $unitOfWork);
         $this->assertEquals(
             [
-                'code' => 200,
-                'statusCode' => 200,
-                'message' => 'OK',
-
+                [
+                    'code' => 200,
+                    'statusCode' => 200,
+                    'message' => 'OK',
+                ],
             ],
             $sendNotification->invokeArgs($ev, [$em, $entity, 'POST'])
         );
