@@ -15,7 +15,7 @@ use Trinity\NotificationBundle\Annotations as Notification;
  *
  * @ORM\Entity()
  *
- * @Notification\Source(columns="id, name, description")
+ * @Notification\Source(columns="id, name, description, tProduct")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
 class Product
@@ -28,6 +28,19 @@ class Product
 
     /** @var  string */
     private $description = 'Lorem impsu';
+
+    /** @var  EEntity */
+    private $tProduct;
+
+
+    /**
+     * Product constructor.
+     */
+    public function __construct()
+    {
+        $this->tProduct = new EEntity();
+    }
+
 
     /** @return int */
     public function getId()
@@ -59,4 +72,25 @@ class Product
 
         return [$c];
     }
+
+
+
+    /**
+     * @return EEntity
+     */
+    public function getTProduct()
+    {
+        return $this->tProduct;
+    }
+
+
+
+    /**
+     * @param EEntity $tProduct
+     */
+    public function setTProduct($tProduct)
+    {
+        $this->tProduct = $tProduct;
+    }
+
 }

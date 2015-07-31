@@ -155,6 +155,13 @@ class EntityConverter
             if ($resultArray[$name] instanceof \DateTime) {
                 $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
             }
+
+            if (is_object($resultArray[$name]) && method_exists($resultArray[$name], 'getId')) {
+                $resultArray[$name] = $resultArray[$name]->getId();
+            }elseif(is_object($resultArray[$name]) && !method_exists($resultArray[$name], 'getId')){
+                $resultArray[$name] = null;
+            }
+
         } catch (\Exception $ex) {
             $resultArray[$name] = null;
         }

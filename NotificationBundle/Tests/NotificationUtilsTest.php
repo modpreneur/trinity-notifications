@@ -168,6 +168,7 @@ class NotificationUtilsTest extends BaseTest
             'id' => 1,
             'name' => "Someone's name",
             'description' => 'Lorem impsu',
+            'tProduct' => 1
         ];
 
         $arrayA = $utils->toArray($p);
