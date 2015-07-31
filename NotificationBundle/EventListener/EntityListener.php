@@ -166,7 +166,7 @@ class EntityListener
             $changeset = $uow->getEntityChangeSet($entity);
 
             foreach ($changeset as $index => $value) {
-                if ($this->processor->hasSource($entity, $index)) {
+                if ($this->processor->hasSource($entity, $index) || $this->processor->hasDependedSource($entity, $index)) {
                     $list[] = $index;
                 }
             }

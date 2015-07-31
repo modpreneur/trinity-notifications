@@ -21,6 +21,7 @@ class AnnotationsUtils
     const DISABLE_ANNOTATION_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DisableNotification';
     const SERIALIZED_NAME = '\\JMS\\Serializer\\Annotation\\SerializedName';
     const FIX_NAMESPACE = 'Proxies\\__CG__\\';
+    const ANNOTATION_DEPENDED_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DependedSource';
 
     /** @var  AnnotationReader */
     protected $reader;
@@ -46,7 +47,7 @@ class AnnotationsUtils
     }
 
     /**
-     * @param Object $entity
+     * @param object $entity
      *
      * @return string
      */
@@ -56,20 +57,20 @@ class AnnotationsUtils
     }
 
     /**
-     * @param Object $entity
+     * @param object $entity
      * @param string $annotationClass
      *
      * @return null|object
      */
     public function getEntityAnnotation($entity, $annotationClass)
     {
-        $class = $this->getEntityClass($entity);
+        //$class = $this->getEntityClass($entity);
 
-        return $this->getClassAnnotation($class, $annotationClass);
+        return $this->getClassAnnotation($entity, $annotationClass);
     }
 
     /**
-     * @param Object $class
+     * @param object $class
      * @param string $annotationClass
      *
      * @return null|object
@@ -82,7 +83,7 @@ class AnnotationsUtils
     }
 
     /**
-     * @param Object $entity
+     * @param object $entity
      * @param string $annotationClass
      *
      * @return array
@@ -104,7 +105,7 @@ class AnnotationsUtils
     }
 
     /**
-     * @param Object $entity
+     * @param object $entity
      *
      * @return NULL|object
      *
@@ -117,6 +118,19 @@ class AnnotationsUtils
             throw new SourceException('Entity has not annotations source.');
         }
 
+        return $classAnn;
+    }
+
+
+    /**
+     * @param object $entity
+     *
+     * @return NULL|object
+     *
+     */
+    public function getClassDependedSourceAnnotation($entity)
+    {
+        $classAnn = $this->getEntityAnnotation($entity, self::ANNOTATION_DEPENDED_CLASS);
         return $classAnn;
     }
 }

@@ -41,6 +41,8 @@ class ApiDriverTest extends BaseTest
         $expected = "{\"id\":1,\"name\":\"Someone's name\",\"description\":\"Lorem impsu\"";
         $result = $method->invokeArgs($driver, [new Product(), 'KJHGHJKKJHJKJHJH']);
 
+        dump($result);
+
         $this->assertStringStartsWith($expected, $result);
 
         $this->assertContains('"hash":', $result);
