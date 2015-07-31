@@ -182,6 +182,6 @@ class NotificationUtils
             $controller,
             $action,
             AnnotationsUtils::DISABLE_ANNOTATION_CLASS
-        )) === null;
+        )) !== null;
     }
 }
