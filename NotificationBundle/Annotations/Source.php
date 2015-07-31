@@ -22,8 +22,6 @@ class Source
     /** @var bool */
     protected $allColumnsSelected = false;
 
-
-
     /**
      * @param array $metadata
      */
@@ -44,8 +42,6 @@ class Source
         }
     }
 
-
-
     /**
      * @return bool
      */
@@ -54,8 +50,6 @@ class Source
         return !empty($this->columns);
     }
 
-
-
     /**
      * @return array|null
      */
@@ -63,8 +57,6 @@ class Source
     {
         return $this->columns;
     }
-
-
 
     /**
      * Rename?
@@ -75,8 +67,6 @@ class Source
     {
         return $this->allColumnsSelected;
     }
-
-
 
     /**
      * @param string $column

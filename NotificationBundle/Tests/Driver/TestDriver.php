@@ -8,8 +8,6 @@ namespace Trinity\NotificationBundle\Tests\Driver;
 
 use Trinity\NotificationBundle\Driver\BaseDriver;
 
-
-
 /**
  * Class TestDriver.
  */
@@ -17,7 +15,7 @@ class TestDriver extends BaseDriver
 {
     /**
      * @param object $entity
-     * @param array $params
+     * @param array  $params
      *
      * @return mixed
      */

@@ -9,8 +9,6 @@ namespace Trinity\NotificationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-
-
 /**
  * Class NotificationEvent.
  *
@@ -21,8 +19,6 @@ class SendEvent extends Event
     /** @var  object */
     protected $entity;
 
-
-
     /**
      * @param object $entity
      */
@@ -30,8 +26,6 @@ class SendEvent extends Event
     {
         $this->entity = $entity;
     }
-
-
 
     /**
      * @return object

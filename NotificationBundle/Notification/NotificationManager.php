@@ -16,8 +16,6 @@ use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Exception\NotificationDriverException;
 
-
-
 /**
  * Class NotificationManager.
  */
@@ -35,13 +33,11 @@ class NotificationManager
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
-
-
     /**
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param string $driverName
+     * @param string                   $driverName
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, $driverName)
     {
@@ -51,8 +47,6 @@ class NotificationManager
         $this->drivers = [];
     }
 
-
-
     /**
      * @param INotificationDriver $driver
      */
@@ -61,18 +55,15 @@ class NotificationManager
         $this->drivers[] = $driver;
     }
 
-
-
     /**
      * @return INotificationDriver
      */
     public function getDriver()
     {
         $this->setDriver();
+
         return $this->driver;
     }
-
-
 
     /**
      *  Process notification.
@@ -101,16 +92,17 @@ class NotificationManager
                 //execute notification
                 $resp = $this->getDriver()->execute($entity, $client, ['HTTPMethod' => $HTTPMethod]);
 
-                if($resp) $response[] = $resp;
+                if ($resp) {
+                    $response[] = $resp;
+                }
 
                 // after
-                $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));            }
+                $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
+            }
         }
 
         return $response;
     }
-
-
 
     /**
      * Transform clients collection to array.
@@ -136,7 +128,6 @@ class NotificationManager
         return $clients;
     }
 
-
     /**
      * @param INotificationDriver|null $driver
      *
@@ -154,11 +145,10 @@ class NotificationManager
             }
 
             if ($this->driver === null && $this->driverName) {
-                throw new NotificationDriverException("Driver " . $this->driverName . " not found.");
+                throw new NotificationDriverException('Driver '.$this->driverName.' not found.');
             } elseif ($this->driver === null) {
-                throw new NotificationDriverException("Notification driver is probably not set.");
+                throw new NotificationDriverException('Notification driver is probably not set.');
             }
-
         } else {
             $this->driver = $driver;
         }

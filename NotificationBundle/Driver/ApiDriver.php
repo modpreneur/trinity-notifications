@@ -11,8 +11,6 @@ use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 
-
-
 /**
  * Class ApiDriver.
  */
@@ -22,12 +20,11 @@ class ApiDriver extends BaseDriver
     const POST = 'POST';
     const PUT = 'PUT';
 
-
-
     /**
-     * @param object $entity
+     * @param object  $entity
      * @param IClient $client
-     * @param array $params
+     * @param array   $params
+     *
      * @return string
      */
     public function execute($entity, $client, $params = [])
@@ -50,7 +47,7 @@ class ApiDriver extends BaseDriver
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
                 );
             } catch (\Exception $ex) {
-                $message = "$HTTPMethod: URL: " . $url . ' returns error: ' . $ex->getMessage() . '.';
+                $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
 
                 $this->eventDispatcher->dispatch(
                     Events::ERROR_NOTIFICATION,
@@ -64,17 +61,15 @@ class ApiDriver extends BaseDriver
         return $response;
     }
 
-
-
     /**
      * Send request to client.
      * Client = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string $url
-     * @param string $method
-     * @param bool $isEncoded
-     * @param null $secret
+     * @param string        $url
+     * @param string        $method
+     * @param bool          $isEncoded
+     * @param null          $secret
      *
      * @return mixed
      */
@@ -84,8 +79,7 @@ class ApiDriver extends BaseDriver
         $method = self::POST,
         $isEncoded = false,
         $secret = null
-    )
-    {
+    ) {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }
@@ -109,8 +103,6 @@ class ApiDriver extends BaseDriver
         return $response->json();
     }
 
-
-
     /**
      * Return name of driver.
      *
@@ -120,5 +112,4 @@ class ApiDriver extends BaseDriver
     {
         return 'api_driver';
     }
-
 }

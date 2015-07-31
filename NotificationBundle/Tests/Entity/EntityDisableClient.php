@@ -5,8 +5,6 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
 
-
-
 /**
  * Class TestEntity.
  *
@@ -26,15 +24,11 @@ class EntityDisableClient
     /** @var  string */
     private $description;
 
-
-
     /** @return int */
     public function getId()
     {
         return $this->id;
     }
-
-
 
     /**
      * @return string
@@ -44,8 +38,6 @@ class EntityDisableClient
         return 'Disable Client';
     }
 
-
-
     /**
      * @return string
      */
@@ -53,8 +45,6 @@ class EntityDisableClient
     {
         return 'Disable client description.';
     }
-
-
 
     /** @return Client[] */
     public function getClients()

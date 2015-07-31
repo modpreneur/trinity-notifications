@@ -6,12 +6,9 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
-use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Driver\ApiDriver;
 use Trinity\NotificationBundle\Tests\Entity\Client;
 use Trinity\NotificationBundle\Tests\Entity\Product;
-
-
 
 /**
  * Class ApiDriverTest.
@@ -32,8 +29,6 @@ class ApiDriverTest extends BaseTest
         return $driver;
     }
 
-
-
     /**
      * @test
      */
@@ -51,8 +46,6 @@ class ApiDriverTest extends BaseTest
         $this->assertContains('"hash":', $result);
         $this->assertContains('"timestamp":', $result);
     }
-
-
 
     /**
      * @test
@@ -72,8 +65,6 @@ class ApiDriverTest extends BaseTest
         $this->assertEquals($expected, $result);
     }
 
-
-
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
      *
@@ -90,8 +81,6 @@ class ApiDriverTest extends BaseTest
         $method = $this->getMethod($driver, 'createRequest');
         $result = $method->invokeArgs($driver, [$data, 'http://example.com/product', 'POST', true]);
     }
-
-
 
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
@@ -110,8 +99,6 @@ class ApiDriverTest extends BaseTest
         $result = $method->invokeArgs($driver, [$data, 'http://example.com/product', 'POST', false]);
     }
 
-
-
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\MethodException
      */
@@ -123,8 +110,6 @@ class ApiDriverTest extends BaseTest
 
         $method->invokeArgs($driver, ['http://example.com', new \stdClass(), 'POST']);
     }
-
-
 
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\ClientException

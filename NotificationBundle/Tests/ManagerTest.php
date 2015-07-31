@@ -8,8 +8,6 @@ use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
  * Class ManagerTest.
  */
@@ -28,7 +26,6 @@ class ManagerTest extends BaseTest
         $this->assertEmpty($result);
     }
 
-
     /**
      * @test
      */
@@ -40,7 +37,7 @@ class ManagerTest extends BaseTest
         $p = new Product();
         $clients = $method->invokeArgs(
             $manager,
-            [ $p->getClients() ]
+            [$p->getClients()]
         );
 
         $this->assertNotEmpty($clients);
@@ -63,7 +60,6 @@ class ManagerTest extends BaseTest
         $this->assertEquals([$client], $method->invokeArgs($manager, [[$client]]));
     }
 
-
     /**
      * @test
      */
@@ -76,24 +72,19 @@ class ManagerTest extends BaseTest
         $this->assertEmpty($result);
     }
 
-
-
     /**
      * @test
      */
     public function testSetDriver()
     {
         $manager = $this->container->get('trinity.notification.manager');
-        $method = $this->getMethod($manager, "setDriver");
+        $method = $this->getMethod($manager, 'setDriver');
 
         $result = $method->invokeArgs($manager, []);
 
-        $result = $method->invokeArgs($manager, [$this->container->get("trinity.notification.driver.api")]);
-        $this->assertInstanceOf("\\Trinity\\NotificationBundle\\Driver\\ApiDriver", $manager->getDriver());
-
+        $result = $method->invokeArgs($manager, [$this->container->get('trinity.notification.driver.api')]);
+        $this->assertInstanceOf('\\Trinity\\NotificationBundle\\Driver\\ApiDriver', $manager->getDriver());
     }
-
-
 
     /**
      * @test
@@ -103,15 +94,13 @@ class ManagerTest extends BaseTest
     public function testSetDriverWrongDriver()
     {
         $manager = $this->container->get('trinity.notification.manager');
-        $method = $this->getMethod($manager, "setDriver");
+        $method = $this->getMethod($manager, 'setDriver');
 
-        $this->setPropertyValue($manager, "driver", null);
-        $this->setPropertyValue($manager, "driverName", "no_exists_driver");
+        $this->setPropertyValue($manager, 'driver', null);
+        $this->setPropertyValue($manager, 'driverName', 'no_exists_driver');
 
         $result = $method->invokeArgs($manager, []);
     }
-
-
 
     /**
      * @test
@@ -121,13 +110,12 @@ class ManagerTest extends BaseTest
     public function testSetDriverNoDriver()
     {
         $manager = $this->container->get('trinity.notification.manager');
-        $method = $this->getMethod($manager, "setDriver");
+        $method = $this->getMethod($manager, 'setDriver');
 
-        $this->setPropertyValue($manager, "driver", null);
-        $this->setPropertyValue($manager, "drivers", []);
-        $this->setPropertyValue($manager, "driverName", null);
+        $this->setPropertyValue($manager, 'driver', null);
+        $this->setPropertyValue($manager, 'drivers', []);
+        $this->setPropertyValue($manager, 'driverName', null);
 
         $result = $method->invokeArgs($manager, []);
     }
-
 }

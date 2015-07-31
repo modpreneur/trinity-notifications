@@ -9,8 +9,6 @@ namespace Trinity\NotificationBundle\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationException;
 
-
-
 /**
  * Class Url.
  *
@@ -24,8 +22,6 @@ class Url
 
     /** @var  array */
     protected $methods = [];
-
-
 
     /**
      * @param array $metadata
@@ -47,8 +43,6 @@ class Url
         $this->methods = (isset($metadata['methods']) && $metadata['methods'] != '') ? $metadata['methods'] : array();
     }
 
-
-
     /**
      * @return string
      */
@@ -56,8 +50,6 @@ class Url
     {
         return $this->postfix;
     }
-
-
 
     /**
      * @return array
@@ -67,8 +59,6 @@ class Url
         return $this->methods;
     }
 
-
-
     /**
      * @return bool
      */
@@ -76,8 +66,6 @@ class Url
     {
         return empty($this->getMethods()) || count($this->getMethods()) == 0;
     }
-
-
 
     /**
      * @param string $method

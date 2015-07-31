@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
  * Class EventListenerTest.
  */
@@ -59,8 +57,6 @@ class EventListenerTest extends BaseTest
         $this->assertEmpty($ev->postUpdate($args));
     }
 
-
-
     /**
      * @test
      */
@@ -76,8 +72,6 @@ class EventListenerTest extends BaseTest
 
         $ev->preRemove($args);
     }
-
-
 
     /**
      * @test
@@ -95,8 +89,6 @@ class EventListenerTest extends BaseTest
         $result = $ev->postPersist($args);
         $this->assertContains('ERROR', reset($result));
     }
-
-
 
     /**
      * @test
@@ -134,8 +126,6 @@ class EventListenerTest extends BaseTest
             $ev->preFlush($args)
         );
     }
-
-
 
     /**
      * @test

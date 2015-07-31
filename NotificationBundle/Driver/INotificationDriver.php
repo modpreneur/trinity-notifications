@@ -7,23 +7,19 @@ namespace Trinity\NotificationBundle\Driver;
 
 use Trinity\FrameworkBundle\Entity\IClient;
 
-
-
 /**
  * Interface INotificationDriver.
  */
 interface INotificationDriver
 {
-
     /**
-     * @param object $entity
+     * @param object  $entity
      * @param IClient $client
-     * @param array $params
+     * @param array   $params
+     *
      * @return mixed
      */
     public function execute($entity, $client, $params = []);
-
-
 
     /**
      * Return name of driver-.
@@ -31,6 +27,4 @@ interface INotificationDriver
      * @return string
      */
     public function getName();
-
-
 }
