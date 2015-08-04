@@ -55,6 +55,22 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->hasSource(new Product(), 'blah'));
     }
 
+
+    /**
+     * @test
+     */
+    public function testHasDependedSource()
+    {
+        $utils = $this->container->get('trinity.notification.utils');
+
+        $this->assertTrue($utils->hasDependedSource(new Product(), 'id'));
+        $this->assertFalse($utils->hasDependedSource(new Product(), 'name'));
+
+        $this->assertFalse($utils->hasDependedSource(new Product(), 'blah'));
+
+        $this->assertFalse($utils->hasDependedSource(new EEntity(), 'blah'));
+    }
+
     /**
      * @test
      */
@@ -207,6 +223,22 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
+
+
+
+    /**
+     * @test
+     */
+    public function testProcessGetMethod(){
+        $utils = $this->container->get('trinity.notification.entityConverter');
+        $method = $this->getMethod($utils, 'processGetMethod');
+
+
+        $e = new Product();
+        $e->setTProduct(new \stdClass());
+        $this->assertEquals(['getTProduct' => null], $method->invokeArgs($utils, [$e, 'getTProduct', 'getTProduct']));
+    }
+
 
     /* ?? 
     public function testEntityToArrayMethodDateError(){

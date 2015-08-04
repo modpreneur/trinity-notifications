@@ -21,7 +21,7 @@ class AnnotationsUtils
     const DISABLE_ANNOTATION_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DisableNotification';
     const SERIALIZED_NAME = '\\JMS\\Serializer\\Annotation\\SerializedName';
     const FIX_NAMESPACE = 'Proxies\\__CG__\\';
-    const ANNOTATION_DEPENDED_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DependedSource';
+    const ANNOTATION_DEPENDED_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DependentSources';
 
     /** @var  AnnotationReader */
     protected $reader;

@@ -57,6 +57,10 @@ class EventListenerTest extends BaseTest
         );
         $ev->setRequest($request);
         $this->assertEmpty($ev->postUpdate($args));
+
+        $this->setPropertyValue($ev, 'defaultValueForEnabledController', FALSE);
+        $this->assertEmpty($ev->postUpdate($args));
+
     }
 
 

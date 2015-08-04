@@ -16,6 +16,7 @@ use Trinity\NotificationBundle\Annotations as Notification;
  * @ORM\Entity()
  *
  * @Notification\Source(columns="id, name, description, tProduct")
+ * @Notification\DependentSources(columns="id")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
 class Product

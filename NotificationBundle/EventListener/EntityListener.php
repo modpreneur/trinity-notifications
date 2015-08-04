@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
+
+
 /**
  * Class EntityListener.
  *
@@ -28,6 +30,10 @@ class EntityListener
     const DELETE = 'DELETE';
     const POST = 'POST';
     const PUT = 'PUT';
+
+    /** @var  bool */
+    protected $defaultValueForEnabledController;
+
 
     /**
      * @var ContainerInterface
@@ -52,15 +58,21 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
+
+
+
+
     /**
      * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationSender
-     * @param NotificationUtils                                            $annotationProcessor
+     * @param NotificationUtils $annotationProcessor
      */
     public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
     {
         $this->notificationSender = $notificationSender;
         $this->processor = $annotationProcessor;
     }
+
+
 
     /**
      * @param RequestStack $requestStack
@@ -70,6 +82,8 @@ class EntityListener
         $this->request = $requestStack->getCurrentRequest();
     }
 
+
+
     /**
      * @param Request $request
      */
@@ -78,12 +92,14 @@ class EntityListener
         $this->request = $request;
     }
 
+
+
     /**
      * Def in service.yml.
      *
      * @param LifecycleEventArgs $args
      *
-     * @return bool
+     * @return array
      *
      * @throws \Exception
      */
@@ -98,6 +114,8 @@ class EntityListener
 
         return false;
     }
+
+
 
     /**
      * Def in service.yml.
@@ -115,6 +133,8 @@ class EntityListener
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
 
+
+
     /**
      * Def in service.yml.
      *
@@ -127,6 +147,8 @@ class EntityListener
         $this->entityManager = $args->getEntityManager();
         $this->entity = $args->getObject();
     }
+
+
 
     /**
      * Def in service.yml.
@@ -144,6 +166,8 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }
     }
+
+
 
     /**
      * @param EntityManager $entityManager
@@ -166,7 +190,11 @@ class EntityListener
             $changeset = $uow->getEntityChangeSet($entity);
 
             foreach ($changeset as $index => $value) {
-                if ($this->processor->hasSource($entity, $index) || $this->processor->hasDependedSource($entity, $index)) {
+                if ($this->processor->hasSource($entity, $index) || $this->processor->hasDependedSource(
+                        $entity,
+                        $index
+                    )
+                ) {
                     $list[] = $index;
                 }
             }
@@ -182,6 +210,8 @@ class EntityListener
         return false;
     }
 
+
+
     /**
      * @param bool $default (if request not set)
      *
@@ -189,6 +219,11 @@ class EntityListener
      */
     private function isNotificationEnabledForController($default = true)
     {
+        //for testing...
+        if($this->defaultValueForEnabledController !== null){
+            $default = $this->defaultValueForEnabledController;
+        }
+
         if ($this->request) {
             $_controller = $this->request->get('_controller');
             $split = explode('::', $_controller);
