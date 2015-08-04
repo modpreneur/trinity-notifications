@@ -9,6 +9,7 @@ namespace Trinity\NotificationBundle\Tests;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\Tests\Common\Persistence\Mapping\TestClassMetadataFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
@@ -159,6 +160,14 @@ class EventListenerTest extends BaseTest
         $refPropConf = new \ReflectionProperty('\\Doctrine\\ORM\\EntityManager', 'config');
         $refPropConf->setAccessible(true);
         $refPropConf->setValue($em, new Configuration());
+
+        $refPropConf = new \ReflectionProperty('\\Doctrine\\ORM\\EntityManager', 'metadataFactory');
+        $refPropConf->setAccessible(true);
+
+        $driver = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        $metadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
+        $refPropConf->setValue($em, new  TestClassMetadataFactory($driver, $metadata));
+
 
         $refPropUnitOfWork = new \ReflectionProperty('\\Doctrine\\ORM\\EntityManager', 'unitOfWork');
         $refPropUnitOfWork->setAccessible(true);
