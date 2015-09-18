@@ -21,17 +21,9 @@ class Methods
     /**
      * @param array $metadata
      */
-    public function __construct($metadata = array())
+    public function __construct($metadata = [])
     {
-        $this->types = (isset($metadata['types']) && $metadata['types'] != '') ? ($metadata['types']) : array();
-    }
-
-    /**
-     * @return array
-     */
-    public function getTypes()
-    {
-        return $this->types;
+        $this->types = (isset($metadata['types']) && $metadata['types'] != '') ? ($metadata['types']) : [];
     }
 
     /**
@@ -42,5 +34,13 @@ class Methods
     public function hasType($typeName)
     {
         return in_array(strtolower($typeName), $this->getTypes());
+    }
+
+    /**
+     * @return array
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 }

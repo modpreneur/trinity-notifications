@@ -7,7 +7,6 @@
 namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Driver\ApiDriver;
-use Trinity\NotificationBundle\Tests\Entity\Client;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 /**
@@ -15,20 +14,6 @@ use Trinity\NotificationBundle\Tests\Entity\Product;
  */
 class ApiDriverTest extends BaseTest
 {
-    /**
-     * @return ApiDriver
-     */
-    private function getDriver()
-    {
-        $driver = new ApiDriver(
-            $this->getContainer()->get('event_dispatcher'),
-            $this->getContainer()->get('trinity.notification.entityConverter'),
-            $this->getContainer()->get('trinity.notification.utils')
-        );
-
-        return $driver;
-    }
-
     /**
      * @test
      */
@@ -47,6 +32,20 @@ class ApiDriverTest extends BaseTest
 
         $this->assertContains('"hash":', $result);
         $this->assertContains('"timestamp":', $result);
+    }
+
+    /**
+     * @return ApiDriver
+     */
+    private function getDriver()
+    {
+        $driver = new ApiDriver(
+            $this->getContainer()->get('event_dispatcher'),
+            $this->getContainer()->get('trinity.notification.entityConverter'),
+            $this->getContainer()->get('trinity.notification.utils')
+        );
+
+        return $driver;
     }
 
     /**

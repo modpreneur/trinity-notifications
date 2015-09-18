@@ -13,11 +13,11 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        return array(
+        return [
             new \Liip\FunctionalTestBundle\LiipFunctionalTestBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Trinity\NotificationBundle\TrinityNotificationBundle(),
-        );
+        ];
     }
 
     /**

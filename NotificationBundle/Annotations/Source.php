@@ -25,12 +25,12 @@ class Source
     /**
      * @param array $metadata
      */
-    public function __construct($metadata = array())
+    public function __construct($metadata = [])
     {
         $this->columns = (isset($metadata['columns']) && $metadata['columns'] != '') ? array_map(
             'trim',
             explode(',', $metadata['columns'])
-        ) : array();
+        ) : [];
 
         foreach ($this->getColumns() as &$column) {
             if ($column == '*') {
@@ -43,19 +43,19 @@ class Source
     }
 
     /**
-     * @return bool
-     */
-    public function hasColumns()
-    {
-        return !empty($this->columns);
-    }
-
-    /**
      * @return array|null
      */
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasColumns()
+    {
+        return !empty($this->columns);
     }
 
     /**

@@ -55,7 +55,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->hasSource(new Product(), 'blah'));
     }
 
-
     /**
      * @test
      */
@@ -184,7 +183,7 @@ class NotificationUtilsTest extends BaseTest
             'id' => 1,
             'name' => "Someone's name",
             'description' => 'Lorem impsu',
-            'tProduct' => 1
+            'tProduct' => 1,
         ];
 
         $arrayA = $utils->toArray($p);
@@ -224,21 +223,18 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
 
-
-
     /**
      * @test
      */
-    public function testProcessGetMethod(){
+    public function testProcessGetMethod()
+    {
         $utils = $this->container->get('trinity.notification.entityConverter');
         $method = $this->getMethod($utils, 'processGetMethod');
-
 
         $e = new Product();
         $e->setTProduct(new \stdClass());
         $this->assertEquals(['getTProduct' => null], $method->invokeArgs($utils, [$e, 'getTProduct', 'getTProduct']));
     }
-
 
     /* ?? 
     public function testEntityToArrayMethodDateError(){

@@ -43,7 +43,7 @@
         <exec executable="php" failonerror="true">
             <arg value='app/console'/>
             <arg value="doctrine:fixtures:load"/>
-            <arg value='-n'/>
+            <arg value='-n'/>x
         </exec>
     </target>
 

@@ -33,7 +33,6 @@ class Product
     /** @var  EEntity */
     private $tProduct;
 
-
     /**
      * Product constructor.
      */
@@ -41,7 +40,6 @@ class Product
     {
         $this->tProduct = new EEntity();
     }
-
 
     /** @return int */
     public function getId()
@@ -74,8 +72,6 @@ class Product
         return [$c];
     }
 
-
-
     /**
      * @return EEntity
      */
@@ -84,8 +80,6 @@ class Product
         return $this->tProduct;
     }
 
-
-
     /**
      * @param EEntity $tProduct
      */
@@ -93,5 +87,4 @@ class Product
     {
         $this->tProduct = $tProduct;
     }
-
 }

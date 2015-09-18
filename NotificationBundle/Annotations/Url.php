@@ -28,7 +28,7 @@ class Url
      *
      * @throws AnnotationException
      */
-    public function __construct($metadata = array())
+    public function __construct($metadata = [])
     {
         $this->postfix = null;
 
@@ -40,7 +40,7 @@ class Url
             throw new AnnotationException('Annotation error: Url postfix is not set.');
         }
 
-        $this->methods = (isset($metadata['methods']) && $metadata['methods'] != '') ? $metadata['methods'] : array();
+        $this->methods = (isset($metadata['methods']) && $metadata['methods'] != '') ? $metadata['methods'] : [];
     }
 
     /**
@@ -52,19 +52,19 @@ class Url
     }
 
     /**
-     * @return array
-     */
-    public function getMethods()
-    {
-        return $this->methods;
-    }
-
-    /**
      * @return bool
      */
     public function isWithoutMethods()
     {
         return empty($this->getMethods()) || count($this->getMethods()) == 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMethods()
+    {
+        return $this->methods;
     }
 
     /**

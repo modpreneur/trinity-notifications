@@ -11,8 +11,6 @@ use Trinity\NotificationBundle\Annotations\Methods;
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 
-
-
 /**
  * Class NotificationUtils.
  */
@@ -20,8 +18,6 @@ class NotificationUtils
 {
     /** @var  AnnotationsUtils */
     private $annotationsUtils;
-
-
 
     /**
      * NotificationUtils constructor.
@@ -32,8 +28,6 @@ class NotificationUtils
     {
         $this->annotationsUtils = $annotationsUtils;
     }
-
-
 
     /**
      * Check GET, POST, PUT, ...
@@ -57,8 +51,6 @@ class NotificationUtils
         return $classAnnotation->hasType($method);
     }
 
-
-
     /**
      * @param object $entity
      *
@@ -76,11 +68,9 @@ class NotificationUtils
         return ($classSourceAnnotation !== null);
     }
 
-
-
     /**
      * @param object $entity
-     * @param null $method
+     * @param null   $method
      *
      * @return mixed|null|string
      */
@@ -120,8 +110,6 @@ class NotificationUtils
         return $postfix;
     }
 
-
-
     /**
      * @param object $entity
      * @param string $source
@@ -135,11 +123,10 @@ class NotificationUtils
         return $this->annotationsUtils->getClassSourceAnnotation($entity)->hasColumn($source);
     }
 
-
-
     /**
      * @param object $entity
      * @param string $source
+     *
      * @return bool
      */
     public function hasDependedSource($entity, $source)
@@ -151,8 +138,6 @@ class NotificationUtils
 
         return $annotation->hasColumn($source);
     }
-
-
 
     /**
      * @param string $class
@@ -192,11 +177,9 @@ class NotificationUtils
         return $result;
     }
 
-
-
     /**
-     * @param string $controller
-     * @param string $action
+     * @param object|string $controller
+     * @param string        $action
      *
      * @return bool
      */

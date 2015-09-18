@@ -39,6 +39,6 @@ class Client implements IClient
      */
     public function getSecret()
     {
-        return '8rsxbgk63b40k8g0cs00ks0s8s0co0884sk4swgk04s8sk8ck';
+        return '3lr3f9q9gbuoks84ogkk4wkc0sc4s4c84wkcscgcwcccwsowws';
     }
 }

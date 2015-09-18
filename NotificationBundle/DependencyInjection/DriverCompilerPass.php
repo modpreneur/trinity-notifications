@@ -29,7 +29,7 @@ class DriverCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition('trinity.notification.manager');
 
         foreach ($container->findTaggedServiceIds('trinity.notification.driver') as $serviceId => $key) {
-            $definition->addMethodCall('addDriver', array(new Reference($serviceId)));
+            $definition->addMethodCall('addDriver', [new Reference($serviceId)]);
         }
     }
 }

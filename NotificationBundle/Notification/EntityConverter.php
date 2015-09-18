@@ -27,36 +27,6 @@ class EntityConverter
     }
 
     /**
-     * Transform property to array.
-     *
-     * ([ 'property-name' => 'property-value' ]).
-     *
-     *
-     * @param object $entity
-     * @param string $property
-     * @param string $methodName
-     *
-     * @return array
-     */
-    private function processProperty($entity, $property, $methodName)
-    {
-        $reflectionProperty = new \ReflectionProperty($entity, $property);
-
-        $annotation = $this->annotationsUtils->getReader()->getPropertyAnnotation(
-            $reflectionProperty,
-            AnnotationsUtils::SERIALIZED_NAME
-        );
-
-        if ($annotation) {
-            $property = $annotation->name;
-        }
-
-        $resultArray = $this->processGetMethod($entity, $property, $methodName);
-
-        return $resultArray;
-    }
-
-    /**
      * Return entity convert to array.
      * Property can be rename via SerializedName annotations.
      *
@@ -113,6 +83,63 @@ class EntityConverter
     }
 
     /**
+     * Transform property to array.
+     *
+     * ([ 'property-name' => 'property-value' ]).
+     *
+     *
+     * @param object $entity
+     * @param string $property
+     * @param string $methodName
+     *
+     * @return array
+     */
+    private function processProperty($entity, $property, $methodName)
+    {
+        $reflectionProperty = new \ReflectionProperty($entity, $property);
+
+        $annotation = $this->annotationsUtils->getReader()->getPropertyAnnotation(
+            $reflectionProperty,
+            AnnotationsUtils::SERIALIZED_NAME
+        );
+
+        if ($annotation) {
+            $property = $annotation->name;
+        }
+
+        $resultArray = $this->processGetMethod($entity, $property, $methodName);
+
+        return $resultArray;
+    }
+
+    /**
+     * @param object $entity
+     * @param string $name
+     * @param string $longName (getName)
+     *
+     * @return array
+     */
+    private function processGetMethod($entity, $name, $longName)
+    {
+        try {
+            $resultArray[ $name ] = call_user_func_array([$entity, $longName], []);
+            if ($resultArray[ $name ] instanceof \DateTime) {
+                $resultArray[ $name ] = $resultArray[ $name ]->format('Y-m-d H:i:s');
+            }
+
+            if (is_object($resultArray[ $name ]) && method_exists($resultArray[ $name ], 'getId')) {
+                $resultArray[ $name ] = $resultArray[ $name ]->getId();
+            } elseif (is_object($resultArray[ $name ]) && !method_exists($resultArray[ $name ], 'getId')) {
+                $resultArray[ $name ] = null;
+            }
+        } catch (\Exception $ex) {
+            $resultArray[ $name ] = null;
+        }
+
+        return $resultArray;
+    }
+
+    /**
      * @param object $entity
      * @param string $method
      * @param string $methodName
@@ -137,34 +164,6 @@ class EntityConverter
         }
 
         $resultArray = $this->processGetMethod($entity, $method, $methodName);
-
-        return $resultArray;
-    }
-
-    /**
-     * @param object $entity
-     * @param string $name
-     * @param string $longName (getName)
-     *
-     * @return array
-     */
-    private function processGetMethod($entity, $name, $longName)
-    {
-        try {
-            $resultArray[$name] = call_user_func_array(array($entity, $longName), []);
-            if ($resultArray[$name] instanceof \DateTime) {
-                $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
-            }
-
-            if (is_object($resultArray[$name]) && method_exists($resultArray[$name], 'getId')) {
-                $resultArray[$name] = $resultArray[$name]->getId();
-            }elseif(is_object($resultArray[$name]) && !method_exists($resultArray[$name], 'getId')){
-                $resultArray[$name] = null;
-            }
-
-        } catch (\Exception $ex) {
-            $resultArray[$name] = null;
-        }
 
         return $resultArray;
     }

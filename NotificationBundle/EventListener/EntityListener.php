@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
-
-
 /**
  * Class EntityListener.
  *
@@ -33,7 +31,6 @@ class EntityListener
 
     /** @var  bool */
     protected $defaultValueForEnabledController;
-
 
     /**
      * @var ContainerInterface
@@ -58,21 +55,15 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
-
-
-
-
     /**
      * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationSender
-     * @param NotificationUtils $annotationProcessor
+     * @param NotificationUtils                                            $annotationProcessor
      */
     public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
     {
         $this->notificationSender = $notificationSender;
         $this->processor = $annotationProcessor;
     }
-
-
 
     /**
      * @param RequestStack $requestStack
@@ -82,8 +73,6 @@ class EntityListener
         $this->request = $requestStack->getCurrentRequest();
     }
 
-
-
     /**
      * @param Request $request
      */
@@ -91,8 +80,6 @@ class EntityListener
     {
         $this->request = $request;
     }
-
-
 
     /**
      * Def in service.yml.
@@ -115,8 +102,6 @@ class EntityListener
         return false;
     }
 
-
-
     /**
      * Def in service.yml.
      *
@@ -133,8 +118,6 @@ class EntityListener
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
 
-
-
     /**
      * Def in service.yml.
      *
@@ -147,8 +130,6 @@ class EntityListener
         $this->entityManager = $args->getEntityManager();
         $this->entity = $args->getObject();
     }
-
-
 
     /**
      * Def in service.yml.
@@ -166,8 +147,6 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }
     }
-
-
 
     /**
      * @param EntityManager $entityManager
@@ -210,8 +189,6 @@ class EntityListener
         return false;
     }
 
-
-
     /**
      * @param bool $default (if request not set)
      *
@@ -220,13 +197,18 @@ class EntityListener
     private function isNotificationEnabledForController($default = true)
     {
         //for testing...
-        if($this->defaultValueForEnabledController !== null){
+        if ($this->defaultValueForEnabledController !== null) {
             $default = $this->defaultValueForEnabledController;
         }
 
         if ($this->request) {
             $_controller = $this->request->get('_controller');
             $split = explode('::', $_controller);
+
+            // No controller.
+            if (count($split) != 2) {
+                return true;
+            }
 
             $controller = $split[0];
             $action = $split[1];

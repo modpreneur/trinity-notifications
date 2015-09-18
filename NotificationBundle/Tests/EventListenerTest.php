@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
-
-
 /**
  * Class EventListenerTest.
  */
@@ -59,12 +57,9 @@ class EventListenerTest extends BaseTest
         $ev->setRequest($request);
         $this->assertEmpty($ev->postUpdate($args));
 
-        $this->setPropertyValue($ev, 'defaultValueForEnabledController', FALSE);
+        $this->setPropertyValue($ev, 'defaultValueForEnabledController', false);
         $this->assertEmpty($ev->postUpdate($args));
-
     }
-
-
 
     /**
      * @test
@@ -82,8 +77,6 @@ class EventListenerTest extends BaseTest
         $ev->preRemove($args);
     }
 
-
-
     /**
      * @test
      */
@@ -100,8 +93,6 @@ class EventListenerTest extends BaseTest
         $result = $ev->postPersist($args);
         $this->assertContains('ERROR', reset($result));
     }
-
-
 
     /**
      * @test
@@ -140,8 +131,6 @@ class EventListenerTest extends BaseTest
         );
     }
 
-
-
     /**
      * @test
      */
@@ -167,7 +156,6 @@ class EventListenerTest extends BaseTest
         $driver = $this->getMock('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
         $metadata = $this->getMock('Doctrine\Common\Persistence\Mapping\ClassMetadata');
         $refPropConf->setValue($em, new  TestClassMetadataFactory($driver, $metadata));
-
 
         $refPropUnitOfWork = new \ReflectionProperty('\\Doctrine\\ORM\\EntityManager', 'unitOfWork');
         $refPropUnitOfWork->setAccessible(true);
