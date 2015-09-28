@@ -12,11 +12,6 @@ class Client implements IClient
     /** @var  bool */
     private $enable;
 
-    /** @return string */
-    public function getNotifyUrl()
-    {
-        return 'http://api.dev.clickandcoach.com/notify/';
-    }
 
     /**
      * @param bool $e
@@ -40,5 +35,12 @@ class Client implements IClient
     public function getSecret()
     {
         return '3lr3f9q9gbuoks84ogkk4wkc0sc4s4c84wkcscgcwcccwsowws';
+    }
+
+
+    /** @return string */
+    public function getNotificationUri()
+    {
+        return 'http://api.dev.clickandcoach.com/notify/';
     }
 }

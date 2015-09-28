@@ -37,7 +37,7 @@ class ApiDriver extends BaseDriver
                 $HTTPMethod = $params['HTTPMethod'];
             }
 
-            $url = $this->prepareURL($client->getNotifyUrl(), $entity, $HTTPMethod);
+            $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
             $json = $this->JSONEncodeObject($entity, $client->getSecret());
 
             try {
