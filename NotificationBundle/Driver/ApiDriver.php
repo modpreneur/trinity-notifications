@@ -7,6 +7,7 @@
 namespace Trinity\NotificationBundle\Driver;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
@@ -85,22 +86,36 @@ class ApiDriver extends BaseDriver
         }
 
         $httpClient = new Client();
+        $request = new Request($method, $url);
+        $response = $httpClient->send($request,[
+            'headers' => ['Content-type' => 'application/json'],
+            'body' => $data,
+            'future' => true,
+        ]);
 
-        $request = $httpClient->createRequest(
-            $method,
-            $url,
-            [
-                'headers' => ['Content-type' => 'application/json'],
-                'body' => $data,
-                'future' => true,
-            ]
-        );
+//        $request = $httpClient->request(
+//            $method,
+//            $url,
+//            [
+//                'headers' => ['Content-type' => 'application/json'],
+//                'body' => $data,
+//                'future' => true,
+//            ]
+//        );
+//
+//        // throw ClientException
+//        /** @var \GuzzleHttp\Message\FutureResponse $response */
+//        $response = $httpClient->send($request);
 
         // throw ClientException
-        /** @var \GuzzleHttp\Message\FutureResponse $response */
-        $response = $httpClient->send($request);
+        return json_decode(
+            (string) $response->getBody(),
+            true,
+            512,
+            0
+        );
 
-        return $response->json();
+//        return $response->json();
     }
 
     /**

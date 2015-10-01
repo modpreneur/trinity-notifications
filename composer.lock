@@ -362,13 +362,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
                 "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
@@ -416,12 +410,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "768b4c0e3e0712a53eb35eaf3ba0d96910225389"
+                "reference": "ecf4fc1ef44d2648e77bf0881a5976b72bfbeabf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/768b4c0e3e0712a53eb35eaf3ba0d96910225389",
-                "reference": "768b4c0e3e0712a53eb35eaf3ba0d96910225389",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ecf4fc1ef44d2648e77bf0881a5976b72bfbeabf",
+                "reference": "ecf4fc1ef44d2648e77bf0881a5976b72bfbeabf",
                 "shasum": ""
             },
             "require": {
@@ -470,7 +464,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-09-16 17:16:54"
+            "time": "2015-09-30 17:14:23"
         },
         {
             "name": "guzzlehttp/promises",
@@ -587,12 +581,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "29980620f5ea3d48799475b4cca773fb9bf7317b"
+                "reference": "7eea27453dbc659e7c6966651be449da02ea1860"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/29980620f5ea3d48799475b4cca773fb9bf7317b",
-                "reference": "29980620f5ea3d48799475b4cca773fb9bf7317b",
+                "url": "https://api.github.com/repos/nette/utils/zipball/7eea27453dbc659e7c6966651be449da02ea1860",
+                "reference": "7eea27453dbc659e7c6966651be449da02ea1860",
                 "shasum": ""
             },
             "require": {
@@ -639,7 +633,7 @@
             ],
             "description": "Nette Utility Classes",
             "homepage": "http://nette.org",
-            "time": "2015-09-26 18:37:16"
+            "time": "2015-09-29 21:28:14"
         },
         {
             "name": "psr/http-message",
@@ -702,13 +696,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/php-fig/log/zipball/9e45edca52cc9c954680072c93e621f8b71fab26",
                 "reference": "9e45edca52cc9c954680072c93e621f8b71fab26",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
@@ -861,12 +849,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "32002d771e0dac6445bd03e43614dfeb53e6d9e7"
+                "reference": "b938a7f1fcf20ca0bb71e189fd0e13d4e5bcc9a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/32002d771e0dac6445bd03e43614dfeb53e6d9e7",
-                "reference": "32002d771e0dac6445bd03e43614dfeb53e6d9e7",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/b938a7f1fcf20ca0bb71e189fd0e13d4e5bcc9a2",
+                "reference": "b938a7f1fcf20ca0bb71e189fd0e13d4e5bcc9a2",
                 "shasum": ""
             },
             "require": {
@@ -900,6 +888,7 @@
                 "symfony/http-foundation": "self.version",
                 "symfony/http-kernel": "self.version",
                 "symfony/intl": "self.version",
+                "symfony/ldap": "self.version",
                 "symfony/locale": "self.version",
                 "symfony/monolog-bridge": "self.version",
                 "symfony/options-resolver": "self.version",
@@ -981,7 +970,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-09-28 11:21:15"
+            "time": "2015-10-01 08:37:26"
         },
         {
             "name": "twig/twig",
@@ -1111,12 +1100,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Transliterator.git",
-                "reference": "d198b77951fe55523a39528cedbc11bf99db9eca"
+                "reference": "868e05be3a9f25ba6424c2dd4849567f50715003"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/d198b77951fe55523a39528cedbc11bf99db9eca",
-                "reference": "d198b77951fe55523a39528cedbc11bf99db9eca",
+                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/868e05be3a9f25ba6424c2dd4849567f50715003",
+                "reference": "868e05be3a9f25ba6424c2dd4849567f50715003",
                 "shasum": ""
             },
             "require": {
@@ -1143,7 +1132,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2015-08-04 14:55:57"
+            "time": "2015-09-28 16:26:35"
         },
         {
             "name": "dmishh/settings-bundle",
@@ -1293,12 +1282,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "233faee4dea14c23e6bca5a77d67eb3c12be8da6"
+                "reference": "5674222e181c9236abdabed19fc660f35619d82c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/233faee4dea14c23e6bca5a77d67eb3c12be8da6",
-                "reference": "233faee4dea14c23e6bca5a77d67eb3c12be8da6",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/5674222e181c9236abdabed19fc660f35619d82c",
+                "reference": "5674222e181c9236abdabed19fc660f35619d82c",
                 "shasum": ""
             },
             "require": {
@@ -1363,7 +1352,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2015-09-22 16:04:40"
+            "time": "2015-09-30 14:52:15"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -1460,13 +1449,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
                 "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3,<8.0-DEV"
@@ -1514,12 +1497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "b055d78ea19835fab563dfc234d4804a9d04966a"
+                "reference": "61ad1bd137bea574dbcfe1ab5ae9e09c02daddd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/b055d78ea19835fab563dfc234d4804a9d04966a",
-                "reference": "b055d78ea19835fab563dfc234d4804a9d04966a",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/61ad1bd137bea574dbcfe1ab5ae9e09c02daddd6",
+                "reference": "61ad1bd137bea574dbcfe1ab5ae9e09c02daddd6",
                 "shasum": ""
             },
             "require": {
@@ -1583,7 +1566,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2015-09-19 08:39:39"
+            "time": "2015-09-30 10:12:43"
         },
         {
             "name": "friendsofsymfony/user-bundle",
@@ -2191,13 +2174,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/d68dbdc53dc358a816f00b300704702b2eaff7b8",
                 "reference": "d68dbdc53dc358a816f00b300704702b2eaff7b8",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2346,20 +2323,20 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "dev-master",
+            "version": "2.2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "40103f9b335f1d84daed099f180b9de12ba080e7"
+                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/40103f9b335f1d84daed099f180b9de12ba080e7",
-                "reference": "40103f9b335f1d84daed099f180b9de12ba080e7",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ef1ca6835468857944d5c3b48fa503d5554cff2f",
+                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6",
+                "php": ">=5.3.3",
                 "phpunit/php-file-iterator": "~1.3",
                 "phpunit/php-text-template": "~1.2",
                 "phpunit/php-token-stream": "~1.3",
@@ -2404,7 +2381,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-08-04 03:45:55"
+            "time": "2015-09-14 06:51:16"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2418,13 +2395,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/6150bf2c35d3fc379e50c7602b75caceaa39dbf0",
                 "reference": "6150bf2c35d3fc379e50c7602b75caceaa39dbf0",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2471,13 +2442,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/31f8b717e51d9a2afca6c9f046f5d69fc27c8686",
                 "reference": "31f8b717e51d9a2afca6c9f046f5d69fc27c8686",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2518,13 +2483,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
                 "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2676,26 +2635,26 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "dev-master",
+            "version": "2.3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "abdf9aaa431c70625abbf28b8879e4510af877c1"
+                "reference": "5e2645ad49d196e020b85598d7c97e482725786a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/abdf9aaa431c70625abbf28b8879e4510af877c1",
-                "reference": "abdf9aaa431c70625abbf28b8879e4510af877c1",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/5e2645ad49d196e020b85598d7c97e482725786a",
+                "reference": "5e2645ad49d196e020b85598d7c97e482725786a",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
-                "php": ">=5.6",
+                "php": ">=5.3.3",
                 "phpunit/php-text-template": "~1.2",
                 "sebastian/exporter": "~1.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "~5"
+                "phpunit/phpunit": "~4.4"
             },
             "suggest": {
                 "ext-soap": "*"
@@ -2703,7 +2662,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.3.x-dev"
                 }
             },
             "autoload": {
@@ -2728,7 +2687,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-07-10 06:54:46"
+            "time": "2015-08-19 09:14:08"
         },
         {
             "name": "sebastian/comparator",
@@ -2806,13 +2765,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/6899b3e33bfbd386d88b5eea5f65f563e8793051",
                 "reference": "6899b3e33bfbd386d88b5eea5f65f563e8793051",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2981,13 +2934,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/23af31f402993cfd94e99cbc4b782e9a78eb0e97",
                 "reference": "23af31f402993cfd94e99cbc4b782e9a78eb0e97",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -3038,13 +2985,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/994d4a811bafe801fb06dccbee797863ba2792ba",
                 "reference": "994d4a811bafe801fb06dccbee797863ba2792ba",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
@@ -3097,13 +3038,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/58b3a85e7999757d6ad81c787a1fbf5ff6c628c6",
                 "reference": "58b3a85e7999757d6ad81c787a1fbf5ff6c628c6",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "type": "library",
             "autoload": {
@@ -3139,13 +3074,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/ab9345fdea575b936b00c915b09540862e92a94f",
                 "reference": "ab9345fdea575b936b00c915b09540862e92a94f",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "symfony/console": "~2.5",
@@ -3241,22 +3170,22 @@
         },
         {
             "name": "trinity/framework",
-            "version": "v1.3.5.10",
+            "version": "v1.3.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity.git",
-                "reference": "e74446878ec7a1bf0ef9dc5b077560fe7384d643"
+                "reference": "7af40f76da6a863e076755b1eb8703d673ec92f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity/zipball/e74446878ec7a1bf0ef9dc5b077560fe7384d643",
-                "reference": "e74446878ec7a1bf0ef9dc5b077560fe7384d643",
+                "url": "https://api.github.com/repos/modpreneur/trinity/zipball/7af40f76da6a863e076755b1eb8703d673ec92f4",
+                "reference": "7af40f76da6a863e076755b1eb8703d673ec92f4",
                 "shasum": ""
             },
             "require": {
                 "apy/datagrid-bundle": "~2.2",
                 "dmishh/settings-bundle": "2.0.*@dev",
-                "doctrine/doctrine-bundle": "dev-master",
+                "doctrine/doctrine-bundle": "~1.5",
                 "doctrine/orm": "~2.5",
                 "friendsofsymfony/user-bundle": "dev-master",
                 "knplabs/doctrine-behaviors": "~1",
@@ -3291,7 +3220,7 @@
                 }
             ],
             "description": "Trinity Framework",
-            "time": "2015-09-28 11:04:58"
+            "time": "2015-10-01 06:12:39"
         }
     ],
     "aliases": [],
