@@ -69,7 +69,11 @@ class ApiDriverTest extends BaseTest
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
      *
-     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
+//     * guzzleHttp exception v6.0
+     * @expectedExceptionMessage Client error: 404
+     *
+//     * guzzleHttp exception v5.3
+//     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
      */
     public function testCreateJSONRequestError()
     {
@@ -86,7 +90,11 @@ class ApiDriverTest extends BaseTest
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
      *
-     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
+//     * guzzleHttp exception v6.0
+     * @expectedExceptionMessage Client error: 404
+     *
+//     * guzzleHttp exception v5.3
+//     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
      */
     public function testCreateJSONRequestError2()
     {

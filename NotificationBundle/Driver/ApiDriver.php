@@ -86,14 +86,20 @@ class ApiDriver extends BaseDriver
         }
 
         $httpClient = new Client();
+            //new interface(v6.0)
         $request = new Request($method, $url);
-        $response = $httpClient->send($request,[
+
+        // throw ClientException
+        /** @var \GuzzleHttp\Message\FutureResponse $response */
+        $response = $httpClient->send($request, [
             'headers' => ['Content-type' => 'application/json'],
             'body' => $data,
             'future' => true,
-        ]);
+         ]);
 
-//        $request = $httpClient->request(
+
+//          //old onterface (v5.3)
+//        $request = $httpClient->createRequest(
 //            $method,
 //            $url,
 //            [
@@ -107,7 +113,6 @@ class ApiDriver extends BaseDriver
 //        /** @var \GuzzleHttp\Message\FutureResponse $response */
 //        $response = $httpClient->send($request);
 
-        // throw ClientException
         return json_decode(
             (string) $response->getBody(),
             true,
@@ -115,7 +120,6 @@ class ApiDriver extends BaseDriver
             0
         );
 
-//        return $response->json();
     }
 
     /**
