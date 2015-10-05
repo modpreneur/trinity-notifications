@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
+
 /**
  * Class EventListenerTest.
  */
@@ -35,9 +36,9 @@ class EventListenerTest extends BaseTest
         $this->assertSame(
             [
                 [
-                    'code' => 200,
+                    'code'       => 200,
                     'statusCode' => 200,
-                    'message' => 'OK',
+                    'message'    => 'OK',
                 ],
             ],
             $ev->postUpdate($args)
@@ -61,6 +62,7 @@ class EventListenerTest extends BaseTest
         $this->assertEmpty($ev->postUpdate($args));
     }
 
+
     /**
      * @test
      */
@@ -76,6 +78,7 @@ class EventListenerTest extends BaseTest
 
         $ev->preRemove($args);
     }
+
 
     /**
      * @test
@@ -93,6 +96,7 @@ class EventListenerTest extends BaseTest
         $result = $ev->postPersist($args);
         $this->assertContains('ERROR', reset($result));
     }
+
 
     /**
      * @test
@@ -115,9 +119,9 @@ class EventListenerTest extends BaseTest
         $this->assertSame(
             [
                 [
-                    'code' => 200,
+                    'code'       => 200,
                     'statusCode' => 200,
-                    'message' => 'OK',
+                    'message'    => 'OK',
                 ],
             ],
             $ev->preFlush($args)
@@ -130,6 +134,7 @@ class EventListenerTest extends BaseTest
             $ev->preFlush($args)
         );
     }
+
 
     /**
      * @test
@@ -174,9 +179,9 @@ class EventListenerTest extends BaseTest
         $this->assertEquals(
             [
                 [
-                    'code' => 200,
+                    'code'       => 200,
                     'statusCode' => 200,
-                    'message' => 'OK',
+                    'message'    => 'OK',
                 ],
             ],
             $sendNotification->invokeArgs($ev, [$em, $entity, 'POST'])

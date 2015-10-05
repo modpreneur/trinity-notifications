@@ -7,6 +7,7 @@ namespace Trinity\NotificationBundle\Tests\Controllers;
 
 use Trinity\NotificationBundle\Annotations\DisableNotification;
 
+
 /**
  * Class ActiveController.
  */
@@ -18,6 +19,7 @@ class ActiveController
     public function disableNotificationAction()
     {
     }
+
 
     /**
      * Test action.

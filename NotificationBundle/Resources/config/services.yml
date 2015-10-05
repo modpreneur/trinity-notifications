@@ -1,6 +1,6 @@
 services:
 
-    trinity.notification.entityConverter:
+    trinity.notification.entity_converter:
         arguments:
             - "@trinity.notification.annotations.utils"
         class: Trinity\NotificationBundle\Notification\EntityConverter
@@ -19,7 +19,7 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
             - "@event_dispatcher"
-            - "%trinity.notification.driver_name%"
+
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
@@ -35,12 +35,11 @@ services:
             - [setRequestStack, [@request_stack]]
 
 
-
     trinity.notification.driver.api:
         class: Trinity\NotificationBundle\Driver\ApiDriver
         arguments:
             - "@event_dispatcher"
-            - "@trinity.notification.entityConverter"
+            - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
         tags:
             - { name: trinity.notification.driver }

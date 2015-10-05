@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
+
 /**
  * Class EntityListener.
  *
@@ -47,7 +48,7 @@ class EntityListener
     protected $entityManager;
 
     /** @var  \Trinity\NotificationBundle\Notification\NotificationManager */
-    protected $notificationSender;
+    protected $notificationManager;
 
     /** @var  NotificationUtils */
     protected $processor;
@@ -55,15 +56,17 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
+
     /**
-     * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationSender
-     * @param NotificationUtils                                            $annotationProcessor
+     * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationManager
+     * @param NotificationUtils $annotationProcessor
      */
-    public function __construct(NotificationManager $notificationSender, NotificationUtils $annotationProcessor)
+    public function __construct(NotificationManager $notificationManager, NotificationUtils $annotationProcessor)
     {
-        $this->notificationSender = $notificationSender;
+        $this->notificationManager = $notificationManager;
         $this->processor = $annotationProcessor;
     }
+
 
     /**
      * @param RequestStack $requestStack
@@ -73,6 +76,7 @@ class EntityListener
         $this->request = $requestStack->getCurrentRequest();
     }
 
+
     /**
      * @param Request $request
      */
@@ -80,6 +84,7 @@ class EntityListener
     {
         $this->request = $request;
     }
+
 
     /**
      * Def in service.yml.
@@ -102,6 +107,7 @@ class EntityListener
         return false;
     }
 
+
     /**
      * Def in service.yml.
      *
@@ -118,6 +124,7 @@ class EntityListener
         return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
     }
 
+
     /**
      * Def in service.yml.
      *
@@ -130,6 +137,7 @@ class EntityListener
         $this->entityManager = $args->getEntityManager();
         $this->entity = $args->getObject();
     }
+
 
     /**
      * Def in service.yml.
@@ -147,6 +155,7 @@ class EntityListener
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }
     }
+
 
     /**
      * @param EntityManager $entityManager
@@ -183,11 +192,12 @@ class EntityListener
         }
 
         if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === 'DELETE') {
-            return $this->notificationSender->send($entity, $method);
+            return $this->notificationManager->send($entity, $method);
         }
 
         return false;
     }
+
 
     /**
      * @param bool $default (if request not set)

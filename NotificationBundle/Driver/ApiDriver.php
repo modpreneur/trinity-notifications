@@ -12,6 +12,7 @@ use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 
+
 /**
  * Class ApiDriver.
  */
@@ -21,10 +22,11 @@ class ApiDriver extends BaseDriver
     const POST = 'POST';
     const PUT = 'PUT';
 
+
     /**
-     * @param object  $entity
+     * @param object $entity
      * @param IClient $client
-     * @param array   $params
+     * @param array $params
      *
      * @return string
      */
@@ -62,15 +64,16 @@ class ApiDriver extends BaseDriver
         return $response;
     }
 
+
     /**
      * Send request to client.
      * Client = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string        $url
-     * @param string        $method
-     * @param bool          $isEncoded
-     * @param null          $secret
+     * @param string $url
+     * @param string $method
+     * @param bool $isEncoded
+     * @param null $secret
      *
      * @return mixed
      */
@@ -86,16 +89,19 @@ class ApiDriver extends BaseDriver
         }
 
         $httpClient = new Client();
-            //new interface(v6.0)
+        //new interface(v6.0)
         $request = new Request($method, $url);
 
         // throw ClientException
         /** @var \GuzzleHttp\Message\FutureResponse $response */
-        $response = $httpClient->send($request, [
-            'headers' => ['Content-type' => 'application/json'],
-            'body' => $data,
-            'future' => true,
-         ]);
+        $response = $httpClient->send(
+            $request,
+            [
+                'headers' => ['Content-type' => 'application/json'],
+                'body'    => $data,
+                'future'  => true,
+            ]
+        );
 
 
 //          //old onterface (v5.3)
@@ -114,13 +120,14 @@ class ApiDriver extends BaseDriver
 //        $response = $httpClient->send($request);
 
         return json_decode(
-            (string) $response->getBody(),
+            (string)$response->getBody(),
             true,
             512,
             0
         );
 
     }
+
 
     /**
      * Return name of driver.

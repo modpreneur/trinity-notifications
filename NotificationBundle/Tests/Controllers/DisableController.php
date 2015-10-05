@@ -7,6 +7,7 @@ namespace Trinity\NotificationBundle\Tests\Controllers;
 
 use Trinity\NotificationBundle\Annotations\DisableNotification;
 
+
 /**
  * @DisableNotification()
  */

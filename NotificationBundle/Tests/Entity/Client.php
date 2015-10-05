@@ -4,6 +4,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Trinity\FrameworkBundle\Entity\IClient;
 
+
 /**
  * Class Client.
  */
@@ -21,6 +22,7 @@ class Client implements IClient
         $this->enable = $e;
     }
 
+
     /**
      * @return bool
      */
@@ -28,6 +30,7 @@ class Client implements IClient
     {
         return $this->enable;
     }
+
 
     /**
      * @return string

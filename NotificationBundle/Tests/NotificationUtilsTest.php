@@ -10,6 +10,7 @@ use Trinity\NotificationBundle\Tests\Entity\EntityMethodDate;
 use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
+
 /**
  * Class NotificationUtilsTest.
  */
@@ -26,6 +27,7 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->isNotificationEntity(new \stdClass()));
     }
 
+
     /**
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      *
@@ -41,6 +43,7 @@ class NotificationUtilsTest extends BaseTest
         $this->assertNotEmpty($utils->getClassSourceAnnotation(new \stdClass()));
     }
 
+
     /**
      * @test
      */
@@ -54,6 +57,7 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertFalse($utils->hasSource(new Product(), 'blah'));
     }
+
 
     /**
      * @test
@@ -70,6 +74,7 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->hasDependedSource(new EEntity(), 'blah'));
     }
 
+
     /**
      * @test
      */
@@ -84,6 +89,7 @@ class NotificationUtilsTest extends BaseTest
         $this->assertTrue($utils->hasHTTPMethod(new \stdClass(), 'Blah'));
     }
 
+
     /**
      * @test
      */
@@ -96,6 +102,7 @@ class NotificationUtilsTest extends BaseTest
             ($utils->getClassAnnotations(new Product(), AnnotationsUtils::ANNOTATION_CLASS)[0] instanceof $class)
         );
     }
+
 
     /**
      * @test
@@ -113,6 +120,7 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals('post-e-entity', $utils->getUrlPostfix(new EEntity(), 'post'));
     }
 
+
     /**
      * @throws \Trinity\NotificationBundle\Exception\MethodException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
@@ -127,6 +135,7 @@ class NotificationUtilsTest extends BaseTest
         $utils->toArray(new EntityWithoutSource());
     }
 
+
     /**
      * Notification\Source(columns="*").
      *
@@ -139,15 +148,16 @@ class NotificationUtilsTest extends BaseTest
 
         $allSourceEntity = new AllSourceEntity();
         $allSourceArrayExpected = [
-            'id' => 1,
-            'name' => 'All source',
+            'id'          => 1,
+            'name'        => 'All source',
             'description' => 'Description text.',
-            'price' => '10$',
+            'price'       => '10$',
         ];
 
         $allSourceArrayResult = $utils->toArray($allSourceEntity);
         $this->assertEquals($allSourceArrayExpected, $allSourceArrayResult);
     }
+
 
     /**
      * @throws \Exception
@@ -180,10 +190,10 @@ class NotificationUtilsTest extends BaseTest
         $p = new Product();
 
         $sourceArrayA = [
-            'id' => 1,
-            'name' => "Someone's name",
+            'id'          => 1,
+            'name'        => "Someone's name",
             'description' => 'Lorem impsu',
-            'tProduct' => 1,
+            'tProduct'    => 1,
         ];
 
         $arrayA = $utils->toArray($p);
@@ -192,11 +202,11 @@ class NotificationUtilsTest extends BaseTest
         $p = new EEntity();
 
         $sourceEE = [
-            'id' => 1,
-            'name' => 'EE Entity',
+            'id'          => 1,
+            'name'        => 'EE Entity',
             'description' => 'Description for entity.',
-            'date' => '2010-11-12 00:00:00',
-            'fullPrice' => '10$',
+            'date'        => '2010-11-12 00:00:00',
+            'fullPrice'   => '10$',
             'test-method' => 'test',
         ];
 
@@ -206,6 +216,7 @@ class NotificationUtilsTest extends BaseTest
         $errorEntity = new EntityErrorArray();
         $utils->toArray($errorEntity);
     }
+
 
     /**
      * @test
@@ -222,6 +233,7 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
+
 
     /**
      * @test

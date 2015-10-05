@@ -11,6 +11,7 @@ use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Tests\Entity\Client;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
+
 /**
  * Class EventTest.
  */
@@ -60,6 +61,7 @@ class EventTest extends BaseTest
         $this->assertFalse($event->hasError());
         $this->assertNull($event->getMessage());
     }
+
 
     /**
      * @test

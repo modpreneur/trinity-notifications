@@ -9,6 +9,7 @@ namespace Trinity\NotificationBundle\Tests;
 use Trinity\NotificationBundle\Driver\ApiDriver;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
+
 /**
  * Class ApiDriverTest.
  */
@@ -34,6 +35,7 @@ class ApiDriverTest extends BaseTest
         $this->assertContains('"timestamp":', $result);
     }
 
+
     /**
      * @return ApiDriver
      */
@@ -47,6 +49,7 @@ class ApiDriverTest extends BaseTest
 
         return $driver;
     }
+
 
     /**
      * @test
@@ -66,14 +69,15 @@ class ApiDriverTest extends BaseTest
         $this->assertEquals($expected, $result);
     }
 
+
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
      *
-//     * guzzleHttp exception v6.0
+     * //     * guzzleHttp exception v6.0
      * @expectedExceptionMessage Client error: 404
      *
-//     * guzzleHttp exception v5.3
-//     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
+     * //     * guzzleHttp exception v5.3
+     * //     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
      */
     public function testCreateJSONRequestError()
     {
@@ -87,14 +91,15 @@ class ApiDriverTest extends BaseTest
         $result = $method->invokeArgs($driver, [$data, 'http://example.com/product', 'POST', true]);
     }
 
+
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
      *
-//     * guzzleHttp exception v6.0
+     * //     * guzzleHttp exception v6.0
      * @expectedExceptionMessage Client error: 404
      *
-//     * guzzleHttp exception v5.3
-//     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
+     * //     * guzzleHttp exception v5.3
+     * //     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
      */
     public function testCreateJSONRequestError2()
     {
@@ -108,6 +113,7 @@ class ApiDriverTest extends BaseTest
         $result = $method->invokeArgs($driver, [$data, 'http://example.com/product', 'POST', false]);
     }
 
+
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\MethodException
      */
@@ -119,6 +125,7 @@ class ApiDriverTest extends BaseTest
 
         $method->invokeArgs($driver, ['http://example.com', new \stdClass(), 'POST']);
     }
+
 
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\ClientException

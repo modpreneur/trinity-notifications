@@ -13,6 +13,7 @@ use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 
+
 /**
  * Class BaseDriver.
  */
@@ -27,11 +28,12 @@ abstract class BaseDriver implements INotificationDriver
     /** @var  EventDispatcher */
     protected $eventDispatcher;
 
+
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcher   $eventDispatcher
-     * @param EntityConverter   $entityConverter
+     * @param EventDispatcher $eventDispatcher
+     * @param EntityConverter $entityConverter
      * @param NotificationUtils $notificationUtils
      */
     public function __construct(
@@ -43,6 +45,7 @@ abstract class BaseDriver implements INotificationDriver
         $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
     }
+
 
     /**
      * Returns object encoded in json.
@@ -61,6 +64,7 @@ abstract class BaseDriver implements INotificationDriver
 
         return json_encode($result);
     }
+
 
     /**
      * Join client URL with entity url.

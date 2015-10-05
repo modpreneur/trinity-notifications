@@ -10,6 +10,7 @@ namespace Trinity\NotificationBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Trinity\FrameworkBundle\Entity\IClient;
 
+
 /**
  *
  */
@@ -41,15 +42,16 @@ class StatusEvent extends Event
     /** @var  int */
     protected $entityId;
 
+
     /**
-     * @param IClient         $client
-     * @param string          $entityName
-     * @param int             $entityId
-     * @param string          $url
-     * @param string          $json
-     * @param string          $method
+     * @param IClient $client
+     * @param string $entityName
+     * @param int $entityId
+     * @param string $url
+     * @param string $json
+     * @param string $method
      * @param \Exception|null $exception
-     * @param string          $message
+     * @param string $message
      */
     public function __construct(
         $client,
@@ -76,6 +78,7 @@ class StatusEvent extends Event
         }
     }
 
+
     /**
      * @return \Exception
      */
@@ -83,6 +86,7 @@ class StatusEvent extends Event
     {
         return $this->exception;
     }
+
 
     /**
      * @return string
@@ -92,6 +96,7 @@ class StatusEvent extends Event
         return $this->message;
     }
 
+
     /**
      * @return string
      */
@@ -99,6 +104,7 @@ class StatusEvent extends Event
     {
         return $this->entityName;
     }
+
 
     /**
      * @return string
@@ -108,6 +114,7 @@ class StatusEvent extends Event
         return $this->url;
     }
 
+
     /**
      * @return string
      */
@@ -115,6 +122,7 @@ class StatusEvent extends Event
     {
         return $this->method;
     }
+
 
     /**
      * @return string
@@ -124,6 +132,7 @@ class StatusEvent extends Event
         return $this->json;
     }
 
+
     /**
      * @return bool
      */
@@ -131,6 +140,7 @@ class StatusEvent extends Event
     {
         return $this->exception !== null;
     }
+
 
     /**
      * @return IClient
@@ -140,6 +150,7 @@ class StatusEvent extends Event
         return $this->client;
     }
 
+
     /**
      * @return int
      */
@@ -147,6 +158,7 @@ class StatusEvent extends Event
     {
         return $this->entityId;
     }
+
 
     /**
      * @param int $entityId

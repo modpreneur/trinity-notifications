@@ -9,6 +9,7 @@ namespace Trinity\NotificationBundle\Tests;
 use Trinity\NotificationBundle\Annotations\Source;
 use Trinity\NotificationBundle\Annotations\Url;
 
+
 /**
  * Class AnnotationsTest.
  */
@@ -22,6 +23,7 @@ class AnnotationsTest extends BaseTest
     {
         $urlClass = new Url();
     }
+
 
     /**
      * @test

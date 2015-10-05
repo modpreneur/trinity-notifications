@@ -5,6 +5,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
 
+
 /**
  * Class TestEntity.
  *
@@ -27,6 +28,7 @@ class AllSourceEntity
     /** @var string */
     private $price = '10$';
 
+
     /**
      * @return int
      */
@@ -34,6 +36,7 @@ class AllSourceEntity
     {
         return $this->id;
     }
+
 
     /**
      * @param int $id
@@ -43,6 +46,7 @@ class AllSourceEntity
         $this->id = $id;
     }
 
+
     /**
      * @return string
      */
@@ -50,6 +54,7 @@ class AllSourceEntity
     {
         return $this->name;
     }
+
 
     /**
      * @param string $name
@@ -59,6 +64,7 @@ class AllSourceEntity
         $this->name = $name;
     }
 
+
     /**
      * @return string
      */
@@ -66,6 +72,7 @@ class AllSourceEntity
     {
         return $this->description;
     }
+
 
     /**
      * @param string $description
@@ -75,6 +82,7 @@ class AllSourceEntity
         $this->description = $description;
     }
 
+
     /**
      * @return string
      */
@@ -82,6 +90,7 @@ class AllSourceEntity
     {
         return $this->price;
     }
+
 
     /**
      * @param string $price

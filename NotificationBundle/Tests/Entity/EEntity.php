@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\SerializedName;
 use Trinity\NotificationBundle\Annotations as Notification;
 
+
 /**
  * Class TestEntity.
  *
@@ -41,6 +42,7 @@ class EEntity
      */
     private $date;
 
+
     /**
      * EEntity constructor.
      */
@@ -48,6 +50,7 @@ class EEntity
     {
         $this->date = new \DateTime('2010-11-12');
     }
+
 
     /**
      * @return mixed
@@ -57,6 +60,7 @@ class EEntity
         return $this->id;
     }
 
+
     /**
      * @param mixed $id
      */
@@ -64,6 +68,7 @@ class EEntity
     {
         $this->id = $id;
     }
+
 
     /**
      * @return mixed
@@ -73,6 +78,7 @@ class EEntity
         return $this->name;
     }
 
+
     /**
      * @param mixed $name
      */
@@ -80,6 +86,7 @@ class EEntity
     {
         $this->name = $name;
     }
+
 
     /**
      * @return string
@@ -89,6 +96,7 @@ class EEntity
         return $this->desc;
     }
 
+
     /**
      * @param mixed $desc
      */
@@ -96,6 +104,7 @@ class EEntity
     {
         $this->desc = $desc;
     }
+
 
     /**
      * @return mixed
@@ -105,6 +114,7 @@ class EEntity
         return $this->date;
     }
 
+
     /**
      * @param mixed $date
      */
@@ -113,6 +123,7 @@ class EEntity
         $this->date = $date;
     }
 
+
     /**
      * @return string
      */
@@ -120,6 +131,7 @@ class EEntity
     {
         return '10$';
     }
+
 
     /**
      * @SerializedName("test-method")

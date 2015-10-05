@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Trinity\NotificationBundle\Exception\SourceException;
 
+
 /**
  * Class AnnotationsUtils.
  */
@@ -26,6 +27,7 @@ class AnnotationsUtils
     /** @var  AnnotationReader */
     protected $reader;
 
+
     /**
      * @param Reader|null $reader
      */
@@ -38,6 +40,7 @@ class AnnotationsUtils
         }
     }
 
+
     /**
      * @return AnnotationReader
      */
@@ -45,6 +48,7 @@ class AnnotationsUtils
     {
         return $this->reader;
     }
+
 
     /**
      * @param object $entity
@@ -55,6 +59,7 @@ class AnnotationsUtils
     {
         return str_replace(self::FIX_NAMESPACE, '', get_class($entity));
     }
+
 
     /**
      * @param object $entity
@@ -69,6 +74,7 @@ class AnnotationsUtils
         return $this->getClassAnnotation($entity, $annotationClass);
     }
 
+
     /**
      * @param object $class
      * @param string $annotationClass
@@ -81,6 +87,7 @@ class AnnotationsUtils
 
         return $this->reader->getClassAnnotation($reflectionObject, $annotationClass);
     }
+
 
     /**
      * @param object $entity
@@ -104,6 +111,7 @@ class AnnotationsUtils
         return $ants;
     }
 
+
     /**
      * @param object $entity
      *
@@ -121,6 +129,7 @@ class AnnotationsUtils
 
         return $classAnn;
     }
+
 
     /**
      * @param object $entity
