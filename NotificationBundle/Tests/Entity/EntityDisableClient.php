@@ -4,6 +4,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
+use Trinity\NotificationBundle\Entity\INotificationEntity;
 
 
 /**
@@ -14,7 +15,7 @@ use Trinity\NotificationBundle\Annotations as Notification;
  * @Notification\Source(columns="id, name, description")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityDisableClient
+class EntityDisableClient implements INotificationEntity
 {
     /** @var  int */
     private $id = 1;

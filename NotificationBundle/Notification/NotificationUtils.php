@@ -8,6 +8,7 @@
 namespace Trinity\NotificationBundle\Notification\Annotations;
 
 use Trinity\NotificationBundle\Annotations\Methods;
+use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 
@@ -59,10 +60,16 @@ class NotificationUtils
      * @param object $entity
      *
      * @return bool
+     * @throws NotificationException
      */
     public function isNotificationEntity($entity)
     {
         $class = $this->annotationsUtils->getEntityClass($entity);
+
+        if(in_array('\Trinity\NotificationBundle\Entity\INotificationEntity', class_implements($class))){
+            throw new NotificationException("Notification entity($class) must be extended via INotificationEntity.");
+        }
+
         $reflectionObject = new \ReflectionClass($class);
         $classSourceAnnotation = $this->annotationsUtils->getReader()->getClassAnnotation(
             $reflectionObject,

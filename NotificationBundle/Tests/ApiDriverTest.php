@@ -6,7 +6,7 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
-use Trinity\NotificationBundle\Driver\ApiDriver;
+use Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -43,7 +43,7 @@ class ApiDriverTest extends BaseTest
     {
         $driver = new ApiDriver(
             $this->getContainer()->get('event_dispatcher'),
-            $this->getContainer()->get('trinity.notification.entityConverter'),
+            $this->getContainer()->get('trinity.notification.entity_converter'),
             $this->getContainer()->get('trinity.notification.utils')
         );
 

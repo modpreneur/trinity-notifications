@@ -4,11 +4,11 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers\ApiDriver;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\NotificationBundle\Driver\BaseDriver;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 
@@ -25,7 +25,7 @@ class ApiDriver extends BaseDriver
 
     /**
      * @param object $entity
-     * @param IClient $client
+     * @param IApiClient $client
      * @param array $params
      *
      * @return string
@@ -83,17 +83,16 @@ class ApiDriver extends BaseDriver
         $method = self::POST,
         $isEncoded = false,
         $secret = null
-    ) {
+    )
+    {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }
 
         $httpClient = new Client();
+
         //new interface(v6.0)
         $request = new Request($method, $url);
-
-        // throw ClientException
-        /** @var \GuzzleHttp\Message\FutureResponse $response */
         $response = $httpClient->send(
             $request,
             [
@@ -102,22 +101,6 @@ class ApiDriver extends BaseDriver
                 'future'  => true,
             ]
         );
-
-
-//          //old onterface (v5.3)
-//        $request = $httpClient->createRequest(
-//            $method,
-//            $url,
-//            [
-//                'headers' => ['Content-type' => 'application/json'],
-//                'body' => $data,
-//                'future' => true,
-//            ]
-//        );
-//
-//        // throw ClientException
-//        /** @var \GuzzleHttp\Message\FutureResponse $response */
-//        $response = $httpClient->send($request);
 
         return json_decode(
             (string)$response->getBody(),

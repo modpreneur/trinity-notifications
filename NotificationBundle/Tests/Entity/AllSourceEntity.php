@@ -3,7 +3,9 @@
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Annotations as Notification;
+use Trinity\NotificationBundle\Entity\INotificationEntity;
 
 
 /**
@@ -14,7 +16,7 @@ use Trinity\NotificationBundle\Annotations as Notification;
  * @Notification\Source(columns="*")
  * @Notification\Methods(types={"put", "post"})
  */
-class AllSourceEntity
+class AllSourceEntity implements INotificationEntity
 {
     /** @var int */
     private $id = 1;
@@ -98,5 +100,12 @@ class AllSourceEntity
     public function setPrice($price)
     {
         $this->price = $price;
+    }
+
+
+    /** @return IClient[] */
+    public function getClients()
+    {
+        // TODO: Implement getClients() method.
     }
 }

@@ -36,7 +36,7 @@ services:
 
 
     trinity.notification.driver.api:
-        class: Trinity\NotificationBundle\Driver\ApiDriver
+        class: Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"

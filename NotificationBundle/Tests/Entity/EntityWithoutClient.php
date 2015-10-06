@@ -2,6 +2,9 @@
 
 namespace Trinity\NotificationBundle\Tests\Entity;
 
+use Trinity\NotificationBundle\Entity\INotificationEntity;
+
+
 /**
  * Class TestEntity.
  *
@@ -10,7 +13,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
  * @Notification\Source(columns="id, name, desc, date")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityWithoutClient
+class EntityWithoutClient implements INotificationEntity
 {
     /** @var  int */
     private $id;

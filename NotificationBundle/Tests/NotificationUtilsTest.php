@@ -168,7 +168,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArray()
     {
-        $utils = $this->container->get('trinity.notification.entityConverter');
+        $utils = $this->container->get('trinity.notification.entity_converter');
         $class = (get_class($utils));
         $method = $this->getMethod($class, 'processProperty');
 
@@ -223,7 +223,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArrayMethodDate()
     {
-        $utils = $this->container->get('trinity.notification.entityConverter');
+        $utils = $this->container->get('trinity.notification.entity_converter');
         $class = (get_class($utils));
         $method = $this->getMethod($class, 'processMethod');
 
@@ -240,7 +240,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testProcessGetMethod()
     {
-        $utils = $this->container->get('trinity.notification.entityConverter');
+        $utils = $this->container->get('trinity.notification.entity_converter');
         $method = $this->getMethod($utils, 'processGetMethod');
 
         $e = new Product();

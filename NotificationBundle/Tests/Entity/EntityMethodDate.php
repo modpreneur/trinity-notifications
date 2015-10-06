@@ -3,7 +3,9 @@
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Annotations as Notification;
+use Trinity\NotificationBundle\Entity\INotificationEntity;
 
 
 /**
@@ -14,7 +16,7 @@ use Trinity\NotificationBundle\Annotations as Notification;
  * @Notification\Source(columns="date")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityMethodDate
+class EntityMethodDate implements INotificationEntity
 {
     /**
      * @return \DateTime
@@ -22,5 +24,12 @@ class EntityMethodDate
     public function getDate()
     {
         return new \DateTime('2010-11-12');
+    }
+
+
+    /** @return IClient[] */
+    public function getClients()
+    {
+        // TODO: Implement getClients() method.
     }
 }

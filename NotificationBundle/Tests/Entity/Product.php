@@ -9,6 +9,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
+use Trinity\NotificationBundle\Entity\INotificationEntity;
 
 
 /**
@@ -20,7 +21,7 @@ use Trinity\NotificationBundle\Annotations as Notification;
  * @Notification\DependentSources(columns="id")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class Product
+class Product implements INotificationEntity
 {
     /** @var  int */
     private $id = 1;
