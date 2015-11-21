@@ -1,9 +1,21 @@
 services:
 
     trinity.notification.entity_converter:
+        class: Trinity\NotificationBundle\Notification\EntityConverter
         arguments:
             - "@trinity.notification.annotations.utils"
-        class: Trinity\NotificationBundle\Notification\EntityConverter
+            - @logger
+            - @doctrine.orm.entity_manager
+
+
+    trinity.notification.services.notification_parser:
+        class: Trinity\NotificationBundle\Notification\NotificationParser
+        arguments:
+            - @logger
+            - @doctrine.orm.entity_manager
+            - @trinity.notification.entity_converter
+            - %necktie_client_secret%
+
 
     trinity.notification.annotations.utils:
         class: Trinity\NotificationBundle\Notification\AnnotationsUtils
@@ -37,6 +49,15 @@ services:
 
     trinity.notification.driver.api:
         class: Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver
+        arguments:
+            - "@event_dispatcher"
+            - "@trinity.notification.entity_converter"
+            - "@trinity.notification.utils"
+        tags:
+            - { name: trinity.notification.driver }
+
+    trinity.notification.driver.client_api:
+        class: Trinity\NotificationBundle\Drivers\ClientApiDriver\ClientApiDriver
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"
