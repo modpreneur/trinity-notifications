@@ -121,12 +121,11 @@ class ClientApiDriver extends BaseDriver
 
         //new interface(v6.0)
         $request = new Request($method, $url);
-        $request->withHeader("Authorization", "Bearer $accessToken");
 
         $response = $httpClient->send(
             $request,
             [
-                'headers' => ['Content-type' => 'application/json'],
+                'headers' => ['Content-type' => 'application/json', "Authorization" => "Bearer $accessToken"],
                 'body'    => $data,
                 'future'  => true,
             ]
