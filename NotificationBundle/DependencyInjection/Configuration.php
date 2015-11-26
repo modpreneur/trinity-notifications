@@ -26,10 +26,10 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('trinity_notification');
 
-        $rootNode->children()->scalarNode('necktie_notify_url');
-        $rootNode->children()->scalarNode('necktie_oauth_url');
-        $rootNode->children()->scalarNode('necktie_client_id');
-        $rootNode->children()->scalarNode('necktie_client_secret');
+        $rootNode->children()->scalarNode('necktie_notify_url')->defaultValue("");
+        $rootNode->children()->scalarNode('necktie_oauth_url')->defaultValue("");
+        $rootNode->children()->scalarNode('necktie_client_id')->defaultValue("");
+        $rootNode->children()->scalarNode('necktie_client_secret')->defaultValue("");
         $rootNode
             ->children()
                 ->arrayNode("drivers")
