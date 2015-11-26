@@ -11,7 +11,7 @@ services:
         arguments:
             - "@logger"
             - "@trinity.notification.entity_converter"
-            - "%necktie_client_secret%"
+            - "%trinity.notification.necktie_client_secret%"
         calls:
             - [setEntityManager, ["@doctrine.orm.entity_manager"]]
 
