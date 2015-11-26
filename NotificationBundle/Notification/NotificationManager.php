@@ -25,9 +25,6 @@ class NotificationManager
     /** @var  INotificationDriver[] */
     private $drivers;
 
-    /** @var INotificationDriver */
-    private $driver;
-
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
@@ -130,6 +127,7 @@ class NotificationManager
 
     protected function sendToNecktie($entity, $HTTPMethod = 'GET')
     {
+
         $response = [];
         $necktie = new Necktie();
         $necktie->setNotificationUri($this->necktieNotifyUri);
@@ -148,7 +146,6 @@ class NotificationManager
             // after
             $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
         }
-
         return $response;
     }
 

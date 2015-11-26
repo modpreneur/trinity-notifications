@@ -29,8 +29,15 @@ class DriverCompilerPass implements CompilerPassInterface
 
         $definition = $container->getDefinition('trinity.notification.manager');
 
+        // Get enabled drivers whose were set in the TrinityNotificationExtension
+        $enabledDrivers = explode(",", $container->getParameter("trinity.enabled_drivers"));
+
         foreach ($container->findTaggedServiceIds('trinity.notification.driver') as $serviceId => $key) {
-            $definition->addMethodCall('addDriver', [new Reference($serviceId)]);
+            // If the driver was configured as enabled or there are no configured drivers
+            if(in_array($serviceId, $enabledDrivers) || empty($enabledDrivers))
+            {
+                $definition->addMethodCall('addDriver', [new Reference($serviceId)]);
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ use Trinity\NotificationBundle\Driver\BaseDriver;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
+use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+use Trinity\NotificationBundle\Notification\EntityConverter;
 
 class ClientApiDriver extends BaseDriver
 {
@@ -21,18 +23,28 @@ class ClientApiDriver extends BaseDriver
     const POST = 'POST';
     const PUT = 'PUT';
 
+    protected $oauthUrl;
+    protected $necktieClientSecret;
+    protected $necktieClientId;
+
+    public function __construct($eventDispatcher, EntityConverter $entityConverter, NotificationUtils $notificationUtils, $oauthUrl, $necktieClientSecret, $necktieClientId)
+    {
+        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils);
+
+        $this->oauthUrl = $oauthUrl;
+        $this->necktieClientSecret = $necktieClientSecret;
+        $this->necktieClientId = $necktieClientId;
+    }
+
 
     /**
      * @param object  $entity
      * @param IClient $necktie
      * @param array   $params
-     * @param string  $clientSecret
-     * @param string  $clientId
-     * @param string  $oauthUrl
      *
      * @return mixed
      */
-    public function execute($entity, $necktie, $params = [], $clientSecret = null, $clientId = null, $oauthUrl = null)
+    public function execute($entity, $necktie, $params = [])
     {
         $HTTPMethod = self::POST;
 
@@ -40,12 +52,13 @@ class ClientApiDriver extends BaseDriver
             $HTTPMethod = $params['HTTPMethod'];
         }
         $url = $this->prepareURL($necktie->getNotificationUri(), $entity, $HTTPMethod);
-        $json = $this->JSONEncodeObject($entity, $clientSecret);
+        $json = $this->JSONEncodeObject($entity, $this->necktieClientSecret);
 
+        // Try to get access token to the necktie
         try {
-            $oauthAccessToken = $this->getAccessToken($oauthUrl, $clientSecret, $clientId);
+            $oauthAccessToken = $this->getAccessToken($this->oauthUrl, $this->necktieClientSecret, $this->necktieClientId);
         } catch (\Exception $ex) {
-            $message = "$HTTPMethod: URL: ".$oauthUrl.' returns error: '.$ex->getMessage().'.';
+            $message = "$HTTPMethod: URL: ".$this->oauthUrl.' returns error: '.$ex->getMessage().'.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
@@ -57,8 +70,9 @@ class ClientApiDriver extends BaseDriver
             return $response;
         }
 
+        // Try to send notification data
         try {
-            $response = $this->createRequest($json, $url, $HTTPMethod, true, $clientSecret, $oauthAccessToken);
+            $response = $this->createRequest($json, $url, $HTTPMethod, true, $this->necktieClientSecret, $oauthAccessToken);
             $this->eventDispatcher->dispatch(
                 Events::SUCCESS_NOTIFICATION,
                 new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, null, null)
@@ -71,7 +85,6 @@ class ClientApiDriver extends BaseDriver
                 Events::ERROR_NOTIFICATION,
                 new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, $ex, $message)
             );
-
             $response = "ERROR - $message";
         }
 
