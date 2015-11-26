@@ -26,7 +26,7 @@ class NotificationParser
 
     protected $entityConverter;
 
-    protected $necktieClientSecret;
+    protected $clientSecret;
 
     protected $request;
 
@@ -37,10 +37,9 @@ class NotificationParser
     protected $ignoredFields = ["id", "timestamp", "hash"];
 
 
-    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $necktieClientSecret)
+    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $clientSecret)
     {
         $this->logger = $logger;
-        $this->necktieClientSecret = $necktieClientSecret;
         $this->entityConverter = $entityConverter;
         $this->parametersArray = [];
     }
@@ -50,16 +49,17 @@ class NotificationParser
      * @param $parameters array Request data as named array
      * @param $fullClassName string Full classname(with namespace) of the entity. e.g. AppBundle\\Entity\\Product\\StandardProduct
      * @param $method string HTTP method of the request
+     * @param $clientSecret string Oauth secret of the client from which the notification came from
      *
      * @return null|object Returns changed entity(on new[POST] or update[PUT]) or null on delete[DELETE]
      * @throws HashMismatchException When the hash does not match
      */
-    public function parseNotification($parameters, $fullClassName, $method)
+    public function parseNotification($parameters, $fullClassName, $method, $clientSecret)
     {
         $this->parametersArray = $parameters;
 
         //check, if the data was not modified
-        if(!$this->isHashOk())
+        if(!$this->isHashOk($clientSecret))
         {
             throw new HashMismatchException("Request hash does not match");
         }
@@ -100,9 +100,11 @@ class NotificationParser
     /**
      * Check if the received data isn't modified(the given hash matches the newly generated hash)
      *
+     * @param $clientSecret string Oauth secret of the client from which the notification came from
+     *
      * @return bool
      */
-    protected function isHashOk()
+    protected function isHashOk($clientSecret)
     {
         //copy received data and remove hash
         $data = $this->parametersArray;
@@ -110,7 +112,7 @@ class NotificationParser
         unset($data["hash"]);
 
         //hash received data without hash
-        $newHash = hash("sha256", ($this->necktieClientSecret . implode(',', $data)));
+        $newHash = hash("sha256", ($clientSecret . implode(',', $data)));
 
         //if the hashes don't match the data is malformed
         return $oldHash == $newHash;
