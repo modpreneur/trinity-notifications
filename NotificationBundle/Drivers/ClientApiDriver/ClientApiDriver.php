@@ -8,8 +8,12 @@ namespace Trinity\NotificationBundle\Drivers\ClientApiDriver;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Nette\Utils\Strings;
 use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Driver\BaseDriver;
+use Trinity\NotificationBundle\Event\Events;
+use Trinity\NotificationBundle\Event\StatusEvent;
+use Trinity\NotificationBundle\Exception\ClientException;
 
 class ClientApiDriver extends BaseDriver
 {
@@ -24,39 +28,52 @@ class ClientApiDriver extends BaseDriver
      * @param array   $params
      * @param string  $clientSecret
      * @param string  $clientId
+     * @param string  $oauthUrl
      *
      * @return mixed
      */
-    public function execute($entity, $necktie, $params = [], $clientSecret = null, $clientId = null)
+    public function execute($entity, $necktie, $params = [], $clientSecret = null, $clientId = null, $oauthUrl = null)
     {
-        $response = '';
         $HTTPMethod = self::POST;
 
         if (array_key_exists('HTTPMethod', $params)) {
             $HTTPMethod = $params['HTTPMethod'];
         }
-
         $url = $this->prepareURL($necktie->getNotificationUri(), $entity, $HTTPMethod);
         $json = $this->JSONEncodeObject($entity, $clientSecret);
 
         try {
-            $response = $this->createRequest($json, $url, $HTTPMethod, true);
-            //todo:events
-            //$this->eventDispatcher->dispatch(
-            //    Events::SUCCESS_NOTIFICATION,
-            //    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
-            //);
+            $oauthAccessToken = $this->getAccessToken($oauthUrl, $clientSecret, $clientId);
+        } catch (\Exception $ex) {
+            $message = "$HTTPMethod: URL: ".$oauthUrl.' returns error: '.$ex->getMessage().'.';
+
+            $this->eventDispatcher->dispatch(
+                Events::ERROR_NOTIFICATION,
+                new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, $ex, $message)
+            );
+
+            $response = "ERROR - $message";
+
+            return $response;
+        }
+
+        try {
+            $response = $this->createRequest($json, $url, $HTTPMethod, true, $clientSecret, $oauthAccessToken);
+            $this->eventDispatcher->dispatch(
+                Events::SUCCESS_NOTIFICATION,
+                new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, null, null)
+            );
         } catch (\Exception $ex) {
             $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
 
             //todo:events
-            //$this->eventDispatcher->dispatch(
-            //    Events::ERROR_NOTIFICATION,
-            //    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
-            //);
+            $this->eventDispatcher->dispatch(
+                Events::ERROR_NOTIFICATION,
+                new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, $ex, $message)
+            );
 
             $response = "ERROR - $message";
-            }
+        }
 
         return $response;
     }
@@ -66,12 +83,11 @@ class ClientApiDriver extends BaseDriver
      * Send request to web application (http:example.com).
      *
      * @param object|string $data
-     * @param string $url
-     * @param string $method
-     * @param bool $isEncoded
-     * @param string $clientSecret
-     * @param string $clientId
-     * @param string $oauthUrl
+     * @param string        $url
+     * @param string        $method
+     * @param bool          $isEncoded
+     * @param string        $clientSecret
+     * @param null          $accessToken
      *
      * @return mixed
      */
@@ -81,8 +97,7 @@ class ClientApiDriver extends BaseDriver
         $method = self::POST,
         $isEncoded = false,
         $clientSecret = null,
-        $clientId = null,
-        $oauthUrl = null
+        $accessToken = null
     )
     {
         if (!$isEncoded) {
@@ -92,9 +107,8 @@ class ClientApiDriver extends BaseDriver
         $httpClient = new Client();
 
         //new interface(v6.0)
-        $request = $this->prepareRequestWithAuthorization($oauthUrl, $clientSecret, $clientId);
-        $request->withMethod(self::POST);
-        $request->withUri($url);
+        $request = new Request($method, $url);
+        $request->withHeader("Authorization", "Bearer $accessToken");
 
         $response = $httpClient->send(
             $request,
@@ -148,28 +162,16 @@ class ClientApiDriver extends BaseDriver
 
 
     /**
-     * Return name of driver.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return 'client_api_driver';
-    }
-
-
-    /**
      * @param $oauthUrl
      * @param $clientSecret
      * @param $clientId
      *
      * @return Request
      */
-    public function prepareRequestWithAuthorization($oauthUrl, $clientSecret, $clientId)
+    protected function getAccessToken($oauthUrl, $clientSecret, $clientId)
     {
-        $authorizedRequest = new Request();
         $httpClient = new Client();
-        $oauthRequest = new Request($oauthUrl, self::POST);
+        $oauthRequest = new Request(self::POST, $oauthUrl);
 
         $oauthResponse = $httpClient->send(
             $oauthRequest,
@@ -192,12 +194,17 @@ class ClientApiDriver extends BaseDriver
             0
         );
 
-        ldd($oauthResponse);
+        return $oauthResponse['access_token'];
+    }
 
-        $accessToken = $oauthResponse['access_token'];
 
-        $authorizedRequest->withHeader('Authorization', "Bearer $accessToken");
-
-        return $authorizedRequest;
+    /**
+     * Return name of driver.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'client_api_driver';
     }
 }

@@ -4,18 +4,16 @@ services:
         class: Trinity\NotificationBundle\Notification\EntityConverter
         arguments:
             - "@trinity.notification.annotations.utils"
-            - @logger
-            - @doctrine.orm.entity_manager
-
+            - "@logger"
 
     trinity.notification.services.notification_parser:
         class: Trinity\NotificationBundle\Notification\NotificationParser
         arguments:
-            - @logger
-            - @doctrine.orm.entity_manager
-            - @trinity.notification.entity_converter
-            - %necktie_client_secret%
-
+            - "@logger"
+            - "@trinity.notification.entity_converter"
+            - "%necktie_client_secret%"
+        calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
 
     trinity.notification.annotations.utils:
         class: Trinity\NotificationBundle\Notification\AnnotationsUtils
@@ -31,13 +29,15 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
             - "@event_dispatcher"
-
+            - "@service_container"
+            - "%trinity.notification.necktie_notify_uri%"
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
         arguments:
             - "@trinity.notification.manager"
             - "@trinity.notification.utils"
+            - "%trinity.notification.is_client%"
         tags:
             - { name: doctrine.event_listener, event: postUpdate,  priority: 255 }
             - { name: doctrine.event_listener, event: postPersist, priority: 255 }

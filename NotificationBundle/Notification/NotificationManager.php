@@ -10,12 +10,12 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Driver\INotificationDriver;
+use Trinity\NotificationBundle\Entity\Necktie;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
-use Trinity\NotificationBundle\Exception\NotificationDriverException;
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class NotificationManager.
@@ -31,16 +31,24 @@ class NotificationManager
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var  ContainerInterface */
+    protected $container;
+
+    protected $necktieNotifyUri;
+
 
     /**
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
+     * @param ContainerInterface       $container
+     * @param                          $necktieNotifyUri
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ContainerInterface $container, $necktieNotifyUri)
     {
         $this->eventDispatcher = $eventDispatcher;
-
+        $this->container = $container;
+        $this->necktieNotifyUri = $necktieNotifyUri;
         $this->drivers = [];
     }
 
@@ -57,6 +65,31 @@ class NotificationManager
     /**
      *  Process notification.
      *
+     * @param object $entity
+     * @param string $HTTPMethod
+     * @param bool $toClient
+     *
+     * @return array
+     *
+     * @throws ClientException
+     * @throws MethodException
+     */
+    public function send($entity, $HTTPMethod = 'GET', $toClient = true)
+    {
+        if($toClient)
+        {
+            $response = $this->sendToClient($entity, $HTTPMethod);
+        }
+        else
+        {
+            $response = $this->sendToNecktie($entity, $HTTPMethod);
+        }
+        return $response;
+    }
+
+
+    /**
+     *  Process notification.
      *
      * @param object $entity
      * @param string $HTTPMethod
@@ -66,7 +99,7 @@ class NotificationManager
      * @throws ClientException
      * @throws MethodException
      */
-    public function send($entity, $HTTPMethod = 'GET')
+    protected function sendToClient($entity, $HTTPMethod = 'GET')
     {
         $response = [];
 
@@ -90,6 +123,30 @@ class NotificationManager
                     $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
                 }
             }
+        }
+
+        return $response;
+    }
+
+    protected function sendToNecktie($entity, $HTTPMethod = 'GET')
+    {
+        $response = [];
+        $necktie = new Necktie();
+        $necktie->setNotificationUri($this->necktieNotifyUri);
+
+        foreach($this->drivers as $driver){
+            // before send event
+            $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
+
+            //execute notification
+            $resp = $driver->execute($entity, $necktie, ['HTTPMethod' => $HTTPMethod]);
+
+            if ($resp) {
+                $response[] = $resp;
+            }
+
+            // after
+            $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
         }
 
         return $response;

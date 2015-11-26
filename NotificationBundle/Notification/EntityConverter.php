@@ -7,7 +7,6 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Psr\Log\LoggerInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Trinity\NotificationBundle\Exception\SourceException;
 
@@ -23,7 +22,6 @@ class EntityConverter
     /** @var  LoggerInterface */
     protected $logger;
 
-    /** @var  EntityManagerInterface */
     protected $entityManager;
 
 
@@ -31,12 +29,12 @@ class EntityConverter
      * EntityConverter constructor.
      *
      * @param AnnotationsUtils $annotationsUtils
+     * @param LoggerInterface  $logger
      */
-    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, EntityManagerInterface $entityManager)
+    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger)
     {
         $this->annotationsUtils = $annotationsUtils;
         $this->logger = $logger;
-        $this->entityManager = $entityManager;
     }
 
 
@@ -297,5 +295,11 @@ class EntityConverter
         {
             return null;
         }
+    }
+
+
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
     }
 }

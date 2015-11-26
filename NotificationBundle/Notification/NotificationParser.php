@@ -6,8 +6,9 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Trinity\NotificationBundle\Exception;
 use Trinity\NotificationBundle\Exception\HashMismatchException;
 
@@ -20,6 +21,7 @@ class NotificationParser
 {
     protected $logger;
 
+    /** @var object EntityManagerInterface */
     protected $entityManager;
 
     protected $entityConverter;
@@ -35,10 +37,9 @@ class NotificationParser
     protected $ignoredFields = ["id", "timestamp", "hash"];
 
 
-    public function __construct(LoggerInterface $logger, EntityManager $entityManager, EntityConverter $entityConverter, $necktieClientSecret)
+    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $necktieClientSecret)
     {
         $this->logger = $logger;
-        $this->entityManager = $entityManager;
         $this->necktieClientSecret = $necktieClientSecret;
         $this->entityConverter = $entityConverter;
         $this->parametersArray = [];
@@ -71,6 +72,7 @@ class NotificationParser
         if($method == "POST" || $method == "PUT")
         {
             $this->logger->emergency("METHOD: POST||PUT:" . $method);
+
             $entityObject = $this->entityConverter->performEntityChanges($entityObject, $this->parametersArray, $this->ignoredFields);
 
             $this->entityManager->persist($entityObject);
@@ -137,5 +139,12 @@ class NotificationParser
         $entityClass = new \ReflectionClass($fullClassName);
 
         return $entityClass->newInstanceArgs()->setNecktieId($this->parametersArray["id"]);
+    }
+
+
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+        $this->entityConverter->setEntityManager($entityManager);
     }
 }

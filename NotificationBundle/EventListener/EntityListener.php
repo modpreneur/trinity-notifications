@@ -56,15 +56,20 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
+    /** @var  bool Is the current application client(e.g. Venice)? */
+    protected $isClient;
+
 
     /**
      * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationManager
-     * @param NotificationUtils $annotationProcessor
+     * @param NotificationUtils                                            $annotationProcessor
+     * @param bool                                                         $isClient
      */
-    public function __construct(NotificationManager $notificationManager, NotificationUtils $annotationProcessor)
+    public function __construct(NotificationManager $notificationManager, NotificationUtils $annotationProcessor, $isClient)
     {
         $this->notificationManager = $notificationManager;
         $this->processor = $annotationProcessor;
+        $this->isClient = $isClient;
     }
 
 
@@ -192,7 +197,7 @@ class EntityListener
         }
 
         if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === 'DELETE') {
-            return $this->notificationManager->send($entity, $method);
+            return $this->notificationManager->send($entity, $method, !$this->isClient);
         }
 
         return false;
