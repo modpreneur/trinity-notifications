@@ -86,7 +86,7 @@ class NotificationManager
 
 
     /**
-     *  Process notification.
+     *  Send notification to client
      *
      * @param object $entity
      * @param string $HTTPMethod
@@ -125,9 +125,20 @@ class NotificationManager
         return $response;
     }
 
+
+    /**
+     *  Send notification to necktie
+     *
+     * @param object $entity
+     * @param string $HTTPMethod
+     *
+     * @return array
+     *
+     * @throws ClientException
+     * @throws MethodException
+     */
     protected function sendToNecktie($entity, $HTTPMethod = 'GET')
     {
-
         $response = [];
         $necktie = new Necktie();
         $necktie->setNotificationUri($this->necktieNotifyUri);
@@ -146,6 +157,7 @@ class NotificationManager
             // after
             $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
         }
+
         return $response;
     }
 

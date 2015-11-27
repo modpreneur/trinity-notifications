@@ -52,7 +52,7 @@ class ClientApiDriver extends BaseDriver
             $HTTPMethod = $params['HTTPMethod'];
         }
         $url = $this->prepareURL($necktie->getNotificationUri(), $entity, $HTTPMethod);
-        $json = $this->JSONEncodeObject($entity, $this->necktieClientSecret);
+        $json = $this->JSONEncodeObject($entity, $this->necktieClientSecret, ["notification_oauth_client_id" => $this->necktieClientId]);
 
         // Try to get access token to the necktie
         try {
@@ -72,7 +72,7 @@ class ClientApiDriver extends BaseDriver
 
         // Try to send notification data
         try {
-            $response = $this->createRequest($json, $url, $HTTPMethod, true, $this->necktieClientSecret, $oauthAccessToken);
+            $response = $this->createRequest($json, $url, $HTTPMethod, true, $this->necktieClientSecret, $this->necktieClientId, $oauthAccessToken);
             $this->eventDispatcher->dispatch(
                 Events::SUCCESS_NOTIFICATION,
                 new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, null, null)
@@ -80,7 +80,6 @@ class ClientApiDriver extends BaseDriver
         } catch (\Exception $ex) {
             $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
 
-            //todo:events
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
                 new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, $ex, $message)
@@ -100,7 +99,8 @@ class ClientApiDriver extends BaseDriver
      * @param string        $method
      * @param bool          $isEncoded
      * @param string        $clientSecret
-     * @param null          $accessToken
+     * @param string        $clientId
+     * @param string        $accessToken
      *
      * @return mixed
      */
@@ -110,11 +110,20 @@ class ClientApiDriver extends BaseDriver
         $method = self::POST,
         $isEncoded = false,
         $clientSecret = null,
+        $clientId = null,
         $accessToken = null
     )
     {
         if (!$isEncoded) {
-            $data = is_object($data) ? $this->JSONEncodeObject($data, $clientSecret) : json_encode($data);
+            if (is_object($data))
+            {
+                $data = $this->JSONEncodeObject($data, $clientSecret, ["notification_oauth_client_id" => $clientId]);
+            }
+            else
+            {
+                $data["notification_oauth_client_id"] = $clientId;
+                $data = json_encode($data);
+            }
         }
 
         $httpClient = new Client();

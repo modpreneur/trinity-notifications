@@ -32,26 +32,30 @@ class NotificationParser
 
     protected $parametersArray;
 
-    //the set method is not called on the entity
-    //these fields has special meaning
-    protected $ignoredFields = ["id", "timestamp", "hash"];
+    // The set method is not called on the entity
+    // These fields has special meaning
+    protected $ignoredFields = ["id", "timestamp", "hash", "notification_oauth_client_id"];
+
+    protected $entityIdFieldName;
 
 
-    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $clientSecret)
+    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $entityIdFieldName)
     {
         $this->logger = $logger;
         $this->entityConverter = $entityConverter;
         $this->parametersArray = [];
+        $this->entityIdFieldName = $entityIdFieldName;
     }
 
 
     /**
-     * @param $parameters array Request data as named array
-     * @param $fullClassName string Full classname(with namespace) of the entity. e.g. AppBundle\\Entity\\Product\\StandardProduct
-     * @param $method string HTTP method of the request
-     * @param $clientSecret string Oauth secret of the client from which the notification came from
+     * @param  $parameters     array  Request data as named array
+     * @param  $fullClassName  string Full classname(with namespace) of the entity. e.g. AppBundle\\Entity\\Product\\StandardProduct
+     * @param  $method         string HTTP method of the request
+     * @param  $clientSecret   string Oauth secret of the client from which the notification came from
      *
      * @return null|object Returns changed entity(on new[POST] or update[PUT]) or null on delete[DELETE]
+     *
      * @throws HashMismatchException When the hash does not match
      */
     public function parseNotification($parameters, $fullClassName, $method, $clientSecret)
@@ -67,7 +71,7 @@ class NotificationParser
         $method = strtoupper($method);
 
         //get existing entity from database or create a new one
-        $entityObject = $this->getEntityObject($fullClassName);
+        $entityObject = $this->getEntityObject($fullClassName, $this->entityIdFieldName);
 
         if($method == "POST" || $method == "PUT")
         {
@@ -124,14 +128,16 @@ class NotificationParser
      *
      * @param $fullClassName string Full classname(with namespace) of the entity. e.g. AppBundle\\Entity\\Product\\StandardProduct
      *
+     * @param $fieldName string Entity field which will be mapped to field "id" from request
+     *
      * @return null|object
      */
-    protected function getEntityObject($fullClassName)
+    protected function getEntityObject($fullClassName, $fieldName)
     {
         $entityObject = $this
             ->entityManager
             ->getRepository($fullClassName)
-            ->findOneBy(["necktieId" => $this->parametersArray["id"]]);
+            ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
         if($entityObject)
         {
@@ -139,8 +145,9 @@ class NotificationParser
         }
 
         $entityClass = new \ReflectionClass($fullClassName);
-
-        return $entityClass->newInstanceArgs()->setNecktieId($this->parametersArray["id"]);
+        $entityObject =  $entityClass->newInstanceArgs();
+        call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
+        return $entityObject;
     }
 
 

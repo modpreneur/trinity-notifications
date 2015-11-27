@@ -29,6 +29,7 @@ class TrinityNotificationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('trinity.notification.entity_id_field', $config['entity_id_field']);
         $container->setParameter('trinity.notification.necktie_notify_url', $config['necktie_notify_url']);
         $container->setParameter('trinity.notification.necktie_oauth_url', $config['necktie_oauth_url']);
         $container->setParameter('trinity.notification.necktie_client_id', $config['necktie_client_id']);
