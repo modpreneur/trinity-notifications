@@ -36,13 +36,16 @@ class NotificationParser
 
     protected $entityIdFieldName;
 
+    protected $isClient;
 
-    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $entityIdFieldName)
+
+    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $entityIdFieldName, $isClient)
     {
         $this->logger = $logger;
         $this->entityConverter = $entityConverter;
         $this->parametersArray = [];
         $this->entityIdFieldName = $entityIdFieldName;
+        $this->isClient = $isClient;
     }
 
 
@@ -131,13 +134,15 @@ class NotificationParser
             ->getRepository($fullClassName)
             ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
-        if ($entityObject) {
+        // Do not allow creating a new entity on necktie
+        if ($entityObject || !$this->isClient) {
             return $entityObject;
         }
 
         $entityClass = new \ReflectionClass($fullClassName);
         $entityObject = $entityClass->newInstanceArgs();
         call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
+
         return $entityObject;
     }
 
