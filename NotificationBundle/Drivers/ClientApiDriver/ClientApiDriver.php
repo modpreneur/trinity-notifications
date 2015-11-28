@@ -38,9 +38,9 @@ class ClientApiDriver extends BaseDriver
 
 
     /**
-     * @param object  $entity
+     * @param object $entity
      * @param IClient $necktie
-     * @param array   $params
+     * @param array $params
      *
      * @return mixed
      */
@@ -58,7 +58,7 @@ class ClientApiDriver extends BaseDriver
         try {
             $oauthAccessToken = $this->getAccessToken($this->oauthUrl, $this->necktieClientSecret, $this->necktieClientId);
         } catch (\Exception $ex) {
-            $message = "$HTTPMethod: URL: ".$this->oauthUrl.' returns error: '.$ex->getMessage().'.';
+            $message = "$HTTPMethod: URL: " . $this->oauthUrl . ' returns error: ' . $ex->getMessage() . '.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
@@ -78,7 +78,7 @@ class ClientApiDriver extends BaseDriver
                 new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, null, null)
             );
         } catch (\Exception $ex) {
-            $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
+            $message = "$HTTPMethod: URL: " . $url . ' returns error: ' . $ex->getMessage() . '.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
@@ -95,12 +95,12 @@ class ClientApiDriver extends BaseDriver
      * Send request to web application (http:example.com).
      *
      * @param object|string $data
-     * @param string        $url
-     * @param string        $method
-     * @param bool          $isEncoded
-     * @param string        $clientSecret
-     * @param string        $clientId
-     * @param string        $accessToken
+     * @param string $url
+     * @param string $method
+     * @param bool   $isEncoded
+     * @param string $clientSecret
+     * @param string $clientId
+     * @param string $accessToken
      *
      * @return mixed
      */
@@ -115,12 +115,9 @@ class ClientApiDriver extends BaseDriver
     )
     {
         if (!$isEncoded) {
-            if (is_object($data))
-            {
+            if (is_object($data)) {
                 $data = $this->JSONEncodeObject($data, $clientSecret, ["notification_oauth_client_id" => $clientId]);
-            }
-            else
-            {
+            } else {
                 $data["notification_oauth_client_id"] = $clientId;
                 $data = json_encode($data);
             }
@@ -135,8 +132,8 @@ class ClientApiDriver extends BaseDriver
             $request,
             [
                 'headers' => ['Content-type' => 'application/json', "Authorization" => "Bearer $accessToken"],
-                'body'    => $data,
-                'future'  => true,
+                'body' => $data,
+                'future' => true,
             ]
         );
 
@@ -178,7 +175,7 @@ class ClientApiDriver extends BaseDriver
             $url .= '/';
         }
 
-        return $url.$class;
+        return $url . $class;
     }
 
 
@@ -198,7 +195,7 @@ class ClientApiDriver extends BaseDriver
             $oauthRequest,
             [
                 'headers' => ['Content-type' => 'application/json'],
-                'body'    => json_encode(
+                'body' => json_encode(
                     [
                         'grant_type' => 'client_credentials',
                         'client_secret' => $clientSecret,

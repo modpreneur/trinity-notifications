@@ -6,9 +6,7 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Trinity\NotificationBundle\Exception;
 use Trinity\NotificationBundle\Exception\HashMismatchException;
 
@@ -63,8 +61,7 @@ class NotificationParser
         $this->parametersArray = $parameters;
 
         //check, if the data was not modified
-        if(!$this->isHashOk($clientSecret))
-        {
+        if (!$this->isHashOk($clientSecret)) {
             throw new HashMismatchException("Request hash does not match");
         }
 
@@ -73,8 +70,7 @@ class NotificationParser
         //get existing entity from database or create a new one
         $entityObject = $this->getEntityObject($fullClassName, $this->entityIdFieldName);
 
-        if($method == "POST" || $method == "PUT")
-        {
+        if ($method == "POST" || $method == "PUT") {
             $this->logger->emergency("METHOD: POST||PUT:" . $method);
 
             $entityObject = $this->entityConverter->performEntityChanges($entityObject, $this->parametersArray, $this->ignoredFields);
@@ -83,17 +79,13 @@ class NotificationParser
             $this->entityManager->flush();
 
             return $entityObject;
-        }
-        else if($method == "DELETE")
-        {
+        } else if ($method == "DELETE") {
             $this->logger->emergency("METHOD: DELETE " . $method);
             $this->entityManager->remove($entityObject);
             $this->entityManager->flush();
 
             return null;
-        }
-        else
-        {
+        } else {
             $this->logger->emergency("method is not supported" . $method);
         }
 
@@ -139,13 +131,12 @@ class NotificationParser
             ->getRepository($fullClassName)
             ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
-        if($entityObject)
-        {
+        if ($entityObject) {
             return $entityObject;
         }
 
         $entityClass = new \ReflectionClass($fullClassName);
-        $entityObject =  $entityClass->newInstanceArgs();
+        $entityObject = $entityClass->newInstanceArgs();
         call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
         return $entityObject;
     }

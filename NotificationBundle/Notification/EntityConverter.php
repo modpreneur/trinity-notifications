@@ -6,8 +6,8 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-use Psr\Log\LoggerInterface;
 use Doctrine\ORM\Mapping\MappingException;
+use Psr\Log\LoggerInterface;
 use Trinity\NotificationBundle\Exception\SourceException;
 
 
@@ -29,7 +29,7 @@ class EntityConverter
      * EntityConverter constructor.
      *
      * @param AnnotationsUtils $annotationsUtils
-     * @param LoggerInterface  $logger
+     * @param LoggerInterface $logger
      */
     public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger)
     {
@@ -71,7 +71,7 @@ class EntityConverter
         }
 
         foreach ($columns as $property) {
-            $methodName = 'get'.ucfirst($property);
+            $methodName = 'get' . ucfirst($property);
 
             if ($property === '*') {
                 continue;
@@ -136,18 +136,18 @@ class EntityConverter
     private function processGetMethod($entity, $name, $longName)
     {
         try {
-            $resultArray[ $name ] = call_user_func_array([$entity, $longName], []);
-            if ($resultArray[ $name ] instanceof \DateTime) {
-                $resultArray[ $name ] = $resultArray[ $name ]->format('Y-m-d H:i:s');
+            $resultArray[$name] = call_user_func_array([$entity, $longName], []);
+            if ($resultArray[$name] instanceof \DateTime) {
+                $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
             }
 
-            if (is_object($resultArray[ $name ]) && method_exists($resultArray[ $name ], 'getId')) {
-                $resultArray[ $name ] = $resultArray[ $name ]->getId();
-            } elseif (is_object($resultArray[ $name ]) && !method_exists($resultArray[ $name ], 'getId')) {
-                $resultArray[ $name ] = null;
+            if (is_object($resultArray[$name]) && method_exists($resultArray[$name], 'getId')) {
+                $resultArray[$name] = $resultArray[$name]->getId();
+            } elseif (is_object($resultArray[$name]) && !method_exists($resultArray[$name], 'getId')) {
+                $resultArray[$name] = null;
             }
         } catch (\Exception $ex) {
-            $resultArray[ $name ] = null;
+            $resultArray[$name] = null;
         }
 
         return $resultArray;
@@ -204,27 +204,23 @@ class EntityConverter
         //if is the entity found, call the set method. continue otherwise
         //if not, just call the set method
 
-        foreach($data as $propertyName => $propertyValue)
-        {
+        foreach ($data as $propertyName => $propertyValue) {
             //if the property is in the ignored list skip it
-            if(in_array($propertyName, $ignoredFields))
-            {
+            if (in_array($propertyName, $ignoredFields)) {
                 $this->logger->emergency("property in ignored fields:" . $propertyName);
                 continue;
             }
 
             //If the property contains null skip it.
             // This fixes DB null constraint violation when calling set method on entity with null value.
-            if($propertyValue == null)
-            {
+            if ($propertyValue == null) {
                 $this->logger->emergency("property: " . $propertyName . " contains null, skipped");
                 continue;
             }
 
             $methodName = 'set' . ucfirst($propertyName);
 
-            if(!method_exists($entityObject, $methodName))
-            {
+            if (!method_exists($entityObject, $methodName)) {
                 $this->logger->emergency("non existing method:" . $methodName);
                 continue;
             }
@@ -234,8 +230,7 @@ class EntityConverter
             $methodParameters = $reflectionMethod->getParameters();
 
             //Setter method with 0 or 2 or more parameters is weird.
-            if(count($methodParameters) != 1)
-            {
+            if (count($methodParameters) != 1) {
                 $this->logger->emergency("count of method parameters is not an 1 " . count($methodParameters) . "in method: " . $methodName);
                 continue;
             }
@@ -245,24 +240,19 @@ class EntityConverter
             $methodParameterType = (is_object($methodParameterClass)) ? $methodParameterClass->getName() : null;
 
             //If the method parameter type is DateTime
-            if($methodParameterType == "DateTime")
-            {
+            if ($methodParameterType == "DateTime") {
                 //Convert it to DateTime object
                 $propertyValue = \DateTime::createFromFormat("Y-m-d H:i:s", $propertyValue);
-                if(!$propertyValue)
-                {
+                if (!$propertyValue) {
                     $this->logger->emergency("unsuccessful datetime conversion");
                     continue;
                 }
-            }
-            //If the method parameter type is doctrine entity.
-            else if($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType)))
-            {
+            } //If the method parameter type is doctrine entity.
+            else if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType))) {
                 //Try to find an object with given necktieId.
                 $propertyValue = $doctrineRepository->findOneBy(["necktieId" => $propertyValue]);
 
-                if(!$propertyValue)
-                {
+                if (!$propertyValue) {
                     //todo: set level to error!
                     $this->logger->emergency("association entity not found " . $methodParameterType . "with id: " . $propertyValue);
                     continue;
@@ -287,12 +277,9 @@ class EntityConverter
      */
     public function getEntityRepository($className)
     {
-        try
-        {
+        try {
             return $this->entityManager->getRepository($className);
-        }
-        catch(MappingException $e)
-        {
+        } catch (MappingException $e) {
             return null;
         }
     }

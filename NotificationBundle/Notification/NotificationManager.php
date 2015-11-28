@@ -7,6 +7,7 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Driver\INotificationDriver;
@@ -15,7 +16,6 @@ use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class NotificationManager.
@@ -31,6 +31,7 @@ class NotificationManager
     /** @var  ContainerInterface */
     protected $container;
 
+    /** @var  string  */
     protected $necktieNotifyUri;
 
 
@@ -73,12 +74,9 @@ class NotificationManager
      */
     public function send($entity, $HTTPMethod = 'GET', $toClient = true)
     {
-        if($toClient)
-        {
+        if ($toClient) {
             $response = $this->sendToClient($entity, $HTTPMethod);
-        }
-        else
-        {
+        } else {
             $response = $this->sendToNecktie($entity, $HTTPMethod);
         }
         return $response;
@@ -103,7 +101,7 @@ class NotificationManager
         /** @var IClient[] $clients */
         $clients = $this->clientsToArray($entity->getClients());
 
-        foreach($this->drivers as $driver){
+        foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
                     // before send event
@@ -143,7 +141,7 @@ class NotificationManager
         $necktie = new Necktie();
         $necktie->setNotificationUri($this->necktieNotifyUri);
 
-        foreach($this->drivers as $driver){
+        foreach ($this->drivers as $driver) {
             // before send event
             $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
 

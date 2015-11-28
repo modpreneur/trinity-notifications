@@ -10,7 +10,6 @@ namespace Trinity\NotificationBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 
@@ -36,12 +35,9 @@ class TrinityNotificationExtension extends Extension
         $container->setParameter('trinity.notification.necktie_client_secret', $config['necktie_client_secret']);
 
         // If is the necktie entity specified the application is client
-        if(array_key_exists("necktie_notify_url", $config) && !empty($config["necktie_notify_url"]))
-        {
+        if (array_key_exists("necktie_notify_url", $config) && !empty($config["necktie_notify_url"])) {
             $container->setParameter("trinity.notification.is_client", true);
-        }
-        else
-        {
+        } else {
             $container->setParameter("trinity.notification.is_client", false);
         }
 
@@ -53,7 +49,7 @@ class TrinityNotificationExtension extends Extension
         // Set enabled drivers to parameters and load them later in DriverCompilerPass
         $container->setParameter("trinity.enabled_drivers", implode(",", $enabledDrivers));
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

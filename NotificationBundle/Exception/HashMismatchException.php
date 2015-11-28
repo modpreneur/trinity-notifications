@@ -7,7 +7,7 @@
 namespace Trinity\NotificationBundle\Exception;
 
 /**
- * Class ClientException.
+ * Class HashMismatchException.
  */
 class HashMismatchException extends \Exception
 {
