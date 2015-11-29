@@ -1,9 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jakub Fajkus
- * Date: 26.11.15
- * Time: 16:28
+
+/*
+ * This file is part of the Trinity project.
  */
 
 namespace Trinity\NotificationBundle\Entity;
