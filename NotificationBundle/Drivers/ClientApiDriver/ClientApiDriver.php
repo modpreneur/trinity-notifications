@@ -51,18 +51,16 @@ class ClientApiDriver extends BaseDriver
         if (array_key_exists('HTTPMethod', $params)) {
             $HTTPMethod = $params['HTTPMethod'];
         }
-        $url = $this->prepareURL($necktie->getNotificationUri(), $entity, $HTTPMethod);
-        $json = $this->JSONEncodeObject($entity, $this->necktieClientSecret, ["notification_oauth_client_id" => $this->necktieClientId]);
 
         // Try to get access token to the necktie
         try {
             $oauthAccessToken = $this->getAccessToken($this->oauthUrl, $this->necktieClientSecret, $this->necktieClientId);
         } catch (\Exception $ex) {
-            $message = "$HTTPMethod: URL: " . $this->oauthUrl . ' returns error: ' . $ex->getMessage() . '.';
+            $message = "$HTTPMethod: request to OAuth URL: " . $this->oauthUrl . ' returns error: ' . $ex->getMessage() . '.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
-                new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, $ex, $message)
+                new StatusEvent($necktie, $entity, $entity->getNecktieId(), $this->oauthUrl, null, $HTTPMethod, $ex, $message)
             );
 
             $response = "ERROR - $message";
@@ -70,9 +68,25 @@ class ClientApiDriver extends BaseDriver
             return $response;
         }
 
+        $url = $this->prepareURL($necktie->getNotificationUri(), $entity, $HTTPMethod);
+        $json = $this->JSONEncodeObject(
+            $entity,
+            $this->necktieClientSecret,
+            ["notification_oauth_client_id" => $this->necktieClientId]
+        );
+
         // Try to send notification data
         try {
-            $response = $this->createRequest($json, $url, $HTTPMethod, true, $this->necktieClientSecret, $this->necktieClientId, $oauthAccessToken);
+            $response = $this->createRequest(
+                $json,
+                $url,
+                $HTTPMethod,
+                true,
+                $this->necktieClientSecret,
+                $this->necktieClientId,
+                $oauthAccessToken
+            );
+
             $this->eventDispatcher->dispatch(
                 Events::SUCCESS_NOTIFICATION,
                 new StatusEvent($necktie, $entity, $entity->getNecktieId(), $url, $json, $HTTPMethod, null, null)
