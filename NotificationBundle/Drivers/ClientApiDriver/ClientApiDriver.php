@@ -164,9 +164,9 @@ class ClientApiDriver extends BaseDriver
     /**
      * Join client URL with entity url.
      *
-     * Example: Client URL => "http://necktie.com"
+     * Example: Client URL => "http://master.com"
      *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
-     *          result: http://necktie.com/product
+     *          result: http://master.com/product
      *
      * @param string $url
      * @param object $entity

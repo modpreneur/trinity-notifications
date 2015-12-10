@@ -34,7 +34,7 @@ class TrinityNotificationExtension extends Extension
         $container->setParameter('trinity.notification.necktie_client_id', $config['necktie_client_id']);
         $container->setParameter('trinity.notification.necktie_client_secret', $config['necktie_client_secret']);
 
-        // If is the necktie entity specified the application is client
+        // If is the master entity specified the application is client
         if (array_key_exists("necktie_notify_url", $config) && !empty($config["necktie_notify_url"])) {
             $container->setParameter("trinity.notification.is_client", true);
         } else {
