@@ -12,7 +12,7 @@ class ControllerTest extends BaseTest
      */
     public function testController()
     {
-        $processor = $this->container->get('trinity.notification.utils');
+        $processor = $this->getContainer()->get('trinity.notification.utils');
         $controller = new Controllers\DisableController();
 
         $this->assertTrue($processor->isControllerOrActionDisabled($controller));

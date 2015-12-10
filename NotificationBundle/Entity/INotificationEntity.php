@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\FrameworkBundle\Entity\IClient;

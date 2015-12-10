@@ -21,7 +21,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testCheckIsObjectEntity()
     {
-        $utils = $this->container->get('trinity.notification.utils');
+        $utils = $this->getContainer()->get('trinity.notification.utils');
 
         $this->assertTrue($utils->isNotificationEntity(new Product()));
         $this->assertFalse($utils->isNotificationEntity(new \stdClass()));
@@ -35,7 +35,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testClassAnnotationSource()
     {
-        $utils = $this->container->get('trinity.notification.annotations.utils');
+        $utils = $this->getContainer()->get('trinity.notification.annotations.utils');
 
         $this->assertNotEmpty($utils->getClassSourceAnnotation(new Product()));
 
@@ -49,7 +49,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testHasSource()
     {
-        $utils = $this->container->get('trinity.notification.utils');
+        $utils = $this->getContainer()->get('trinity.notification.utils');
 
         $this->assertTrue($utils->hasSource(new Product(), 'id'));
         $this->assertTrue($utils->hasSource(new Product(), 'name'));
@@ -64,7 +64,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testHasDependedSource()
     {
-        $utils = $this->container->get('trinity.notification.utils');
+        $utils = $this->getContainer()->get('trinity.notification.utils');
 
         $this->assertTrue($utils->hasDependedSource(new Product(), 'id'));
         $this->assertFalse($utils->hasDependedSource(new Product(), 'name'));
@@ -80,7 +80,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testHTTPMethodForEntity()
     {
-        $utils = $this->container->get('trinity.notification.utils');
+        $utils = $this->getContainer()->get('trinity.notification.utils');
 
         $this->assertTrue($utils->hasHTTPMethod(new Product(), 'PUT'));
         $this->assertTrue($utils->hasHTTPMethod(new Product(), 'DeleTE'));
@@ -95,7 +95,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testClassAnnotations()
     {
-        $utils = $this->container->get('trinity.notification.annotations.utils');
+        $utils = $this->getContainer()->get('trinity.notification.annotations.utils');
 
         $class = AnnotationsUtils::ANNOTATION_CLASS;
         $this->assertTrue(
@@ -109,7 +109,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testURLPostfix()
     {
-        $utils = $this->container->get('trinity.notification.utils');
+        $utils = $this->getContainer()->get('trinity.notification.utils');
 
         $this->assertEquals('std-class', $utils->getUrlPostfix(new \stdClass(), 'DELETE'));
         $this->assertEquals('product', $utils->getUrlPostfix(new Product()));
@@ -129,7 +129,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArrayError()
     {
-        $utils = $this->container->get('trinity.notification.entityConverter');
+        $utils = $this->getContainer()->get('trinity.notification.entity_converter');
 
         // Error
         $utils->toArray(new EntityWithoutSource());
@@ -144,7 +144,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArrayAllSource()
     {
-        $utils = $this->container->get('trinity.notification.entityConverter');
+        $utils = $this->getContainer()->get('trinity.notification.entity_converter');
 
         $allSourceEntity = new AllSourceEntity();
         $allSourceArrayExpected = [
@@ -168,7 +168,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArray()
     {
-        $utils = $this->container->get('trinity.notification.entity_converter');
+        $utils = $this->getContainer()->get('trinity.notification.entity_converter');
         $class = (get_class($utils));
         $method = $this->getMethod($class, 'processProperty');
 
@@ -223,7 +223,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testEntityToArrayMethodDate()
     {
-        $utils = $this->container->get('trinity.notification.entity_converter');
+        $utils = $this->getContainer()->get('trinity.notification.entity_converter');
         $class = (get_class($utils));
         $method = $this->getMethod($class, 'processMethod');
 
@@ -240,7 +240,7 @@ class NotificationUtilsTest extends BaseTest
      */
     public function testProcessGetMethod()
     {
-        $utils = $this->container->get('trinity.notification.entity_converter');
+        $utils = $this->getContainer()->get('trinity.notification.entity_converter');
         $method = $this->getMethod($utils, 'processGetMethod');
 
         $e = new Product();
@@ -250,7 +250,7 @@ class NotificationUtilsTest extends BaseTest
 
     /* ?? 
     public function testEntityToArrayMethodDateError(){
-        $utils = $this->container->get("trinity.notification.entityConverter");
+        $utils = $this->getContainer()->get("trinity.notification.entityConverter");
         $class = (get_class($utils));
         $method = $this->getMethod($class, "processMethod");
 

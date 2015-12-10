@@ -6,6 +6,7 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
+use Closure;
 use Doctrine\Common\Collections\Collection;
 use Trinity\NotificationBundle\Tests\Entity\Client;
 

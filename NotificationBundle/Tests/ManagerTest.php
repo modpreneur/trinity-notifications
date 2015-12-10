@@ -19,7 +19,7 @@ class ManagerTest extends BaseTest
      */
     public function testSendWithoutClient()
     {
-        $manager = $this->container->get('trinity.notification.manager');
+        $manager = $this->getContainer()->get('trinity.notification.manager');
 
         $entity = new EntityWithoutClient();
 
@@ -33,7 +33,7 @@ class ManagerTest extends BaseTest
      */
     public function testClientToArray()
     {
-        $manager = $this->container->get('trinity.notification.manager');
+        $manager = $this->getContainer()->get('trinity.notification.manager');
         $method = $this->getMethod($manager, 'clientsToArray');
 
         $p = new Product();
@@ -68,7 +68,7 @@ class ManagerTest extends BaseTest
      */
     public function testSendWithDisableClient()
     {
-        $manager = $this->container->get('trinity.notification.manager');
+        $manager = $this->getContainer()->get('trinity.notification.manager');
         $entity = new EntityDisableClient();
         $result = $manager->send($entity);
 

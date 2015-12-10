@@ -26,7 +26,7 @@ class EventListenerTest extends BaseTest
     public function testPostUpdate()
     {
         $em = $this->getEM();
-        $ev = $this->container->get('trinity.notification.entity_listener');
+        $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
         $args = new LifecycleEventArgs(
@@ -69,7 +69,7 @@ class EventListenerTest extends BaseTest
     public function testPreRemove()
     {
         $em = $this->getEM();
-        $ev = $this->container->get('trinity.notification.entity_listener');
+        $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
         $args = new LifecycleEventArgs(
@@ -86,7 +86,7 @@ class EventListenerTest extends BaseTest
     public function testPostPersist()
     {
         $em = $this->getEM();
-        $ev = $this->container->get('trinity.notification.entity_listener');
+        $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
         $args = new LifecycleEventArgs(
@@ -104,7 +104,7 @@ class EventListenerTest extends BaseTest
     public function testPreFlush()
     {
         $em = $this->getEM();
-        $ev = $this->container->get('trinity.notification.entity_listener');
+        $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
 
@@ -142,7 +142,7 @@ class EventListenerTest extends BaseTest
     public function testSendNotification()
     {
         $em = $this->getEM();
-        $ev = $this->container->get('trinity.notification.entity_listener');
+        $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $sendNotification = $this->getMethod($ev, 'sendNotification');
 

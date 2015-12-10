@@ -17,6 +17,11 @@ class AppKernel extends Kernel
         return [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Trinity\NotificationBundle\TrinityNotificationBundle(),
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
+
+            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
         ];
     }
 
@@ -27,6 +32,7 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__.'/config.yml');
+        $loader->load(__DIR__.'/../../Resources/config/services.yml');
     }
 
 
