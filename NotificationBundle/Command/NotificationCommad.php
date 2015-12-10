@@ -16,7 +16,7 @@ class NotificationCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('necktie:notification:send')
+        $this->setName('trinity:notification:send')
             ->setDescription('Necktie client command.')
             ->addArgument(
                 'id',
