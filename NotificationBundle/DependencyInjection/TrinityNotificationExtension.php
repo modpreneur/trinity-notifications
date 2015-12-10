@@ -29,12 +29,14 @@ class TrinityNotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('trinity.notification.entity_id_field', $config['entity_id_field']);
+        $container->setParameter('trinity.notification.master_entity_id_field', $config['master_entity_id_field']);
         $container->setParameter('trinity.notification.master_notify_url', $config['master_notify_url']);
         $container->setParameter('trinity.notification.master_oauth_url', $config['master_oauth_url']);
         $container->setParameter('trinity.notification.master_client_id', $config['master_client_id']);
         $container->setParameter('trinity.notification.master_client_secret', $config['master_client_secret']);
+        $container->setParameter('trinity.notification.create_new_entity', $config['create_new_entity']);
 
-        // If is the master entity specified the application is client
+        // If is the master notify url is specified then the application is client
         if (array_key_exists("master_notify_url", $config) && !empty($config["master_notify_url"])) {
             $container->setParameter("trinity.notification.is_client", true);
         } else {
@@ -49,7 +51,6 @@ class TrinityNotificationExtension extends Extension
         $container->setParameter("trinity.enabled_drivers", implode(",", $enabledDrivers));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('config.yml');
         $loader->load('services.yml');
     }
 }

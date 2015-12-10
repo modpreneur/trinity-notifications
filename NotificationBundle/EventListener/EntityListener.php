@@ -56,7 +56,7 @@ class EntityListener
     /** @var  Request */
     protected $request;
 
-    /** @var  bool Is the current application client(e.g. Venice)? */
+    /** @var  bool Is the current application client? */
     protected $isClient;
 
 

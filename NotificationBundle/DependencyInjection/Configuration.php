@@ -27,10 +27,12 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('trinity_notification');
 
         $rootNode->children()->scalarNode('entity_id_field')->defaultValue("id");
+        $rootNode->children()->scalarNode('master_entity_id_field')->defaultValue("id");
         $rootNode->children()->scalarNode('master_notify_url')->defaultValue("");
         $rootNode->children()->scalarNode('master_oauth_url')->defaultValue("");
         $rootNode->children()->scalarNode('master_client_id')->defaultValue("");
         $rootNode->children()->scalarNode('master_client_secret')->defaultValue("");
+        $rootNode->children()->scalarNode('create_new_entity')->defaultFalse();
         $rootNode
             ->children()
                 ->arrayNode("drivers")
