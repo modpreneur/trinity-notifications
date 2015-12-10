@@ -60,7 +60,7 @@ class ClientApiDriver extends BaseDriver
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
-                new StatusEvent($master, $entity, $entity->getMasterId(), $this->oauthUrl, null, $HTTPMethod, $ex, $message)
+                new StatusEvent($master, $entity, $entity->getId(), $this->oauthUrl, null, $HTTPMethod, $ex, $message)
             );
 
             $response = "ERROR - $message";
@@ -89,14 +89,14 @@ class ClientApiDriver extends BaseDriver
 
             $this->eventDispatcher->dispatch(
                 Events::SUCCESS_NOTIFICATION,
-                new StatusEvent($master, $entity, $entity->getMasterId(), $url, $json, $HTTPMethod, null, null)
+                new StatusEvent($master, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
             );
         } catch (\Exception $ex) {
             $message = "$HTTPMethod: URL: " . $url . ' returns error: ' . $ex->getMessage() . '.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
-                new StatusEvent($master, $entity, $entity->getMasterId(), $url, $json, $HTTPMethod, $ex, $message)
+                new StatusEvent($master, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
             );
             $response = "ERROR - $message";
         }
