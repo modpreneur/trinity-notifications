@@ -14,6 +14,7 @@ services:
             - "@trinity.notification.entity_converter"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
+            - "%trinity.notification.create_new_entity%"
         calls:
             - [setEntityManager, ["@doctrine.orm.entity_manager"]]
 
