@@ -47,7 +47,7 @@ class EntityListener
     /** @var  EntityManager */
     protected $entityManager;
 
-    /** @var  \Trinity\NotificationBundle\Notification\NotificationManager */
+    /** @var  NotificationManager */
     protected $notificationManager;
 
     /** @var  NotificationUtils */
@@ -61,9 +61,9 @@ class EntityListener
 
 
     /**
-     * @param \Trinity\NotificationBundle\Notification\NotificationManager $notificationManager
-     * @param NotificationUtils                                            $annotationProcessor
-     * @param bool                                                         $isClient
+     * @param NotificationManager $notificationManager
+     * @param NotificationUtils   $annotationProcessor
+     * @param bool                $isClient
      */
     public function __construct(NotificationManager $notificationManager, NotificationUtils $annotationProcessor, $isClient)
     {

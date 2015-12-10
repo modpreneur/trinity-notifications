@@ -94,6 +94,9 @@ class EventListenerTest extends BaseTest
         );
 
         $result = $ev->postPersist($args);
+        var_dump($result);
+        exit;
+
         $this->assertContains('ERROR', reset($result));
     }
 
