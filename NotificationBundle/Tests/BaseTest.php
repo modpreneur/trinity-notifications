@@ -15,4 +15,5 @@ use Trinity\FrameworkBundle\Utils\BaseWebTest;
 abstract class BaseTest extends BaseWebTest
 {
 
+
 }

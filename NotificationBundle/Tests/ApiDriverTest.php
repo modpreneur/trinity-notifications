@@ -20,14 +20,14 @@ class ApiDriverTest extends BaseTest
      */
     public function testJsonEncodeObject()
     {
+        $product = new Product();
+        $id = $product->getId();
         $driver = $driver = $this->getDriver();
 
         $method = $this->getMethod($driver, 'JSONEncodeObject');
 
-        $expected = "{\"id\":1,\"name\":\"Someone's name\",\"description\":\"Lorem impsu\"";
-        $result = $method->invokeArgs($driver, [new Product(), 'KJHGHJKKJHJKJHJH']);
-
-        //dump($result);
+        $expected = "{\"id\":$id,\"name\":\"Someone's name\",\"description\":\"Lorem impsu\"";
+        $result = $method->invokeArgs($driver, [$product, 'KJHGHJKKJHJKJHJH']);
 
         $this->assertStringStartsWith($expected, $result);
 
@@ -72,12 +72,6 @@ class ApiDriverTest extends BaseTest
 
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
-     *
-     * //     * guzzleHttp exception v6.0
-     * @expectedExceptionMessage Client error: 404
-     *
-     * //     * guzzleHttp exception v5.3
-     * //     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
      */
     public function testCreateJSONRequestError()
     {
@@ -94,12 +88,6 @@ class ApiDriverTest extends BaseTest
 
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
-     *
-     * //     * guzzleHttp exception v6.0
-     * @expectedExceptionMessage Client error: 404
-     *
-     * //     * guzzleHttp exception v5.3
-     * //     * @expectedExceptionMessage Client error response [url] http://example.com/product [status code] 404 [reason phrase] Not Found
      */
     public function testCreateJSONRequestError2()
     {

@@ -25,7 +25,7 @@ class EventListenerTest extends BaseTest
      */
     public function testPostUpdate()
     {
-        $em = $this->getEM();
+        $em = $this->getEM(true);
         $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
@@ -68,7 +68,7 @@ class EventListenerTest extends BaseTest
      */
     public function testPreRemove()
     {
-        $em = $this->getEM();
+        $em = $this->getEM(true);
         $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
@@ -85,7 +85,7 @@ class EventListenerTest extends BaseTest
      */
     public function testPostPersist()
     {
-        $em = $this->getEM();
+        $em = $this->getEM(true);
         $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
@@ -93,11 +93,14 @@ class EventListenerTest extends BaseTest
             $object, $em
         );
 
+        $object->setName("Name_" . rand(1, 9999));
         $result = $ev->postPersist($args);
-        var_dump($result);
-        exit;
 
-        $this->assertContains('ERROR', reset($result));
+        $this->assertEquals([
+            'code'       => 200,
+            'statusCode' => 200,
+            'message'    => 'OK',
+        ], reset($result));
     }
 
 
@@ -106,35 +109,21 @@ class EventListenerTest extends BaseTest
      */
     public function testPreFlush()
     {
-        $em = $this->getEM();
+        $em = $this->getEM(true);
         $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $object = new Product();
-
         $refProp = new \ReflectionProperty($ev, 'entity');
         $refProp->setAccessible(true);
         $refProp->setValue($ev, $object);
+        $args = new PreFlushEventArgs($em);
 
-        $args = new PreFlushEventArgs(
-            $em
-        );
-
-        $this->assertSame(
-            [
-                [
-                    'code'       => 200,
-                    'statusCode' => 200,
-                    'message'    => 'OK',
-                ],
-            ],
-            $ev->preFlush($args)
-        );
-
+        $string = ($ev->preFlush($args)[0]);
         $refProp->setValue($ev, null);
 
-        $this->assertSame(
-            null,
-            $ev->preFlush($args)
+        $this->assertContains(
+            'ERROR',
+            $string
         );
     }
 
@@ -144,7 +133,7 @@ class EventListenerTest extends BaseTest
      */
     public function testSendNotification()
     {
-        $em = $this->getEM();
+        $em = $this->getEM(true);
         $ev = $this->getContainer()->get('trinity.notification.entity_listener');
 
         $sendNotification = $this->getMethod($ev, 'sendNotification');

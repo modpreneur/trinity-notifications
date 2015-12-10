@@ -46,10 +46,10 @@ class TrinityNotificationExtension extends Extension
             $enabledDrivers[] = $driver;
         }
 
-        // Set enabled drivers to parameters and load them later in DriverCompilerPass
         $container->setParameter("trinity.enabled_drivers", implode(",", $enabledDrivers));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('config.yml');
         $loader->load('services.yml');
     }
 }

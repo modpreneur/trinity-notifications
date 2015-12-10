@@ -20,7 +20,7 @@ interface INotificationDriver
      *
      * @return mixed
      */
-    public function execute($entity, $client, $params = []);
+    public function execute($entity, IClient $client, $params = []);
 
 
     /**

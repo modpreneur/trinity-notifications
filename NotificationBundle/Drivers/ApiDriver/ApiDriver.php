@@ -8,9 +8,12 @@ namespace Trinity\NotificationBundle\Drivers\ApiDriver;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use Nette\Utils\Strings;
+use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Driver\BaseDriver;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
+use Trinity\NotificationBundle\Exception\NotificationDriverException;
 
 
 /**
@@ -25,12 +28,12 @@ class ApiDriver extends BaseDriver
 
     /**
      * @param object $entity
-     * @param IApiClient $client
+     * @param $client
      * @param array $params
      *
      * @return string
      */
-    public function execute($entity, $client, $params = [])
+    public function execute($entity, IClient $client, $params = [])
     {
         $response = '';
         $HTTPMethod = self::POST;
@@ -76,6 +79,7 @@ class ApiDriver extends BaseDriver
      * @param null $secret
      *
      * @return mixed
+     * @throws NotificationDriverException
      */
     private function createRequest(
         $data,
@@ -101,6 +105,10 @@ class ApiDriver extends BaseDriver
                 'future'  => true,
             ]
         );
+
+        if(Strings::contains((string)$response->getBody(), '"code":404')){
+            throw new NotificationDriverException((string)$response->getBody());
+        }
 
         return json_decode(
             (string)$response->getBody(),

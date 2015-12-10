@@ -11,7 +11,7 @@ use Trinity\NotificationBundle\Drivers\ApiDriver\IApiClient;
 class Client implements IApiClient
 {
     /** @var  bool */
-    private $enable;
+    private $enable = true;
 
 
     /**

@@ -175,7 +175,7 @@ class EntityListener
             return false;
         }
 
-        $uow = $entityManager->getUnitOfWork();
+        $uow  = $entityManager->getUnitOfWork();
         $list = [];
 
         if ($uow) {
@@ -191,6 +191,7 @@ class EntityListener
                     $list[] = $index;
                 }
             }
+
             $doSendNotification = (count($list) > 0);
         } else {
             $doSendNotification = true;

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b9751b548f21ea320fb0638224479bb6",
-    "content-hash": "f0992d49ae88c118e4be34d4caa7307f",
+    "hash": "d400001ab119466e80956aa5600b0dab",
+    "content-hash": "305f15e42fe5a4b65487e9cd4c301fcc",
     "packages": [
         {
             "name": "apy/datagrid-bundle",
@@ -2428,12 +2428,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity.git",
-                "reference": "25481b76b998f3033a9154312a1358e70b125b0f"
+                "reference": "965f3b5b98f0c15b8869452f4b9815b50bf5d6f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity/zipball/25481b76b998f3033a9154312a1358e70b125b0f",
-                "reference": "25481b76b998f3033a9154312a1358e70b125b0f",
+                "url": "https://api.github.com/repos/modpreneur/trinity/zipball/965f3b5b98f0c15b8869452f4b9815b50bf5d6f4",
+                "reference": "965f3b5b98f0c15b8869452f4b9815b50bf5d6f4",
                 "shasum": ""
             },
             "require": {
@@ -2476,7 +2476,7 @@
                 }
             ],
             "description": "Trinity Framework",
-            "time": "2015-12-10 15:04:00"
+            "time": "2015-12-10 18:13:53"
         },
         {
             "name": "twig/twig",

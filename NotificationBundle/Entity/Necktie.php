@@ -22,4 +22,18 @@ class Necktie implements IClient
     {
         return $this->notificationUri;
     }
+
+
+    /** @return  boolean */
+    public function isNotificationEnabled()
+    {
+        // TODO: Implement isNotificationEnabled() method.
+    }
+
+
+    /** @return string */
+    public function getSecret()
+    {
+        // TODO: Implement getSecret() method.
+    }
 }

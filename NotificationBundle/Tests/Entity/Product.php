@@ -24,7 +24,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
 class Product implements INotificationEntity
 {
     /** @var  int */
-    private $id = 1;
+    private $id = 1987656789;
 
     /** @var  string */
     private $name = "Someone's name";
@@ -42,6 +42,7 @@ class Product implements INotificationEntity
     public function __construct()
     {
         $this->tProduct = new EEntity();
+        $this->id = rand(10, 999999);
     }
 
 
@@ -96,4 +97,14 @@ class Product implements INotificationEntity
     {
         $this->tProduct = $tProduct;
     }
+
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
 }
