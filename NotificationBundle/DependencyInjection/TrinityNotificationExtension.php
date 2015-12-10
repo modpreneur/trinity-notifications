@@ -29,13 +29,13 @@ class TrinityNotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('trinity.notification.entity_id_field', $config['entity_id_field']);
-        $container->setParameter('trinity.notification.necktie_notify_url', $config['necktie_notify_url']);
-        $container->setParameter('trinity.notification.necktie_oauth_url', $config['necktie_oauth_url']);
-        $container->setParameter('trinity.notification.necktie_client_id', $config['necktie_client_id']);
-        $container->setParameter('trinity.notification.necktie_client_secret', $config['necktie_client_secret']);
+        $container->setParameter('trinity.notification.master_notify_url', $config['master_notify_url']);
+        $container->setParameter('trinity.notification.master_oauth_url', $config['master_oauth_url']);
+        $container->setParameter('trinity.notification.master_client_id', $config['master_client_id']);
+        $container->setParameter('trinity.notification.master_client_secret', $config['master_client_secret']);
 
         // If is the master entity specified the application is client
-        if (array_key_exists("necktie_notify_url", $config) && !empty($config["necktie_notify_url"])) {
+        if (array_key_exists("master_notify_url", $config) && !empty($config["master_notify_url"])) {
             $container->setParameter("trinity.notification.is_client", true);
         } else {
             $container->setParameter("trinity.notification.is_client", false);

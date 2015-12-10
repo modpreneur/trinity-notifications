@@ -134,7 +134,7 @@ class NotificationParser
             ->getRepository($fullClassName)
             ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
-        // Do not allow creating a new entity on necktie
+        // Do not allow creating a new entity on master
         if ($entityObject || !$this->isClient) {
             return $entityObject;
         }

@@ -250,7 +250,7 @@ class EntityConverter
             } //If the method parameter type is doctrine entity.
             else if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType))) {
                 //Try to find an object with given masterId.
-                $propertyValue = $doctrineRepository->findOneBy(["necktieId" => $propertyValue]);
+                $propertyValue = $doctrineRepository->findOneBy(["masterId" => $propertyValue]);
 
                 if (!$propertyValue) {
                     //todo: set level to error!
