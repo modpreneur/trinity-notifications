@@ -138,7 +138,7 @@ class NotificationParser
             ->getRepository($fullClassName)
             ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
-        if ($this->createNewEntity) {
+        if (!$this->createNewEntity) {
             return $entityObject;
         }
 
