@@ -14,6 +14,8 @@ class Master implements IClient
 
     protected $isNotificationEnabled;
 
+    protected $secret;
+
 
     public function setNotificationUri($uri)
     {
@@ -37,5 +39,17 @@ class Master implements IClient
     public function setIsNotificationEnabled($isNotificationEnabled)
     {
         $this->isNotificationEnabled = $isNotificationEnabled;
+    }
+
+
+    public function getSecret()
+    {
+        return $this->secret;
+    }
+
+
+    public function setSecret($secret)
+    {
+        $this->secret = $secret;
     }
 }
