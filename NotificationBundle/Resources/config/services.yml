@@ -1,9 +1,20 @@
 services:
 
     trinity.notification.entity_converter:
+        class: Trinity\NotificationBundle\Notification\EntityConverter
         arguments:
             - "@trinity.notification.annotations.utils"
-        class: Trinity\NotificationBundle\Notification\EntityConverter
+            - "@logger"
+
+    trinity.notification.services.notification_parser:
+        class: Trinity\NotificationBundle\Notification\NotificationParser
+        arguments:
+            - "@logger"
+            - "@trinity.notification.entity_converter"
+            - "%trinity.notification.entity_id_field%"
+            - "%trinity.notification.is_client%"
+        calls:
+            - [setEntityManager, ["@doctrine.orm.entity_manager"]]
 
     trinity.notification.annotations.utils:
         class: Trinity\NotificationBundle\Notification\AnnotationsUtils
@@ -19,13 +30,15 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
             - "@event_dispatcher"
-
+            - "@service_container"
+            - "%trinity.notification.necktie_notify_url%"
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
         arguments:
             - "@trinity.notification.manager"
             - "@trinity.notification.utils"
+            - "%trinity.notification.is_client%"
         tags:
             - { name: doctrine.event_listener, event: postUpdate,  priority: 255 }
             - { name: doctrine.event_listener, event: postPersist, priority: 255 }
@@ -41,5 +54,17 @@ services:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
+        tags:
+            - { name: trinity.notification.driver }
+
+    trinity.notification.driver.client_api:
+        class: Trinity\NotificationBundle\Drivers\ClientApiDriver\ClientApiDriver
+        arguments:
+            - "@event_dispatcher"
+            - "@trinity.notification.entity_converter"
+            - "@trinity.notification.utils"
+            - "%trinity.notification.necktie_oauth_url%"
+            - "%trinity.notification.necktie_client_secret%"
+            - "%trinity.notification.necktie_client_id%"
         tags:
             - { name: trinity.notification.driver }

@@ -54,11 +54,19 @@ abstract class BaseDriver implements INotificationDriver
      * @param object $entity
      * @param string $secret
      *
+     * @param array  $extraFields
+     *
      * @return string
+     * @throws \Exception
      */
-    protected function JSONEncodeObject($entity, $secret)
+    protected function JSONEncodeObject($entity, $secret, $extraFields = [])
     {
         $result = $this->entityConverter->toArray($entity);
+
+        foreach ($extraFields as $extraFieldKey => $extraFieldValue) {
+            $result[$extraFieldKey] = $extraFieldValue;
+        }
+
         $result['timestamp'] = (new \DateTime())->getTimestamp();
         $result['hash'] = hash('sha256', $secret.(implode(',', $result)));
 
