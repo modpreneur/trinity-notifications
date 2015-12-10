@@ -24,6 +24,9 @@ class EntityConverter
 
     protected $entityManager;
 
+    /** @var  string Name of the property of a entity which will be mapped to the Id from the notification */
+    protected $masterEntityIdProperty;
+
 
     /**
      * EntityConverter constructor.
@@ -31,7 +34,7 @@ class EntityConverter
      * @param AnnotationsUtils $annotationsUtils
      * @param LoggerInterface $logger
      */
-    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger)
+    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, $masterEntityIdProperty = null)
     {
         $this->annotationsUtils = $annotationsUtils;
         $this->logger = $logger;
@@ -249,8 +252,8 @@ class EntityConverter
                 }
             } //If the method parameter type is doctrine entity.
             else if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType))) {
-                //Try to find an object with given necktieId.
-                $propertyValue = $doctrineRepository->findOneBy(["necktieId" => $propertyValue]);
+                //Try to find an object with given master entity id.
+                $propertyValue = $doctrineRepository->findOneBy([$this->masterEntityIdProperty => $propertyValue]);
 
                 if (!$propertyValue) {
                     //todo: set level to error!

@@ -8,7 +8,7 @@ namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\FrameworkBundle\Entity\IClient;
 
-class Necktie implements IClient
+class Master implements IClient
 {
     protected $notificationUri;
 

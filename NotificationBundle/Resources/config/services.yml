@@ -5,6 +5,7 @@ services:
         arguments:
             - "@trinity.notification.annotations.utils"
             - "@logger"
+            - "%trinity.notification.master_entity_id_field%"
 
     trinity.notification.services.notification_parser:
         class: Trinity\NotificationBundle\Notification\NotificationParser
@@ -31,7 +32,7 @@ services:
         arguments:
             - "@event_dispatcher"
             - "@service_container"
-            - "%trinity.notification.necktie_notify_url%"
+            - "%trinity.notification.master_notify_url%"
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
@@ -63,8 +64,8 @@ services:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
-            - "%trinity.notification.necktie_oauth_url%"
-            - "%trinity.notification.necktie_client_secret%"
-            - "%trinity.notification.necktie_client_id%"
+            - "%trinity.notification.master_oauth_url%"
+            - "%trinity.notification.master_client_secret%"
+            - "%trinity.notification.master_client_id%"
         tags:
             - { name: trinity.notification.driver }

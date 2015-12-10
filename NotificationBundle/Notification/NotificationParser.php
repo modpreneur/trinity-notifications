@@ -38,14 +38,18 @@ class NotificationParser
 
     protected $isClient;
 
+    /** @var string Allow creating a new entity when the entity does not exist */
+    protected $createNewEntity;
 
-    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $entityIdFieldName, $isClient)
+
+    public function __construct(LoggerInterface $logger, EntityConverter $entityConverter, $entityIdFieldName, $isClient, $createNewEntity)
     {
         $this->logger = $logger;
         $this->entityConverter = $entityConverter;
         $this->parametersArray = [];
         $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;
+        $this->createNewEntity = $createNewEntity;
     }
 
 
@@ -134,8 +138,8 @@ class NotificationParser
             ->getRepository($fullClassName)
             ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
-        // Do not allow creating a new entity on necktie
-        if ($entityObject || !$this->isClient) {
+        // Do not allow creating a new entity on master
+        if ($this->createNewEntity) {
             return $entityObject;
         }
 

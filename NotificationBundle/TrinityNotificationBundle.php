@@ -11,7 +11,7 @@ use Trinity\NotificationBundle\DependencyInjection\DriverCompilerPass;
 
 
 /**
- * Class NecktieNotificationBundle.
+ * Class TrinityNotificationBundle.
  */
 class TrinityNotificationBundle extends Bundle
 {
