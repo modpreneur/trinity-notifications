@@ -49,7 +49,9 @@ class NotificationCommand extends ContainerAwareCommand
         $p->setName("ddff");
         $p->setClient($c);
         $api = $this->getContainer()->get('trinity.notification.driver.api');
-        $api->execute($p, $c);
-        $output->writeln('Notification was sent.');
+
+        $result = $api->execute($p, $c);
+        $output->writeln('Client Result:');
+        $output->writeln($result);
     }
 }
