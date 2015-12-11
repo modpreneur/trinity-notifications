@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d400001ab119466e80956aa5600b0dab",
-    "content-hash": "305f15e42fe5a4b65487e9cd4c301fcc",
+    "hash": "09ffa21ec8ef1dac4604604cda4a626e",
+    "content-hash": "62ff0c86b81ffb881bfd2254ab9cf5c7",
     "packages": [
         {
             "name": "apy/datagrid-bundle",
@@ -1126,6 +1126,58 @@
                 "User management"
             ],
             "time": "2015-12-05 09:38:57"
+        },
+        {
+            "name": "fzaninotto/faker",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "d0190b156bcca848d401fb80f31f504f37141c8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/d0190b156bcca848d401fb80f31f504f37141c8d",
+                "reference": "d0190b156bcca848d401fb80f31f504f37141c8d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "suggest": {
+                "ext-intl": "*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2015-05-29 06:29:14"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2428,12 +2480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity.git",
-                "reference": "965f3b5b98f0c15b8869452f4b9815b50bf5d6f4"
+                "reference": "5c8973d77f511780c05588d74833955e747927f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity/zipball/965f3b5b98f0c15b8869452f4b9815b50bf5d6f4",
-                "reference": "965f3b5b98f0c15b8869452f4b9815b50bf5d6f4",
+                "url": "https://api.github.com/repos/modpreneur/trinity/zipball/5c8973d77f511780c05588d74833955e747927f4",
+                "reference": "5c8973d77f511780c05588d74833955e747927f4",
                 "shasum": ""
             },
             "require": {
@@ -2476,7 +2528,7 @@
                 }
             ],
             "description": "Trinity Framework",
-            "time": "2015-12-10 18:13:53"
+            "time": "2015-12-10 20:48:09"
         },
         {
             "name": "twig/twig",

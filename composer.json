@@ -15,7 +15,8 @@
     "trinity/framework": "dev-master",
     "guzzlehttp/guzzle": "~6.0",
     "nette/utils": "~2.3",
-    "sensio/framework-extra-bundle": "~3.0"
+    "sensio/framework-extra-bundle": "~3.0",
+    "fzaninotto/faker": "^1.5"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",

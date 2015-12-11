@@ -24,7 +24,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
 class Product implements INotificationEntity
 {
     /** @var  int */
-    private $id = 1987656789;
+    private $id;
 
     /** @var  string */
     private $name = "Someone's name";
