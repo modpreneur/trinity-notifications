@@ -5,7 +5,7 @@ services:
         arguments:
             - "@trinity.notification.annotations.utils"
             - "@logger"
-            - "%trinity.notification.master_entity_id_field%"
+            - "%trinity.notification.entity_id_field%"
 
     trinity.notification.services.notification_parser:
         class: Trinity\NotificationBundle\Notification\NotificationParser

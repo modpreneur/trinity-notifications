@@ -25,7 +25,7 @@ class EntityConverter
     protected $entityManager;
 
     /** @var  string Name of the property of a entity which will be mapped to the Id from the notification */
-    protected $masterEntityIdProperty;
+    protected $entityIdFieldName;
 
 
     /**
@@ -33,8 +33,9 @@ class EntityConverter
      *
      * @param AnnotationsUtils $annotationsUtils
      * @param LoggerInterface $logger
+     * @param string $entityIdFieldName
      */
-    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, $masterEntityIdProperty = null)
+    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, $entityIdFieldName = "")
     {
         $this->annotationsUtils = $annotationsUtils;
         $this->logger = $logger;
@@ -253,7 +254,7 @@ class EntityConverter
             } //If the method parameter type is doctrine entity.
             else if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType))) {
                 //Try to find an object with given master entity id.
-                $propertyValue = $doctrineRepository->findOneBy([$this->masterEntityIdProperty => $propertyValue]);
+                $propertyValue = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
 
                 if (!$propertyValue) {
                     //todo: set level to error!
