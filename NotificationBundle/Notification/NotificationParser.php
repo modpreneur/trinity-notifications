@@ -17,25 +17,29 @@ use Trinity\NotificationBundle\Exception\HashMismatchException;
  */
 class NotificationParser
 {
+    /** @var LoggerInterface  */
     protected $logger;
 
     /** @var object EntityManagerInterface */
     protected $entityManager;
 
+    /** @var EntityConverter */
     protected $entityConverter;
 
+    /** @var string Client secret  */
     protected $clientSecret;
 
-    protected $request;
-
+    /** @var array Array of request data */
     protected $parametersArray;
 
-    // The set method is not called on the entity
-    // These fields has special meaning
+    // The set method is not called on the entity for
+    /** @var array Fields with special meaning. The set method is not called on the entity for those fields. */
     protected $ignoredFields = ["id", "timestamp", "hash", "notification_oauth_client_id"];
 
+    /** @var string Field name which will be mapped to the id from the notification request */
     protected $entityIdFieldName;
 
+    /** @var  bool */
     protected $isClient;
 
     /** @var string Allow creating a new entity when the entity does not exist */
@@ -138,7 +142,7 @@ class NotificationParser
             ->getRepository($fullClassName)
             ->findOneBy([$fieldName => $this->parametersArray["id"]]);
 
-        if (!$this->createNewEntity) {
+        if ($entityObject || !$this->createNewEntity) {
             return $entityObject;
         }
 
@@ -147,12 +151,5 @@ class NotificationParser
         call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
 
         return $entityObject;
-    }
-
-
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
-        $this->entityConverter->setEntityManager($entityManager);
     }
 }
