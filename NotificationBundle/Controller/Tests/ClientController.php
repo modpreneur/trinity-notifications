@@ -6,44 +6,54 @@
 
 namespace Trinity\NotificationBundle\Controller\Tests;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Trinity\NotificationBundle\Annotations\DisableNotification;
 
 
 /**
  * Class ClientController
+ * @DisableNotification()
  *
  * @package Trinity\NotificationBundle\Tests\Controller
  */
 class ClientController extends Controller
 {
 
-    public function indexAction(){
+    public function indexAction()
+    {
 
         return new Response('It\'s work!');
     }
 
 
-    public function productAction(Request $request){
-
-        $r = json_decode($request->getContent(), true);
-
-        if($r['id'] == 1){
+    public function productAction(Request $request)
+    {
+        try {
+            $this->get("trinity.notification.services.notification_parser")
+                ->parseNotification(
+                    $request->request->all(),
+                    "Trinity\\NotificationBundle\\Tests\\Sandbox\\Entity\\ClientProduct",
+                    $request->getMethod(),
+                    $this->getParameter("trinity.notification.master_client_secret")
+                );
+        }
+        catch (\Exception $e) {
             return new JsonResponse([
-                'code'       => 500,
+                'code' => 500,
                 'statusCode' => 500,
-                'message'    => 'Product already exist.'
+                'message' => $e->getMessage()
             ]);
         }
 
         return new JsonResponse([
-            'code'       => 200,
+            'code' => 200,
             'statusCode' => 200,
-            'message'    => 'OK'
+            'message' => 'OK'
         ]);
+
+
     }
-
-
 }

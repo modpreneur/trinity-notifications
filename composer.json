@@ -20,7 +20,6 @@
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
-    "phpunit/phpunit": "~5.0",
     "dmishh/settings-bundle": "2.0.*@dev",
     "friendsofsymfony/user-bundle": "dev-master",
     "trinity/framework": "dev-master",

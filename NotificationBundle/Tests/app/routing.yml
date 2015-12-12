@@ -5,4 +5,4 @@ index:
 product:
     path:      /product
     defaults:  { _controller: TrinityNotificationBundle:Tests/Client:product }
-    methods: post
+    methods: [post,put]

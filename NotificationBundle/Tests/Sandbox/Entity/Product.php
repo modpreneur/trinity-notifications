@@ -23,7 +23,6 @@ class Product extends BaseProduct implements INotificationEntity
     /** @var  Client */
     private $client;
 
-
     /**
      * @param int $id
      */

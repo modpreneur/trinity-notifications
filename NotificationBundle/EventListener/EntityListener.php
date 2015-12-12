@@ -125,8 +125,14 @@ class EntityListener
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->entityManager = $args->getEntityManager();
+        $enable = $this->isNotificationEnabledForController();
 
-        return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
+        if($enable)
+        {
+            return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
+        }
+
+        return false;
     }
 
 
@@ -155,8 +161,9 @@ class EntityListener
     {
         $entity = $this->entity;
         $this->entity = null;
+        $enable = $this->isNotificationEnabledForController();
 
-        if ($entity) {
+        if ($entity && $enable) {
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }
     }

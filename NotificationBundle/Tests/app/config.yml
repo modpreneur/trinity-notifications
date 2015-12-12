@@ -26,6 +26,15 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
 
+        #Tell doctrine that there are another entities in the Sandbox folder
+        mappings:
+            SandboxTest:
+                type: annotation
+                dir: '%kernel.root_dir%/../Sandbox'
+                is_bundle: false
+                prefix: Trinity\NotificationBundle\Tests\Sandbox\Entity
+
+
 framework:
     secret: "Three can keep a secret, if two of them are dead. MUHEHE."
     test: ~
@@ -63,6 +72,9 @@ monolog:
 
 trinity_notification:
     drivers: ["trinity.notification.driver.api"]
+    entity_id_field: masterId
+    master_client_secret: secretKey
+    create_new_entity: true
 
 services:
     trinity.logger_database:
