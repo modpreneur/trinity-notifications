@@ -152,4 +152,13 @@ class NotificationParser
 
         return $entityObject;
     }
+
+    /**
+     * @param $entityManager
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+        $this->entityConverter->setEntityManager($entityManager);
+    }
 }
