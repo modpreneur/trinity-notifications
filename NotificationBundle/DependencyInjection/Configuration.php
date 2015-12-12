@@ -26,8 +26,11 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('trinity_notification');
 
+        // The property which will be mapped to the id which is in the notification request.
+        // This field is used to fetch an entity from the database
+        // Value "id" is typically on master
+        // Value "masterId" is typically on client
         $rootNode->children()->scalarNode('entity_id_field')->defaultValue("id");
-        $rootNode->children()->scalarNode('master_entity_id_field')->defaultValue("id");
         $rootNode->children()->scalarNode('master_notify_url')->defaultValue("");
         $rootNode->children()->scalarNode('master_oauth_url')->defaultValue("");
         $rootNode->children()->scalarNode('master_client_id')->defaultValue("");

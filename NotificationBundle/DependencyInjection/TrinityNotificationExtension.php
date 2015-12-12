@@ -29,7 +29,6 @@ class TrinityNotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('trinity.notification.entity_id_field', $config['entity_id_field']);
-        $container->setParameter('trinity.notification.master_entity_id_field', $config['master_entity_id_field']);
         $container->setParameter('trinity.notification.master_notify_url', $config['master_notify_url']);
         $container->setParameter('trinity.notification.master_oauth_url', $config['master_oauth_url']);
         $container->setParameter('trinity.notification.master_client_id', $config['master_client_id']);
