@@ -69,7 +69,6 @@ abstract class BaseDriver implements INotificationDriver
 
         $result['timestamp'] = (new \DateTime())->getTimestamp();
         $result['hash'] = hash('sha256', $secret.(implode(',', $result)));
-
         return json_encode($result);
     }
 

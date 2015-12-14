@@ -1,7 +1,5 @@
 trinity_notification:
-    drivers: ["trinity.notification.driver.client_api"]
-    entity_id_field: necktieId
-    necktie_notify_url: 'localhost:8000'
-    necktie_oauth_url: 'localhost:8000/api/notify'
-    necktie_client_id: '3_2pn879wqvwo4ksg0kco8gokgk8ooko4k4s08ck8sscw4c08kcw'
-    necktie_client_secret: '58akszpgzu8s0sw0cckwc0c0swgwg0wk404o0kocc8swoo8sc4'
+    drivers: ["trinity.notification.driver.api"]
+    entity_id_field: masterId
+    master_client_secret: secretKey
+    create_new_entity: true

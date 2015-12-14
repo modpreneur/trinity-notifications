@@ -96,9 +96,8 @@ class ApiDriver extends BaseDriver
         $httpClient = new Client();
 
         //new interface(v6.0)
-        $request = new Request($method, $url, ['content-type' => 'application/json'], $data);
+        $request  = new Request($method, $url, ['content-type' => 'application/json'], $data);
         $response = $httpClient->send( $request );
-
 
         if(Strings::contains((string)$response->getBody(), '"code":404')){
             throw new NotificationDriverException((string)$response->getBody());

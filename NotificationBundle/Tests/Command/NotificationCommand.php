@@ -5,9 +5,11 @@ namespace Trinity\NotificationBundle\Tests\Command;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
@@ -43,14 +45,18 @@ class NotificationCommand extends ContainerAwareCommand
         $id = $input->getOption('id');
 
         //create database
-        $command = $this->getApplication()->find("doctrine:schema:update");
+        $command = $this
+            ->getApplication()
+            ->find("doctrine:schema:update");
 
         $arguments = [
             "command" => "doctrine:schema:update",
-            "--force" => true
+            "--force" => true,
+            '-q'
         ];
-        $command->run(new ArrayInput($arguments), $output);
 
+        $bufferOutput = new BufferedOutput();
+        $command->run(new ArrayInput($arguments), $bufferOutput);
 
         $p = new Product();
         $c = new Client();
@@ -62,8 +68,21 @@ class NotificationCommand extends ContainerAwareCommand
         $p->setClient($c);
         $api = $this->getContainer()->get('trinity.notification.driver.api');
 
-        $result = $api->execute($p, $c);
-        $output->writeln('Client Result:');
-        $output->writeln($result);
+
+        $table = new Table($output);
+        $resutl = $api->execute($p, $c);
+        if(is_array($resutl)) $resutl = json_encode($resutl);
+
+        $table
+            ->setHeaders(['Server', 'Responce']);
+        $table
+            ->setRows([
+                [
+                    'client', $resutl
+                ]
+            ]);
+
+        $table->render();
+
     }
 }

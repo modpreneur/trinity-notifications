@@ -34,7 +34,7 @@ class ClientController extends Controller
         try {
             $this->get("trinity.notification.services.notification_parser")
                 ->parseNotification(
-                    $request->request->all(),
+                    json_decode($request->getContent(), true),
                     "Trinity\\NotificationBundle\\Tests\\Sandbox\\Entity\\ClientProduct",
                     $request->getMethod(),
                     $this->getParameter("trinity.notification.master_client_secret")
@@ -45,7 +45,7 @@ class ClientController extends Controller
                 'code' => 500,
                 'statusCode' => 500,
                 'message' => $e->getMessage()
-            ]);
+            ], 500);
         }
 
         return new JsonResponse([
@@ -53,7 +53,5 @@ class ClientController extends Controller
             'statusCode' => 200,
             'message' => 'OK'
         ]);
-
-
     }
 }
