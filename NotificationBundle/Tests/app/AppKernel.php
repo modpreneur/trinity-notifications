@@ -10,6 +10,31 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class AppKernel extends Kernel
 {
+
+    private $port;
+
+    private $client = false;
+
+
+    /**
+     * @return mixed
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+
+    /**
+     * @param mixed $port
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+        $this->client = $port == 8000;
+    }
+
+
     /**
      * @return array
      */
@@ -34,6 +59,12 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__.'/config.yml');
         $loader->load(__DIR__.'/../../Resources/config/services.yml');
+
+        if($this->client){
+            $loader->load(__DIR__.'/client/config.yml');
+        }else{
+            $loader->load(__DIR__.'/master/config.yml');
+        }
     }
 
 

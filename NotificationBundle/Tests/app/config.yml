@@ -70,12 +70,6 @@ monolog:
              id: trinity.logger_database
              level: ERROR
 
-trinity_notification:
-    drivers: ["trinity.notification.driver.api"]
-    entity_id_field: masterId
-    master_client_secret: secretKey
-    create_new_entity: true
-
 services:
     trinity.logger_database:
         class: Trinity\FrameworkBundle\DatabaseLogger\DatabaseHandler

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "09ffa21ec8ef1dac4604604cda4a626e",
-    "content-hash": "62ff0c86b81ffb881bfd2254ab9cf5c7",
+    "hash": "ee4a16f83c2c203d11d06cd830ce83b7",
+    "content-hash": "ea1a67d75115419eec7b996f574e3ec6",
     "packages": [
         {
             "name": "apy/datagrid-bundle",
             "version": "2.2.16",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Abhoryo/APYDataGridBundle.git",
+                "url": "https://github.com/APY/APYDataGridBundle.git",
                 "reference": "08f109cd25acaec99d3b700653dd33e77012b61f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Abhoryo/APYDataGridBundle/zipball/08f109cd25acaec99d3b700653dd33e77012b61f",
+                "url": "https://api.github.com/repos/APY/APYDataGridBundle/zipball/08f109cd25acaec99d3b700653dd33e77012b61f",
                 "reference": "08f109cd25acaec99d3b700653dd33e77012b61f",
                 "shasum": ""
             },
@@ -114,12 +114,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmishh/SettingsBundle.git",
-                "reference": "25280a62b279cffb1afbe7179a458670dc748d54"
+                "reference": "a1747348665f69213cd962de27cbcd1ab29b1c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmishh/SettingsBundle/zipball/25280a62b279cffb1afbe7179a458670dc748d54",
-                "reference": "25280a62b279cffb1afbe7179a458670dc748d54",
+                "url": "https://api.github.com/repos/dmishh/SettingsBundle/zipball/a1747348665f69213cd962de27cbcd1ab29b1c4d",
+                "reference": "a1747348665f69213cd962de27cbcd1ab29b1c4d",
                 "shasum": ""
             },
             "require": {
@@ -177,7 +177,7 @@
                 "config",
                 "configuration"
             ],
-            "time": "2015-11-14 13:51:41"
+            "time": "2015-12-13 01:40:27"
         },
         {
             "name": "doctrine/annotations",
@@ -2977,7 +2977,13 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/d68dbdc53dc358a816f00b300704702b2eaff7b8",
                 "reference": "d68dbdc53dc358a816f00b300704702b2eaff7b8",
-                "shasum": ""
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
             },
             "require": {
                 "php": ">=5.3.3"
@@ -3245,7 +3251,13 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/31f8b717e51d9a2afca6c9f046f5d69fc27c8686",
                 "reference": "31f8b717e51d9a2afca6c9f046f5d69fc27c8686",
-                "shasum": ""
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
             },
             "require": {
                 "php": ">=5.3.3"
@@ -3884,7 +3896,13 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/58b3a85e7999757d6ad81c787a1fbf5ff6c628c6",
                 "reference": "58b3a85e7999757d6ad81c787a1fbf5ff6c628c6",
-                "shasum": ""
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://tp.corp.modpreneur.com/repo/packagist/dists/%package%/%version%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
             },
             "type": "library",
             "autoload": {
