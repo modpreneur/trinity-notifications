@@ -7,10 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 $port = null;
 
-if($argv[1] == 'trinity:notification:client:run'){
-    $port = 8000;
-}elseif($argv[1] == 'trinity:notification:master:run'){
-    $port = 9000;
+if(isset($argv[1])){
+    if($argv[1] == 'trinity:notification:client:run'){
+        $port = 8000;
+    }elseif($argv[1] == 'trinity:notification:master:run'){
+        $port = 9000;
+    }
 }
 
 $kernel = new AppKernel('dev', true);
