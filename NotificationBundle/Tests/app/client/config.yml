@@ -1,6 +1,6 @@
 trinity_notification:
     drivers: ["trinity.notification.driver.client_api"]
-    entity_id_field: necktieId
+    entity_id_field: masterId
     necktie_notify_url: 'localhost:8000'
     necktie_oauth_url: 'localhost:8000/api/notify'
     necktie_client_id: '3_2pn879wqvwo4ksg0kco8gokgk8ooko4k4s08ck8sscw4c08kcw'
