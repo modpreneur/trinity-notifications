@@ -13,6 +13,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ClientRunCommand extends ContainerAwareCommand
 {
+    private $kernel;
+
+
+    /**
+     * @param mixed $kernel
+     */
+    public function setKernel($kernel)
+    {
+        $this->kernel = $kernel;
+    }
+
+
     protected function configure()
     {
         $this->setName('trinity:notification:client:run')
@@ -23,17 +35,22 @@ class ClientRunCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $kernel = $this->kernel;
+
         $input = new ArrayInput(array(
-            'command' => 'server:run',
+            'command' => 'server:start',
             '--port' => '8000'
         ));
 
-        $kernel = $this->getContainer()->get('kernel');
+        if($this->kernel === null){
+            $kernel = $this
+                ->getContainer()
+                ->get('kernel');
+        }
         $kernel->setPort(8000);
 
         $application = new Application($kernel);
         $application->setAutoExit(false);
-
         $application->run($input, $output);
     }
 }

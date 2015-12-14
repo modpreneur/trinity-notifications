@@ -23,6 +23,5 @@ $application->add(new \Trinity\NotificationBundle\Tests\Command\NotificationComm
 $application->add(new \Trinity\NotificationBundle\Tests\Command\ClientRunCommand());
 $application->add(new \Trinity\NotificationBundle\Tests\Command\MasterRunCommand());
 
-
 $application->run();
 

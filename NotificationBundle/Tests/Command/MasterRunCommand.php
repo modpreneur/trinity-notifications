@@ -24,7 +24,7 @@ class MasterRunCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $input = new ArrayInput(array(
-            'command' => 'server:run',
+            'command' => 'server:start',
             '--port' => '9000'
         ));
 
