@@ -1,5 +1,4 @@
 trinity_notification:
     drivers: ["trinity.notification.driver.api"]
-    entity_id_field: masterId
-    master_client_secret: secretKey
+    entity_id_field: id
     create_new_entity: true
