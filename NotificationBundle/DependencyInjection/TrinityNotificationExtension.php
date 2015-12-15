@@ -7,6 +7,7 @@
 
 namespace Trinity\NotificationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -28,28 +29,48 @@ class TrinityNotificationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('trinity.notification.entity_id_field', $config['entity_id_field']);
-        $container->setParameter('trinity.notification.master_notify_url', $config['master_notify_url']);
-        $container->setParameter('trinity.notification.master_oauth_url', $config['master_oauth_url']);
-        $container->setParameter('trinity.notification.master_client_id', $config['master_client_id']);
-        $container->setParameter('trinity.notification.master_client_secret', $config['master_client_secret']);
-        $container->setParameter('trinity.notification.create_new_entity', $config['create_new_entity']);
+        //If the app is in client mode
+        if (array_key_exists('client', $config)) {
+            $config = $config['client'];
 
-        // If is the master notify url is specified then the application is client
-        if (array_key_exists("master_notify_url", $config) && !empty($config["master_notify_url"])) {
-            $container->setParameter("trinity.notification.is_client", true);
+            $container->setParameter('trinity.notification.is_client', true);
+
+        //If the app is in master mode
+        } else if (array_key_exists('master', $config)) {
+            $config = $config["master"];
+
+            $container->setParameter('trinity.notification.is_client', false);
         } else {
-            $container->setParameter("trinity.notification.is_client", false);
+            throw new InvalidConfigurationException('Client or master node is not specified.');
         }
 
-        $enabledDrivers = [];
-        foreach ($config["drivers"] as $driver) {
-            $enabledDrivers[] = $driver;
-        }
+        //Add string with driver names which will be processed in DriverCompilerPass
+        $container->setParameter('trinity.notification.enabled_drivers',     implode(',', $config["drivers"]));
 
-        $container->setParameter("trinity.enabled_drivers", implode(",", $enabledDrivers));
+        //Add other paramters
+        $container->setParameter('trinity.notification.master_notify_url',   $this->getValue($config, 'master_notify_url'));
+        $container->setParameter('trinity.notification.master_oauth_url',    $this->getValue($config, 'master_oauth_url'));
+        $container->setParameter('trinity.notification.master_client_id',    $this->getValue($config, 'master_client_id'));
+        $container->setParameter('trinity.notification.master_client_secret',$this->getValue($config, 'master_client_secret'));
+        $container->setParameter('trinity.notification.entity_id_field',     $this->getValue($config, 'entity_id_field'));
+        $container->setParameter('trinity.notification.create_new_entity',   $this->getValue($config, 'create_new_entity'));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+    }
+
+    /**
+     * @param $array
+     * @param $key
+     * @return null
+     */
+    private function getValue($array, $key)
+    {
+        if(array_key_exists($key, $array) && isset($array[$key]))
+        {
+            return $array[$key];
+        }
+
+        return null;
     }
 }

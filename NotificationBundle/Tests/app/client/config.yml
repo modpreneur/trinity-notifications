@@ -1,7 +1,9 @@
 trinity_notification:
-    drivers: ["trinity.notification.driver.client_api"]
-    entity_id_field: masterId
+  client:
+    entity_id_field: 'masterId'
     master_notify_url: 'localhost:8000'
     master_oauth_url: 'localhost:8000/api/notify'
     master_client_id: '3_2pn879wqvwo4ksg0kco8gokgk8ooko4k4s08ck8sscw4c08kcw'
     master_client_secret: '58akszpgzu8s0sw0cckwc0c0swgwg0wk404o0kocc8swoo8sc4'
+    create_new_entity: true
+    drivers: ['@trinity.notification.driver.api']

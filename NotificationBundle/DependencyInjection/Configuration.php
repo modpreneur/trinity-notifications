@@ -26,20 +26,68 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('trinity_notification');
 
-        // The property which will be mapped to the id which is in the notification request.
-        // This field is used to fetch an entity from the database
-        // Value "id" is typically on master
-        // Value "masterId" is typically on client
-        $rootNode->children()->scalarNode('entity_id_field')->defaultValue("id");
-        $rootNode->children()->scalarNode('master_notify_url')->defaultValue("");
-        $rootNode->children()->scalarNode('master_oauth_url')->defaultValue("");
-        $rootNode->children()->scalarNode('master_client_id')->defaultValue("");
-        $rootNode->children()->scalarNode('master_client_secret')->defaultValue("");
-        $rootNode->children()->scalarNode('create_new_entity')->defaultFalse();
+        //Add root for client
         $rootNode
             ->children()
-                ->arrayNode("drivers")
-                    ->prototype("scalar");
+                ->arrayNode("client")
+                    ->children()
+                        ->scalarNode("entity_id_field")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("master_oauth_url")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("master_notify_url")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("master_client_id")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("master_client_secret")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->booleanNode("create_new_entity")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->arrayNode("drivers")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->prototype("scalar")
+                        ->end()
+                    ->end();
+
+
+        //Add root for master
+        $rootNode
+            ->children()
+                ->arrayNode("master")
+                    ->children()
+                        ->scalarNode("create_new_entity")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("entity_id_field")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->arrayNode("drivers")
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->prototype("scalar")
+                        ->end();
+
+        //Ensure that there is only one node. "client" or "master"
+        $rootNode->validate()
+            ->ifTrue(function($v){
+                return !(is_array($v) && count($v) == 1);
+            })
+            ->thenInvalid("Please define exactly one node: client, master");
 
         return $treeBuilder;
     }

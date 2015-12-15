@@ -24,8 +24,7 @@ class ClientController extends Controller
 
     public function indexAction()
     {
-
-        return new Response('It\'s work!');
+        return new Response('It works!');
     }
 
 
