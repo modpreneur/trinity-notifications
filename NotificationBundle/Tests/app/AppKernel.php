@@ -11,27 +11,21 @@ use Symfony\Component\HttpKernel\Kernel;
 class AppKernel extends Kernel
 {
 
+    /** @var  integer */
     private $port;
 
-    private $client = false;
-
 
     /**
-     * @return mixed
+     * Constructor.
+     *
+     * @param string $environment The environment
+     * @param bool $debug         Whether to enable debugging or not
+     * @param integer $port
      */
-    public function getPort()
-    {
-        return $this->port;
-    }
-
-
-    /**
-     * @param mixed $port
-     */
-    public function setPort($port)
+    public function __construct($environment, $debug, $port)
     {
         $this->port = $port;
-        $this->client = $port == 8000;
+        parent::__construct($environment, $debug);
     }
 
 
@@ -60,7 +54,7 @@ class AppKernel extends Kernel
         $loader->load(__DIR__.'/config.yml');
         $loader->load(__DIR__.'/../../Resources/config/services.yml');
 
-        if($this->client){
+        if($this->port == 8000){
             $loader->load(__DIR__.'/client/config.yml');
         }else{
             $loader->load(__DIR__.'/server/config.yml');

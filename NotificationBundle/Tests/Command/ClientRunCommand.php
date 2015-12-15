@@ -10,7 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-
+/**
+ * Class ClientRunCommand
+ *
+ * @package Trinity\NotificationBundle\Tests\Command
+ */
 class ClientRunCommand extends ContainerAwareCommand
 {
     private $kernel;
@@ -36,9 +40,8 @@ class ClientRunCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel = $this->kernel;
-
         $input = new ArrayInput(array(
-            'command' => 'server:start',
+            'command' => 'server:run',
             '--port' => '8000'
         ));
 
@@ -47,7 +50,6 @@ class ClientRunCommand extends ContainerAwareCommand
                 ->getContainer()
                 ->get('kernel');
         }
-        $kernel->setPort(8000);
 
         $application = new Application($kernel);
         $application->setAutoExit(false);

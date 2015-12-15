@@ -25,20 +25,8 @@ class ServerToClientTest extends BaseTest
      */
     public function send(){
 
-        $k = $this->createKernel();
-        $application = new Application($k);
+        //exec("php console.php trinity:notification:client:run");
 
-        $crc = new ClientRunCommand();
-        $crc->setKernel($k);
-
-        $application->add($crc);
-        $application->add(new ServerRunCommand());
-
-        $command = $application->find('trinity:notification:client:run');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(['command' => $command->getName()]);
-
-        dump($commandTester->getDisplay());
     }
 
 }
