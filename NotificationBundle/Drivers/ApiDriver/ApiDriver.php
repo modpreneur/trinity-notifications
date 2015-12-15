@@ -37,6 +37,9 @@ class ApiDriver extends BaseDriver
     {
         $response = '';
         $HTTPMethod = self::POST;
+        $user = null;
+
+        if($this->tokenStorage) $user = $this->tokenStorage->getToken()->getUser();
 
         if ($client->isNotificationEnabled()) {
             if (array_key_exists('HTTPMethod', $params)) {
@@ -50,14 +53,13 @@ class ApiDriver extends BaseDriver
                 $response = $this->createRequest($json, $url, $HTTPMethod, true);
                 $this->eventDispatcher->dispatch(
                     Events::SUCCESS_NOTIFICATION,
-                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
+                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
                 );
             } catch (\Exception $ex) {
                 $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
-
                 $this->eventDispatcher->dispatch(
                     Events::ERROR_NOTIFICATION,
-                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
+                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message, $user)
                 );
 
                 $response = "ERROR - $message";

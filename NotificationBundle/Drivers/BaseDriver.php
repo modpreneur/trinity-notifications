@@ -8,6 +8,8 @@ namespace Trinity\NotificationBundle\Driver;
 
 use Nette\Utils\Strings;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Trinity\FrameworkBundle\Entity\BaseUser;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
@@ -28,6 +30,8 @@ abstract class BaseDriver implements INotificationDriver
     /** @var  EventDispatcher */
     protected $eventDispatcher;
 
+    protected $tokenStorage;
+
 
     /**
      * NotificationManager constructor.
@@ -35,15 +39,19 @@ abstract class BaseDriver implements INotificationDriver
      * @param EventDispatcher $eventDispatcher
      * @param EntityConverter $entityConverter
      * @param NotificationUtils $notificationUtils
+     * @param TokenStorage $tokenStorage
      */
     public function __construct(
         $eventDispatcher,
         EntityConverter $entityConverter,
-        NotificationUtils $notificationUtils
+        NotificationUtils $notificationUtils,
+        TokenStorage $tokenStorage = null
+
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityConverter = $entityConverter;
+        $this->eventDispatcher   = $eventDispatcher;
+        $this->entityConverter   = $entityConverter;
         $this->notificationUtils = $notificationUtils;
+        $this->tokenStorage      = $tokenStorage;
     }
 
 

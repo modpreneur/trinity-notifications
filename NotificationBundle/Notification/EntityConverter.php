@@ -6,6 +6,7 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\MappingException;
 use Psr\Log\LoggerInterface;
 use Trinity\NotificationBundle\Exception\SourceException;
@@ -22,6 +23,7 @@ class EntityConverter
     /** @var  LoggerInterface */
     protected $logger;
 
+    /** @var  EntityManager */
     protected $entityManager;
 
     /** @var  string Name of the property of a entity which will be mapped to the Id from the notification */

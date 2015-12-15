@@ -8,6 +8,7 @@
 namespace Trinity\NotificationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Trinity\FrameworkBundle\Entity\BaseUser;
 use Trinity\FrameworkBundle\Entity\IClient;
 
 
@@ -42,6 +43,9 @@ class StatusEvent extends Event
     /** @var  int */
     protected $entityId;
 
+    /** @var BaseUser */
+    protected $user;
+
 
     /**
      * @param IClient $client
@@ -52,6 +56,7 @@ class StatusEvent extends Event
      * @param string $method
      * @param \Exception|null $exception
      * @param string $message
+     * @param BaseUser $user
      */
     public function __construct(
         $client,
@@ -61,7 +66,8 @@ class StatusEvent extends Event
         $json,
         $method,
         \Exception $exception = null,
-        $message = self::NULL_MESSAGE
+        $message = self::NULL_MESSAGE,
+        BaseUser $user = null
     ) {
         $this->exception = $exception;
         $this->entityName = $entityName;
@@ -70,6 +76,7 @@ class StatusEvent extends Event
         $this->json = $json;
         $this->client = $client;
         $this->entityId = $entityId;
+        $this->user = $user;
 
         if ($exception && $message === null) {
             $this->message = $exception->getMessage();
@@ -167,4 +174,23 @@ class StatusEvent extends Event
     {
         $this->entityId = $entityId;
     }
+
+
+    /**
+     * @return BaseUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+
+    /**
+     * @param BaseUser $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
 }

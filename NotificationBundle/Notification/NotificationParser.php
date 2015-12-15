@@ -105,7 +105,7 @@ class NotificationParser
 
 
     /**
-     * Check if the received data isn't modified(the given hash matches the newly generated hash)
+     * Check if the received data isn't modified (the given hash matches the newly generated hash)
      *
      * @param $clientSecret string Oauth secret of the client from which the notification came from
      *
