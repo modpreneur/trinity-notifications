@@ -22,7 +22,7 @@ class AppKernel extends Kernel
      * @param bool $debug         Whether to enable debugging or not
      * @param integer $port
      */
-    public function __construct($environment, $debug, $port)
+    public function __construct($environment, $debug, $port = null)
     {
         $this->port = $port;
         parent::__construct($environment, $debug);

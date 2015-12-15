@@ -37,6 +37,18 @@ class ClientRunCommand extends ContainerAwareCommand
     }
 
 
+    function isRunning($pid){
+        try{
+            $result = shell_exec(sprintf("ps %d", $pid));
+            if( count(preg_split("/\n/", $result)) > 2){
+                return true;
+            }
+        }catch(\Exception $e){}
+
+        return false;
+    }
+
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel = $this->kernel;
