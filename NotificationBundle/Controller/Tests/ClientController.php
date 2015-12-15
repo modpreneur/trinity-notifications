@@ -36,7 +36,7 @@ class ClientController extends Controller
                     json_decode($request->getContent(), true),
                     "Trinity\\NotificationBundle\\Tests\\Sandbox\\Entity\\ClientProduct",
                     $request->getMethod(),
-                    $this->getParameter("trinity.notification.master_client_secret")
+                    $this->getParameter("trinity.notification.server_client_secret")
                 );
         }
         catch (\Exception $e) {

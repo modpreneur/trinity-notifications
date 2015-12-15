@@ -11,12 +11,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 
 
-class MasterRunCommand extends ContainerAwareCommand
+class ServerRunCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('trinity:notification:master:run')
-            ->setDescription('Trinity master run command.');
+        $this->setName('trinity:notification:server:run')
+            ->setDescription('Trinity server run command.');
         ;
     }
 

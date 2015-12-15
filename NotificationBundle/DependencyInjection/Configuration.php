@@ -35,19 +35,19 @@ class Configuration implements ConfigurationInterface
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode("master_oauth_url")
+                        ->scalarNode("server_oauth_url")
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode("master_notify_url")
+                        ->scalarNode("server_notify_url")
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode("master_client_id")
+                        ->scalarNode("server_client_id")
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
-                        ->scalarNode("master_client_secret")
+                        ->scalarNode("server_client_secret")
                             ->isRequired()
                             ->cannotBeEmpty()
                         ->end()
@@ -63,10 +63,10 @@ class Configuration implements ConfigurationInterface
                     ->end();
 
 
-        //Add root for master
+        //Add root for server
         $rootNode
             ->children()
-                ->arrayNode("master")
+                ->arrayNode("server")
                     ->children()
                         ->scalarNode("create_new_entity")
                             ->isRequired()
@@ -82,12 +82,12 @@ class Configuration implements ConfigurationInterface
                             ->prototype("scalar")
                         ->end();
 
-        //Ensure that there is only one node. "client" or "master"
+        //Ensure that there is only one node. "client" or "server"
         $rootNode->validate()
             ->ifTrue(function($v){
                 return !(is_array($v) && count($v) == 1);
             })
-            ->thenInvalid("Please define exactly one node: client, master");
+            ->thenInvalid("Please define exactly one node: client, server");
 
         return $treeBuilder;
     }

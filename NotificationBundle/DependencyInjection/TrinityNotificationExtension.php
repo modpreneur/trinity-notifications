@@ -35,23 +35,23 @@ class TrinityNotificationExtension extends Extension
 
             $container->setParameter('trinity.notification.is_client', true);
 
-        //If the app is in master mode
-        } else if (array_key_exists('master', $config)) {
-            $config = $config["master"];
+        //If the app is in server mode
+        } else if (array_key_exists('server', $config)) {
+            $config = $config["server"];
 
             $container->setParameter('trinity.notification.is_client', false);
         } else {
-            throw new InvalidConfigurationException('Client or master node is not specified.');
+            throw new InvalidConfigurationException('Client or server node is not specified.');
         }
 
         //Add string with driver names which will be processed in DriverCompilerPass
         $container->setParameter('trinity.notification.enabled_drivers',     implode(',', $config["drivers"]));
 
         //Add other paramters
-        $container->setParameter('trinity.notification.master_notify_url',   $this->getValue($config, 'master_notify_url'));
-        $container->setParameter('trinity.notification.master_oauth_url',    $this->getValue($config, 'master_oauth_url'));
-        $container->setParameter('trinity.notification.master_client_id',    $this->getValue($config, 'master_client_id'));
-        $container->setParameter('trinity.notification.master_client_secret',$this->getValue($config, 'master_client_secret'));
+        $container->setParameter('trinity.notification.server_notify_url',   $this->getValue($config, 'server_notify_url'));
+        $container->setParameter('trinity.notification.server_oauth_url',    $this->getValue($config, 'server_oauth_url'));
+        $container->setParameter('trinity.notification.server_client_id',    $this->getValue($config, 'server_client_id'));
+        $container->setParameter('trinity.notification.server_client_secret',$this->getValue($config, 'server_client_secret'));
         $container->setParameter('trinity.notification.entity_id_field',     $this->getValue($config, 'entity_id_field'));
         $container->setParameter('trinity.notification.create_new_entity',   $this->getValue($config, 'create_new_entity'));
 

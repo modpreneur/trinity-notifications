@@ -24,27 +24,27 @@ class ClientApiDriver extends BaseDriver
     const PUT = 'PUT';
 
     protected $oauthUrl;
-    protected $masterClientSecret;
-    protected $masterClientId;
+    protected $serverClientSecret;
+    protected $serverClientId;
 
-    public function __construct($eventDispatcher, EntityConverter $entityConverter, NotificationUtils $notificationUtils, $oauthUrl, $masterClientSecret, $masterClientId)
+    public function __construct($eventDispatcher, EntityConverter $entityConverter, NotificationUtils $notificationUtils, $oauthUrl, $serverClientSecret, $serverClientId)
     {
         parent::__construct($eventDispatcher, $entityConverter, $notificationUtils);
 
         $this->oauthUrl = $oauthUrl;
-        $this->masterClientSecret = $masterClientSecret;
-        $this->masterClientId = $masterClientId;
+        $this->serverClientSecret = $serverClientSecret;
+        $this->serverClientId = $serverClientId;
     }
 
 
     /**
      * @param object $entity
-     * @param IClient $master
+     * @param IClient $server
      * @param array $params
      *
      * @return mixed
      */
-    public function execute($entity, IClient $master, $params = [])
+    public function execute($entity, IClient $server, $params = [])
     {
         $HTTPMethod = self::POST;
 
@@ -52,15 +52,15 @@ class ClientApiDriver extends BaseDriver
             $HTTPMethod = $params['HTTPMethod'];
         }
 
-        // Try to get access token to the master
+        // Try to get access token to the server
         try {
-            $oauthAccessToken = $this->getAccessToken($this->oauthUrl, $this->masterClientSecret, $this->masterClientId);
+            $oauthAccessToken = $this->getAccessToken($this->oauthUrl, $this->serverClientSecret, $this->serverClientId);
         } catch (\Exception $ex) {
             $message = "$HTTPMethod: request to OAuth URL: " . $this->oauthUrl . ' returns error: ' . $ex->getMessage() . '.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
-                new StatusEvent($master, $entity, $entity->getId(), $this->oauthUrl, null, $HTTPMethod, $ex, $message)
+                new StatusEvent($server, $entity, $entity->getId(), $this->oauthUrl, null, $HTTPMethod, $ex, $message)
             );
 
             $response = "ERROR - $message";
@@ -68,11 +68,11 @@ class ClientApiDriver extends BaseDriver
             return $response;
         }
 
-        $url = $this->prepareURL($master->getNotificationUri(), $entity, $HTTPMethod);
+        $url = $this->prepareURL($server->getNotificationUri(), $entity, $HTTPMethod);
         $json = $this->JSONEncodeObject(
             $entity,
-            $this->masterClientSecret,
-            ["notification_oauth_client_id" => $this->masterClientId]
+            $this->serverClientSecret,
+            ["notification_oauth_client_id" => $this->serverClientId]
         );
 
         // Try to send notification data
@@ -82,21 +82,21 @@ class ClientApiDriver extends BaseDriver
                 $url,
                 $HTTPMethod,
                 true,
-                $this->masterClientSecret,
-                $this->masterClientId,
+                $this->serverClientSecret,
+                $this->serverClientId,
                 $oauthAccessToken
             );
 
             $this->eventDispatcher->dispatch(
                 Events::SUCCESS_NOTIFICATION,
-                new StatusEvent($master, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
+                new StatusEvent($server, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
             );
         } catch (\Exception $ex) {
             $message = "$HTTPMethod: URL: " . $url . ' returns error: ' . $ex->getMessage() . '.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
-                new StatusEvent($master, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
+                new StatusEvent($server, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message)
             );
             $response = "ERROR - $message";
         }
@@ -164,9 +164,9 @@ class ClientApiDriver extends BaseDriver
     /**
      * Join client URL with entity url.
      *
-     * Example: Client URL => "http://master.com"
+     * Example: Client URL => "http://server.com"
      *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
-     *          result: http://master.com/product
+     *          result: http://server.com/product
      *
      * @param string $url
      * @param object $entity

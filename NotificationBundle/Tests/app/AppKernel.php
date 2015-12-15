@@ -63,7 +63,7 @@ class AppKernel extends Kernel
         if($this->client){
             $loader->load(__DIR__.'/client/config.yml');
         }else{
-            $loader->load(__DIR__.'/master/config.yml');
+            $loader->load(__DIR__.'/server/config.yml');
         }
     }
 

@@ -10,14 +10,14 @@ namespace Trinity\NotificationBundle\Tests;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Trinity\NotificationBundle\Tests\Command\ClientRunCommand;
-use Trinity\NotificationBundle\Tests\Command\MasterRunCommand;
+use Trinity\NotificationBundle\Tests\Command\ServerRunCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\Process;
 
 /**
- * Class MasterToClientTest.
+ * Class ServerToClientTest.
  */
-class MasterToClientTest extends BaseTest
+class ServerToClientTest extends BaseTest
 {
 
     /**
@@ -32,7 +32,7 @@ class MasterToClientTest extends BaseTest
         $crc->setKernel($k);
 
         $application->add($crc);
-        $application->add(new MasterRunCommand());
+        $application->add(new ServerRunCommand());
 
         $command = $application->find('trinity:notification:client:run');
         $commandTester = new CommandTester($command);

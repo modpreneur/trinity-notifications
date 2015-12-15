@@ -10,11 +10,11 @@ use Trinity\FrameworkBundle\Entity\IClient;
 
 
 /**
- * Class Master
+ * Class Server
  *
  * @package Trinity\NotificationBundle\Entity
  */
-class Master implements IClient
+class Server implements IClient
 {
     /** @var  string */
     protected $notificationUri;

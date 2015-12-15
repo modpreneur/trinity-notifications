@@ -27,25 +27,25 @@ class ClientProduct extends BaseProduct
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $masterId;
+    protected $serverId;
 
 
     /**
      * @return mixed
      */
-    public function getMasterId()
+    public function getServerId()
     {
-        return $this->masterId;
+        return $this->serverId;
     }
 
 
     /**
-     * @param mixed $masterId
+     * @param mixed $serverId
      * @return $this
      */
-    public function setMasterId($masterId)
+    public function setServerId($serverId)
     {
-        $this->masterId = $masterId;
+        $this->serverId = $serverId;
 
         return $this;
     }

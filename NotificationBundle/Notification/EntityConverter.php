@@ -253,7 +253,7 @@ class EntityConverter
                 }
             } //If the method parameter type is doctrine entity.
             else if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType))) {
-                //Try to find an object with given master entity id.
+                //Try to find an object with given server entity id.
                 $propertyValue = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
 
                 if (!$propertyValue) {

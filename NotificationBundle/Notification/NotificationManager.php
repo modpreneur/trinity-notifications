@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\IClient;
 use Trinity\NotificationBundle\Driver\INotificationDriver;
-use Trinity\NotificationBundle\Entity\Master;
+use Trinity\NotificationBundle\Entity\Server;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
@@ -32,7 +32,7 @@ class NotificationManager
     protected $container;
 
     /** @var  string  */
-    protected $masterNotifyUri;
+    protected $serverNotifyUri;
 
 
     /**
@@ -40,13 +40,13 @@ class NotificationManager
      *
      * @param EventDispatcherInterface $eventDispatcher
      * @param ContainerInterface       $container
-     * @param                          $masterNotifyUri
+     * @param                          $serverNotifyUri
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, ContainerInterface $container, $masterNotifyUri)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ContainerInterface $container, $serverNotifyUri)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->container = $container;
-        $this->masterNotifyUri = $masterNotifyUri;
+        $this->serverNotifyUri = $serverNotifyUri;
         $this->drivers = [];
     }
 
@@ -77,7 +77,7 @@ class NotificationManager
         if ($toClient) {
             $response = $this->sendToClient($entity, $HTTPMethod);
         } else {
-            $response = $this->sendToMaster($entity, $HTTPMethod);
+            $response = $this->sendToServer($entity, $HTTPMethod);
         }
         return $response;
     }
@@ -125,7 +125,7 @@ class NotificationManager
 
 
     /**
-     *  Send notification to master
+     *  Send notification to server
      *
      * @param object $entity
      * @param string $HTTPMethod
@@ -135,18 +135,18 @@ class NotificationManager
      * @throws ClientException
      * @throws MethodException
      */
-    protected function sendToMaster($entity, $HTTPMethod = 'GET')
+    protected function sendToServer($entity, $HTTPMethod = 'GET')
     {
         $response = [];
-        $master = new Master();
-        $master->setNotificationUri($this->masterNotifyUri);
+        $server = new Server();
+        $server->setNotificationUri($this->serverNotifyUri);
 
         foreach ($this->drivers as $driver) {
             // before send event
             $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
 
             //execute notification
-            $resp = $driver->execute($entity, $master, ['HTTPMethod' => $HTTPMethod]);
+            $resp = $driver->execute($entity, $server, ['HTTPMethod' => $HTTPMethod]);
 
             if ($resp) {
                 $response[] = $resp;
