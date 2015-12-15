@@ -174,7 +174,7 @@ class EntityListener
      * @param $entity
      * @param $method
      *
-     * @return bool
+     * @return bool|array
      */
     private function sendNotification(EntityManager $entityManager, $entity, $method)
     {
