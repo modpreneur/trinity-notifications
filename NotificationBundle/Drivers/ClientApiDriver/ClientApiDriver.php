@@ -9,15 +9,16 @@ namespace Trinity\NotificationBundle\Drivers\ClientApiDriver;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Nette\Utils\Strings;
-use Trinity\FrameworkBundle\Entity\IClient;
-use Trinity\NotificationBundle\Driver\BaseDriver;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\NotificationBundle\Driver\BaseDriverInterface;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 
-class ClientApiDriver extends BaseDriver
+
+class ClientApiDriver extends BaseDriverInterface
 {
     const DELETE = 'DELETE';
     const POST = 'POST';
@@ -27,8 +28,15 @@ class ClientApiDriver extends BaseDriver
     protected $serverClientSecret;
     protected $serverClientId;
 
-    public function __construct($eventDispatcher, EntityConverter $entityConverter, NotificationUtils $notificationUtils, $oauthUrl, $serverClientSecret, $serverClientId)
-    {
+
+    public function __construct(
+        $eventDispatcher,
+        EntityConverter $entityConverter,
+        NotificationUtils $notificationUtils,
+        $oauthUrl,
+        $serverClientSecret,
+        $serverClientId
+    ) {
         parent::__construct($eventDispatcher, $entityConverter, $notificationUtils);
 
         $this->oauthUrl = $oauthUrl;
@@ -39,12 +47,12 @@ class ClientApiDriver extends BaseDriver
 
     /**
      * @param object $entity
-     * @param IClient $server
+     * @param ClientInterface $server
      * @param array $params
      *
      * @return mixed
      */
-    public function execute($entity, IClient $server, $params = [])
+    public function execute($entity, ClientInterface $server, $params = [])
     {
         $HTTPMethod = self::POST;
 
@@ -54,9 +62,13 @@ class ClientApiDriver extends BaseDriver
 
         // Try to get access token to the server
         try {
-            $oauthAccessToken = $this->getAccessToken($this->oauthUrl, $this->serverClientSecret, $this->serverClientId);
+            $oauthAccessToken = $this->getAccessToken(
+                $this->oauthUrl,
+                $this->serverClientSecret,
+                $this->serverClientId
+            );
         } catch (\Exception $ex) {
-            $message = "$HTTPMethod: request to OAuth URL: " . $this->oauthUrl . ' returns error: ' . $ex->getMessage() . '.';
+            $message = "$HTTPMethod: request to OAuth URL: ".$this->oauthUrl.' returns error: '.$ex->getMessage().'.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
@@ -92,7 +104,7 @@ class ClientApiDriver extends BaseDriver
                 new StatusEvent($server, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null)
             );
         } catch (\Exception $ex) {
-            $message = "$HTTPMethod: URL: " . $url . ' returns error: ' . $ex->getMessage() . '.';
+            $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
 
             $this->eventDispatcher->dispatch(
                 Events::ERROR_NOTIFICATION,
@@ -111,7 +123,7 @@ class ClientApiDriver extends BaseDriver
      * @param object|string $data
      * @param string $url
      * @param string $method
-     * @param bool   $isEncoded
+     * @param bool $isEncoded
      * @param string $clientSecret
      * @param string $clientId
      * @param string $accessToken
@@ -126,8 +138,7 @@ class ClientApiDriver extends BaseDriver
         $clientSecret = null,
         $clientId = null,
         $accessToken = null
-    )
-    {
+    ) {
         if (!$isEncoded) {
             if (is_object($data)) {
                 $data = $this->JSONEncodeObject($data, $clientSecret, ["notification_oauth_client_id" => $clientId]);
@@ -164,7 +175,7 @@ class ClientApiDriver extends BaseDriver
     /**
      * Join client URL with entity url.
      *
-     * Example: Client URL => "http://server.com"
+     * Example: ClientInterface URL => "http://server.com"
      *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
      *          result: http://server.com/product
      *
@@ -189,7 +200,7 @@ class ClientApiDriver extends BaseDriver
             $url .= '/';
         }
 
-        return $url . $class;
+        return $url.$class;
     }
 
 
@@ -213,7 +224,7 @@ class ClientApiDriver extends BaseDriver
                     [
                         'grant_type' => 'client_credentials',
                         'client_secret' => $clientSecret,
-                        'client_id' => $clientId
+                        'client_id' => $clientId,
                     ]
                 ),
             ]

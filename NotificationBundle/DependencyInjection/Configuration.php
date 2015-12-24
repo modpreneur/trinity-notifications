@@ -27,67 +27,29 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('trinity_notification');
 
         //Add root for client
-        $rootNode
-            ->children()
-                ->arrayNode("client")
-                    ->children()
-                        ->scalarNode("entity_id_field")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode("server_oauth_url")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode("server_notify_url")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode("server_client_id")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode("server_client_secret")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->booleanNode("create_new_entity")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->arrayNode("drivers")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                            ->prototype("scalar")
-                        ->end()
-                    ->end();
+        $rootNode->children()->arrayNode("client")->children()->scalarNode("entity_id_field")->isRequired(
+            )->cannotBeEmpty()->end()->scalarNode("server_oauth_url")->isRequired()->cannotBeEmpty()->end()->scalarNode(
+                "server_notify_url"
+            )->isRequired()->cannotBeEmpty()->end()->scalarNode("server_client_id")->isRequired()->cannotBeEmpty()->end(
+            )->scalarNode("server_client_secret")->isRequired()->cannotBeEmpty()->end()->booleanNode(
+                "create_new_entity"
+            )->isRequired()->cannotBeEmpty()->end()->arrayNode("drivers")->isRequired()->cannotBeEmpty()->prototype(
+                "scalar"
+            )->end()->end();
 
 
         //Add root for server
-        $rootNode
-            ->children()
-                ->arrayNode("server")
-                    ->children()
-                        ->scalarNode("create_new_entity")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode("entity_id_field")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->arrayNode("drivers")
-                            ->isRequired()
-                            ->cannotBeEmpty()
-                            ->prototype("scalar")
-                        ->end();
+        $rootNode->children()->arrayNode("server")->children()->scalarNode("create_new_entity")->isRequired(
+            )->cannotBeEmpty()->end()->scalarNode("entity_id_field")->isRequired()->cannotBeEmpty()->end()->arrayNode(
+                "drivers"
+            )->isRequired()->cannotBeEmpty()->prototype("scalar")->end();
 
         //Ensure that there is only one node. "client" or "server"
-        $rootNode->validate()
-            ->ifTrue(function($v){
-                return !(is_array($v) && count($v) == 1);
-            })
-            ->thenInvalid("Please define exactly one node: client, server");
+        $rootNode->validate()->ifTrue(
+                function ($v) {
+                    return !(is_array($v) && count($v) == 1);
+                }
+            )->thenInvalid("Please define exactly one node: client, server");
 
         return $treeBuilder;
     }

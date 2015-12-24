@@ -62,11 +62,14 @@ class EntityListener
 
     /**
      * @param NotificationManager $notificationManager
-     * @param NotificationUtils   $annotationProcessor
-     * @param bool                $isClient
+     * @param NotificationUtils $annotationProcessor
+     * @param bool $isClient
      */
-    public function __construct(NotificationManager $notificationManager, NotificationUtils $annotationProcessor, $isClient)
-    {
+    public function __construct(
+        NotificationManager $notificationManager,
+        NotificationUtils $annotationProcessor,
+        $isClient
+    ) {
         $this->notificationManager = $notificationManager;
         $this->processor = $annotationProcessor;
         $this->isClient = $isClient;
@@ -127,8 +130,7 @@ class EntityListener
         $this->entityManager = $args->getEntityManager();
         $enable = $this->isNotificationEnabledForController();
 
-        if($enable)
-        {
+        if ($enable) {
             return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
         }
 
@@ -182,7 +184,7 @@ class EntityListener
             return false;
         }
 
-        $uow  = $entityManager->getUnitOfWork();
+        $uow = $entityManager->getUnitOfWork();
         $list = [];
 
         if ($uow) {

@@ -2,7 +2,7 @@
 
 namespace Trinity\NotificationBundle\Tests\Entity;
 
-use Trinity\NotificationBundle\Entity\INotificationEntity;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -13,7 +13,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
  * @Notification\Source(columns="id, name, desc, date")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityWithoutClient implements INotificationEntity
+class EntityInterfaceWithoutClient implements NotificationEntityInterface
 {
     /** @var  int */
     private $id;
@@ -50,7 +50,7 @@ class EntityWithoutClient implements INotificationEntity
     }
 
 
-    /** @return Client[] */
+    /** @return ClientInterface[] */
     public function getClients()
     {
         return [];

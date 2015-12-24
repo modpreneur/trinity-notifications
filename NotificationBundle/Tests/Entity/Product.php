@@ -9,7 +9,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
-use Trinity\NotificationBundle\Entity\INotificationEntity;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -21,7 +21,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
  * @Notification\DependentSources(columns="id")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class Product implements INotificationEntity
+class Product implements NotificationEntityInterface
 {
     /** @var  int */
     private $id;
@@ -32,7 +32,7 @@ class Product implements INotificationEntity
     /** @var  string */
     private $description = 'Lorem impsu';
 
-    /** @var  EEntity */
+    /** @var  EEntityInterface */
     private $tProduct;
 
 
@@ -41,7 +41,7 @@ class Product implements INotificationEntity
      */
     public function __construct()
     {
-        $this->tProduct = new EEntity();
+        $this->tProduct = new EEntityInterface();
         $this->id = rand(10, 999999);
     }
 
@@ -71,10 +71,10 @@ class Product implements INotificationEntity
     }
 
 
-    /** @return Client[] */
+    /** @return ClientInterface[] */
     public function getClients()
     {
-        $c = new Client();
+        $c = new ClientInterface();
         $c->setEnableNotification(true);
 
         return [$c];
@@ -82,7 +82,7 @@ class Product implements INotificationEntity
 
 
     /**
-     * @return EEntity
+     * @return EEntityInterface
      */
     public function getTProduct()
     {
@@ -91,7 +91,7 @@ class Product implements INotificationEntity
 
 
     /**
-     * @param EEntity $tProduct
+     * @param EEntityInterface $tProduct
      */
     public function setTProduct($tProduct)
     {

@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Trinity\FrameworkBundle\Entity\BaseProduct;
 use Trinity\NotificationBundle\Annotations as Notification;
 
+
 /**
  *
  * @ORM\Entity()

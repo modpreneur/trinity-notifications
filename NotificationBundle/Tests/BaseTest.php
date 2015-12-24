@@ -16,6 +16,7 @@ abstract class BaseTest extends BaseWebTest
 {
     protected $port;
 
+
     /**
      * Creates an AppKernel.
      *

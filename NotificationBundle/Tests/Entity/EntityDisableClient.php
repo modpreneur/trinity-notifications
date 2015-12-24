@@ -4,7 +4,7 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\NotificationBundle\Annotations as Notification;
-use Trinity\NotificationBundle\Entity\INotificationEntity;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -15,7 +15,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
  * @Notification\Source(columns="id, name, description")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityDisableClient implements INotificationEntity
+class EntityInterfaceDisableClient implements NotificationEntityInterface
 {
     /** @var  int */
     private $id = 1;
@@ -39,7 +39,7 @@ class EntityDisableClient implements INotificationEntity
      */
     public function getName()
     {
-        return 'Disable Client';
+        return 'Disable ClientInterface';
     }
 
 
@@ -52,10 +52,10 @@ class EntityDisableClient implements INotificationEntity
     }
 
 
-    /** @return Client[] */
+    /** @return ClientInterface[] */
     public function getClients()
     {
-        $c = new Client();
+        $c = new ClientInterface();
         $c->setEnableNotification(false);
 
         return [$c];

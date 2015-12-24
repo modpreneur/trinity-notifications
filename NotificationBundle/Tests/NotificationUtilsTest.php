@@ -3,11 +3,11 @@
 namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
-use Trinity\NotificationBundle\Tests\Entity\AllSourceEntity;
-use Trinity\NotificationBundle\Tests\Entity\EEntity;
-use Trinity\NotificationBundle\Tests\Entity\EntityErrorArray;
-use Trinity\NotificationBundle\Tests\Entity\EntityMethodDate;
-use Trinity\NotificationBundle\Tests\Entity\EntityWithoutSource;
+use Trinity\NotificationBundle\Tests\Entity\AllSourceEntityInterface;
+use Trinity\NotificationBundle\Tests\Entity\EEntityInterface;
+use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceErrorArray;
+use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceMethodDate;
+use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutSource;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -71,7 +71,7 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertFalse($utils->hasDependedSource(new Product(), 'blah'));
 
-        $this->assertFalse($utils->hasDependedSource(new EEntity(), 'blah'));
+        $this->assertFalse($utils->hasDependedSource(new EEntityInterface(), 'blah'));
     }
 
 
@@ -114,10 +114,10 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals('std-class', $utils->getUrlPostfix(new \stdClass(), 'DELETE'));
         $this->assertEquals('product', $utils->getUrlPostfix(new Product()));
 
-        $this->assertEquals('no-name-e-entity', $utils->getUrlPostfix(new EEntity()));
-        $this->assertEquals('put-e-entity', $utils->getUrlPostfix(new EEntity(), 'put'));
-        $this->assertEquals('delete-e-entity', $utils->getUrlPostfix(new EEntity(), 'delete'));
-        $this->assertEquals('post-e-entity', $utils->getUrlPostfix(new EEntity(), 'post'));
+        $this->assertEquals('no-name-e-entity', $utils->getUrlPostfix(new EEntityInterface()));
+        $this->assertEquals('put-e-entity', $utils->getUrlPostfix(new EEntityInterface(), 'put'));
+        $this->assertEquals('delete-e-entity', $utils->getUrlPostfix(new EEntityInterface(), 'delete'));
+        $this->assertEquals('post-e-entity', $utils->getUrlPostfix(new EEntityInterface(), 'post'));
     }
 
 
@@ -132,7 +132,7 @@ class NotificationUtilsTest extends BaseTest
         $utils = $this->getContainer()->get('trinity.notification.entity_converter');
 
         // Error
-        $utils->toArray(new EntityWithoutSource());
+        $utils->toArray(new EntityInterfaceWithoutSource());
     }
 
 
@@ -146,12 +146,12 @@ class NotificationUtilsTest extends BaseTest
     {
         $utils = $this->getContainer()->get('trinity.notification.entity_converter');
 
-        $allSourceEntity = new AllSourceEntity();
+        $allSourceEntity = new AllSourceEntityInterface();
         $allSourceArrayExpected = [
-            'id'          => 1,
-            'name'        => 'All source',
+            'id' => 1,
+            'name' => 'All source',
             'description' => 'Description text.',
-            'price'       => '10$',
+            'price' => '10$',
         ];
 
         $allSourceArrayResult = $utils->toArray($allSourceEntity);
@@ -190,22 +190,22 @@ class NotificationUtilsTest extends BaseTest
         $p = new Product();
 
         $sourceArrayA = [
-            'name'        => "Someone's name",
+            'name' => "Someone's name",
             'description' => 'Lorem impsu',
-            'tProduct'    => 1,
+            'tProduct' => 1,
         ];
 
         $arrayA = $utils->toArray($p);
         unset($arrayA['id']);
         $this->assertEquals($sourceArrayA, $arrayA);
 
-        $p = new EEntity();
+        $p = new EEntityInterface();
 
         $sourceEE = [
-            'name'        => 'EE Entity',
+            'name' => 'EE Entity',
             'description' => 'Description for entity.',
-            'date'        => '2010-11-12 00:00:00',
-            'fullPrice'   => '10$',
+            'date' => '2010-11-12 00:00:00',
+            'fullPrice' => '10$',
             'test-method' => 'test',
         ];
 
@@ -214,7 +214,7 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertEquals($sourceEE, $arrayEE);
 
-        $errorEntity = new EntityErrorArray();
+        $errorEntity = new EntityInterfaceErrorArray();
         $utils->toArray($errorEntity);
     }
 
@@ -228,7 +228,7 @@ class NotificationUtilsTest extends BaseTest
         $class = (get_class($utils));
         $method = $this->getMethod($class, 'processMethod');
 
-        $entity = new EntityMethodDate();
+        $entity = new EntityInterfaceMethodDate();
 
         $array = $method->invokeArgs($utils, [$entity, 'date', 'getDate']);
 
@@ -255,7 +255,7 @@ class NotificationUtilsTest extends BaseTest
         $class = (get_class($utils));
         $method = $this->getMethod($class, "processMethod");
 
-        $entity = new EntityErrorArray();
+        $entity = new EntityInterfaceErrorArray();
 
         $array = $method->invokeArgs( $utils, [$entity, 'date', 'getDate'] );
 

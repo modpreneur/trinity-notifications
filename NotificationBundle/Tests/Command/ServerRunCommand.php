@@ -19,17 +19,18 @@ class ServerRunCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('trinity:notification:server:run')
-            ->setDescription('Trinity server run command.')
-        ;
+        $this->setName('trinity:notification:server:run')->setDescription('Trinity server run command.');
     }
+
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $input = new ArrayInput(array(
-            'command' => 'server:run',
-            '--port' => '9000'
-        ));
+        $input = new ArrayInput(
+            array(
+                'command' => 'server:run',
+                '--port' => '9000',
+            )
+        );
 
         $kernel = $this->getContainer()->get('kernel');
         $application = new Application($kernel);

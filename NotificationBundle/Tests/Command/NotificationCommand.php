@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
 use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
 
@@ -20,24 +19,22 @@ class NotificationCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('trinity:notification:send')
-            ->setDescription('Necktie client command.')
-            ->addOption(
+        $this->setName('trinity:notification:send')->setDescription('Necktie client command.')->addOption(
                 'id',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 '',
                 null
-            )
-            ->addOption(
+            )->addOption(
                 'method',
                 null,
                 InputOption::VALUE_OPTIONAL,
                 '',
                 'PUT'
-            )
-        ;
+            );
     }
+
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var EntityManager $em */
@@ -45,14 +42,12 @@ class NotificationCommand extends ContainerAwareCommand
         $id = $input->getOption('id');
 
         //create database
-        $command = $this
-            ->getApplication()
-            ->find("doctrine:schema:update");
+        $command = $this->getApplication()->find("doctrine:schema:update");
 
         $arguments = [
             "command" => "doctrine:schema:update",
             "--force" => true,
-            '-q'
+            '-q',
         ];
 
         $bufferOutput = new BufferedOutput();
@@ -61,7 +56,7 @@ class NotificationCommand extends ContainerAwareCommand
         $p = new Product();
         $c = new Client();
 
-        if($id){
+        if ($id) {
             $p->setId($id);
         }
 
@@ -71,16 +66,19 @@ class NotificationCommand extends ContainerAwareCommand
 
         $table = new Table($output);
         $resutl = $api->execute($p, $c);
-        if(is_array($resutl)) $resutl = json_encode($resutl);
+        if (is_array($resutl)) {
+            $resutl = json_encode($resutl);
+        }
 
-        $table
-            ->setHeaders(['Server', 'Responce']);
-        $table
-            ->setRows([
+        $table->setHeaders(['Server', 'Responce']);
+        $table->setRows(
                 [
-                    'client', $resutl
+                    [
+                        'client',
+                        $resutl,
+                    ],
                 ]
-            ]);
+            );
 
         $table->render();
 

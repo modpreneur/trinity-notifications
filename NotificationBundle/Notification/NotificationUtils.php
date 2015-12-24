@@ -66,8 +66,8 @@ class NotificationUtils
     {
         $class = $this->annotationsUtils->getEntityClass($entity);
 
-        if(in_array('\Trinity\NotificationBundle\Entity\INotificationEntity', class_implements($class))){
-            throw new NotificationException("Notification entity($class) must be extended via INotificationEntity.");
+        if (in_array('\Trinity\NotificationBundle\Entity\INotificationEntity', class_implements($class))) {
+            throw new NotificationException("Notification entity($class) must be extended via NotificationEntityInterface.");
         }
 
         $reflectionObject = new \ReflectionClass($class);

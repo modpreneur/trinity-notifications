@@ -7,7 +7,7 @@ namespace Trinity\NotificationBundle\Tests\Sandbox\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\FrameworkBundle\Entity\BaseProduct;
 use Trinity\NotificationBundle\Annotations as Notification;
-use Trinity\NotificationBundle\Entity\INotificationEntity;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -18,10 +18,11 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
  * @Notification\DependentSources(columns="id")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class Product extends BaseProduct implements INotificationEntity
+class Product extends BaseProduct implements NotificationEntityInterface
 {
     /** @var  Client */
     private $client;
+
 
     /**
      * @param int $id

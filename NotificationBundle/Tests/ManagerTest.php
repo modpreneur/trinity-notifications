@@ -2,11 +2,11 @@
 
 namespace Trinity\NotificationBundle\Tests;
 
-use Trinity\FrameworkBundle\Entity\IClient;
-use Trinity\NotificationBundle\Tests\Entity\Client;
-use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
-use Trinity\NotificationBundle\Tests\Entity\EntityWithoutClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
+use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
 
 
 /**
@@ -21,7 +21,7 @@ class ManagerTest extends BaseTest
     {
         $manager = $this->getContainer()->get('trinity.notification.manager');
 
-        $entity = new EntityWithoutClient();
+        $entity = new EntityInterfaceWithoutClient();
 
         $result = $manager->send($entity);
         $this->assertEmpty($result);
@@ -45,13 +45,13 @@ class ManagerTest extends BaseTest
         $this->assertNotEmpty($clients);
 
         foreach ($clients as $client) {
-            $this->assertTrue($client instanceof IClient);
+            $this->assertTrue($client instanceof ClientInterface);
         }
 
         // NULL
         $this->assertEquals([], $method->invokeArgs($manager, [null]));
 
-        // Client
+        // ClientInterface
         $client = new Client();
         $this->assertEquals([$client], $method->invokeArgs($manager, [$client]));
 
@@ -69,7 +69,7 @@ class ManagerTest extends BaseTest
     public function testSendWithDisableClient()
     {
         $manager = $this->getContainer()->get('trinity.notification.manager');
-        $entity = new EntityDisableClient();
+        $entity = new EntityInterfaceDisableClient();
         $result = $manager->send($entity);
 
         $this->assertEmpty($result);

@@ -11,7 +11,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Tests\Common\Persistence\Mapping\TestClassMetadataFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Trinity\NotificationBundle\Tests\Entity\EntityDisableClient;
+use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -36,15 +36,15 @@ class EventListenerTest extends BaseTest
         $this->assertSame(
             [
                 [
-                    'code'       => 200,
+                    'code' => 200,
                     'statusCode' => 200,
-                    'message'    => 'OK',
+                    'message' => 'OK',
                 ],
             ],
             $ev->postUpdate($args)
         );
 
-        $object = new EntityDisableClient();
+        $object = new EntityInterfaceDisableClient();
         $args = new LifecycleEventArgs(
             $object, $em
         );
@@ -93,14 +93,17 @@ class EventListenerTest extends BaseTest
             $object, $em
         );
 
-        $object->setName("Name_" . rand(1, 9999));
+        $object->setName("Name_".rand(1, 9999));
         $result = $ev->postPersist($args);
 
-        $this->assertEquals([
-            'code'       => 200,
-            'statusCode' => 200,
-            'message'    => 'OK',
-        ], reset($result));
+        $this->assertEquals(
+            [
+                'code' => 200,
+                'statusCode' => 200,
+                'message' => 'OK',
+            ],
+            reset($result)
+        );
     }
 
 
@@ -171,9 +174,9 @@ class EventListenerTest extends BaseTest
         $this->assertEquals(
             [
                 [
-                    'code'       => 200,
+                    'code' => 200,
                     'statusCode' => 200,
-                    'message'    => 'OK',
+                    'message' => 'OK',
                 ],
             ],
             $sendNotification->invokeArgs($ev, [$em, $entity, 'POST'])

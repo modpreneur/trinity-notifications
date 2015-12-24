@@ -9,7 +9,7 @@ namespace Trinity\NotificationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Trinity\FrameworkBundle\Entity\BaseUser;
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 
 
 /**
@@ -19,7 +19,7 @@ class StatusEvent extends Event
 {
     const NULL_MESSAGE = 'No messages';
 
-    /** @var IClient */
+    /** @var ClientInterface */
     protected $client;
 
     /** @var  \Exception */
@@ -48,7 +48,7 @@ class StatusEvent extends Event
 
 
     /**
-     * @param IClient $client
+     * @param ClientInterface $client
      * @param string $entityName
      * @param int $entityId
      * @param string $url
@@ -150,7 +150,7 @@ class StatusEvent extends Event
 
 
     /**
-     * @return IClient
+     * @return ClientInterface
      */
     public function getClient()
     {

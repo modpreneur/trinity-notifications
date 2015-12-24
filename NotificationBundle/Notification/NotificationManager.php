@@ -9,20 +9,21 @@ namespace Trinity\NotificationBundle\Notification;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\FrameworkBundle\Entity\IClient;
-use Trinity\NotificationBundle\Driver\INotificationDriver;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\NotificationBundle\Driver\NotificationDriverInterface;
 use Trinity\NotificationBundle\Entity\Server;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
 
+
 /**
  * Class NotificationManager.
  */
 class NotificationManager
 {
-    /** @var  INotificationDriver[] */
+    /** @var  NotificationDriverInterface[] */
     private $drivers;
 
     /** @var  EventDispatcherInterface */
@@ -31,7 +32,7 @@ class NotificationManager
     /** @var  ContainerInterface */
     protected $container;
 
-    /** @var  string  */
+    /** @var  string */
     protected $serverNotifyUri;
 
 
@@ -39,11 +40,14 @@ class NotificationManager
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param ContainerInterface       $container
+     * @param ContainerInterface $container
      * @param                          $serverNotifyUri
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, ContainerInterface $container, $serverNotifyUri)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        ContainerInterface $container,
+        $serverNotifyUri
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->container = $container;
         $this->serverNotifyUri = $serverNotifyUri;
@@ -52,9 +56,9 @@ class NotificationManager
 
 
     /**
-     * @param INotificationDriver $driver
+     * @param NotificationDriverInterface $driver
      */
-    public function addDriver(INotificationDriver $driver)
+    public function addDriver(NotificationDriverInterface $driver)
     {
         $this->drivers[] = $driver;
     }
@@ -79,6 +83,7 @@ class NotificationManager
         } else {
             $response = $this->sendToServer($entity, $HTTPMethod);
         }
+
         return $response;
     }
 
@@ -98,7 +103,7 @@ class NotificationManager
     {
         $response = [];
 
-        /** @var IClient[] $clients */
+        /** @var ClientInterface[] $clients */
         $clients = $this->clientsToArray($entity->getClients());
 
         foreach ($this->drivers as $driver) {
@@ -163,7 +168,7 @@ class NotificationManager
     /**
      * Transform clients collection to array.
      *
-     * @param IClient|Collection|array $clientsCollection
+     * @param ClientInterface|Collection|array $clientsCollection
      *
      * @return Object[]
      *
@@ -175,7 +180,7 @@ class NotificationManager
 
         if ($clientsCollection instanceof Collection) {
             $clients = $clientsCollection->toArray();
-        } elseif ($clientsCollection instanceof IClient) {
+        } elseif ($clientsCollection instanceof ClientInterface) {
             $clients[] = $clientsCollection;
         } elseif (is_array($clientsCollection)) {
             $clients = $clientsCollection;

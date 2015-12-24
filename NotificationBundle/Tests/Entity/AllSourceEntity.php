@@ -3,9 +3,9 @@
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Annotations as Notification;
-use Trinity\NotificationBundle\Entity\INotificationEntity;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -16,7 +16,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
  * @Notification\Source(columns="*")
  * @Notification\Methods(types={"put", "post"})
  */
-class AllSourceEntity implements INotificationEntity
+class AllSourceEntityInterface implements NotificationEntityInterface
 {
     /** @var int */
     private $id = 1;
@@ -103,7 +103,7 @@ class AllSourceEntity implements INotificationEntity
     }
 
 
-    /** @return IClient[] */
+    /** @return ClientInterface[] */
     public function getClients()
     {
         // TODO: Implement getClients() method.

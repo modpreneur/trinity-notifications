@@ -124,7 +124,7 @@ class AnnotationsUtils
         $classAnn = $this->getEntityAnnotation($this->getEntityClass($entity), self::ANNOTATION_CLASS);
 
         if (!$classAnn) {
-            throw new SourceException('Entity(' . get_class($entity) . ') has not annotations source.');
+            throw new SourceException('Entity('.get_class($entity).') has not annotations source.');
         }
 
         return $classAnn;

@@ -4,10 +4,10 @@
 namespace Trinity\NotificationBundle\Tests\Sandbox\Entity;
 
 
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 
 
-class Client implements IClient
+class Client implements ClientInterface
 {
 
     /** @return string */

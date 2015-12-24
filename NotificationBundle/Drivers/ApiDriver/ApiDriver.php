@@ -9,8 +9,8 @@ namespace Trinity\NotificationBundle\Drivers\ApiDriver;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Nette\Utils\Strings;
-use Trinity\FrameworkBundle\Entity\IClient;
-use Trinity\NotificationBundle\Driver\BaseDriver;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\NotificationBundle\Driver\BaseDriverInterface;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Exception\NotificationDriverException;
@@ -19,7 +19,7 @@ use Trinity\NotificationBundle\Exception\NotificationDriverException;
 /**
  * Class ApiDriver.
  */
-class ApiDriver extends BaseDriver
+class ApiDriver extends BaseDriverInterface
 {
     const DELETE = 'DELETE';
     const POST = 'POST';
@@ -33,13 +33,15 @@ class ApiDriver extends BaseDriver
      *
      * @return string
      */
-    public function execute($entity, IClient $client, $params = [])
+    public function execute($entity, ClientInterface $client, $params = [])
     {
         $response = '';
         $HTTPMethod = self::POST;
         $user = null;
 
-        if($this->tokenStorage) $user = $this->tokenStorage->getToken()->getUser();
+        if ($this->tokenStorage) {
+            $user = $this->tokenStorage->getToken()->getUser();
+        }
 
         if ($client->isNotificationEnabled()) {
             if (array_key_exists('HTTPMethod', $params)) {
@@ -72,7 +74,7 @@ class ApiDriver extends BaseDriver
 
     /**
      * Send request to client.
-     * Client = web application (http:example.com).
+     * ClientInterface = web application (http:example.com).
      *
      * @param object|string $data
      * @param string $url
@@ -89,8 +91,7 @@ class ApiDriver extends BaseDriver
         $method = self::POST,
         $isEncoded = false,
         $secret = null
-    )
-    {
+    ) {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
         }
@@ -98,14 +99,14 @@ class ApiDriver extends BaseDriver
         $httpClient = new Client();
 
         //new interface(v6.0)
-        $request  = new Request($method, $url, ['content-type' => 'application/json'], $data);
-        $response = $httpClient->send( $request );
+        $request = new Request($method, $url, ['content-type' => 'application/json'], $data);
+        $response = $httpClient->send($request);
 
-        if(Strings::contains((string)$response->getBody(), '"code":404')){
+        if (Strings::contains((string)$response->getBody(), '"code":404')) {
             throw new NotificationDriverException((string)$response->getBody());
         }
 
-        if(Strings::contains((string)$response->getBody(), '"code":500')){
+        if (Strings::contains((string)$response->getBody(), '"code":500')) {
             throw new NotificationDriverException((string)$response->getBody());
         }
 

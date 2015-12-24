@@ -31,19 +31,19 @@ class ClientRunCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('trinity:notification:client:run')
-            ->setDescription('Trinity client run command.');
-        ;
+        $this->setName('trinity:notification:client:run')->setDescription('Trinity client run command.');;
     }
 
 
-    function isRunning($pid){
-        try{
+    function isRunning($pid)
+    {
+        try {
             $result = shell_exec(sprintf("ps %d", $pid));
-            if( count(preg_split("/\n/", $result)) > 2){
+            if (count(preg_split("/\n/", $result)) > 2) {
                 return true;
             }
-        }catch(\Exception $e){}
+        } catch (\Exception $e) {
+        }
 
         return false;
     }
@@ -52,15 +52,15 @@ class ClientRunCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel = $this->kernel;
-        $input = new ArrayInput(array(
-            'command' => 'server:run',
-            '--port' => '8000'
-        ));
+        $input = new ArrayInput(
+            array(
+                'command' => 'server:run',
+                '--port' => '8000',
+            )
+        );
 
-        if($this->kernel === null){
-            $kernel = $this
-                ->getContainer()
-                ->get('kernel');
+        if ($this->kernel === null) {
+            $kernel = $this->getContainer()->get('kernel');
         }
 
         $application = new Application($kernel);

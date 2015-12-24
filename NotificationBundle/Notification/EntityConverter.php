@@ -77,7 +77,7 @@ class EntityConverter
         }
 
         foreach ($columns as $property) {
-            $methodName = 'get' . ucfirst($property);
+            $methodName = 'get'.ucfirst($property);
 
             if ($property === '*') {
                 continue;
@@ -213,21 +213,21 @@ class EntityConverter
         foreach ($data as $propertyName => $propertyValue) {
             //if the property is in the ignored list skip it
             if (in_array($propertyName, $ignoredFields)) {
-                $this->logger->emergency("property in ignored fields:" . $propertyName);
+                $this->logger->emergency("property in ignored fields:".$propertyName);
                 continue;
             }
 
             //If the property contains null skip it.
             // This fixes DB null constraint violation when calling set method on entity with null value.
             if ($propertyValue == null) {
-                $this->logger->emergency("property: " . $propertyName . " contains null, skipped");
+                $this->logger->emergency("property: ".$propertyName." contains null, skipped");
                 continue;
             }
 
-            $methodName = 'set' . ucfirst($propertyName);
+            $methodName = 'set'.ucfirst($propertyName);
 
             if (!method_exists($entityObject, $methodName)) {
-                $this->logger->emergency("non existing method:" . $methodName);
+                $this->logger->emergency("non existing method:".$methodName);
                 continue;
             }
 
@@ -237,7 +237,9 @@ class EntityConverter
 
             //Setter method with 0 or 2 or more parameters is weird.
             if (count($methodParameters) != 1) {
-                $this->logger->emergency("count of method parameters is not an 1 " . count($methodParameters) . "in method: " . $methodName);
+                $this->logger->emergency(
+                    "count of method parameters is not an 1 ".count($methodParameters)."in method: ".$methodName
+                );
                 continue;
             }
 
@@ -254,18 +256,25 @@ class EntityConverter
                     continue;
                 }
             } //If the method parameter type is doctrine entity.
-            else if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository($methodParameterType))) {
-                //Try to find an object with given server entity id.
-                $propertyValue = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
+            else {
+                if ($methodParameterType != null && ($doctrineRepository = $this->getEntityRepository(
+                        $methodParameterType
+                    ))
+                ) {
+                    //Try to find an object with given server entity id.
+                    $propertyValue = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
 
-                if (!$propertyValue) {
-                    //todo: set level to error!
-                    $this->logger->emergency("association entity not found " . $methodParameterType . "with id: " . $propertyValue);
-                    continue;
+                    if (!$propertyValue) {
+                        //todo: set level to error!
+                        $this->logger->emergency(
+                            "association entity not found ".$methodParameterType."with id: ".$propertyValue
+                        );
+                        continue;
+                    }
                 }
             }
 
-            $this->logger->emergency("CALL_METHOD: " . $methodName);
+            $this->logger->emergency("CALL_METHOD: ".$methodName);
             //Call the setter method
             call_user_func_array([$entityObject, $methodName], [$propertyValue]);
         }

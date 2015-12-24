@@ -19,7 +19,7 @@ class AppKernel extends Kernel
      * Constructor.
      *
      * @param string $environment The environment
-     * @param bool $debug         Whether to enable debugging or not
+     * @param bool $debug Whether to enable debugging or not
      * @param integer $port
      */
     public function __construct($environment, $debug, $port = null)
@@ -41,7 +41,7 @@ class AppKernel extends Kernel
 
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new \Symfony\Bundle\SecurityBundle\SecurityBundle()
+            new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
         ];
     }
 
@@ -54,9 +54,9 @@ class AppKernel extends Kernel
         $loader->load(__DIR__.'/config.yml');
         $loader->load(__DIR__.'/../../Resources/config/services.yml');
 
-        if($this->port == 8000){
+        if ($this->port == 8000) {
             $loader->load(__DIR__.'/client/config.yml');
-        }else{
+        } else {
             $loader->load(__DIR__.'/server/config.yml');
         }
     }

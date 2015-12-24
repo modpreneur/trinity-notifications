@@ -5,22 +5,22 @@
  */
 namespace Trinity\NotificationBundle\Driver;
 
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 
 
 /**
- * Interface INotificationDriver.
+ * Interface NotificationDriverInterface.
  */
-interface INotificationDriver
+interface NotificationDriverInterface
 {
     /**
      * @param object $entity
-     * @param IClient $client
+     * @param ClientInterface $client
      * @param array $params
      *
      * @return mixed
      */
-    public function execute($entity, IClient $client, $params = []);
+    public function execute($entity, ClientInterface $client, $params = []);
 
 
     /**

@@ -4,9 +4,9 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\SerializedName;
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Annotations as Notification;
-use Trinity\NotificationBundle\Entity\INotificationEntity;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -22,7 +22,7 @@ use Trinity\NotificationBundle\Entity\INotificationEntity;
  * @Notification\Url(methods={"delete"}, postfix="delete-e-entity")
  * @Notification\Url(methods={"post"}, postfix="post-e-entity")
  */
-class EEntity implements INotificationEntity
+class EEntityInterface implements NotificationEntityInterface
 {
     /**
      * @var int
@@ -46,7 +46,7 @@ class EEntity implements INotificationEntity
 
 
     /**
-     * EEntity constructor.
+     * EEntityInterface constructor.
      */
     public function __construct()
     {
@@ -146,7 +146,7 @@ class EEntity implements INotificationEntity
     }
 
 
-    /** @return IClient[] */
+    /** @return ClientInterface[] */
     public function getClients()
     {
         // TODO: Implement getClients() method.

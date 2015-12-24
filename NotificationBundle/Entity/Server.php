@@ -6,7 +6,7 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-use Trinity\FrameworkBundle\Entity\IClient;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 
 
 /**
@@ -14,7 +14,7 @@ use Trinity\FrameworkBundle\Entity\IClient;
  *
  * @package Trinity\NotificationBundle\Entity
  */
-class Server implements IClient
+class Server implements ClientInterface
 {
     /** @var  string */
     protected $notificationUri;
@@ -26,19 +26,19 @@ class Server implements IClient
     protected $secret;
 
 
+    /** @return string */
+    public function getNotificationUri()
+    {
+        return $this->notificationUri;
+    }
+
+
     /**
      * @param string $uri
      */
     public function setNotificationUri($uri)
     {
         $this->notificationUri = $uri;
-    }
-
-
-    /** @return string */
-    public function getNotificationUri()
-    {
-        return $this->notificationUri;
     }
 
 

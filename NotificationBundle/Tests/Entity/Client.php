@@ -2,13 +2,13 @@
 
 namespace Trinity\NotificationBundle\Tests\Entity;
 
-use Trinity\NotificationBundle\Drivers\ApiDriver\IApiClient;
+use Trinity\NotificationBundle\Drivers\ApiDriver\ApiClientInterface;
 
 
 /**
- * Class Client.
+ * Class ClientInterface.
  */
-class Client implements IApiClient
+class ClientInterface implements ApiClientInterface
 {
     /** @var  bool */
     private $enable = true;

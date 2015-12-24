@@ -9,7 +9,6 @@ namespace Trinity\NotificationBundle\Driver;
 use Nette\Utils\Strings;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Trinity\FrameworkBundle\Entity\BaseUser;
 use Trinity\NotificationBundle\Exception\ClientException;
 use Trinity\NotificationBundle\Exception\MethodException;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
@@ -17,9 +16,9 @@ use Trinity\NotificationBundle\Notification\EntityConverter;
 
 
 /**
- * Class BaseDriver.
+ * Class BaseDriverInterface.
  */
-abstract class BaseDriver implements INotificationDriver
+abstract class BaseDriverInterface implements NotificationDriverInterface
 {
     /** @var  EntityConverter */
     protected $entityConverter;
@@ -48,10 +47,10 @@ abstract class BaseDriver implements INotificationDriver
         TokenStorage $tokenStorage = null
 
     ) {
-        $this->eventDispatcher   = $eventDispatcher;
-        $this->entityConverter   = $entityConverter;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
-        $this->tokenStorage      = $tokenStorage;
+        $this->tokenStorage = $tokenStorage;
     }
 
 
@@ -62,7 +61,7 @@ abstract class BaseDriver implements INotificationDriver
      * @param object $entity
      * @param string $secret
      *
-     * @param array  $extraFields
+     * @param array $extraFields
      *
      * @return string
      * @throws \Exception
@@ -77,6 +76,7 @@ abstract class BaseDriver implements INotificationDriver
 
         $result['timestamp'] = (new \DateTime())->getTimestamp();
         $result['hash'] = hash('sha256', $secret.(implode(',', $result)));
+
         return json_encode($result);
     }
 
@@ -84,7 +84,7 @@ abstract class BaseDriver implements INotificationDriver
     /**
      * Join client URL with entity url.
      *
-     * Example: Client URL => "http://example.com"
+     * Example: ClientInterface URL => "http://example.com"
      *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
      *          result: http://example.com/product
      *

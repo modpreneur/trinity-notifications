@@ -8,7 +8,7 @@ namespace Trinity\NotificationBundle\Tests;
 
 use Closure;
 use Doctrine\Common\Collections\Collection;
-use Trinity\NotificationBundle\Tests\Entity\Client;
+use Trinity\NotificationBundle\Tests\Entity\ClientInterface;
 
 
 /**
@@ -144,7 +144,7 @@ class TestCollection implements Collection
      * Sets an element in the collection at the specified key/index.
      *
      * @param string|int $key The key/index of the element to set.
-     * @param mixed $value    The element to set.
+     * @param mixed $value The element to set.
      */
     public function set($key, $value)
     {
@@ -159,7 +159,7 @@ class TestCollection implements Collection
      */
     public function toArray()
     {
-        return [new Client()];
+        return [new ClientInterface()];
     }
 
 
@@ -310,7 +310,7 @@ class TestCollection implements Collection
      * Keys have to be preserved by this method. Calling this method will only return the
      * selected slice and NOT change the elements contained in the collection slice is called on.
      *
-     * @param int $offset      The offset to start from.
+     * @param int $offset The offset to start from.
      * @param int|null $length The maximum number of elements to return, or null for no limit.
      *
      * @return array
@@ -384,7 +384,7 @@ class TestCollection implements Collection
      * @param mixed $offset <p>
      *                      The offset to assign the value to.
      *                      </p>
-     * @param mixed $value  <p>
+     * @param mixed $value <p>
      *                      The value to set.
      *                      </p>
      */
