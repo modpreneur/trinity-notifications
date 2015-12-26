@@ -3,7 +3,6 @@
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 

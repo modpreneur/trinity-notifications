@@ -42,24 +42,25 @@ class ManagerTest extends BaseTest
             [$p->getClients()]
         );
 
+        // NULL
+        $this->assertEquals([], $method->invokeArgs($manager, [null]));
+
         $this->assertNotEmpty($clients);
 
         foreach ($clients as $client) {
             $this->assertTrue($client instanceof ClientInterface);
+
+            // ClientInterface
+            $client = new Client();
+            $this->assertEquals([$client], $method->invokeArgs($manager, [$client]));
+
+            // Collection
+            $this->assertEquals([$client], $method->invokeArgs($manager, [new TestCollection()]));
+
+            // Array
+            $this->assertEquals([$client], $method->invokeArgs($manager, [[$client]]));
+
         }
-
-        // NULL
-        $this->assertEquals([], $method->invokeArgs($manager, [null]));
-
-        // ClientInterface
-        $client = new Client();
-        $this->assertEquals([$client], $method->invokeArgs($manager, [$client]));
-
-        // Collection
-        $this->assertEquals([$client], $method->invokeArgs($manager, [new TestCollection()]));
-
-        // Array
-        $this->assertEquals([$client], $method->invokeArgs($manager, [[$client]]));
     }
 
 
