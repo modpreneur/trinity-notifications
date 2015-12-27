@@ -1,8 +1,8 @@
 index:
     path:      /
-    defaults:  { _controller: TrinityNotificationBundle:Tests/ClientInterface:index }
+    defaults:  { _controller: TrinityNotificationBundle:Tests/Client:index }
 
 product:
     path:      /product
-    defaults:  { _controller: TrinityNotificationBundle:Tests/ClientInterface:product }
-    methods: [post,put]
+    defaults:  { _controller: TrinityNotificationBundle:Tests/Client:product }
+    methods: [post,put,get]

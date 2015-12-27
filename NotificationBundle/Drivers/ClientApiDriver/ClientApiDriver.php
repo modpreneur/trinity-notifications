@@ -175,7 +175,7 @@ class ClientApiDriver extends BaseDriverInterface
     /**
      * Join client URL with entity url.
      *
-     * Example: ClientInterface URL => "http://server.com"
+     * Example: TestClient URL => "http://server.com"
      *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
      *          result: http://server.com/product
      *

@@ -125,6 +125,9 @@ class NotificationManager
             }
         }
 
+        if(array_key_exists('error', $response))
+            dump($response);
+
         return $response;
     }
 

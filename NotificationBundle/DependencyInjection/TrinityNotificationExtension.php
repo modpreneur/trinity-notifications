@@ -42,7 +42,7 @@ class TrinityNotificationExtension extends Extension
 
                 $container->setParameter('trinity.notification.is_client', false);
             } else {
-                throw new InvalidConfigurationException('ClientInterface or server node is not specified.');
+                throw new InvalidConfigurationException('TestClient or server node is not specified.');
             }
         }
 

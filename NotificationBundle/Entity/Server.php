@@ -77,4 +77,10 @@ class Server implements ClientInterface
         $this->secret = $secret;
     }
 
+
+    /** @return string */
+    public function getName()
+    {
+        return 'server';
+    }
 }

@@ -8,8 +8,7 @@ namespace Trinity\NotificationBundle\Tests;
 
 use Closure;
 use Doctrine\Common\Collections\Collection;
-use Trinity\NotificationBundle\Tests\Entity\ClientInterface;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\Tests\Entity\TestClient;
 
 
 /**
@@ -160,7 +159,7 @@ class TestCollection implements Collection
      */
     public function toArray()
     {
-        return [new Client()];
+        return [new TestClient()];
     }
 
 

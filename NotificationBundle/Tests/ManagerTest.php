@@ -6,7 +6,7 @@ use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\Tests\Entity\TestClient;
 
 
 /**
@@ -50,8 +50,8 @@ class ManagerTest extends BaseTest
         foreach ($clients as $client) {
             $this->assertTrue($client instanceof ClientInterface);
 
-            // ClientInterface
-            $client = new Client();
+            // TestClient
+            $client = new TestClient();
             $this->assertEquals([$client], $method->invokeArgs($manager, [$client]));
 
             // Collection
@@ -73,7 +73,7 @@ class ManagerTest extends BaseTest
         $entity = new EntityInterfaceDisableClient();
         $result = $manager->send($entity);
 
-        $this->assertEmpty($result);
+        $this->assertArrayHasKey('error', $result[0]);
     }
 
 }

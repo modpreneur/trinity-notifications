@@ -12,7 +12,7 @@ namespace Trinity\NotificationBundle\Tests;
  */
 class ServerToClientTest extends BaseTest
 {
-    protected $port = 8000;
+    protected $port = 8001;
 
 
     /**

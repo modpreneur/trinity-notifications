@@ -84,7 +84,7 @@ abstract class BaseDriverInterface implements NotificationDriverInterface
     /**
      * Join client URL with entity url.
      *
-     * Example: ClientInterface URL => "http://example.com"
+     * Example: TestClient URL => "http://example.com"
      *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
      *          result: http://example.com/product
      *

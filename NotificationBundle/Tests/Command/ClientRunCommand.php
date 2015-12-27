@@ -31,7 +31,9 @@ class ClientRunCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('trinity:notification:client:run')->setDescription('Trinity client run command.');;
+        $this
+            ->setName('trinity:notification:client:run')
+            ->setDescription('Trinity client run command.');;
     }
 
 
@@ -55,7 +57,7 @@ class ClientRunCommand extends ContainerAwareCommand
         $input = new ArrayInput(
             array(
                 'command' => 'server:run',
-                '--port' => '8000',
+                '--port'  => '8001',
             )
         );
 
@@ -63,7 +65,7 @@ class ClientRunCommand extends ContainerAwareCommand
             $kernel = $this->getContainer()->get('kernel');
         }
 
-        $application = new Application($kernel);
+        $application = new Application($kernel, true, 8001);
         $application->setAutoExit(false);
         $application->run($input, $output);
     }

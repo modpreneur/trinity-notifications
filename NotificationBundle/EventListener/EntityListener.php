@@ -165,6 +165,7 @@ class EntityListener
         $this->entity = null;
         $enable = $this->isNotificationEnabledForController();
 
+
         if ($entity && $enable) {
             return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
         }

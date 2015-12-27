@@ -6,9 +6,9 @@ use Trinity\NotificationBundle\Drivers\ApiDriver\ApiClientInterface;
 
 
 /**
- * Class ClientInterface.
+ * Class TestClient.
  */
-class ClientInterface implements ApiClientInterface
+class TestClient implements ApiClientInterface
 {
     /** @var  bool */
     private $enable = true;
@@ -45,5 +45,12 @@ class ClientInterface implements ApiClientInterface
     public function getNotificationUri()
     {
         return 'http://api.dev.clickandcoach.com/notify/';
+    }
+
+
+    /** @return string */
+    public function getName()
+    {
+        return 'client';
     }
 }

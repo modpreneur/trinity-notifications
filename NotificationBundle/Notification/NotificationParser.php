@@ -27,7 +27,7 @@ class NotificationParser
     /** @var EntityConverter */
     protected $entityConverter;
 
-    /** @var string ClientInterface secret */
+    /** @var string TestClient secret */
     protected $clientSecret;
 
     /** @var array Array of request data */
@@ -76,6 +76,7 @@ class NotificationParser
     public function parseNotification($parameters, $fullClassName, $method, $clientSecret)
     {
         $this->parametersArray = $parameters;
+
 
         //check, if the data was not modified
         if (!$this->isHashOk($clientSecret)) {

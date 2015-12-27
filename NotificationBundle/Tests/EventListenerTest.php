@@ -49,17 +49,17 @@ class EventListenerTest extends BaseTest
             $object, $em
         );
 
-        $this->assertEmpty($ev->postUpdate($args));
+        $this->assertArrayHasKey('error', $ev->postUpdate($args)[0]);
 
         $request = new Request();
         $request->query->add(
             ['_controller' => '\\Trinity\\NotificationBundle\\Tests\\Controllers\\ActiveController::disableNotification']
         );
         $ev->setRequest($request);
-        $this->assertEmpty($ev->postUpdate($args));
+        $this->assertArrayHasKey('error', $ev->postUpdate($args)[0]);
 
         $this->setPropertyValue($ev, 'defaultValueForEnabledController', false);
-        $this->assertEmpty($ev->postUpdate($args));
+        $this->assertArrayHasKey('error', $ev->postUpdate($args)[0]);
     }
 
 
@@ -121,12 +121,12 @@ class EventListenerTest extends BaseTest
         $refProp->setValue($ev, $object);
         $args = new PreFlushEventArgs($em);
 
-        $string = ($ev->preFlush($args)[0]);
+        $array = ($ev->preFlush($args)[0]);
         $refProp->setValue($ev, null);
 
-        $this->assertContains(
-            'ERROR',
-            $string
+        $this->assertArrayHasKey(
+            'error',
+            $array
         );
     }
 

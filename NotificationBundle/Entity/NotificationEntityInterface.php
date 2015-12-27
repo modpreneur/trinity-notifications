@@ -18,4 +18,12 @@ interface NotificationEntityInterface
     /** @return ClientInterface[] */
     public function getClients();
 
+
+    /**
+     * @param ClientInterface $client
+     * @param string $status
+     * @return void
+     */
+    public function setSyncStatus(ClientInterface $client, $status);
+
 }

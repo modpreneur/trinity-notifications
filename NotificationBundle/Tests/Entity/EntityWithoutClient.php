@@ -2,6 +2,7 @@
 
 namespace Trinity\NotificationBundle\Tests\Entity;
 
+use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
@@ -50,9 +51,20 @@ class EntityInterfaceWithoutClient implements NotificationEntityInterface
     }
 
 
-    /** @return ClientInterface[] */
+    /** @return TestClient[] */
     public function getClients()
     {
         return [];
+    }
+
+
+    /**
+     * @param CI $client
+     * @param string $status
+     * @return void
+     */
+    public function setSyncStatus(CI $client, $status)
+    {
+        // TODO: Implement setSyncStatus() method.
     }
 }

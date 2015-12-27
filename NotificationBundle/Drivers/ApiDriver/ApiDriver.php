@@ -11,6 +11,7 @@ use GuzzleHttp\Psr7\Request;
 use Nette\Utils\Strings;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Driver\BaseDriverInterface;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Exception\NotificationDriverException;
@@ -35,6 +36,10 @@ class ApiDriver extends BaseDriverInterface
      */
     public function execute($entity, ClientInterface $client, $params = [])
     {
+        if(!($entity instanceof NotificationEntityInterface)){
+            return;
+        }
+
         $response = '';
         $HTTPMethod = self::POST;
         $user = null;
@@ -50,19 +55,22 @@ class ApiDriver extends BaseDriverInterface
 
             $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
             $json = $this->JSONEncodeObject($entity, $client->getSecret());
-
             try {
                 $response = $this->createRequest($json, $url, $HTTPMethod, true);
                 $this->eventDispatcher->dispatch(
                     Events::SUCCESS_NOTIFICATION,
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
                 );
+                $entity->setSyncStatus($client, 'ok');
             } catch (\Exception $ex) {
+
                 $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
                 $this->eventDispatcher->dispatch(
                     Events::ERROR_NOTIFICATION,
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message, $user)
                 );
+
+                $entity->setSyncStatus($client, 'error');
 
                 $response = "ERROR - $message";
             }
@@ -74,7 +82,7 @@ class ApiDriver extends BaseDriverInterface
 
     /**
      * Send request to client.
-     * ClientInterface = web application (http:example.com).
+     * TestClient = web application (http:example.com).
      *
      * @param object|string $data
      * @param string $url
@@ -110,13 +118,11 @@ class ApiDriver extends BaseDriverInterface
             throw new NotificationDriverException((string)$response->getBody());
         }
 
-        return json_decode(
-            (string)$response->getBody(),
-            true,
-            512,
-            0
-        );
+        $body = (string)$response->getBody();
 
+        return json_decode($body, true)
+            ??
+        ['error' => "Web resultj: " . $body];
     }
 
 

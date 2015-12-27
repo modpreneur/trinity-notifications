@@ -8,8 +8,10 @@
 namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
 
 
 /**
@@ -34,6 +36,8 @@ class Product implements NotificationEntityInterface
 
     /** @var  EEntityInterface */
     private $tProduct;
+
+    private $status = [];
 
 
     /**
@@ -74,8 +78,7 @@ class Product implements NotificationEntityInterface
     /** @return ClientInterface[] */
     public function getClients()
     {
-        $c = new ClientInterface();
-        $c->setEnableNotification(true);
+        $c = new Client();
 
         return [$c];
     }
@@ -107,4 +110,14 @@ class Product implements NotificationEntityInterface
         $this->name = $name;
     }
 
+
+    /**
+     * @param ClientInterface $client
+     * @param string $status
+     * @return void
+     */
+    public function setSyncStatus(ClientInterface $client, $status)
+    {
+        $this->status[$client->getName()] = $status;
+    }
 }

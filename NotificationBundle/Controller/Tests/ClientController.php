@@ -31,7 +31,9 @@ class ClientController extends Controller
     public function productAction(Request $request)
     {
         try {
-            $this->get("trinity.notification.services.notification_parser")->parseNotification(
+            $this
+                ->get("trinity.notification.services.notification_parser")
+                ->parseNotification(
                     json_decode($request->getContent(), true),
                     "Trinity\\NotificationBundle\\Tests\\Sandbox\\Entity\\ClientProduct",
                     $request->getMethod(),

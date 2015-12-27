@@ -8,7 +8,7 @@ namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Event\StatusEvent;
-use Trinity\NotificationBundle\Tests\Entity\ClientInterface;
+use Trinity\NotificationBundle\Tests\Entity\TestClient;
 use Trinity\NotificationBundle\Tests\Entity\Product;
 
 
@@ -22,7 +22,7 @@ class EventTest extends BaseTest
      */
     public function testCreateStatusEvent()
     {
-        $client = new ClientInterface();
+        $client = new TestClient();
         $client->setEnableNotification(true);
 
         $exception = new \Exception('Test Exception');

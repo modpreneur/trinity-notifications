@@ -1,19 +1,19 @@
 <?php
-
-
 namespace Trinity\NotificationBundle\Tests\Sandbox\Entity;
+use Trinity\NotificationBundle\Drivers\ApiDriver\ApiClientInterface;
 
 
-use Trinity\FrameworkBundle\Entity\ClientInterface;
-
-
-class Client implements ClientInterface
+/**
+ * Class TestClient
+ * @package Trinity\NotificationBundle\Tests\Sandbox\Entity
+ */
+class Client implements ApiClientInterface
 {
 
     /** @return string */
     public function getNotificationUri()
     {
-        return "http://127.0.0.1:8000";
+        return "http://127.0.0.1:8001";
     }
 
 
@@ -28,5 +28,12 @@ class Client implements ClientInterface
     public function getSecret()
     {
         return "secretKey";
+    }
+
+
+    /** @return string */
+    public function getName()
+    {
+        return 'sandbox';
     }
 }

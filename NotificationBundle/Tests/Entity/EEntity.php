@@ -4,9 +4,10 @@ namespace Trinity\NotificationBundle\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\SerializedName;
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
 
 
 /**
@@ -146,9 +147,20 @@ class EEntityInterface implements NotificationEntityInterface
     }
 
 
-    /** @return ClientInterface[] */
+    /** @return Client[] */
     public function getClients()
     {
-        // TODO: Implement getClients() method.
+        return [new Client()];
+    }
+
+
+    /**
+     * @param CI $client
+     * @param string $status
+     * @return void
+     */
+    public function setSyncStatus(CI $client, $status)
+    {
+        // TODO: Implement setSyncStatus() method.
     }
 }
