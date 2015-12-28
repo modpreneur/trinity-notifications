@@ -80,8 +80,9 @@ class ManagerTest extends BaseTest
     public function testSyncEntity(){
         $manager = $this->getContainer()->get('trinity.notification.manager');
         $entity = new Product();
+        $client = $entity->getClients()[0];
 
-        $r = $manager->syncEntity($entity);
+        $r = $manager->syncEntity($entity, $client);
         $this->assertEquals([
             'code'       => 200,
             'statusCode' => 200,

@@ -72,9 +72,6 @@ class NotificationManager
      * @param bool $toClient
      *
      * @return array
-     *
-     * @throws ClientException
-     * @throws MethodException
      */
     public function send($entity, $HTTPMethod = 'GET', $toClient = true)
     {
@@ -90,10 +87,18 @@ class NotificationManager
 
     /**
      * @param object $entity
+     * @param ClientInterface $client
      * @return array
      */
-    public function syncEntity($entity){
-        return $this->send($entity, 'PUT');
+    public function syncEntity($entity, ClientInterface $client){
+
+        $responce = [];
+
+        foreach($this->drivers as $driver){
+            $responce[] = $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+        }
+
+        return $responce;
     }
 
 
@@ -108,7 +113,7 @@ class NotificationManager
      * @throws ClientException
      * @throws MethodException
      */
-    protected function sendToClient($entity, $HTTPMethod = 'GET')
+    protected function sendToClient($entity, $HTTPMethod = 'GET' )
     {
         $response = [];
 
@@ -118,18 +123,8 @@ class NotificationManager
         foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
-                    // before send event
-                    $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
+                    $response[] = $this->executeEntityInDriver($entity, $driver, $client, $HTTPMethod);
 
-                    //execute notification
-                    $resp = $driver->execute($entity, $client, ['HTTPMethod' => $HTTPMethod]);
-
-                    if ($resp) {
-                        $response[] = $resp;
-                    }
-
-                    // after
-                    $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
                 }
             }
         }
@@ -196,6 +191,29 @@ class NotificationManager
         }
 
         return $clients;
+    }
+
+
+    /**
+     * @param object $entity
+     * @param NotificationDriverInterface $driver
+     * @param ClientInterface $client
+     * @param string $HTTPMethod [POST, PUT, GET, DELETE, ...]
+     *
+     * @return array|null
+     */
+    private function executeEntityInDriver($entity, NotificationDriverInterface $driver, ClientInterface $client, $HTTPMethod = "POST")
+    {
+        // before send event
+        $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
+
+        //execute notification
+        $resp = $driver->execute($entity, $client, ['HTTPMethod' => $HTTPMethod]);
+
+        // after
+        $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
+
+        if ($resp) { return $resp; }
     }
 
 }
