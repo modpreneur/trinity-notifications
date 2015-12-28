@@ -8,7 +8,7 @@ use Trinity\NotificationBundle\Tests\Entity\EEntityInterface;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceErrorArray;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceMethodDate;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutSource;
-use Trinity\NotificationBundle\Tests\Entity\Product;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
 
 
 /**
@@ -190,9 +190,8 @@ class NotificationUtilsTest extends BaseTest
         $p = new Product();
 
         $sourceArrayA = [
-            'name' => "Someone's name",
-            'description' => 'Lorem impsu',
-            'tProduct' => 1,
+            'name' => $p->getName(),
+            'description' => $p->getDescription()
         ];
 
         $arrayA = $utils->toArray($p);
@@ -235,31 +234,4 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
 
-
-    /**
-     * @test
-     */
-    public function testProcessGetMethod()
-    {
-        $utils = $this->getContainer()->get('trinity.notification.entity_converter');
-        $method = $this->getMethod($utils, 'processGetMethod');
-
-        $e = new Product();
-        $e->setTProduct(new \stdClass());
-        $this->assertEquals(['getTProduct' => null], $method->invokeArgs($utils, [$e, 'getTProduct', 'getTProduct']));
-    }
-
-    /* ?? 
-    public function testEntityToArrayMethodDateError(){
-        $utils = $this->getContainer()->get("trinity.notification.entityConverter");
-        $class = (get_class($utils));
-        $method = $this->getMethod($class, "processMethod");
-
-        $entity = new EntityInterfaceErrorArray();
-
-        $array = $method->invokeArgs( $utils, [$entity, 'date', 'getDate'] );
-
-        $this->assertEquals([ 'date' => '2010-11-12 00:00:00'], $array );
-    }
-    */
 }

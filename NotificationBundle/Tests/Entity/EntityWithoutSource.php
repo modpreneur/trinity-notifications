@@ -16,7 +16,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  */
 class EntityInterfaceWithoutSource implements NotificationEntityInterface
 {
-    /** @return TestClient[] */
+    /** @return CI[] */
     public function getClients()
     {
         // TODO: Implement getClients() method.

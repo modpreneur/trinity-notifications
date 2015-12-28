@@ -54,8 +54,6 @@ class AppKernel extends Kernel
         $loader->load(__DIR__.'/config.yml');
         $loader->load(__DIR__.'/../../Resources/config/services.yml');
 
-        var_dump($this->port);
-
         if ($this->port == 8001) {
             $loader->load(__DIR__.'/client/config.yml');
         } else {

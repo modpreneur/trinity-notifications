@@ -12,7 +12,7 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Tests\Common\Persistence\Mapping\TestClassMetadataFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
-use Trinity\NotificationBundle\Tests\Entity\Product;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
 
 
 /**

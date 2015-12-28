@@ -147,7 +147,7 @@ class EEntityInterface implements NotificationEntityInterface
     }
 
 
-    /** @return Client[] */
+    /** @return CI[] */
     public function getClients()
     {
         return [new Client()];

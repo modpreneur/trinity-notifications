@@ -18,7 +18,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  */
 class EntityInterfaceErrorArray implements NotificationEntityInterface
 {
-    /** @return TestClient[] */
+    /** @return CI[] */
     public function getClients()
     {
         // TODO: Implement getClients() method.

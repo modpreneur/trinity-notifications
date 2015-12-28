@@ -7,7 +7,7 @@
 namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver;
-use Trinity\NotificationBundle\Tests\Entity\Product;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
 
 
 /**
@@ -25,8 +25,10 @@ class ApiDriverTest extends BaseTest
         $driver = $driver = $this->getDriver();
 
         $method = $this->getMethod($driver, 'JSONEncodeObject');
+        $name = $product->getName();
+        $description = $product->getDescription();
 
-        $expected = "{\"id\":$id,\"name\":\"Someone's name\",\"description\":\"Lorem impsu\"";
+        $expected = "{\"id\":$id,\"name\":\"$name\",\"description\":\"$description\"";
         $result = $method->invokeArgs($driver, [$product, 'KJHGHJKKJHJKJHJH']);
 
         $this->assertStringStartsWith($expected, $result);
@@ -108,9 +110,7 @@ class ApiDriverTest extends BaseTest
     public function testPrepareURLsError()
     {
         $driver = $this->getDriver();
-
         $method = $this->getMethod($driver, 'prepareURL');
-
         $method->invokeArgs($driver, ['http://example.com', new \stdClass(), 'POST']);
     }
 
@@ -121,9 +121,7 @@ class ApiDriverTest extends BaseTest
     public function testPrepareURLsClientError()
     {
         $driver = $this->getDriver();
-
         $method = $this->getMethod($driver, 'prepareURL');
-
         $method->invokeArgs($driver, [null, new Product(), 'POST']);
     }
 }

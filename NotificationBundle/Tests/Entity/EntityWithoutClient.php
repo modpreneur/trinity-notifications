@@ -51,7 +51,7 @@ class EntityInterfaceWithoutClient implements NotificationEntityInterface
     }
 
 
-    /** @return TestClient[] */
+    /** @return CI[] */
     public function getClients()
     {
         return [];

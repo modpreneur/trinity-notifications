@@ -90,6 +90,7 @@ class NotificationManager
 
     /**
      * @param object $entity
+     * @return array
      */
     public function syncEntity($entity){
         return $this->send($entity, 'PUT');
@@ -132,9 +133,6 @@ class NotificationManager
                 }
             }
         }
-
-        if(array_key_exists('error', $response))
-            dump($response);
 
         return $response;
     }

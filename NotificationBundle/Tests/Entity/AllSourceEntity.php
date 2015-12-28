@@ -103,10 +103,10 @@ class AllSourceEntityInterface implements NotificationEntityInterface
     }
 
 
-    /** @return TestClient[] */
+    /** @return CI[] */
     public function getClients()
     {
-        // TODO: Implement getClients() method.
+        return [];
     }
 
 

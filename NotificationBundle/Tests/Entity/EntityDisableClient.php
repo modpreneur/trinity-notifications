@@ -54,7 +54,7 @@ class EntityInterfaceDisableClient implements NotificationEntityInterface
     }
 
 
-    /** @return Client[] */
+    /** @return CI[] */
     public function getClients()
     {
         $c = new Client();

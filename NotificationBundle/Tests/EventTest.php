@@ -8,8 +8,8 @@ namespace Trinity\NotificationBundle\Tests;
 
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Event\StatusEvent;
-use Trinity\NotificationBundle\Tests\Entity\TestClient;
-use Trinity\NotificationBundle\Tests\Entity\Product;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
 
 
 /**
@@ -22,8 +22,7 @@ class EventTest extends BaseTest
      */
     public function testCreateStatusEvent()
     {
-        $client = new TestClient();
-        $client->setEnableNotification(true);
+        $client = new Client();
 
         $exception = new \Exception('Test Exception');
         $method = 'method';

@@ -5,8 +5,8 @@ namespace Trinity\NotificationBundle\Tests;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
 use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutClient;
-use Trinity\NotificationBundle\Tests\Entity\Product;
-use Trinity\NotificationBundle\Tests\Entity\TestClient;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
 
 
 /**
@@ -51,7 +51,7 @@ class ManagerTest extends BaseTest
             $this->assertTrue($client instanceof ClientInterface);
 
             // TestClient
-            $client = new TestClient();
+            $client = new Client();
             $this->assertEquals([$client], $method->invokeArgs($manager, [$client]));
 
             // Collection
