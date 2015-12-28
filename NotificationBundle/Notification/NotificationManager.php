@@ -89,6 +89,14 @@ class NotificationManager
 
 
     /**
+     * @param object $entity
+     */
+    public function syncEntity($entity){
+        return $this->send($entity, 'PUT');
+    }
+
+
+    /**
      *  Send notification to client
      *
      * @param object $entity

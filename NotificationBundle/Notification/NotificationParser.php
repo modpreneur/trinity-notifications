@@ -121,13 +121,18 @@ class NotificationParser
      * Check if the received data isn't modified (the given hash matches the newly generated hash)
      *
      * @param $clientSecret string Oauth secret of the client from which the notification came from
-     *
      * @return bool
+     * @throws HashMismatchException
      */
     protected function isHashOk($clientSecret)
     {
         //copy received data and remove hash
         $data = $this->parametersArray;
+
+        if(!is_array($data) || (is_array($data) && !array_key_exists('hash', $data))){
+            throw new HashMismatchException('Parameter hash does not exists.');
+        }
+
         $oldHash = $data["hash"];
         unset($data["hash"]);
 

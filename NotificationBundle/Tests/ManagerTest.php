@@ -76,4 +76,17 @@ class ManagerTest extends BaseTest
         $this->assertArrayHasKey('error', $result[0]);
     }
 
+
+    public function testSyncEntity(){
+        $manager = $this->getContainer()->get('trinity.notification.manager');
+        $entity = new Product();
+
+        $r = $manager->syncEntity($entity);
+        $this->assertEquals([
+            'code'       => 200,
+            'statusCode' => 200,
+            'message'    => 'OK'
+        ], $r[0]);
+    }
+
 }
