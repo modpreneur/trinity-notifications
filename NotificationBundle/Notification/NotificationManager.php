@@ -224,22 +224,35 @@ class NotificationManager
         $HTTPMethod = "POST"
     ) {
         // before send event
-        $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
+        $this->eventDispatcher
+            ->dispatch(
+                Events::BEFORE_NOTIFICATION_SEND,
+                new SendEvent($entity)
+            );
 
         //execute notification
-        $resp = $driver->execute($entity, $client, ['HTTPMethod' => $HTTPMethod]);
+        $resp = $driver
+            ->execute(
+                $entity,
+                $client,
+                ['HTTPMethod' => $HTTPMethod]
+            );
 
         // after
-        $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
-
-        if ($resp) {
-            return $resp;
-        }
+        $this->eventDispatcher
+            ->dispatch(
+                Events::AFTER_NOTIFICATION_SEND,
+                new SendEvent($entity)
+            );
 
 
         if($this->entityManager){
             $this->entityManager->persist($entity);
             $this->entityManager->flush($entity);
+        }
+
+        if ($resp) {
+            return $resp;
         }
     }
 
