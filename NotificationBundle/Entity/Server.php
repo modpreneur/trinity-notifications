@@ -26,6 +26,13 @@ class Server implements ClientInterface
     protected $secret;
 
 
+    /** @var string */
+    protected $name;
+
+    /** @var  int */
+    protected $id;
+
+
     /** @return string */
     public function getNotificationUri()
     {
@@ -81,6 +88,13 @@ class Server implements ClientInterface
     /** @return string */
     public function getName()
     {
-        return 'server';
+        return $this->name;
+    }
+
+
+    /** @return int */
+    public function getId()
+    {
+        return $this->id;
     }
 }
