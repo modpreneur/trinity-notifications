@@ -235,6 +235,12 @@ class NotificationManager
         if ($resp) {
             return $resp;
         }
+
+
+        if($this->entityManager){
+            $this->entityManager->persist($entity);
+            $this->entityManager->flush($entity);
+        }
     }
 
 
