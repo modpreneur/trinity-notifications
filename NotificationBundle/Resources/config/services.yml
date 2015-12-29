@@ -36,8 +36,6 @@ services:
             - "@event_dispatcher"
             - "@service_container"
             - "%trinity.notification.server_notify_url%"
-        tags:
-            - { name: doctrine.event_listener, event: preUpdate,  priority: 255 }
 
 
     trinity.notification.entity_listener:
