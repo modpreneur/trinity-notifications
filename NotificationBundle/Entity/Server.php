@@ -97,4 +97,23 @@ class Server implements ClientInterface
     {
         return $this->id;
     }
+
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 }
