@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Nette\Utils\Strings;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
-use Trinity\NotificationBundle\Driver\BaseDriverInterface;
+use Trinity\NotificationBundle\Driver\BaseDriver;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
@@ -20,7 +20,7 @@ use Trinity\NotificationBundle\Exception\NotificationDriverException;
 /**
  * Class ApiDriver.
  */
-class ApiDriver extends BaseDriverInterface
+class ApiDriver extends BaseDriver
 {
     const DELETE = 'DELETE';
     const POST = 'POST';
@@ -28,24 +28,23 @@ class ApiDriver extends BaseDriverInterface
 
 
     /**
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param $client
      * @param array $params
      *
      * @return string
      */
-    public function execute($entity, ClientInterface $client, $params = [])
+    public function execute(NotificationEntityInterface $entity, ClientInterface $client, $params = [])
     {
-        if(!($entity instanceof NotificationEntityInterface)){
-            return;
-        }
-
         $response = '';
         $HTTPMethod = self::POST;
         $user = null;
 
         if ($this->tokenStorage) {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this
+                ->tokenStorage
+                ->getToken()
+                ->getUser();
         }
 
         if ($client->isNotificationEnabled()) {
@@ -71,7 +70,6 @@ class ApiDriver extends BaseDriverInterface
                 );
 
                 $entity->setSyncStatus($client, 'error');
-
                 $response = "ERROR - $message";
             }
         }
@@ -122,7 +120,7 @@ class ApiDriver extends BaseDriverInterface
 
         return json_decode($body, true)
             ??
-        ['error' => "Web resultj: " . $body];
+        ['error' => "Client result: " . $body];
     }
 
 

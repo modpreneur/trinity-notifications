@@ -6,13 +6,13 @@
 
 namespace Trinity\NotificationBundle\Tests\Driver;
 
-use Trinity\NotificationBundle\Driver\BaseDriverInterface;
+use Trinity\NotificationBundle\Driver\BaseDriver;
 
 
 /**
  * Class TestDriver.
  */
-class TestDriver extends BaseDriverInterface
+class TestDriver extends BaseDriver
 {
     /**
      * @param object $entity

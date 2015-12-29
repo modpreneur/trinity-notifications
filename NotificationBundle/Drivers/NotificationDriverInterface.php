@@ -6,6 +6,7 @@
 namespace Trinity\NotificationBundle\Driver;
 
 use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
 /**
@@ -14,13 +15,13 @@ use Trinity\FrameworkBundle\Entity\ClientInterface;
 interface NotificationDriverInterface
 {
     /**
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param ClientInterface $client
      * @param array $params
      *
      * @return mixed
      */
-    public function execute($entity, ClientInterface $client, $params = []);
+    public function execute(NotificationEntityInterface $entity, ClientInterface $client, $params = []);
 
 
     /**

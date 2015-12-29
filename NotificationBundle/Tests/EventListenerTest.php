@@ -171,6 +171,7 @@ class EventListenerTest extends BaseTest
         );
 
         $refPropUnitOfWork->setValue($em, $unitOfWork);
+
         $this->assertEquals(
             [
                 [

@@ -6,6 +6,7 @@
 
 namespace Trinity\NotificationBundle\Driver;
 
+use Doctrine\ORM\EntityManager;
 use Nette\Utils\Strings;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -16,9 +17,9 @@ use Trinity\NotificationBundle\Notification\EntityConverter;
 
 
 /**
- * Class BaseDriverInterface.
+ * Class BaseDriver.
  */
-abstract class BaseDriverInterface implements NotificationDriverInterface
+abstract class BaseDriver implements NotificationDriverInterface
 {
     /** @var  EntityConverter */
     protected $entityConverter;
@@ -30,6 +31,9 @@ abstract class BaseDriverInterface implements NotificationDriverInterface
     protected $eventDispatcher;
 
     protected $tokenStorage;
+
+    /** @var  EntityManager */
+    protected $entityManager;
 
 
     /**
@@ -51,6 +55,15 @@ abstract class BaseDriverInterface implements NotificationDriverInterface
         $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
         $this->tokenStorage = $tokenStorage;
+    }
+
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
     }
 
 

@@ -77,7 +77,6 @@ class NotificationParser
     {
         $this->parametersArray = $parameters;
 
-
         //check, if the data was not modified
         if (!$this->isHashOk($clientSecret)) {
             throw new HashMismatchException("Request hash does not match");

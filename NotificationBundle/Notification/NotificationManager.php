@@ -7,10 +7,13 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Driver\NotificationDriverInterface;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendEvent;
@@ -34,6 +37,9 @@ class NotificationManager
 
     /** @var  string */
     protected $serverNotifyUri;
+
+    /** @var  EntityManager */
+    protected $entityManager;
 
 
     /**
@@ -65,15 +71,24 @@ class NotificationManager
 
 
     /**
+     * @param EntityManager $entityManager
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+
+    /**
      *  Process notification.
      *
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
      * @param bool $toClient
      *
      * @return array
      */
-    public function send($entity, $HTTPMethod = 'GET', $toClient = true)
+    public function send(NotificationEntityInterface $entity, $HTTPMethod = 'GET', $toClient = true)
     {
         if ($toClient) {
             $response = $this->sendToClient($entity, $HTTPMethod);
@@ -86,15 +101,15 @@ class NotificationManager
 
 
     /**
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param ClientInterface $client
      * @return array
      */
-    public function syncEntity($entity, ClientInterface $client){
-
+    public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
+    {
         $responce = [];
 
-        foreach($this->drivers as $driver){
+        foreach ($this->drivers as $driver) {
             $responce[] = $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
         }
 
@@ -105,7 +120,7 @@ class NotificationManager
     /**
      *  Send notification to client
      *
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
      *
      * @return array
@@ -113,7 +128,7 @@ class NotificationManager
      * @throws ClientException
      * @throws MethodException
      */
-    protected function sendToClient($entity, $HTTPMethod = 'GET' )
+    protected function sendToClient(NotificationEntityInterface $entity, $HTTPMethod = 'GET')
     {
         $response = [];
 
@@ -136,7 +151,7 @@ class NotificationManager
     /**
      *  Send notification to server
      *
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
      *
      * @return array
@@ -144,7 +159,7 @@ class NotificationManager
      * @throws ClientException
      * @throws MethodException
      */
-    protected function sendToServer($entity, $HTTPMethod = 'GET')
+    protected function sendToServer(NotificationEntityInterface $entity, $HTTPMethod = 'GET')
     {
         $response = [];
         $server = new Server();
@@ -195,15 +210,19 @@ class NotificationManager
 
 
     /**
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param NotificationDriverInterface $driver
      * @param ClientInterface $client
      * @param string $HTTPMethod [POST, PUT, GET, DELETE, ...]
      *
      * @return array|null
      */
-    private function executeEntityInDriver($entity, NotificationDriverInterface $driver, ClientInterface $client, $HTTPMethod = "POST")
-    {
+    private function executeEntityInDriver(
+        NotificationEntityInterface $entity,
+        NotificationDriverInterface $driver,
+        ClientInterface $client,
+        $HTTPMethod = "POST"
+    ) {
         // before send event
         $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
 
@@ -213,7 +232,10 @@ class NotificationManager
         // after
         $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
 
-        if ($resp) { return $resp; }
+        if ($resp) {
+            return $resp;
+        }
     }
+
 
 }

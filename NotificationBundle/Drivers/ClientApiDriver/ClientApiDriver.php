@@ -10,7 +10,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Nette\Utils\Strings;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
-use Trinity\NotificationBundle\Driver\BaseDriverInterface;
+use Trinity\NotificationBundle\Driver\BaseDriver;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\StatusEvent;
 use Trinity\NotificationBundle\Exception\ClientException;
@@ -18,7 +19,7 @@ use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 
 
-class ClientApiDriver extends BaseDriverInterface
+class ClientApiDriver extends BaseDriver
 {
     const DELETE = 'DELETE';
     const POST = 'POST';
@@ -46,13 +47,13 @@ class ClientApiDriver extends BaseDriverInterface
 
 
     /**
-     * @param object $entity
+     * @param NotificationEntityInterface $entity
      * @param ClientInterface $server
      * @param array $params
      *
      * @return mixed
      */
-    public function execute($entity, ClientInterface $server, $params = [])
+    public function execute(NotificationEntityInterface $entity, ClientInterface $server, $params = [])
     {
         $HTTPMethod = self::POST;
 

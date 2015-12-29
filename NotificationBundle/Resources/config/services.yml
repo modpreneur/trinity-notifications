@@ -7,6 +7,7 @@ services:
             - "@logger"
             - "%trinity.notification.entity_id_field%"
 
+
     trinity.notification.services.notification_parser:
         class: Trinity\NotificationBundle\Notification\NotificationParser
         arguments:
@@ -17,6 +18,7 @@ services:
             - "%trinity.notification.create_new_entity%"
         calls:
             - [setEntityManager, ["@doctrine.orm.entity_manager"]]
+
 
     trinity.notification.annotations.utils:
         class: Trinity\NotificationBundle\Notification\AnnotationsUtils
@@ -34,6 +36,9 @@ services:
             - "@event_dispatcher"
             - "@service_container"
             - "%trinity.notification.server_notify_url%"
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate,  priority: 255 }
+
 
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
@@ -59,6 +64,7 @@ services:
             - "@security.token_storage"
         tags:
             - { name: trinity.notification.driver }
+
 
     trinity.notification.driver.client_api:
         class: Trinity\NotificationBundle\Drivers\ClientApiDriver\ClientApiDriver

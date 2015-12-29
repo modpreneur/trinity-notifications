@@ -26,9 +26,8 @@ class ApiDriverTest extends BaseTest
 
         $method = $this->getMethod($driver, 'JSONEncodeObject');
         $name = $product->getName();
-        $description = $product->getDescription();
 
-        $expected = "{\"id\":$id,\"name\":\"$name\",\"description\":\"$description\"";
+        $expected = "{\"id\":$id,\"name\":\"$name\",\"";
         $result = $method->invokeArgs($driver, [$product, 'KJHGHJKKJHJKJHJH']);
 
         $this->assertStringStartsWith($expected, $result);

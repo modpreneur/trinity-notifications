@@ -36,4 +36,11 @@ class Client implements ApiClientInterface
     {
         return 'sandbox';
     }
+
+
+    /** @return int */
+    public function getId()
+    {
+        return 1;
+    }
 }
