@@ -67,7 +67,7 @@ class StatusEvent extends Event
         $method,
         \Exception $exception = null,
         $message = self::NULL_MESSAGE,
-        BaseUser $user = null
+        $user = null
     ) {
         $this->exception = $exception;
         $this->entityName = $entityName;
