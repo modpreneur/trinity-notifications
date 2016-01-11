@@ -41,11 +41,15 @@ class ApiDriver extends BaseDriver
         $user = null;
 
         if ($this->tokenStorage) {
-            $user = $this
+            $token = $this
                 ->tokenStorage
-                ->getToken()
-                ->getUser();
+                ->getToken();
+
+            if($token){
+                $user = $token->getUser();
+            }
         }
+
 
         if ($client->isNotificationEnabled()) {
             if (array_key_exists('HTTPMethod', $params)) {
