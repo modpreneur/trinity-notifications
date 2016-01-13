@@ -24,6 +24,6 @@ interface NotificationEntityInterface
      * @param string $status
      * @return void
      */
-    public function setSyncStatus(ClientInterface $client, $status);
+    public function setNotificationStatus(ClientInterface $client, $status);
 
 }

@@ -64,7 +64,7 @@ class ApiDriver extends BaseDriver
                     Events::SUCCESS_NOTIFICATION,
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
                 );
-                $entity->setSyncStatus($client, 'ok');
+                $entity->setNotificationStatus($client, 'ok');
             } catch (\Exception $ex) {
 
                 $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
@@ -73,7 +73,7 @@ class ApiDriver extends BaseDriver
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message, $user)
                 );
 
-                $entity->setSyncStatus($client, 'error');
+                $entity->setNotificationStatus($client, 'error');
                 $response = "ERROR - $message";
             }
         }
