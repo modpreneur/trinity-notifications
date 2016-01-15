@@ -245,7 +245,7 @@ class NotificationManager
             );
 
 
-        if($this->entityManager){
+        if($this->entityManager && $this->entityManager->isOpen()){
             $this->entityManager->persist($entity);
             $this->entityManager->flush($entity);
         }
