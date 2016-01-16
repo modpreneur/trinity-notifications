@@ -41,6 +41,7 @@ class EntityConverter
     {
         $this->annotationsUtils = $annotationsUtils;
         $this->logger = $logger;
+        $this->entityIdFieldName = $entityIdFieldName;
     }
 
 
