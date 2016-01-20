@@ -9,6 +9,7 @@ namespace Trinity\NotificationBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,76 +98,31 @@ class EntityListener
     /**
      * Def in service.yml.
      *
-     * @param LifecycleEventArgs $args
+     * @param OnFlushEventArgs $eventArgs
      *
      * @return array
      *
      * @throws \Exception
      */
-    public function postUpdate(LifecycleEventArgs $args)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $this->entityManager = $args->getEntityManager();
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
         $enable = $this->isNotificationEnabledForController();
 
-        if ($enable) {
-            return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::PUT);
-        }
 
-        return false;
-    }
+        if($enable){
+            foreach ($uow->getScheduledEntityInsertions() as $entity) {
+                return $this->sendNotification($em, $entity, self::POST);
+            }
 
+            foreach ($uow->getScheduledEntityUpdates() as $entity) {
+                return $this->sendNotification($em, $entity, self::PUT);
+            }
 
-    /**
-     * Def in service.yml.
-     *
-     * @param LifecycleEventArgs $args
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
-    public function postPersist(LifecycleEventArgs $args)
-    {
-        $this->entityManager = $args->getEntityManager();
-        $enable = $this->isNotificationEnabledForController();
-
-        if ($enable) {
-            return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Def in service.yml.
-     *
-     * @param LifecycleEventArgs $args
-     *
-     * @throws \Exception
-     */
-    public function preRemove(LifecycleEventArgs $args)
-    {
-        $this->entityManager = $args->getEntityManager();
-        $this->entity = $args->getObject();
-    }
-
-
-    /**
-     * Def in service.yml.
-     *
-     * @param PreFlushEventArgs $args
-     *
-     * @return bool|NULL
-     */
-    public function preFlush(PreFlushEventArgs $args)
-    {
-        $entity = $this->entity;
-        $this->entity = null;
-        $enable = $this->isNotificationEnabledForController();
-
-        if ($entity && $enable) {
-            return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
+            foreach ($uow->getScheduledEntityDeletions() as $entity) {
+                return $this->sendNotification($em, $entity, self::DELETE);
+            }
         }
     }
 
