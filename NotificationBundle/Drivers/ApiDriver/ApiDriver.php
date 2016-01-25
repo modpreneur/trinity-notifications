@@ -23,8 +23,8 @@ use Trinity\NotificationBundle\Exception\NotificationDriverException;
 class ApiDriver extends BaseDriver
 {
     const DELETE = 'DELETE';
-    const POST = 'POST';
-    const PUT = 'PUT';
+    const POST   = 'POST';
+    const PUT    = 'PUT';
 
 
     /**
@@ -49,7 +49,6 @@ class ApiDriver extends BaseDriver
                 $user = $token->getUser();
             }
         }
-
 
         if ($client->isNotificationEnabled()) {
             if (array_key_exists('HTTPMethod', $params)) {
@@ -108,13 +107,9 @@ class ApiDriver extends BaseDriver
 
         $httpClient = new Client();
 
-        if($method == self::DELETE){
-            $response = $httpClient->delete($uri);
-        }else{
-            $request = new Request($method, $uri, ['content-type' => 'application/json'], $data);
-            /** @var Client $response */
-            $response = $httpClient->send($request);
-        }
+        $request = new Request($method, $uri, ['content-type' => 'application/json'], $data);
+        /** @var Client $response */
+        $response = $httpClient->send($request);
 
         if (Strings::contains((string)$response->getBody(), '"code":404')) {
             throw new NotificationDriverException((string)$response->getBody());
