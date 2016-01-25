@@ -90,6 +90,8 @@ abstract class BaseDriver implements NotificationDriverInterface
         $result['timestamp'] = (new \DateTime())->getTimestamp();
         $result['hash'] = hash('sha256', $secret.(implode(',', $result)));
 
+        // error fix...
+        $result = str_replace('null', '""', $result);
         return json_encode($result);
     }
 

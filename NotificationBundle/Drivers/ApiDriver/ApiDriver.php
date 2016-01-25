@@ -87,7 +87,7 @@ class ApiDriver extends BaseDriver
      * TestClient = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string $url
+     * @param string $uri
      * @param string $method
      * @param bool $isEncoded
      * @param null $secret
@@ -97,7 +97,7 @@ class ApiDriver extends BaseDriver
      */
     private function createRequest(
         $data,
-        $url,
+        $uri,
         $method = self::POST,
         $isEncoded = false,
         $secret = null
@@ -108,9 +108,13 @@ class ApiDriver extends BaseDriver
 
         $httpClient = new Client();
 
-        //new interface(v6.0)
-        $request = new Request($method, $url, ['content-type' => 'application/json'], $data);
-        $response = $httpClient->send($request);
+        if($method == self::DELETE){
+            $response = $httpClient->delete($uri);
+        }else{
+            $request = new Request($method, $uri, ['content-type' => 'application/json'], $data);
+            /** @var Client $response */
+            $response = $httpClient->send($request);
+        }
 
         if (Strings::contains((string)$response->getBody(), '"code":404')) {
             throw new NotificationDriverException((string)$response->getBody());
@@ -123,7 +127,7 @@ class ApiDriver extends BaseDriver
         $body = (string)$response->getBody();
 
         return json_decode($body, true)
-            ??
+        ??
         ['error' => "Client result: " . $body];
     }
 

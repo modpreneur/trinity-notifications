@@ -60,6 +60,8 @@ class EntityListener
     /** @var  bool Is the current application client? */
     protected $isClient;
 
+    protected $currentProcessEntity = null;
+
 
     /**
      * @param NotificationManager $notificationManager
@@ -98,6 +100,52 @@ class EntityListener
     /**
      * Def in service.yml.
      *
+     * @param LifecycleEventArgs $args
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        $this->entityManager = $args->getEntityManager();
+        $enable = $this->isNotificationEnabledForController();
+        $entity = $args->getObject();
+
+        if ($enable && !$this->currentProcessEntity) {
+            $this->currentProcessEntity = $entity;
+            return $this->sendNotification($args->getEntityManager(), $entity, self::PUT);
+        }
+        return false;
+    }
+
+
+    /**
+     * Def in service.yml.
+     *
+     * @param LifecycleEventArgs $args
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    public function postPersist(LifecycleEventArgs $args)
+    {
+        $this->entityManager = $args->getEntityManager();
+        $enable = $this->isNotificationEnabledForController();
+        $entity = $args->getObject();
+
+        if ($enable && !$this->currentProcessEntity) {
+            $this->currentProcessEntity = $entity;
+            return $this->sendNotification($args->getEntityManager(), $entity, self::POST);
+        }
+        return false;
+    }
+
+
+    /**
+     * Def in service.yml.
+     *
      * @param OnFlushEventArgs $eventArgs
      *
      * @return array
@@ -106,21 +154,13 @@ class EntityListener
      */
     public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $em     = $eventArgs->getEntityManager();
+        $uow    = $em->getUnitOfWork();
         $enable = $this->isNotificationEnabledForController();
 
-
-        if($enable){
-            foreach ($uow->getScheduledEntityInsertions() as $entity) {
-                return $this->sendNotification($em, $entity, self::POST);
-            }
-
-            foreach ($uow->getScheduledEntityUpdates() as $entity) {
-                return $this->sendNotification($em, $entity, self::PUT);
-            }
-
+        if($enable && !$this->currentProcessEntity){
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
+                $this->currentProcessEntity = $entity;
                 return $this->sendNotification($em, $entity, self::DELETE);
             }
         }

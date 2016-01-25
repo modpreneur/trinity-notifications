@@ -46,6 +46,8 @@ services:
             - "%trinity.notification.is_client%"
         tags:
             - { name: doctrine.event_listener, event: onFlush, priority: 255 }
+            - { name: doctrine.event_listener, event: postUpdate,  priority: 200 }
+            - { name: doctrine.event_listener, event: postPersist, priority: 200 }
         calls:
             - [setRequestStack, [@request_stack]]
 
