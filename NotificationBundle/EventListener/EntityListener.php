@@ -14,6 +14,7 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
@@ -60,6 +61,7 @@ class EntityListener
     /** @var  bool Is the current application client? */
     protected $isClient;
 
+    /** @var NotificationEntityInterface  */
     protected $currentProcessEntity = null;
 
 
@@ -157,13 +159,16 @@ class EntityListener
         $em     = $eventArgs->getEntityManager();
         $uow    = $em->getUnitOfWork();
         $enable = $this->isNotificationEnabledForController();
+        $array  = [];
 
         if($enable && !$this->currentProcessEntity){
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
                 $this->currentProcessEntity = $entity;
-                return $this->sendNotification($em, $entity, self::DELETE);
+                $array[] = $this->sendNotification($em, $entity, self::DELETE);
             }
         }
+
+        return $array;
     }
 
 
