@@ -8,7 +8,6 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
@@ -246,7 +245,7 @@ class NotificationManager
             );
 
 
-        if($this->entityManager){
+        if($this->entityManager && $this->entityManager->isOpen()){
             $this->entityManager->persist($entity);
             $this->entityManager->flush($entity);
         }

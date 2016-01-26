@@ -9,10 +9,12 @@ namespace Trinity\NotificationBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
@@ -58,6 +60,9 @@ class EntityListener
 
     /** @var  bool Is the current application client? */
     protected $isClient;
+
+    /** @var NotificationEntityInterface  */
+    protected $currentProcessEntity = null;
 
 
     /**
@@ -107,11 +112,12 @@ class EntityListener
     {
         $this->entityManager = $args->getEntityManager();
         $enable = $this->isNotificationEnabledForController();
+        $entity = $args->getObject();
 
-        if ($enable) {
-            return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::PUT);
+        if ($enable && !$this->currentProcessEntity) {
+            $this->currentProcessEntity = $entity;
+            return $this->sendNotification($args->getEntityManager(), $entity, self::PUT);
         }
-
         return false;
     }
 
@@ -129,11 +135,12 @@ class EntityListener
     {
         $this->entityManager = $args->getEntityManager();
         $enable = $this->isNotificationEnabledForController();
+        $entity = $args->getObject();
 
-        if ($enable) {
-            return $this->sendNotification($args->getEntityManager(), $args->getObject(), self::POST);
+        if ($enable && !$this->currentProcessEntity) {
+            $this->currentProcessEntity = $entity;
+            return $this->sendNotification($args->getEntityManager(), $entity, self::POST);
         }
-
         return false;
     }
 
@@ -141,33 +148,27 @@ class EntityListener
     /**
      * Def in service.yml.
      *
-     * @param LifecycleEventArgs $args
+     * @param OnFlushEventArgs $eventArgs
+     *
+     * @return array
      *
      * @throws \Exception
      */
-    public function preRemove(LifecycleEventArgs $args)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $this->entityManager = $args->getEntityManager();
-        $this->entity = $args->getObject();
-    }
-
-
-    /**
-     * Def in service.yml.
-     *
-     * @param PreFlushEventArgs $args
-     *
-     * @return bool|NULL
-     */
-    public function preFlush(PreFlushEventArgs $args)
-    {
-        $entity = $this->entity;
-        $this->entity = null;
+        $em     = $eventArgs->getEntityManager();
+        $uow    = $em->getUnitOfWork();
         $enable = $this->isNotificationEnabledForController();
+        $array  = [];
 
-        if ($entity && $enable) {
-            return $this->sendNotification($args->getEntityManager(), $entity, self::DELETE);
+        if($enable && !$this->currentProcessEntity){
+            foreach ($uow->getScheduledEntityDeletions() as $entity) {
+                $this->currentProcessEntity = $entity;
+                $array[] = $this->sendNotification($em, $entity, self::DELETE);
+            }
         }
+
+        return $array;
     }
 
 

@@ -15,6 +15,10 @@ use Trinity\FrameworkBundle\Entity\ClientInterface;
  */
 interface NotificationEntityInterface
 {
+    /** @return int */
+    public function getId();
+
+
     /** @return ClientInterface[] */
     public function getClients();
 
@@ -24,6 +28,6 @@ interface NotificationEntityInterface
      * @param string $status
      * @return void
      */
-    public function setSyncStatus(ClientInterface $client, $status);
+    public function setNotificationStatus(ClientInterface $client, $status);
 
 }

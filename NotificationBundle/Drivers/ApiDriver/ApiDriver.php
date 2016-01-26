@@ -23,8 +23,8 @@ use Trinity\NotificationBundle\Exception\NotificationDriverException;
 class ApiDriver extends BaseDriver
 {
     const DELETE = 'DELETE';
-    const POST = 'POST';
-    const PUT = 'PUT';
+    const POST   = 'POST';
+    const PUT    = 'PUT';
 
 
     /**
@@ -41,10 +41,13 @@ class ApiDriver extends BaseDriver
         $user = null;
 
         if ($this->tokenStorage) {
-            $user = $this
+            $token = $this
                 ->tokenStorage
-                ->getToken()
-                ->getUser();
+                ->getToken();
+
+            if($token){
+                $user = $token->getUser();
+            }
         }
 
         if ($client->isNotificationEnabled()) {
@@ -60,7 +63,7 @@ class ApiDriver extends BaseDriver
                     Events::SUCCESS_NOTIFICATION,
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
                 );
-                $entity->setSyncStatus($client, 'ok');
+                $entity->setNotificationStatus($client, 'ok');
             } catch (\Exception $ex) {
 
                 $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
@@ -69,7 +72,7 @@ class ApiDriver extends BaseDriver
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message, $user)
                 );
 
-                $entity->setSyncStatus($client, 'error');
+                $entity->setNotificationStatus($client, 'error');
                 $response = "ERROR - $message";
             }
         }
@@ -83,7 +86,7 @@ class ApiDriver extends BaseDriver
      * TestClient = web application (http:example.com).
      *
      * @param object|string $data
-     * @param string $url
+     * @param string $uri
      * @param string $method
      * @param bool $isEncoded
      * @param null $secret
@@ -93,7 +96,7 @@ class ApiDriver extends BaseDriver
      */
     private function createRequest(
         $data,
-        $url,
+        $uri,
         $method = self::POST,
         $isEncoded = false,
         $secret = null
@@ -104,8 +107,8 @@ class ApiDriver extends BaseDriver
 
         $httpClient = new Client();
 
-        //new interface(v6.0)
-        $request = new Request($method, $url, ['content-type' => 'application/json'], $data);
+        $request = new Request($method, $uri, ['content-type' => 'application/json'], $data);
+        /** @var Client $response */
         $response = $httpClient->send($request);
 
         if (Strings::contains((string)$response->getBody(), '"code":404')) {
@@ -119,7 +122,7 @@ class ApiDriver extends BaseDriver
         $body = (string)$response->getBody();
 
         return json_decode($body, true)
-            ??
+        ??
         ['error' => "Client result: " . $body];
     }
 
