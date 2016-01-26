@@ -218,12 +218,12 @@ class EntityConverter
                 continue;
             }
 
-            //If the property contains null skip it.
-            // This fixes DB null constraint violation when calling set method on entity with null value.
-            if ($propertyValue == null) {
-                $this->logger->emergency("property: ".$propertyName." contains null, skipped");
-                continue;
-            }
+//            //If the property contains null skip it.
+//            This may cause errors... but it's needed e.g. when setting some properties to null(delete description of product)
+//            if ($propertyValue == null) {
+//                $this->logger->emergency("property: ".$propertyName." contains null, skipped");
+//                continue;
+//            }
 
             $methodName = 'set'.ucfirst($propertyName);
 
