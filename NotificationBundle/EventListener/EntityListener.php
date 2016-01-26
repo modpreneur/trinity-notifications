@@ -141,6 +141,7 @@ class EntityListener
             $this->currentProcessEntity = $entity;
             return $this->sendNotification($args->getEntityManager(), $entity, self::POST);
         }
+
         return false;
     }
 

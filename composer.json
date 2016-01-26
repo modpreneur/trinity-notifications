@@ -20,7 +20,7 @@
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
-    "dmishh/settings-bundle": "2.0.*@dev",
+    "trinity/settings": "dev-master",
     "friendsofsymfony/user-bundle": "dev-master",
     "trinity/framework": "dev-master",
     "sensio/generator-bundle": "~3.0",
