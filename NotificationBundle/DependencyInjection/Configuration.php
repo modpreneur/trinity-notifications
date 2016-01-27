@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
             )->isRequired()->cannotBeEmpty()->end()->scalarNode("server_client_id")->isRequired()->cannotBeEmpty()->end(
             )->scalarNode("server_client_secret")->isRequired()->cannotBeEmpty()->end()->booleanNode(
                 "create_new_entity"
-            )->isRequired()->cannotBeEmpty()->end()->arrayNode("drivers")->isRequired()->cannotBeEmpty()->prototype(
+            )->isRequired()->end()->arrayNode("drivers")->isRequired()->cannotBeEmpty()->prototype(
                 "scalar"
             )->end()->end();
 
