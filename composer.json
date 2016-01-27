@@ -21,7 +21,7 @@
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
-    "friendsofsymfony/user-bundle": "dev-master",
+    "friendsofsymfony/user-bundle": "~1.3",
     "trinity/framework": "dev-master",
     "sensio/generator-bundle": "~3.0",
     "phpunit/phpunit": "~5.0",
