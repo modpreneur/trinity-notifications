@@ -165,7 +165,7 @@ class EntityListener
         if($enable && !$this->currentProcessEntity){
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
                 $this->currentProcessEntity = $entity;
-                $array[] = $this->sendNotification($em, $entity, self::DELETE);
+                $array[] = $this->sendNotification($em, clone($entity), self::DELETE);
             }
         }
 
