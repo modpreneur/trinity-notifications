@@ -165,7 +165,8 @@ class EntityListener
         if($enable && !$this->currentProcessEntity){
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
                 $this->currentProcessEntity = $entity;
-                $array[] = $this->sendNotification($em, clone($entity), self::DELETE);
+                $id = $entity->getId();
+                $array[] = $this->sendNotification($em, ($entity), self::DELETE, ['id' => $id]);
             }
         }
 
@@ -178,10 +179,13 @@ class EntityListener
      * @param $entity
      * @param $method
      *
-     * @return bool|array
+     * @param array $options
+     * @return array|bool
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
      */
-    private function sendNotification(EntityManager $entityManager, $entity, $method)
+    private function sendNotification(EntityManager $entityManager, $entity, $method, array $options = [])
     {
+
         $this->notificationManager->setEntityManager($this->entityManager);
 
         if (!$this->processor->isNotificationEntity($entity)) {
@@ -211,7 +215,7 @@ class EntityListener
         }
 
         if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === 'DELETE') {
-            return $this->notificationManager->send($entity, $method, !$this->isClient);
+            return $this->notificationManager->send($entity, $method, !$this->isClient, $options);
         }
 
         return false;

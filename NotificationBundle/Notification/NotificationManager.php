@@ -85,12 +85,13 @@ class NotificationManager
      * @param string $HTTPMethod
      * @param bool $toClient
      *
+     * @param array $options
      * @return array
      */
-    public function send(NotificationEntityInterface $entity, $HTTPMethod = 'GET', $toClient = true)
+    public function send(NotificationEntityInterface $entity, $HTTPMethod = 'GET', $toClient = true, array $options = [])
     {
         if ($toClient) {
-            $response = $this->sendToClient($entity, $HTTPMethod);
+            $response = $this->sendToClient($entity, $HTTPMethod, $options);
         } else {
             $response = $this->sendToServer($entity, $HTTPMethod);
         }
@@ -122,12 +123,10 @@ class NotificationManager
      * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
      *
+     * @param array $options
      * @return array
-     *
-     * @throws ClientException
-     * @throws MethodException
      */
-    protected function sendToClient(NotificationEntityInterface $entity, $HTTPMethod = 'GET')
+    protected function sendToClient(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
     {
         $response = [];
 
@@ -137,7 +136,7 @@ class NotificationManager
         foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
-                    $response[] = $this->executeEntityInDriver($entity, $driver, $client, $HTTPMethod);
+                    $response[] = $this->executeEntityInDriver($entity, $driver, $client, $HTTPMethod, $options);
 
                 }
             }
@@ -214,13 +213,15 @@ class NotificationManager
      * @param ClientInterface $client
      * @param string $HTTPMethod [POST, PUT, GET, DELETE, ...]
      *
+     * @param array $options
      * @return array|null
      */
     private function executeEntityInDriver(
         NotificationEntityInterface $entity,
         NotificationDriverInterface $driver,
         ClientInterface $client,
-        $HTTPMethod = "POST"
+        $HTTPMethod = "POST",
+        array $options = []
     ) {
         // before send event
         $this->eventDispatcher
@@ -234,8 +235,9 @@ class NotificationManager
             ->execute(
                 $entity,
                 $client,
-                ['HTTPMethod' => $HTTPMethod]
+                ['HTTPMethod' => $HTTPMethod, 'options' => $options]
             );
+
 
         // after
         $this->eventDispatcher

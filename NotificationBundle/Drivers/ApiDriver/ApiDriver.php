@@ -58,7 +58,7 @@ class ApiDriver extends BaseDriver
             $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
             $json = $this->JSONEncodeObject($entity, $client->getSecret());
             try {
-                $response = $this->createRequest($json, $url, $HTTPMethod, true);
+                $response = $this->createRequest($json, $url, $HTTPMethod, true, null,  $params);
                 $this->eventDispatcher->dispatch(
                     Events::SUCCESS_NOTIFICATION,
                     new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
@@ -91,6 +91,7 @@ class ApiDriver extends BaseDriver
      * @param bool $isEncoded
      * @param null $secret
      *
+     * @param array $params
      * @return mixed
      * @throws NotificationDriverException
      */
@@ -99,7 +100,8 @@ class ApiDriver extends BaseDriver
         $uri,
         $method = self::POST,
         $isEncoded = false,
-        $secret = null
+        $secret = null,
+        array $params = []
     ) {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
@@ -108,6 +110,7 @@ class ApiDriver extends BaseDriver
         $httpClient = new Client();
 
         $request = new Request($method, $uri, ['content-type' => 'application/json'], $data);
+
         /** @var Client $response */
         $response = $httpClient->send($request);
 
