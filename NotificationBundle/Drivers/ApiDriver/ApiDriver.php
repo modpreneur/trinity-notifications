@@ -26,6 +26,7 @@ class ApiDriver extends BaseDriver
     const POST   = 'POST';
     const PUT    = 'PUT';
 
+    private $entityQueue = [];
 
     /**
      * @param NotificationEntityInterface $entity
@@ -36,7 +37,13 @@ class ApiDriver extends BaseDriver
      */
     public function execute(NotificationEntityInterface $entity, ClientInterface $client, $params = [])
     {
-        $response = '';
+        if(!$entity->getId()) return [];
+        $id = $entity->getId();
+
+        if(isset($this->entityQueue[$id])) return [];
+        $this->entityQueue[$id] = $id;
+
+        $response = [];
         $HTTPMethod = self::POST;
         $user = null;
 
@@ -50,30 +57,36 @@ class ApiDriver extends BaseDriver
             }
         }
 
-        if ($client->isNotificationEnabled()) {
-            if (array_key_exists('HTTPMethod', $params)) {
-                $HTTPMethod = $params['HTTPMethod'];
-            }
+        $entityArray = $this->entityConverter->toArray($entity);
 
-            $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
-            $json = $this->JSONEncodeObject($entity, $client->getSecret());
-            try {
-                $response = $this->createRequest($json, $url, $HTTPMethod, true, null,  $params);
-                $this->eventDispatcher->dispatch(
-                    Events::SUCCESS_NOTIFICATION,
-                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
-                );
-                $entity->setNotificationStatus($client, 'ok');
-            } catch (\Exception $ex) {
+        foreach( $entity->getClients() as $client ){
 
-                $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
-                $this->eventDispatcher->dispatch(
-                    Events::ERROR_NOTIFICATION,
-                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message, $user)
-                );
+            if ($client->isNotificationEnabled()) {
+                if (array_key_exists('HTTPMethod', $params)) {
+                    $HTTPMethod = $params['HTTPMethod'];
+                }
 
-                $entity->setNotificationStatus($client, 'error');
-                $response = "ERROR - $message";
+                $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
+                $json = $this->JSONEncodeObject($entityArray, $client->getSecret());
+
+                try {
+                    $response = $this->createRequest($json, $url, $HTTPMethod, true, null,  $params);
+                    $this->eventDispatcher->dispatch(
+                        Events::SUCCESS_NOTIFICATION,
+                        new StatusEvent($client, $entity, $id, $url, $json, $HTTPMethod, null, null, $user)
+                    );
+                    $entity->setNotificationStatus($client, 'ok');
+                } catch (\Exception $ex) {
+
+                    $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
+                    $this->eventDispatcher->dispatch(
+                        Events::ERROR_NOTIFICATION,
+                        new StatusEvent($client, $entity, $id, $url, $json, $HTTPMethod, $ex, $message, $user)
+                    );
+
+                    $entity->setNotificationStatus($client, 'error');
+                    $response[] = "ERROR - $message";
+                }
             }
         }
 

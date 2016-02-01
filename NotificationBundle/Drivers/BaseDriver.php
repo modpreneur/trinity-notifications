@@ -79,9 +79,8 @@ abstract class BaseDriver implements NotificationDriverInterface
      * @return string
      * @throws \Exception
      */
-    protected function JSONEncodeObject($entity, $secret, $extraFields = [])
+    protected function JSONEncodeObject($result, $secret, $extraFields = [])
     {
-        $result = $this->entityConverter->toArray($entity);
 
         foreach ($extraFields as $extraFieldKey => $extraFieldValue) {
             $result[$extraFieldKey] = $extraFieldValue;
