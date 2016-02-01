@@ -37,11 +37,18 @@ class ApiDriver extends BaseDriver
      */
     public function execute(NotificationEntityInterface $entity, ClientInterface $client, $params = [])
     {
-        if(!$entity->getId()) return [];
         $id = $entity->getId();
+        $class = get_class($entity);
 
-        if(isset($this->entityQueue[$id])) return [];
-        $this->entityQueue[$id] = $id;
+        if(!$id) {
+            return [];
+        }
+
+        if(array_key_exists($class, $this->entityQueue) && in_array($id, $this->entityQueue[$class])) {
+            return [];
+        }
+
+        $this->entityQueue[$class][] = $id;
 
         $response = [];
         $HTTPMethod = self::POST;
@@ -70,7 +77,7 @@ class ApiDriver extends BaseDriver
                 $json = $this->JSONEncodeObject($entityArray, $client->getSecret());
 
                 try {
-                    $response = $this->createRequest($json, $url, $HTTPMethod, true, null,  $params);
+                    $response[] = $this->createRequest($json, $url, $HTTPMethod, true, null,  $params);
                     $this->eventDispatcher->dispatch(
                         Events::SUCCESS_NOTIFICATION,
                         new StatusEvent($client, $entity, $id, $url, $json, $HTTPMethod, null, null, $user)
@@ -138,8 +145,8 @@ class ApiDriver extends BaseDriver
         $body = (string)$response->getBody();
 
         return json_decode($body, true)
-        ??
-        ['error' => "Client result: " . $body];
+               ??
+               ['error' => "Client result: " . $body];
     }
 
 
@@ -152,4 +159,5 @@ class ApiDriver extends BaseDriver
     {
         return 'api_driver';
     }
+
 }
