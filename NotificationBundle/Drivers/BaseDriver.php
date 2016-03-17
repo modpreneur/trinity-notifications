@@ -81,18 +81,17 @@ abstract class BaseDriver implements NotificationDriverInterface
      */
     protected function JSONEncodeObject($entity, $secret, $extraFields = [])
     {
-        $result = $this->entityConverter->toArray($entity);
-
         foreach ($extraFields as $extraFieldKey => $extraFieldValue) {
-            $result[$extraFieldKey] = $extraFieldValue;
+            $entity[$extraFieldKey] = $extraFieldValue;
         }
 
-        $result['timestamp'] = (new \DateTime())->getTimestamp();
-        $result['hash'] = hash('sha256', $secret.(implode(',', $result)));
+        $entity['timestamp'] = (new \DateTime())->getTimestamp();
+        $entity['hash'] = hash('sha256', $secret.(implode(',', $entity)));
 
         // error fix...
-        $result = str_replace('null', '""', $result);
-        return json_encode($result);
+        $entity = str_replace('null', '""', $entity);
+        
+        return json_encode($entity);
     }
 
 

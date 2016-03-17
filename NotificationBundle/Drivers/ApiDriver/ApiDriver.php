@@ -26,6 +26,7 @@ class ApiDriver extends BaseDriver
     const POST   = 'POST';
     const PUT    = 'PUT';
 
+    private $entityQueue = [];
 
     /**
      * @param NotificationEntityInterface $entity
@@ -36,7 +37,20 @@ class ApiDriver extends BaseDriver
      */
     public function execute(NotificationEntityInterface $entity, ClientInterface $client, $params = [])
     {
-        $response = '';
+        $id = $entity->getId();
+        $class = get_class($entity);
+
+        if(!$id) {
+            return [];
+        }
+
+        if(array_key_exists($class, $this->entityQueue) && in_array($id, $this->entityQueue[$class])) {
+            return [];
+        }
+
+        $this->entityQueue[$class][] = $id;
+
+        $response = [];
         $HTTPMethod = self::POST;
         $user = null;
 
@@ -50,30 +64,36 @@ class ApiDriver extends BaseDriver
             }
         }
 
-        if ($client->isNotificationEnabled()) {
-            if (array_key_exists('HTTPMethod', $params)) {
-                $HTTPMethod = $params['HTTPMethod'];
-            }
+        $entityArray = $this->entityConverter->toArray($entity);
 
-            $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
-            $json = $this->JSONEncodeObject($entity, $client->getSecret());
-            try {
-                $response = $this->createRequest($json, $url, $HTTPMethod, true);
-                $this->eventDispatcher->dispatch(
-                    Events::SUCCESS_NOTIFICATION,
-                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, null, null, $user)
-                );
-                $entity->setNotificationStatus($client, 'ok');
-            } catch (\Exception $ex) {
+        foreach( $entity->getClients() as $client ){
 
-                $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
-                $this->eventDispatcher->dispatch(
-                    Events::ERROR_NOTIFICATION,
-                    new StatusEvent($client, $entity, $entity->getId(), $url, $json, $HTTPMethod, $ex, $message, $user)
-                );
+            if ($client->isNotificationEnabled()) {
+                if (array_key_exists('HTTPMethod', $params)) {
+                    $HTTPMethod = $params['HTTPMethod'];
+                }
 
-                $entity->setNotificationStatus($client, 'error');
-                $response = "ERROR - $message";
+                $url = $this->prepareURL($client->getNotificationUri(), $entity, $HTTPMethod);
+                $json = $this->JSONEncodeObject($entityArray, $client->getSecret());
+
+                try {
+                    $response[] = $this->createRequest($json, $url, $HTTPMethod, true, null,  $params);
+                    $this->eventDispatcher->dispatch(
+                        Events::SUCCESS_NOTIFICATION,
+                        new StatusEvent($client, $entity, $id, $url, $json, $HTTPMethod, null, null, $user)
+                    );
+                    $entity->setNotificationStatus($client, 'ok');
+                } catch (\Exception $ex) {
+
+                    $message = "$HTTPMethod: URL: ".$url.' returns error: '.$ex->getMessage().'.';
+                    $this->eventDispatcher->dispatch(
+                        Events::ERROR_NOTIFICATION,
+                        new StatusEvent($client, $entity, $id, $url, $json, $HTTPMethod, $ex, $message, $user)
+                    );
+
+                    $entity->setNotificationStatus($client, 'error');
+                    $response[] = "ERROR - $message";
+                }
             }
         }
 
@@ -91,6 +111,7 @@ class ApiDriver extends BaseDriver
      * @param bool $isEncoded
      * @param null $secret
      *
+     * @param array $params
      * @return mixed
      * @throws NotificationDriverException
      */
@@ -99,7 +120,8 @@ class ApiDriver extends BaseDriver
         $uri,
         $method = self::POST,
         $isEncoded = false,
-        $secret = null
+        $secret = null,
+        array $params = []
     ) {
         if (!$isEncoded) {
             $data = is_object($data) ? $this->JSONEncodeObject($data, $secret) : json_encode($data);
@@ -108,6 +130,7 @@ class ApiDriver extends BaseDriver
         $httpClient = new Client();
 
         $request = new Request($method, $uri, ['content-type' => 'application/json'], $data);
+
         /** @var Client $response */
         $response = $httpClient->send($request);
 
@@ -122,8 +145,8 @@ class ApiDriver extends BaseDriver
         $body = (string)$response->getBody();
 
         return json_decode($body, true)
-        ??
-        ['error' => "Client result: " . $body];
+               ??
+               ['error' => "Client result: " . $body];
     }
 
 
@@ -136,4 +159,5 @@ class ApiDriver extends BaseDriver
     {
         return 'api_driver';
     }
+
 }
