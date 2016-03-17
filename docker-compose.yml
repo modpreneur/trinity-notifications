@@ -1,4 +1,4 @@
-trinity_notification:
+tests:
   build: .
   volumes:
     - .:/var/app
