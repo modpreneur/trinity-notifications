@@ -8,7 +8,6 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Driver\NotificationDriverInterface;
@@ -31,9 +30,6 @@ class NotificationManager
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var  ContainerInterface */
-    protected $container;
-
     /** @var  string */
     protected $serverNotifyUri;
 
@@ -45,16 +41,13 @@ class NotificationManager
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param ContainerInterface $container
-     * @param                          $serverNotifyUri
+     * @param string $serverNotifyUri
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        ContainerInterface $container,
         $serverNotifyUri
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->container = $container;
         $this->serverNotifyUri = $serverNotifyUri;
         $this->drivers = [];
     }

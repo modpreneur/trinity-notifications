@@ -34,7 +34,6 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
             - "@event_dispatcher"
-            - "@service_container"
             - "%trinity.notification.server_notify_url%"
 
 
