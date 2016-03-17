@@ -17,7 +17,8 @@
     "guzzlehttp/guzzle": "~6.0",
     "nette/utils": "~2.3",
     "sensio/framework-extra-bundle": "~3.0",
-    "fzaninotto/faker": "^1.5"
+    "fzaninotto/faker": "^1.5",
+    "trinity/logger": "dev-master"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
@@ -29,11 +30,14 @@
     "symfony/monolog-bundle": "~2.8",
     "symfony/console": "~2.8| ~3.0"
   },
+
   "autoload": {
-    "classmap": [
-      "NotificationBundle/"
+    "psr-4": { "Trinity\\Notification\\": "" },
+    "exclude-from-classmap": [
+      "/Tests/"
     ]
   },
+
   "minimum-stability": "stable",
   "extra": {
     "branch-alias": {
