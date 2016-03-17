@@ -1,0 +1,6 @@
+trinity_notification:
+  build: .
+  volumes:
+    - .:/var/app
+  environment:
+      XDEBUG_CONFIG: remote_host=10.0.1.16
