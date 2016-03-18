@@ -32,7 +32,7 @@
   },
 
   "autoload": {
-    "psr-4": { "Trinity\\Notification\\": "" },
+    "psr-4": { "Trinity\\NotificationBundle\\": "" },
     "exclude-from-classmap": [
       "/Tests/"
     ]
