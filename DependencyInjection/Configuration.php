@@ -26,30 +26,97 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('trinity_notification');
 
-        //Add root for client
-        $rootNode->children()->arrayNode("client")->children()->scalarNode("entity_id_field")->isRequired(
-            )->cannotBeEmpty()->end()->scalarNode("server_oauth_url")->isRequired()->cannotBeEmpty()->end()->scalarNode(
-                "server_notify_url"
-            )->isRequired()->cannotBeEmpty()->end()->scalarNode("server_client_id")->isRequired()->cannotBeEmpty()->end(
-            )->scalarNode("server_client_secret")->isRequired()->cannotBeEmpty()->end()->booleanNode(
-                "create_new_entity"
-            )->isRequired()->end()->arrayNode("drivers")->isRequired()->cannotBeEmpty()->prototype(
-                "scalar"
-            )->end()->end();
+        $rootNode
+            ->children()
+                ->enumNode("mode")
+                    ->values(["client", "server"])
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->arrayNode("drivers")
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->prototype("scalar")
+                    ->end()
+                ->end()
+                ->scalarNode("client_id")
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode("client_secret")
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode("notify_url")
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode("entity_id_field")
+                    ->cannotBeEmpty()
+                    ->defaultValue("id")
+                ->end()
+                ->booleanNode("create_new_entity")
+                    ->defaultTrue()
+                ->end()
+                    ->arrayNode("server_to_clients")
+                        ->cannotBeEmpty()
+                        ->children()
+                            ->scalarNode("dead_letter_exchange_name")
+                                ->defaultValue("exchange.dead.server.to.clients.notifications")
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode("dead_letter_queue_name")
+                                ->defaultValue("queue.dead.server.to.clients.notifications")
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode("exchange_name")
+                                ->defaultValue("exchange.server.to.clients.notifications")
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode("queue_name_pattern")
+                                ->defaultValue("queue.client_:ID")
+                                ->cannotBeEmpty()
+                                ->validate()
+                                ->ifTrue(function($s){
+                                    return strpos($s, ":ID") === false;
+                                })
+                                    ->thenInvalid("The queue_name_pattern should contain :ID as wildcard for client id. %s given.")
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->arrayNode("clients_to_server")
+                    ->cannotBeEmpty()
+                    ->children()
+                        ->scalarNode("dead_letter_exchange_name")
+                            ->defaultValue("exchange.dead.clients.to.server.notifications")
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("dead_letter_queue_name")
+                            ->defaultValue("queue.dead.clients.to.server.notifications")
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode("exchange_name")
+                            ->cannotBeEmpty()
+                            ->defaultValue("exchange.clients.to.server.notifications")
+                        ->end()
+                        ->scalarNode("queue_name")
+                            ->cannotBeEmpty()
+                            ->defaultValue("queue.clients.to.server.notifications")
+                        ->end()
+                    ->end()
+                ->end()
+                ->scalarNode("client_read_queue_name")
+                    ->cannotBeEmpty()
+                    ->defaultValue("queue.client_1")
+                ->end()
+                ->scalarNode("client_output_exchange_name")
+                    ->cannotBeEmpty()
+                    ->defaultValue("exchange.clients.to.server.notifications")
+                ->end()
+                ->scalarNode("client_output_routing_key")
+                    ->cannotBeEmpty()
+                    ->defaultValue("queue.clients.to.server.notifications")
+                ->end()
+            ;
 
-
-        //Add root for server
-        $rootNode->children()->arrayNode("server")->children()->scalarNode("create_new_entity")->isRequired(
-            )->cannotBeEmpty()->end()->scalarNode("entity_id_field")->isRequired()->cannotBeEmpty()->end()->arrayNode(
-                "drivers"
-            )->isRequired()->cannotBeEmpty()->prototype("scalar")->end();
-
-        //Ensure that there is only one node. "client" or "server"
-        $rootNode->validate()->ifTrue(
-                function ($v) {
-                    return !(is_array($v) && count($v) == 1);
-                }
-            )->thenInvalid("Please define exactly one node: client, server");
 
         return $treeBuilder;
     }

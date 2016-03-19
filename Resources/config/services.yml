@@ -51,25 +51,83 @@ services:
             - [setRequestStack, ["@request_stack"]]
 
 
-    trinity.notification.driver.api:
-        class: Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver
+    trinity.notification.driver.rabbit.server:
+        class: Trinity\NotificationBundle\Driver\RabbitMasterDriver
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
+            - "@trinity.notification.server.producer"
             - "@security.token_storage"
         tags:
             - { name: trinity.notification.driver }
 
 
-    trinity.notification.driver.client_api:
-        class: Trinity\NotificationBundle\Drivers\ClientApiDriver\ClientApiDriver
+    trinity.notification.driver.rabbit.client:
+        class: Trinity\NotificationBundle\Driver\RabbitClientDriver
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
-            - "%trinity.notification.server_oauth_url%"
-            - "%trinity.notification.server_client_secret%"
-            - "%trinity.notification.server_client_id%"
+            - "@trinity.notification.client.producer"
+            - "@security.token_storage"
+            - "%trinity.notification.client.id%" #client id!
+            - "%trinity.notification.client.secret%"
         tags:
             - { name: trinity.notification.driver }
+
+    trinity.noticifation.server.setup:
+        class: Trinity\NotificationBundle\RabbitMQ\ServerSetup
+        arguments:
+            - "@trinity.bunny.client"
+            - "%trinity.notification.server.to.clients.dead.letter.exchange.name%"
+            - "%trinity.notification.server.to.clients.dead.letter.queue.name%"
+            - "%trinity.notification.server.to.clients.exchange.name%"
+            - "%trinity.notification.server.to.clients.queue.name.pattern%"
+            - "%trinity.notification.clients.to.server.dead.letter.exchange.name%"
+            - "%trinity.notification.clients.to.server.dead.letter.queue.name%"
+            - "%trinity.notification.clients.to.server.exchange.name%"
+            - "%trinity.notification.clients.to.server.queue.name%"
+
+
+    trinity.noticifation.client.setup:
+        class: Trinity\NotificationBundle\RabbitMQ\ClientSetup
+        arguments:
+            - "@trinity.bunny.client"
+            - "%trinity.notification.output.exchange.name%"
+            - "%trinity.notification.output.routing.key%"
+            - "%trinity.notification.client.read.queue.name%"
+
+    trinity.notification.server.producer:
+        class: Trinity\NotificationBundle\RabbitMQ\ServerProducer
+        arguments:
+            - "@trinity.noticifation.server.setup"
+
+
+    trinity.notification.client.producer:
+        class: Trinity\NotificationBundle\RabbitMQ\ClientProducer
+        arguments:
+            - "@trinity.noticifation.client.setup"
+
+
+    trinity.notification.server.consumer:
+        class: Trinity\NotificationBundle\RabbitMQ\ServerConsumer
+        arguments:
+            - "@trinity.noticifation.server.setup"
+
+
+    trinity.notification.client.consumer:
+        class: Trinity\NotificationBundle\RabbitMQ\ClientConsumer
+        arguments:
+            - "@trinity.noticifation.client.setup"
+
+
+    trinity.bunny.client:
+        class: Bunny\Client
+        arguments:
+            - host: "%rabbit_url%"
+            - port: "%rabbit_port%"
+            - user: "%rabbit_user%"
+            - password: "%rabbit_password%"
+            - persistent: 2
+            - path: "/"

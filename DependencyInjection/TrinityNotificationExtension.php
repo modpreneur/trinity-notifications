@@ -29,44 +29,39 @@ class TrinityNotificationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        //If the app is in client mode
-        if (array_key_exists('client', $config)) {
-            $config = $config['client'];
-
-            $container->setParameter('trinity.notification.is_client', true);
-
-            //If the app is in server mode
-        } else {
-            if (array_key_exists('server', $config)) {
-                $config = $config["server"];
-
-                $container->setParameter('trinity.notification.is_client', false);
-            } else {
-                throw new InvalidConfigurationException('TestClient or server node is not specified.');
-            }
-        }
+        $container->setParameter('trinity.notification.is_client', $config["mode"] == "client");
 
         //Add string with driver names which will be processed in DriverCompilerPass
-        $container->setParameter('trinity.notification.enabled_drivers', implode(',', $config["drivers"]));
+        $container->setParameter('trinity.notification.enabled_drivers', implode(',', $config['drivers']));
 
-        //Add other paramters
-        $container->setParameter(
-            'trinity.notification.server_notify_url',
-            $this->getValue($config, 'server_notify_url')
-        );
-        $container->setParameter('trinity.notification.server_oauth_url', $this->getValue($config, 'server_oauth_url'));
-        $container->setParameter('trinity.notification.server_client_id', $this->getValue($config, 'server_client_id'));
-        $container->setParameter(
-            'trinity.notification.server_client_secret',
-            $this->getValue($config, 'server_client_secret')
-        );
+        //Add other parameters
+        $container->setParameter('trinity.notification.client.id', $this->getValue($config, "client_id"));
+        $container->setParameter('trinity.notification.client.secret', $this->getValue($config, "client_secret"));
+
+        $container->setParameter('trinity.notification.server_notify_url', $this->getValue($config, 'server_notify_url'));
         $container->setParameter('trinity.notification.entity_id_field', $this->getValue($config, 'entity_id_field'));
-        $container->setParameter(
-            'trinity.notification.create_new_entity',
-            $this->getValue($config, 'create_new_entity')
-        );
+        $container->setParameter('trinity.notification.create_new_entity', $this->getValue($config, 'create_new_entity'));
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        if (array_key_exists("server_to_clients", $config)) {
+            $container->setParameter('trinity.notification.server.to.clients.dead.letter.exchange.name', $this->getValue($config["server_to_clients"], "dead_letter_exchange_name")); // DLX for N client queues
+            $container->setParameter('trinity.notification.server.to.clients.dead.letter.queue.name', $this->getValue($config["server_to_clients"], "dead_letter_queue_name")); //for N client queues
+            $container->setParameter('trinity.notification.server.to.clients.exchange.name', $this->getValue($config["server_to_clients"], "exchange_name")); //for N client queues
+            $container->setParameter('trinity.notification.server.to.clients.queue.name.pattern', $this->getValue($config["server_to_clients"], "queue_name_pattern"));//for N client queues
+        }
+
+        if (array_key_exists("clients_to_server", $config)) {
+            $container->setParameter('trinity.notification.clients.to.server.dead.letter.exchange.name', $this->getValue($config["clients_to_server"], "dead_letter_exchange_name"));// DLX for 1 server queue
+            $container->setParameter('trinity.notification.clients.to.server.dead.letter.queue.name', $this->getValue($config["clients_to_server"], "dead_letter_queue_name")); //for 1 server notification queue
+            $container->setParameter('trinity.notification.clients.to.server.exchange.name', $this->getValue($config["clients_to_server"], "exchange_name"));// DLX for 1 server queue
+            $container->setParameter('trinity.notification.clients.to.server.queue.name', $this->getValue($config["clients_to_server"], "queue_name"));// DLX for 1 server queue
+        }
+
+
+        $container->setParameter('trinity.notification.client.read.queue.name', $this->getValue($config, "client_read_queue_name"));
+        $container->setParameter('trinity.notification.output.exchange.name', $this->getValue($config, "client_output_exchange_name"));
+        $container->setParameter('trinity.notification.output.routing.key', $this->getValue($config, "client_output_routing_key"));
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 
@@ -74,6 +69,7 @@ class TrinityNotificationExtension extends Extension
     /**
      * @param $array
      * @param $key
+     *
      * @return null
      */
     private function getValue($array, $key)

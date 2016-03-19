@@ -18,7 +18,9 @@
     "nette/utils": "~2.3",
     "sensio/framework-extra-bundle": "~3.0",
     "fzaninotto/faker": "^1.5",
-    "trinity/logger": "dev-master"
+    "trinity/logger": "dev-master",
+    "trinity/bunny": "dev-master",
+    "bunny/bunny": "~0.2"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
