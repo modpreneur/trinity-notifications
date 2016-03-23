@@ -32,7 +32,7 @@
   },
 
   "autoload": {
-    "psr-4": { "Trinity\\Notification\\": "" },
+    "psr-4": { " Trinity\\NotificationBundle\\": "" },
     "exclude-from-classmap": [
       "/Tests/"
     ]
@@ -43,6 +43,5 @@
     "branch-alias": {
       "dev-master": "1.0-dev"
     }
-  },
-  "target-dir": "NotificationBundle"
+  }
 }
