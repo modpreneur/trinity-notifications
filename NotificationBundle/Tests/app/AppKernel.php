@@ -1,8 +1,9 @@
 <?php
-
+namespace Trinity\NotificationBundle;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
+
 
 
 /**
