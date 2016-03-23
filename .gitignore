@@ -6,3 +6,7 @@
 /NotificationBundle/Tests/app/cache
 /NotificationBundle/Tests/app/logs
 /.gitignore
+
+#test files
+tests/_output/*
+tests/_support/_generated
