@@ -1,0 +1,43 @@
+services:
+    trinity.notification.driver.rabbit.server:
+        class: Trinity\NotificationBundle\Driver\RabbitMasterDriver
+        arguments:
+            - "@event_dispatcher"
+            - "@trinity.notification.entity_converter"
+            - "@trinity.notification.utils"
+            - "@trinity.notification.server.producer"
+            - "@security.token_storage"
+            - "@trinity.notification.batch_manager"
+        tags:
+            - { name: trinity.notification.driver }
+
+    trinity.noticifation.server.setup:
+        class: Trinity\NotificationBundle\RabbitMQ\ServerSetup
+        arguments:
+            - "@trinity.bunny.client"
+            - "%trinity.notification.listening.queue.name%"
+            - "%trinity.notification.output.error.exchange.name%"
+            - "%trinity.notification.server.to.clients.dead.letter.exchange.name%"
+            - "%trinity.notification.server.to.clients.dead.letter.queue.name%"
+            - "%trinity.notification.server.to.clients.exchange.name%"
+            - "%trinity.notification.server.to.clients.queue.name.pattern%"
+            - "%trinity.notification.clients.to.server.dead.letter.exchange.name%"
+            - "%trinity.notification.clients.to.server.dead.letter.queue.name%"
+            - "%trinity.notification.clients.to.server.exchange.name%"
+            - "%trinity.notification.clients.to.server.queue.name%"
+            - "%trinity.notification.clients_to_server.error.messages.exchange.name%"
+            - "%trinity.notification.clients_to_server.error.messages.queue.name%"
+            - "%trinity.notification.server.to.clients.error.messages.exchange.name%"
+            - "%trinity.notification.server.to.clients.error.messages.queue.name%"
+
+    trinity.notification.server.producer:
+        class: Trinity\NotificationBundle\RabbitMQ\ServerProducer
+        arguments:
+            - "@trinity.noticifation.server.setup"
+
+    trinity.notification.server.consumer:
+        class: Trinity\NotificationBundle\RabbitMQ\ServerConsumer
+        arguments:
+            - "@trinity.noticifation.server.setup"
+            - "@trinity.notification.reader"
+            - "@trinity.notification.server.producer"
