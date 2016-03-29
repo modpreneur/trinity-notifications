@@ -64,15 +64,6 @@ services:
         class: Trinity\NotificationBundle\Notification\BatchManager
 
 
-    trinity.notification.reader:
-        class: Trinity\NotificationBundle\Notification\NotificationReader
-        arguments:
-            - "@trinity.notification.services.notification_parser"
-            - "%trinity.notification.client.secret%"
-            - "%trinity.notification.entities%"
-
-
-
     trinity.bunny.client:
         class: Bunny\Client
         arguments:

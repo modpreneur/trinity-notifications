@@ -11,6 +11,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 
@@ -75,6 +76,9 @@ class TrinityNotificationExtension extends Extension
             $loader->load('client/services.yml');
         } else {
             $loader->load('server/services.yml');
+
+            // Inject provider into reader service
+            $container->getDefinition('trinity.notification.reader')->addMethodCall("setClientSecretProvider", [new Reference($config["client_secret_provider"])]);
         }
 
 

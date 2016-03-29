@@ -141,6 +141,20 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->isRequired()
                 ->end()
+                ->scalarNode("client_secret_provider")
+                    ->cannotBeEmpty()
+                    ->beforeNormalization()
+                    ->ifTrue(function ($v) {
+                        return is_string($v) && 0 === strpos($v, '@'); })
+                    ->then(function ($v) {
+                        if (0 === strpos($v, '@@')) {
+                            return substr($v, 1);
+                        }
+
+                        return substr($v, 1);
+                    })
+                    ->end()
+                ->end()
             ;
 
 

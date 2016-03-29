@@ -35,3 +35,12 @@ services:
             - "@trinity.notification.reader"
             - "@trinity.notification.client.producer"
 
+    trinity.notification.reader:
+        class: Trinity\NotificationBundle\Notification\NotificationReader
+        arguments:
+            - "@trinity.notification.services.notification_parser"
+            - "%trinity.notification.client.secret%"
+            - "%trinity.notification.entities%"
+
+        calls:
+            - [ "setClientSecret", ["%trinity.notification.client.secret%"]]

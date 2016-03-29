@@ -104,6 +104,7 @@ class NotificationBatch
     {
         $data = $this->getArrayOfNotificationsConvertedToArray();
 
+        //dump($this->clientId);die();
         if (!$this->hash) {
             $this->makeHash();
         }

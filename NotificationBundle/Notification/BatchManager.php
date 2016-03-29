@@ -83,6 +83,13 @@ class BatchManager
     public function send()
     {
         foreach ($this->batches as $batch) {
+            //$packed = $batch->packBatch();
+            //$old = clone $batch;
+            //$unpacked = new NotificationBatch();
+            //$batch->unpackBatch($packed);
+            //
+            //dump($old, $batch);
+
             $this->producer->publish($batch->packBatch(), $batch->getClientId());
         }
     }

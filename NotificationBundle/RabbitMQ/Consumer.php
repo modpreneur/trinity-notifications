@@ -59,6 +59,8 @@ abstract class Consumer
 
         $channel = $this->setup->getChannel();
 
+
+
         $channel->consume(function (Message $message, Channel $channel) {
             try {
                 $this->consume($message);

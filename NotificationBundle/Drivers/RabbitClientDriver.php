@@ -93,8 +93,7 @@ class RabbitClientDriver extends BaseDriver
         //get entity "name", e.g. "product", "user"
         $entityArray["entityName"] = $this->notificationUtils->getUrlPostfix($entity);
 
-        //clientId = server. It is just to have an id. This allows handling server->client and client->server messages in the same way.
-        $batch = $this->batchManager->createBatch("server");
+        $batch = $this->batchManager->createBatch($this->clientId);
         $batch->setClientSecret($this->clientSecret);
         $notification = new Notification();
         $notification->setData($entityArray);

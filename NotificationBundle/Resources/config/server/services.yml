@@ -41,3 +41,9 @@ services:
             - "@trinity.noticifation.server.setup"
             - "@trinity.notification.reader"
             - "@trinity.notification.server.producer"
+
+    trinity.notification.reader:
+        class: Trinity\NotificationBundle\Notification\ServerNotificationReader
+        arguments:
+            - "@trinity.notification.services.notification_parser"
+            - "%trinity.notification.entities%"

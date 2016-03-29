@@ -25,6 +25,7 @@ class NotificationReader
      */
     protected $parser;
 
+
     /**
      * @var array Indexed array of entities' aliases and real class names.
      * format:
@@ -40,12 +41,10 @@ class NotificationReader
      * NotificationReader constructor.
      *
      * @param NotificationParser $parser
-     * @param string $clientSecret
      * @param string $entities
      */
-    public function __construct(NotificationParser $parser, string $clientSecret, string $entities)
+    public function __construct(NotificationParser $parser, string $entities)
     {
-        $this->clientSecret = $clientSecret;
         $this->parser = $parser;
         $this->entities = json_decode($entities, true);
 
@@ -58,17 +57,29 @@ class NotificationReader
     }
 
 
+    /**
+     * @param string $clientSecret
+     */
+    public function setClientSecret(string $clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+
+    /**
+     * @param string $message
+     *
+     * @throws \Exception
+     */
     public function read(string $message)
     {
         $batch = new NotificationBatch();
-        $batch->setClientSecret($this->clientSecret);
         $batch->unpackBatch($message);
+        $batch->setClientSecret($this->getClientSecret($batch));
 
         if (!$batch->isHashValid()) {
             throw new \Exception("Hash does not match");
         }
-
-        //product, billing-plan, user
 
         /** @var Notification $notification */
         foreach ($batch->getNotifications() as $notification) {
@@ -80,7 +91,21 @@ class NotificationReader
 
             $this->parser->parseNotification($notification->getData(), $this->entities[$entityName], $notification->getMethod());
         }
+    }
 
+
+    /**
+     * Get client secret from the batch.
+     *
+     * Override this method to customize the behaviour.
+     *
+     * @param NotificationBatch $batch
+     *
+     * @return string
+     */
+    public function getClientSecret(NotificationBatch $batch)
+    {
+        return $this->clientSecret;
     }
 
 

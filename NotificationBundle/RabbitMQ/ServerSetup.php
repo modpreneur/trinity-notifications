@@ -193,6 +193,8 @@ class ServerSetup extends BaseRabbitSetup
      */
     protected function setupClientToServer()
     {
+
+        //dump($this->clientsToServerQueueName);die();
         //declare input clients exchange
         $this->channel->exchangeDeclare($this->clientsToServerExchangeName, "direct", false, true);
 
