@@ -10,3 +10,5 @@ WORKDIR /var/app
 
 RUN chmod +x entrypoint.sh
 ENTRYPOINT ["sh", "entrypoint.sh"]
+
+#blabla test
