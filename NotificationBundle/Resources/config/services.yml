@@ -27,7 +27,7 @@ services:
     trinity.notification.utils:
         arguments:
             - "@trinity.notification.annotations.utils"
-        class: Trinity\NotificationBundle\Notification\Annotations\NotificationUtils
+        class: Trinity\NotificationBundle\Notification\NotificationUtils
 
 
     trinity.notification.manager:

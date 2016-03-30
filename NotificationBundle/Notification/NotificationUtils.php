@@ -5,7 +5,7 @@
  *
  */
 
-namespace Trinity\NotificationBundle\Notification\Annotations;
+namespace Trinity\NotificationBundle\Notification;
 
 use Trinity\NotificationBundle\Annotations\Methods;
 use Trinity\NotificationBundle\Exception\NotificationException;
