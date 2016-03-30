@@ -72,6 +72,14 @@ class NotificationBatch
      */
     public function makeHash()
     {
+        if(!$this->clientSecret) {
+            throw new \Exception("No client secret defined while trying to make hash.");
+        }
+
+        if(!$this->clientId) {
+            throw new \Exception("No client id defined while trying to make hash.");
+        }
+
         $notificationsString = json_encode($this->getArrayOfNotificationsConvertedToArray());
 
         $this->hash = hash(
@@ -90,6 +98,7 @@ class NotificationBatch
     {
         $oldHash = $this->hash;
         $this->makeHash();
+        dump("HASHES::", $oldHash, $this->hash);
 
         return $oldHash === $this->hash;
     }

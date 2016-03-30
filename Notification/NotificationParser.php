@@ -35,7 +35,7 @@ class NotificationParser
 
     // The set method is not called on the entity for
     /** @var array Fields with special meaning. The set method is not called on the entity for those fields. */
-    protected $ignoredFields = ["id", "timestamp", "hash", "notification_oauth_client_id"];
+    protected $ignoredFields = ["id", "timestamp", "hash", "notification_oauth_client_id", "entityName"];
 
     /** @var string Field name which will be mapped to the id from the notification request */
     protected $entityIdFieldName;
@@ -53,7 +53,8 @@ class NotificationParser
         $entityIdFieldName,
         $isClient,
         $createNewEntity
-    ) {
+    )
+    {
         $this->logger = $logger;
         $this->entityConverter = $entityConverter;
         $this->parametersArray = [];
@@ -80,9 +81,9 @@ class NotificationParser
 
         //get existing entity from database or create a new one
         $entityObject = $this->getEntityObject($fullClassName, $this->entityIdFieldName);
-
+        dump($entityObject);
         if ($method == "POST" || $method == "PUT") {
-            $this->logger->emergency("METHOD: POST||PUT:".$method);
+            $this->logger->emergency("METHOD: POST||PUT:" . $method);
 
             $entityObject = $this->entityConverter->performEntityChanges(
                 $entityObject,
@@ -96,13 +97,13 @@ class NotificationParser
             return $entityObject;
         } else {
             if ($method == "DELETE") {
-                $this->logger->emergency("METHOD: DELETE ".$method);
+                $this->logger->emergency("METHOD: DELETE " . $method);
                 $this->entityManager->remove($entityObject);
                 $this->entityManager->flush();
 
                 return null;
             } else {
-                $this->logger->emergency("method is not supported".$method);
+                $this->logger->emergency("method is not supported" . $method);
             }
         }
 
@@ -122,7 +123,7 @@ class NotificationParser
         //copy received data and remove hash
         $data = $this->parametersArray;
 
-        if(!is_array($data) || (is_array($data) && !array_key_exists('hash', $data))){
+        if (!is_array($data) || (is_array($data) && !array_key_exists('hash', $data))) {
             throw new HashMismatchException('Parameter hash does not exists.');
         }
 
@@ -130,7 +131,7 @@ class NotificationParser
         unset($data["hash"]);
 
         //hash received data without hash
-        $newHash = hash("sha256", ($clientSecret.implode(',', $data)));
+        $newHash = hash("sha256", ($clientSecret . implode(',', $data)));
 
         //if the hashes don't match the data is malformed
         return $oldHash == $newHash;
@@ -149,8 +150,13 @@ class NotificationParser
     protected function getEntityObject($fullClassName, $fieldName)
     {
         $entityObject = $this->entityManager->getRepository($fullClassName)->findOneBy(
-                [$fieldName => $this->parametersArray["id"]]
-            );
+            [$fieldName => $this->parametersArray["id"]]
+        );
+
+        //set server id
+        if ($entityObject) {
+            call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
+        }
 
         if ($entityObject || !$this->createNewEntity) {
             return $entityObject;
@@ -158,7 +164,6 @@ class NotificationParser
 
         $entityClass = new \ReflectionClass($fullClassName);
         $entityObject = $entityClass->newInstanceArgs();
-        call_user_func_array([$entityObject, "set".ucfirst($fieldName)], [$this->parametersArray["id"]]);
 
         return $entityObject;
     }

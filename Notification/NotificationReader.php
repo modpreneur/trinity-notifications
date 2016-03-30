@@ -41,11 +41,13 @@ class NotificationReader
      * NotificationReader constructor.
      *
      * @param NotificationParser $parser
+     * @param string $clientSecret
      * @param string $entities
      */
-    public function __construct(NotificationParser $parser, string $entities)
+    public function __construct(NotificationParser $parser, string $entities, string $clientSecret = null)
     {
         $this->parser = $parser;
+        $this->clientSecret = $clientSecret;
         $this->entities = json_decode($entities, true);
 
         // Replace "_" for "-" in all keys
@@ -58,15 +60,6 @@ class NotificationReader
 
 
     /**
-     * @param string $clientSecret
-     */
-    public function setClientSecret(string $clientSecret)
-    {
-        $this->clientSecret = $clientSecret;
-    }
-
-
-    /**
      * @param string $message
      *
      * @throws \Exception
@@ -75,7 +68,12 @@ class NotificationReader
     {
         $batch = new NotificationBatch();
         $batch->unpackBatch($message);
+
+//        dump($batch);die();
+
         $batch->setClientSecret($this->getClientSecret($batch));
+
+        dump($batch);
 
         if (!$batch->isHashValid()) {
             throw new \Exception("Hash does not match");
@@ -84,8 +82,8 @@ class NotificationReader
         /** @var Notification $notification */
         foreach ($batch->getNotifications() as $notification) {
             $entityName = $notification->getData()["entityName"];
-//todo!            if(!array_key_exists($entityName, $this->entities)) {
-            if(array_key_exists($entityName, $this->entities)) {
+
+            if(!array_key_exists($entityName, $this->entities)) {
                 throw new \Exception("No classname found for entityName: \"".$entityName."\". Have you defined it in the configuration under trinity_notification:entities?");
             }
 
@@ -103,7 +101,7 @@ class NotificationReader
      *
      * @return string
      */
-    public function getClientSecret(NotificationBatch $batch)
+    public function getClientSecret(NotificationBatch $batch = null)
     {
         return $this->clientSecret;
     }

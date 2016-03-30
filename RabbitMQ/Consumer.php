@@ -59,8 +59,6 @@ abstract class Consumer
 
         $channel = $this->setup->getChannel();
 
-
-
         $channel->consume(function (Message $message, Channel $channel) {
             try {
                 $this->consume($message);
@@ -80,6 +78,7 @@ abstract class Consumer
         $message = json_decode($message->content, true);
 
         $data = [];
+        $data["class"] = get_class($e);
         $data["message"] = $e->getMessage();
         $data["code"] = $e->getCode();
         $data["trace"] = $e->getTraceAsString();

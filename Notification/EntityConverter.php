@@ -280,6 +280,8 @@ class EntityConverter
             call_user_func_array([$entityObject, $methodName], [$propertyValue]);
         }
 
+        dump($entityObject);
+
         return $entityObject;
     }
 

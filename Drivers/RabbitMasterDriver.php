@@ -80,6 +80,7 @@ class RabbitMasterDriver extends BaseDriver
                 //get entity "name", e.g. "product", "user"
                 $entityArray["entityName"] = $this->notificationUtils->getUrlPostfix($entity);
 
+
                 $batch = $this->batchManager->createBatch($client->getId());
                 $batch->setClientSecret($client->getSecret());
                 $notification = new Notification();
