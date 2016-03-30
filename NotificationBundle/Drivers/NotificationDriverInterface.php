@@ -3,7 +3,7 @@
 /**
  * This file is part of the Trinity project.
  */
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers;
 
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;

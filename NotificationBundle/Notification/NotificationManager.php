@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
-use Trinity\NotificationBundle\Driver\NotificationDriverInterface;
+use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
 use Trinity\NotificationBundle\Event\Events;

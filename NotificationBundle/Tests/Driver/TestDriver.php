@@ -6,7 +6,7 @@
 
 namespace Trinity\NotificationBundle\Tests\Driver;
 
-use Trinity\NotificationBundle\Driver\BaseDriver;
+use Trinity\NotificationBundle\Drivers\BaseDriver;
 
 
 /**
@@ -22,5 +22,16 @@ class TestDriver extends BaseDriver
      */
     public function execute($entity, $params = [])
     {
+    }
+
+
+    /**
+     * Return name of driver-.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return "testDriver";
     }
 }
