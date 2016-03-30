@@ -4,7 +4,7 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers;
 
 use Doctrine\ORM\EntityManager;
 use Nette\Utils\Strings;
