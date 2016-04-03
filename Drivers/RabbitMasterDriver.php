@@ -6,7 +6,7 @@
  * Time: 16:13
  */
 
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers;
 
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -15,7 +15,7 @@ use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\RabbitMQ\ServerProducer;

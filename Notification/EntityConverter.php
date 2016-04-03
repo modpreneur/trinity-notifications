@@ -29,6 +29,9 @@ class EntityConverter
     /** @var  string Name of the property of a entity which will be mapped to the Id from the notification */
     protected $entityIdFieldName;
 
+    /** @var  bool */
+    protected $isClient;
+
 
     /**
      * EntityConverter constructor.
@@ -36,12 +39,14 @@ class EntityConverter
      * @param AnnotationsUtils $annotationsUtils
      * @param LoggerInterface $logger
      * @param string $entityIdFieldName
+     * @param bool $isClient
      */
-    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, $entityIdFieldName = "")
+    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, $entityIdFieldName = "", bool $isClient = false)
     {
         $this->annotationsUtils = $annotationsUtils;
         $this->logger = $logger;
         $this->entityIdFieldName = $entityIdFieldName;
+        $this->isClient = $isClient;
     }
 
 
@@ -78,18 +83,34 @@ class EntityConverter
         }
 
         foreach ($columns as $property) {
-            $methodName = 'get'.ucfirst($property);
-
             if ($property === '*') {
                 continue;
             }
 
-            if (property_exists($entity, $property)) {
-                $array = $this->processProperty($entity, $property, $methodName);
-            } elseif (method_exists($entity, $methodName) || method_exists($entity, $property)) {
-                $array = $this->processMethod($entity, $property, $methodName);
-            } else {
-                throw new \Exception("No method or property $property.");
+            $methodNames = [
+                'get' => 'get' . ucfirst($property),
+                'is' => 'is' . ucfirst($property),
+                'has' => 'has' . ucfirst($property)
+            ];
+
+            $array = [];
+            // Try all known methods - "getter", "isser" and "hasser"
+            foreach ($methodNames as $methodName) {
+                try {
+                    if (property_exists($entity, $property)) {
+                        $array = $this->processProperty($entity, $property, $methodName);
+                    } elseif (method_exists($entity, $methodName) || method_exists($entity, $property)) {
+                        $array = $this->processMethod($entity, $property, $methodName);
+                    } else {
+                        throw new \Exception("No method or property $property.");
+                    }
+
+                    // if no exception thrown, the method getting was successful and there is no need to iterate again(most cases)
+                    break;
+                } catch (\Exception $e) {
+                    //if there is an exception, continue with the methods(there is no "getter", so try "isser" and so)
+                    continue;
+                }
             }
 
             $entityArray = array_merge(
@@ -142,18 +163,14 @@ class EntityConverter
      */
     private function processGetMethod($entity, $name, $longName)
     {
-        try {
-            $resultArray[$name] = call_user_func_array([$entity, $longName], []);
-            if ($resultArray[$name] instanceof \DateTime) {
-                $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
-            }
+        $resultArray[$name] = call_user_func_array([$entity, $longName], []);
+        if ($resultArray[$name] instanceof \DateTime) {
+            $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
+        }
 
-            if (is_object($resultArray[$name]) && method_exists($resultArray[$name], 'getId')) {
-                $resultArray[$name] = $resultArray[$name]->getId();
-            } elseif (is_object($resultArray[$name]) && !method_exists($resultArray[$name], 'getId')) {
-                $resultArray[$name] = null;
-            }
-        } catch (\Exception $ex) {
+        if (is_object($resultArray[$name]) && method_exists($resultArray[$name], 'getId')) {
+            $resultArray[$name] = $resultArray[$name]->getId();
+        } elseif (is_object($resultArray[$name]) && !method_exists($resultArray[$name], 'getId')) {
             $resultArray[$name] = null;
         }
 
@@ -214,21 +231,27 @@ class EntityConverter
         foreach ($data as $propertyName => $propertyValue) {
             //if the property is in the ignored list skip it
             if (in_array($propertyName, $ignoredFields)) {
-                $this->logger->emergency("property in ignored fields:".$propertyName);
+                $this->logger->info("property in ignored fields:" . $propertyName);
                 continue;
             }
 
 //            //If the property contains null skip it.
 //            This may cause errors... but it's needed e.g. when setting some properties to null(delete description of product)
 //            if ($propertyValue == null) {
-//                $this->logger->emergency("property: ".$propertyName." contains null, skipped");
+//                $this->logger->info("property: ".$propertyName." contains null, skipped");
 //                continue;
 //            }
 
-            $methodName = 'set'.ucfirst($propertyName);
+            //Rename field "id" to the string which was used in config as "entityIdFieldName".
+            if ("id" === $propertyName) {
+                $propertyName = $this->entityIdFieldName;
+
+            }
+
+            $methodName = 'set' . ucfirst($propertyName);
 
             if (!method_exists($entityObject, $methodName)) {
-                $this->logger->emergency("non existing method:".$methodName);
+                $this->logger->info("non existing method:" . $methodName);
                 continue;
             }
 
@@ -238,8 +261,8 @@ class EntityConverter
 
             //Setter method with 0 or 2 or more parameters is weird.
             if (count($methodParameters) != 1) {
-                $this->logger->emergency(
-                    "count of method parameters is not an 1 ".count($methodParameters)."in method: ".$methodName
+                $this->logger->info(
+                    "count of method parameters is not an 1 " . count($methodParameters) . "in method: " . $methodName
                 );
                 continue;
             }
@@ -253,7 +276,7 @@ class EntityConverter
                 //Convert it to DateTime object
                 $propertyValue = \DateTime::createFromFormat("Y-m-d H:i:s", $propertyValue);
                 if (!$propertyValue) {
-                    $this->logger->emergency("unsuccessful datetime conversion");
+                    $this->logger->info("unsuccessful datetime conversion");
                     continue;
                 }
             } //If the method parameter type is doctrine entity.
@@ -267,20 +290,18 @@ class EntityConverter
 
                     if (!$propertyValue) {
                         //todo: set level to error!
-                        $this->logger->emergency(
-                            "association entity not found ".$methodParameterType."with id: ".$propertyValue
+                        $this->logger->info(
+                            "association entity not found " . $methodParameterType . "with id: " . $propertyValue
                         );
                         continue;
                     }
                 }
             }
 
-            $this->logger->emergency("CALL_METHOD: ".$methodName);
+            $this->logger->info("CALL_METHOD: " . $methodName);
             //Call the setter method
             call_user_func_array([$entityObject, $methodName], [$propertyValue]);
         }
-
-        dump($entityObject);
 
         return $entityObject;
     }

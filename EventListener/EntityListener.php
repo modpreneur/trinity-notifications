@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
 
@@ -162,7 +162,6 @@ class EntityListener
         $enable = $this->isNotificationEnabledForController();
         $array  = [];
 
-        //todo: the notification is send even if the entity was not deleted(database error occurs)
         if($enable){
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
                 $this->currentProcessEntity = $entity;

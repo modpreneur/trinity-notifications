@@ -39,33 +39,30 @@ class ClientSetup extends BaseRabbitSetup
     /**
      * ClientSetup constructor.
      * @param Client $client
-     * @param $outputExchangeName
-     * @param $outputRoutingKey
      * @param $listeningQueue
      * @param $outputErrorMessagesExchangeName
+     * @param $outputExchangeName
+     * @internal param $outputRoutingKey
      */
     public function __construct(
         Client $client,
         $listeningQueue,
         $outputErrorMessagesExchangeName,
         $outputExchangeName
-//        $outputRoutingKey
     )
     {
         parent::__construct($client, $listeningQueue, $outputErrorMessagesExchangeName);
 
         $this->outputExchangeName = $outputExchangeName;
-//        $this->outputRoutingKey = $outputRoutingKey;
         $this->listeningQueue = $listeningQueue;
         $this->outputErrorMessagesExchangeName = $outputErrorMessagesExchangeName;
     }
 
-
-//    /**
-//     * @inheritdoc
-//     */
-//    public function getOutputRoutingKey(array $data = [])
-//    {
-//        return $this->outputRoutingKey;
-//    }
+    /**
+     * @inheritdoc
+     */
+    public function getOutputExchangeName()
+    {
+        return $this->outputExchangeName;
+    }
 }

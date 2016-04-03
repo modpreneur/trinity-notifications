@@ -35,7 +35,7 @@ class NotificationParser
 
     // The set method is not called on the entity for
     /** @var array Fields with special meaning. The set method is not called on the entity for those fields. */
-    protected $ignoredFields = ["id", "timestamp", "hash", "notification_oauth_client_id", "entityName"];
+    protected $ignoredFields = ["timestamp", "hash", "notification_oauth_client_id", "entityName"];
 
     /** @var string Field name which will be mapped to the id from the notification request */
     protected $entityIdFieldName;
@@ -43,16 +43,19 @@ class NotificationParser
     /** @var  bool */
     protected $isClient;
 
-    /** @var string Allow creating a new entity when the entity does not exist */
-    protected $createNewEntity;
 
-
+    /**
+     * NotificationParser constructor.
+     * @param LoggerInterface $logger
+     * @param EntityConverter $entityConverter
+     * @param $entityIdFieldName
+     * @param $isClient
+     */
     public function __construct(
         LoggerInterface $logger,
         EntityConverter $entityConverter,
         $entityIdFieldName,
-        $isClient,
-        $createNewEntity
+        $isClient
     )
     {
         $this->logger = $logger;
@@ -60,7 +63,6 @@ class NotificationParser
         $this->parametersArray = [];
         $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;
-        $this->createNewEntity = $createNewEntity;
     }
 
 
@@ -81,9 +83,9 @@ class NotificationParser
 
         //get existing entity from database or create a new one
         $entityObject = $this->getEntityObject($fullClassName, $this->entityIdFieldName);
-        dump($entityObject);
+
         if ($method == "POST" || $method == "PUT") {
-            $this->logger->emergency("METHOD: POST||PUT:" . $method);
+            $this->logger->info("METHOD: POST||PUT:" . $method);
 
             $entityObject = $this->entityConverter->performEntityChanges(
                 $entityObject,
@@ -97,44 +99,17 @@ class NotificationParser
             return $entityObject;
         } else {
             if ($method == "DELETE") {
-                $this->logger->emergency("METHOD: DELETE " . $method);
+                $this->logger->info("METHOD: DELETE " . $method);
                 $this->entityManager->remove($entityObject);
                 $this->entityManager->flush();
 
                 return null;
             } else {
-                $this->logger->emergency("method is not supported" . $method);
+                $this->logger->info("method is not supported" . $method);
             }
         }
 
         return null;
-    }
-
-
-    /**
-     * Check if the received data isn't modified (the given hash matches the newly generated hash)
-     *
-     * @param $clientSecret string Oauth secret of the client from which the notification came from
-     * @return bool
-     * @throws HashMismatchException
-     */
-    protected function isHashOk($clientSecret)
-    {
-        //copy received data and remove hash
-        $data = $this->parametersArray;
-
-        if (!is_array($data) || (is_array($data) && !array_key_exists('hash', $data))) {
-            throw new HashMismatchException('Parameter hash does not exists.');
-        }
-
-        $oldHash = $data["hash"];
-        unset($data["hash"]);
-
-        //hash received data without hash
-        $newHash = hash("sha256", ($clientSecret . implode(',', $data)));
-
-        //if the hashes don't match the data is malformed
-        return $oldHash == $newHash;
     }
 
 
@@ -154,11 +129,12 @@ class NotificationParser
         );
 
         //set server id
-        if ($entityObject) {
+        //only on client
+        if ($entityObject && $this->isClient) {
             call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
         }
 
-        if ($entityObject || !$this->createNewEntity) {
+        if ($entityObject) {
             return $entityObject;
         }
 

@@ -40,7 +40,6 @@ class TrinityNotificationExtension extends Extension
         $container->setParameter('trinity.notification.client.secret', $this->getValue($config, "client_secret"));
 
         $container->setParameter('trinity.notification.entity_id_field', $this->getValue($config, 'entity_id_field'));
-        $container->setParameter('trinity.notification.create_new_entity', $this->getValue($config, 'create_new_entity'));
 
         if (array_key_exists("server_to_clients", $config)) {
             $container->setParameter('trinity.notification.server.to.clients.dead.letter.exchange.name', $this->getValue($config["server_to_clients"], "dead_letter_exchange_name")); // DLX for N client queues

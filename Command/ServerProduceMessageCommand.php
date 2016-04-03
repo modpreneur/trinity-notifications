@@ -21,14 +21,14 @@ class ServerProduceMessageCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $product = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:Product")->find($input->getArgument("product"));
+//        $product = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:Product")->find($input->getArgument("product"));
         $user = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:User")->find($input->getArgument("user"));
-        $billingPlan = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:BillingPlan")->find($input->getArgument("billing-plan"));
+//        $billingPlan = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:BillingPlan")->find($input->getArgument("billing-plan"));
 
         $driver = $this->getContainer()->get("trinity.notification.driver.rabbit.server");
 
-        $driver->execute($product, null, ["HTTPMethod" => "PUT"]);
-        $driver->execute($billingPlan, null, ["HTTPMethod" => "PUT"]);
+//        $driver->execute($product, null, ["HTTPMethod" => "PUT"]);
+//        $driver->execute($billingPlan, null, ["HTTPMethod" => "PUT"]);
         $driver->execute($user, null, ["HTTPMethod" => "PUT"]);
 
         $this->getContainer()->get("trinity.notification.batch_manager")->send();
@@ -40,8 +40,8 @@ class ServerProduceMessageCommand extends ContainerAwareCommand
     {
         $this->setName('trinity:notification:server:message:produce');
 
-        $this->addArgument('product', InputArgument::OPTIONAL, 'Product id?');
+//        $this->addArgument('product', InputArgument::OPTIONAL, 'Product id?');
         $this->addArgument('user', InputArgument::OPTIONAL, 'User id?');
-        $this->addArgument('billing-plan', InputArgument::OPTIONAL, 'BP id?');
+//        $this->addArgument('billing-plan', InputArgument::OPTIONAL, 'BP id?');
     }
 }

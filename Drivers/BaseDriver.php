@@ -4,13 +4,13 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 

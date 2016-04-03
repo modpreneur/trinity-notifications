@@ -40,8 +40,6 @@ class ClientConsumer extends Consumer
     {
         dump($message->content);
 
-//        if(rand(0, 100) > 50) throw new \Exception("Exception!");
-
         try {
             $this->reader->read($message->content);
         } catch (\Exception $exception) {

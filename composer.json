@@ -25,7 +25,6 @@
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
     "friendsofsymfony/user-bundle": "dev-master",
-    "trinity/framework": "dev-master",
     "sensio/generator-bundle": "~3.0",
     "phpunit/phpunit": "~5.0",
     "jms/serializer-bundle": "~1.1",

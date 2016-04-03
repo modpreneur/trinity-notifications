@@ -120,4 +120,13 @@ abstract class BaseRabbitSetup
     {
         $this->client->disconnect();
     }
+
+
+    /**
+     * Get exchange name which will be used to produce messages
+     *
+     * @return string
+     */
+    abstract public function getOutputExchangeName();
+
 }

@@ -69,11 +69,7 @@ class NotificationReader
         $batch = new NotificationBatch();
         $batch->unpackBatch($message);
 
-//        dump($batch);die();
-
         $batch->setClientSecret($this->getClientSecret($batch));
-
-        dump($batch);
 
         if (!$batch->isHashValid()) {
             throw new \Exception("Hash does not match");

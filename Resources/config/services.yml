@@ -6,6 +6,7 @@ services:
             - "@trinity.notification.annotations.utils"
             - "@logger"
             - "%trinity.notification.entity_id_field%"
+            - "%trinity.notification.is_client%"
 
 
     trinity.notification.services.notification_parser:
@@ -15,7 +16,6 @@ services:
             - "@trinity.notification.entity_converter"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
-            - "%trinity.notification.create_new_entity%"
         calls:
             - [ "setEntityManager", ["@doctrine.orm.entity_manager"]]
 
@@ -27,7 +27,7 @@ services:
     trinity.notification.utils:
         arguments:
             - "@trinity.notification.annotations.utils"
-        class: Trinity\NotificationBundle\Notification\Annotations\NotificationUtils
+        class: Trinity\NotificationBundle\Notification\NotificationUtils
 
 
     trinity.notification.manager:
@@ -47,7 +47,6 @@ services:
             - { name: doctrine.event_listener, event: onFlush,     priority: 255 }
             - { name: doctrine.event_listener, event: postUpdate,  priority: 200 }
             - { name: doctrine.event_listener, event: postPersist, priority: 200 }
-            - { name: doctrine.event_listener, event: postRemove,  priority: 200 }
         calls:
             - [setRequestStack, ["@request_stack"]]
 

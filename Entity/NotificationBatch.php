@@ -98,7 +98,6 @@ class NotificationBatch
     {
         $oldHash = $this->hash;
         $this->makeHash();
-        dump("HASHES::", $oldHash, $this->hash);
 
         return $oldHash === $this->hash;
     }
@@ -113,7 +112,6 @@ class NotificationBatch
     {
         $data = $this->getArrayOfNotificationsConvertedToArray();
 
-        //dump($this->clientId);die();
         if (!$this->hash) {
             $this->makeHash();
         }

@@ -1,6 +1,6 @@
 services:
     trinity.notification.driver.rabbit.server:
-        class: Trinity\NotificationBundle\Driver\RabbitMasterDriver
+        class: Trinity\NotificationBundle\Drivers\RabbitMasterDriver
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.entity_converter"
