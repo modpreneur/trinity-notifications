@@ -10,7 +10,12 @@ namespace Trinity\NotificationBundle\RabbitMQ;
 
 
 use Bunny\Client;
+use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
 
+/**
+ * Class ClientSetup
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ClientSetup extends BaseRabbitSetup
 {
     /**

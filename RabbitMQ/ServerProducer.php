@@ -9,6 +9,13 @@
 namespace Trinity\NotificationBundle\RabbitMQ;
 
 
+use Trinity\Bundle\BunnyBundle\Consumer\Producer;
+
+
+/**
+ * Class ServerProducer
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ServerProducer extends Producer
 {
     public function __construct(ServerSetup $serverSetup)
@@ -18,6 +25,7 @@ class ServerProducer extends Producer
 
     /**
      * @inheritdoc
+     * @param clientId string Client id
      * @throws \Exception
      */
     public function publish(string $data, string $clientId = null)

@@ -10,7 +10,13 @@ namespace Trinity\NotificationBundle\RabbitMQ;
 
 
 use Bunny\Client;
+use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
 
+
+/**
+ * Class ServerSetup
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ServerSetup extends BaseRabbitSetup
 {
     const ID_PATTERN_WILDCARD = ":ID";

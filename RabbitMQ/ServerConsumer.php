@@ -10,8 +10,15 @@ namespace Trinity\NotificationBundle\RabbitMQ;
 
 
 use Bunny\Message;
+use Trinity\Bundle\BunnyBundle\Consumer\Consumer;
+use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
+
+/**
+ * Class ServerConsumer
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ServerConsumer extends Consumer
 {
     protected $reader;
@@ -40,8 +47,6 @@ class ServerConsumer extends Consumer
      */
     public function consume(Message $message)
     {
-        dump($message->content);
-
         try {
             $this->reader->read($message->content);
         } catch (\Exception $exception) {

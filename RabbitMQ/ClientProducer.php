@@ -9,6 +9,12 @@
 namespace Trinity\NotificationBundle\RabbitMQ;
 
 
+use Trinity\Bundle\BunnyBundle\Consumer\Producer;
+
+/**
+ * Class ClientProducer
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ClientProducer extends Producer
 {
     /**
