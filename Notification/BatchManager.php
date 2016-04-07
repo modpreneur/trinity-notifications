@@ -9,8 +9,8 @@
 namespace Trinity\NotificationBundle\Notification;
 
 
+use Trinity\Bundle\BunnyBundle\Producer\Producer;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
-use Trinity\NotificationBundle\RabbitMQ\Producer;
 
 class BatchManager
 {
