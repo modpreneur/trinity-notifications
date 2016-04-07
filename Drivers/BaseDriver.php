@@ -111,43 +111,6 @@ abstract class BaseDriver implements NotificationDriverInterface
         return json_encode($entity);
     }
     
-//    /**
-//     * Join client URL with entity url.
-//     *
-//     * Example: TestClient URL => "http://example.com"
-//     *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
-//     *          result: http://example.com/product
-//     *
-//     * @param string $url
-//     * @param NotificationEntityInterface $entity
-//     * @param string $HTTPMethod
-//     *
-//     * @return array
-//     *
-//     * @throws ClientException
-//     * @throws MethodException
-//     */
-//    protected function prepareURL($url, NotificationEntityInterface $entity, $HTTPMethod)
-//    {
-//        $methodName = 'getClients';
-//        if (!is_callable([$entity, $methodName])) {
-//            throw new MethodException("Method '$methodName' not exists in entity.");
-//        }
-//
-//        if ($url === null || empty($url)) {
-//            throw new ClientException('Notification: NULL client URL.');
-//        }
-//
-//        $class = $this->notificationUtils->getUrlPostfix($entity, $HTTPMethod);
-//
-//        // add / to url
-//        if (!Strings::endsWith($url, '/')) {
-//            $url .= '/';
-//        }
-//
-//        return $url . $class;
-//    }
-
 
     /**
      * Add entity to notifiedEntities array.

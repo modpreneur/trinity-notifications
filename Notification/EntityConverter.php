@@ -289,8 +289,7 @@ class EntityConverter
                     $propertyValue = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
 
                     if (!$propertyValue) {
-                        //todo: set level to error!
-                        $this->logger->info(
+                        $this->logger->error(
                             "association entity not found " . $methodParameterType . "with id: " . $propertyValue
                         );
                         continue;
