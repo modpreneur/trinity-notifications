@@ -37,6 +37,7 @@ abstract class Producer
      * Publish message to error message exchange
      *
      * @param string $data
+     * @throws \Exception
      */
     public function publishErrorMessage(string $data)
     {
@@ -44,7 +45,6 @@ abstract class Producer
 
         $channel = $this->rabbitSetup->getChannel();
 
-        dump("PUBLISHING ERROR", $data);
         $channel->publish(
             $data,
             [],

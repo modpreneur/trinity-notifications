@@ -31,7 +31,12 @@ class ServerConsumer extends Consumer
 
 
     /**
-     * @inheritdoc
+     * Consume message
+     *
+     * @param Message $message
+     *
+     * @throws \Exception On any error
+     * @return void
      */
     public function consume(Message $message)
     {

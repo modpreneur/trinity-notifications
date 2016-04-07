@@ -23,7 +23,7 @@ abstract class BaseRabbitSetup
     /**
      * @var Channel
      */
-    protected $channel = null;
+    protected $channel;
 
 
     /**
@@ -37,7 +37,13 @@ abstract class BaseRabbitSetup
     protected $outputErrorMessagesExchangeName;
 
 
-    public function __construct(Client $client, $listeningQueue, $outputErrorMessagesExchangeName)
+    /**
+     * BaseRabbitSetup constructor.
+     * @param Client $client
+     * @param string $listeningQueue
+     * @param string $outputErrorMessagesExchangeName
+     */
+    public function __construct(Client $client, string $listeningQueue, string $outputErrorMessagesExchangeName)
     {
         $this->client = $client;
         $this->listeningQueue = $listeningQueue;
@@ -47,6 +53,7 @@ abstract class BaseRabbitSetup
 
     /**
      * Set up the rabbit queue, exchanges and so.
+     * @throws \Exception
      */
     public function setUp()
     {
@@ -95,6 +102,7 @@ abstract class BaseRabbitSetup
      * Get channel which will be used for publishing/listening messages.
      *
      * @return \Bunny\Channel
+     * @throws \Exception
      */
     public function getChannel()
     {

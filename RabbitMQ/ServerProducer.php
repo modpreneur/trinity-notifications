@@ -18,6 +18,7 @@ class ServerProducer extends Producer
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
     public function publish(string $data, string $clientId = null)
     {

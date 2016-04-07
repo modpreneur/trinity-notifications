@@ -52,6 +52,7 @@ abstract class Consumer
 
     /**
      * Start reading messages from rabbit.
+     * @throws \Exception
      */
     public function startConsuming()
     {
@@ -75,7 +76,7 @@ abstract class Consumer
 
     public function produceError(\Exception $e, Message $message)
     {
-        $message = json_decode($message->content, true);
+        $messageContent = json_decode($message->content, true);
 
         $data = [];
         $data["class"] = get_class($e);
@@ -84,7 +85,7 @@ abstract class Consumer
         $data["trace"] = $e->getTraceAsString();
         $data["line"] = $e->getLine();
         $data["file"] = $e->getFile();
-        $data["uid"] = $message["uid"];
+        $data["uid"] = $messageContent["uid"];
 
         $this->producer->publishErrorMessage(json_encode($data));
     }

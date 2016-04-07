@@ -20,6 +20,10 @@ class ClientProducer extends Producer
         parent::__construct($clientSetup);
     }
 
+    /**
+     * @inheritdoc
+     * @throws \Exception
+     */
     public function publish(string $data, string $clientId = null)
     {
         $this->rabbitSetup->setUp();

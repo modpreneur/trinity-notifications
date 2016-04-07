@@ -26,17 +26,6 @@ class ClientSetup extends BaseRabbitSetup
 
 
     /**
-     * @var string
-     */
-    protected $listeningQueue;
-
-    /**
-     * @var string
-     */
-    protected $outputErrorMessagesExchangeName;
-
-
-    /**
      * ClientSetup constructor.
      * @param Client $client
      * @param $listeningQueue
@@ -59,7 +48,9 @@ class ClientSetup extends BaseRabbitSetup
     }
 
     /**
-     * @inheritdoc
+     * Get exchange name which will be used to produce messages
+     *
+     * @return string
      */
     public function getOutputExchangeName()
     {

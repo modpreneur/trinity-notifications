@@ -57,12 +57,12 @@ class RabbitMasterDriver extends BaseDriver
 
     /**
      * @param NotificationEntityInterface $entity
-     * @param ClientInterface $client
+     * @param ClientInterface $destinationClient
      * @param array $params
      *
-     * @return void
+     * @return mixed|void
      */
-    public function execute(NotificationEntityInterface $entity, ClientInterface $client = null, $params = [])
+    public function execute(NotificationEntityInterface $entity, ClientInterface $destinationClient = null, $params = [])
     {
         if ($this->isEntityAlreadyProcessed($entity)) {
             return;
