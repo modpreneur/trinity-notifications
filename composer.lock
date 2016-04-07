@@ -2635,12 +2635,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity-bunny.git",
-                "reference": "a71144a5c2b49391dee2151c4c873699139251ec"
+                "reference": "9e01ca4a7944fbd58fa00f923fcbfb42602f8bdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity-bunny/zipball/a71144a5c2b49391dee2151c4c873699139251ec",
-                "reference": "a71144a5c2b49391dee2151c4c873699139251ec",
+                "url": "https://api.github.com/repos/modpreneur/trinity-bunny/zipball/9e01ca4a7944fbd58fa00f923fcbfb42602f8bdd",
+                "reference": "9e01ca4a7944fbd58fa00f923fcbfb42602f8bdd",
                 "shasum": ""
             },
             "require": {
@@ -2686,7 +2686,7 @@
                 }
             ],
             "description": "Trinity Bunny bundle",
-            "time": "2016-04-07 13:10:36"
+            "time": "2016-04-07 13:48:16"
         },
         {
             "name": "trinity/framework",
