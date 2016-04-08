@@ -21,4 +21,16 @@ final class Events
     const ERROR_NOTIFICATION = 'notification.error';
 
     const SUCCESS_NOTIFICATION = 'notification.success';
+
+    const BATCH_VALIDATED = 'notification.batchValidated';
+
+    const BEFORE_MESSAGE_READ = 'notification.beforeMessageRead';
+
+    const BEFORE_PARSE_NOTIFICATION = 'notification.beforeParseNotification';
+
+    const BEFORE_PERFORM_ENTITY_CHANGES = 'notification.beforePerformEntityChanges';
+
+    const AFTER_PERFORM_ENTITY_CHANGES= 'notification.afterPerformEntityChanges';
+
+    const CONSUME_MESSAGE_ERROR= 'notification.consumeMessageError';
 }

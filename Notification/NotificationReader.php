@@ -9,8 +9,12 @@
 namespace Trinity\NotificationBundle\Notification;
 
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Event\BatchValidatedEvent;
+use Trinity\NotificationBundle\Event\BeforeMessageReadEvent;
+use Trinity\NotificationBundle\Event\Events;
 
 class NotificationReader
 {
@@ -27,6 +31,12 @@ class NotificationReader
 
 
     /**
+     * @var  EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+
+    /**
      * @var array Indexed array of entities' aliases and real class names.
      * format:
      * [
@@ -37,16 +47,19 @@ class NotificationReader
      */
     protected $entities;
 
+
     /**
      * NotificationReader constructor.
      *
      * @param NotificationParser $parser
-     * @param string $clientSecret
+     * @param EventDispatcherInterface $eventDispatcher
      * @param string $entities
+     * @param string $clientSecret
      */
-    public function __construct(NotificationParser $parser, string $entities, string $clientSecret = null)
+    public function __construct(NotificationParser $parser, EventDispatcherInterface $eventDispatcher, string $entities, string $clientSecret = null)
     {
         $this->parser = $parser;
+        $this->eventDispatcher = $eventDispatcher;
         $this->clientSecret = $clientSecret;
         $this->entities = json_decode($entities, true);
 
@@ -66,6 +79,15 @@ class NotificationReader
      */
     public function read(string $message)
     {
+        // If there are listeners for this event, fire it and get the message from it(it allows changing the message)
+        if ($this->eventDispatcher->hasListeners(Events::BEFORE_MESSAGE_READ)) {
+            $beforeReadEvent = new BeforeMessageReadEvent($message);
+            $beforeReadEvent->setMessage($message);
+            /** @var BeforeMessageReadEvent $beforeReadEvent */
+            $beforeReadEvent = $this->eventDispatcher->dispatch(Events::BEFORE_MESSAGE_READ, $beforeReadEvent);
+            $message = $beforeReadEvent->getMessage();
+        }
+
         $batch = new NotificationBatch();
         $batch->unpackBatch($message);
 
@@ -75,6 +97,14 @@ class NotificationReader
             throw new \Exception("Hash does not match");
         }
 
+        // If there are listeners for this event, fire it and get the message from it(it allows changing the batch)
+        if ($this->eventDispatcher->hasListeners(Events::BATCH_VALIDATED)) {
+            $batchValidatedEvent = new BatchValidatedEvent($batch);
+            /** @var BatchValidatedEvent $batchValidatedEvent */
+            $batchValidatedEvent = $this->eventDispatcher->dispatch(Events::BATCH_VALIDATED, $batchValidatedEvent);
+            $batch = $batchValidatedEvent->getBatch();
+        }
+        
         /** @var Notification $notification */
         foreach ($batch->getNotifications() as $notification) {
             $entityName = $notification->getData()["entityName"];
@@ -82,7 +112,7 @@ class NotificationReader
             if(!array_key_exists($entityName, $this->entities)) {
                 throw new \Exception("No classname found for entityName: \"".$entityName."\". Have you defined it in the configuration under trinity_notification:entities?");
             }
-
+            
             $this->parser->parseNotification($notification->getData(), $this->entities[$entityName], $notification->getMethod());
         }
     }

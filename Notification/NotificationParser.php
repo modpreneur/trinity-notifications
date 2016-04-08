@@ -7,6 +7,9 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
+use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception;
 use Trinity\NotificationBundle\Exception\HashMismatchException;
 
@@ -27,11 +30,14 @@ class NotificationParser
     /** @var EntityConverter */
     protected $entityConverter;
 
+    /** @var  EventDispatcherInterface */
+    protected $eventDispatcher;
+
     /** @var string TestClient secret */
     protected $clientSecret;
 
     /** @var array Array of request data */
-    protected $parametersArray;
+    protected $notificationData;
 
     // The set method is not called on the entity for
     /** @var array Fields with special meaning. The set method is not called on the entity for those fields. */
@@ -48,26 +54,29 @@ class NotificationParser
      * NotificationParser constructor.
      * @param LoggerInterface $logger
      * @param EntityConverter $entityConverter
+     * @param EventDispatcherInterface $eventDispatcher
      * @param $entityIdFieldName
      * @param $isClient
      */
     public function __construct(
         LoggerInterface $logger,
         EntityConverter $entityConverter,
+        EventDispatcherInterface $eventDispatcher,
         $entityIdFieldName,
         $isClient
     )
     {
         $this->logger = $logger;
         $this->entityConverter = $entityConverter;
-        $this->parametersArray = [];
+        $this->eventDispatcher = $eventDispatcher;
+        $this->notificationData = [];
         $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;
     }
 
 
     /**
-     * @param  $parameters     array  Request data as named array
+     * @param  $data           array  Notification data as named array
      * @param  $fullClassName  string Full classname(with namespace) of the entity. e.g. AppBundle\\Entity\\Product\\StandardProduct
      * @param  $method         string HTTP method of the request
      *
@@ -75,9 +84,19 @@ class NotificationParser
      *
      * @throws HashMismatchException When the hash does not match
      */
-    public function parseNotification($parameters, $fullClassName, $method)
+    public function parseNotification($data, $fullClassName, $method)
     {
-        $this->parametersArray = $parameters;
+        // If there are listeners for this event, fire it and get the message from it(it allows changing the data, className and method)
+        if ($this->eventDispatcher->hasListeners(Events::BEFORE_PARSE_NOTIFICATION)) {
+            $beforeParseNotificationEvent = new BeforeParseNotificationEvent($data, $fullClassName, $method);
+            /** @var BeforeParseNotificationEvent $beforeParseNotificationEvent */
+            $beforeParseNotificationEvent = $this->eventDispatcher->dispatch(Events::BEFORE_PARSE_NOTIFICATION, $beforeParseNotificationEvent);
+            $data = $beforeParseNotificationEvent->getData();
+            $fullClassName = $beforeParseNotificationEvent->getClassname();
+            $method = $beforeParseNotificationEvent->getHttpMethod();
+        }
+
+        $this->notificationData = $data;
 
         $method = strtoupper($method);
 
@@ -89,7 +108,7 @@ class NotificationParser
 
             $entityObject = $this->entityConverter->performEntityChanges(
                 $entityObject,
-                $this->parametersArray,
+                $this->notificationData,
                 $this->ignoredFields
             );
 
@@ -125,13 +144,13 @@ class NotificationParser
     protected function getEntityObject($fullClassName, $fieldName)
     {
         $entityObject = $this->entityManager->getRepository($fullClassName)->findOneBy(
-            [$fieldName => $this->parametersArray["id"]]
+            [$fieldName => $this->notificationData["id"]]
         );
 
         //set server id
         //only on client
         if ($entityObject && $this->isClient) {
-            call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->parametersArray["id"]]);
+            call_user_func_array([$entityObject, "set" . ucfirst($fieldName)], [$this->notificationData["id"]]);
         }
 
         if ($entityObject) {

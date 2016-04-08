@@ -9,6 +9,10 @@ namespace Trinity\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\MappingException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Trinity\NotificationBundle\Event\AfterPerformEntityChangesEvent;
+use Trinity\NotificationBundle\Event\BeforePerformEntityChangesEvent;
+use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\SourceException;
 
 
@@ -26,6 +30,12 @@ class EntityConverter
     /** @var  EntityManager */
     protected $entityManager;
 
+    /** @var EntityConverter */
+    protected $entityConverter;
+
+    /** @var  EventDispatcherInterface */
+    protected $eventDispatcher;
+
     /** @var  string Name of the property of a entity which will be mapped to the Id from the notification */
     protected $entityIdFieldName;
 
@@ -38,12 +48,20 @@ class EntityConverter
      *
      * @param AnnotationsUtils $annotationsUtils
      * @param LoggerInterface $logger
+     * @param EventDispatcherInterface $eventDispatcher
      * @param string $entityIdFieldName
      * @param bool $isClient
      */
-    public function __construct(AnnotationsUtils $annotationsUtils, LoggerInterface $logger, $entityIdFieldName = "", bool $isClient = false)
+    public function __construct(
+        AnnotationsUtils $annotationsUtils,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        $entityIdFieldName = "",
+        bool $isClient = false
+    )
     {
         $this->annotationsUtils = $annotationsUtils;
+        $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
         $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;
@@ -220,6 +238,17 @@ class EntityConverter
      */
     public function performEntityChanges($entityObject, $data, $ignoredFields)
     {
+        // If there are listeners for this event, fire it and get the message from it
+        //(it allows changing the entityObject, data and ignoredFields)
+        if ($this->eventDispatcher->hasListeners(Events::BEFORE_PERFORM_ENTITY_CHANGES)) {
+            $beforePerformEntityChangesEvent = new BeforePerformEntityChangesEvent($entityObject, $data, $ignoredFields);
+            /** @var BeforePerformEntityChangesEvent $beforePerformEntityChangesEvent */
+            $beforePerformEntityChangesEvent = $this->eventDispatcher->dispatch(Events::BEFORE_PERFORM_ENTITY_CHANGES, $beforePerformEntityChangesEvent);
+            $entityObject = $beforePerformEntityChangesEvent->getEntityObject();
+            $data = $beforePerformEntityChangesEvent->getData();
+            $ignoredFields = $beforePerformEntityChangesEvent->getIgnoredFields();
+        }
+
         //check if the method exists
         //determine the type of the parameter. It will be used for inserting entities(User,Product...)
         //if is it an object:
@@ -300,6 +329,15 @@ class EntityConverter
             $this->logger->info("CALL_METHOD: " . $methodName);
             //Call the setter method
             call_user_func_array([$entityObject, $methodName], [$propertyValue]);
+        }
+
+        // If there are listeners for this event, fire it and get the message from it
+        //(it allows changing the entityObject, data and ignoredFields)
+        if ($this->eventDispatcher->hasListeners(Events::AFTER_PERFORM_ENTITY_CHANGES)) {
+            $afterPerformEntityChangesEvent = new AfterPerformEntityChangesEvent($entityObject);
+            /** @var AfterPerformEntityChangesEvent $afterPerformEntityChangesEvent */
+            $afterPerformEntityChangesEvent = $this->eventDispatcher->dispatch(Events::AFTER_PERFORM_ENTITY_CHANGES, $afterPerformEntityChangesEvent);
+            $entityObject = $afterPerformEntityChangesEvent->getEntityObject();
         }
 
         return $entityObject;

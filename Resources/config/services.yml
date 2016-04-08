@@ -5,6 +5,7 @@ services:
         arguments:
             - "@trinity.notification.annotations.utils"
             - "@logger"
+            - "@event_dispatcher"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
 
@@ -14,6 +15,7 @@ services:
         arguments:
             - "@logger"
             - "@trinity.notification.entity_converter"
+            - "@event_dispatcher"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
         calls:

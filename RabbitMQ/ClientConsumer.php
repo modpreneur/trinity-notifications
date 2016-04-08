@@ -19,41 +19,7 @@ use Trinity\NotificationBundle\Notification\NotificationReader;
  * Class ClientConsumer
  * @package Trinity\NotificationBundle\RabbitMQ
  */
-class ClientConsumer extends Consumer
+class ClientConsumer extends NotificationConsumer
 {
-    /**
-     * @var NotificationReader
-     */
-    protected $reader;
 
-    /**
-     * ClientConsumer constructor.
-     * @param BaseRabbitSetup $setup
-     * @param NotificationReader $reader
-     * @param ClientProducer $producer
-     */
-    public function __construct(BaseRabbitSetup $setup, NotificationReader $reader, ClientProducer $producer)
-    {
-        parent::__construct($setup, $producer);
-
-        $this->reader = $reader;
-    }
-
-
-    /**
-     * Consume message
-     *
-     * @param Message $message
-     *
-     * @throws \Exception On any error
-     * @return void
-     */
-    public function consume(Message $message)
-    {
-        try {
-            $this->reader->read($message->content);
-        } catch (\Exception $exception) {
-            throw $exception;
-        }
-    }
 }
