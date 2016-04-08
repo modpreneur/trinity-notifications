@@ -10,7 +10,13 @@ namespace Trinity\NotificationBundle\RabbitMQ;
 
 
 use Bunny\Client;
+use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
 
+
+/**
+ * Class ServerSetup
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ServerSetup extends BaseRabbitSetup
 {
     const ID_PATTERN_WILDCARD = ":ID";
@@ -65,6 +71,31 @@ class ServerSetup extends BaseRabbitSetup
 
 
     /**
+     * @var string
+     */
+    protected $clientsToServerDeadNotificationsErrorMessagesExchangeName;
+
+
+    /**
+     * @var string
+     */
+    protected $clientsToServerDeadNotificationsErrorMessagesQueueName;
+
+
+    /**
+     * @var string
+     */
+    protected $serverToClientsDeadNotificationsErrorMessagesExchangeName;
+
+
+    /**
+     * @var string
+     */
+    protected $serverToClientsDeadNotificationsErrorMessagesQueueName;
+
+
+
+    /**
      * ServerSetup constructor.
      * @param Client $client
      * @param string $serverToClientsDeadLetterExchangeName
@@ -75,9 +106,17 @@ class ServerSetup extends BaseRabbitSetup
      * @param string $clientsToServerDeadLetterQueueName
      * @param string $clientsToServerExchangeName
      * @param string $clientsToServerQueueName
+     * @param $clientsToServerDeadNotificationsErrorMessagesExchangeName
+     * @param $clientsToServerDeadNotificationsErrorMessagesQueueName
+     * @param $serverToClientsDeadNotificationsErrorMessagesExchangeName
+     * @param $serverToClientsDeadNotificationsErrorMessagesQueueName
+     * @param $listeningQueue
+     * @param $outputErrorMessagesExchangeName
      */
     public function __construct(
         Client $client,
+        $listeningQueue,
+        $outputErrorMessagesExchangeName,
         $serverToClientsDeadLetterExchangeName,
         $serverToClientsDeadLetterQueueName,
         $serverToClientsExchangeName,
@@ -85,10 +124,14 @@ class ServerSetup extends BaseRabbitSetup
         $clientsToServerDeadLetterExchangeName,
         $clientsToServerDeadLetterQueueName,
         $clientsToServerExchangeName,
-        $clientsToServerQueueName
+        $clientsToServerQueueName,
+        $clientsToServerDeadNotificationsErrorMessagesExchangeName,
+        $clientsToServerDeadNotificationsErrorMessagesQueueName,
+        $serverToClientsDeadNotificationsErrorMessagesExchangeName,
+        $serverToClientsDeadNotificationsErrorMessagesQueueName
     )
     {
-        parent::__construct($client);
+        parent::__construct($client, $listeningQueue, $outputErrorMessagesExchangeName);
 
         $this->serverToClientsDeadLetterExchangeName = $serverToClientsDeadLetterExchangeName;
         $this->serverToClientsDeadLetterQueueName = $serverToClientsDeadLetterQueueName;
@@ -99,6 +142,13 @@ class ServerSetup extends BaseRabbitSetup
         $this->clientsToServerDeadLetterQueueName = $clientsToServerDeadLetterQueueName;
         $this->clientsToServerExchangeName = $clientsToServerExchangeName;
         $this->clientsToServerQueueName = $clientsToServerQueueName;
+
+        $this->clientsToServerDeadNotificationsErrorMessagesExchangeName = $clientsToServerDeadNotificationsErrorMessagesExchangeName;
+        $this->clientsToServerDeadNotificationsErrorMessagesQueueName = $clientsToServerDeadNotificationsErrorMessagesQueueName;
+        $this->serverToClientsDeadNotificationsErrorMessagesExchangeName = $serverToClientsDeadNotificationsErrorMessagesExchangeName;
+        $this->serverToClientsDeadNotificationsErrorMessagesQueueName = $serverToClientsDeadNotificationsErrorMessagesQueueName;
+
+        $this->listeningQueue = $listeningQueue;
     }
 
 
@@ -131,6 +181,16 @@ class ServerSetup extends BaseRabbitSetup
 
         //declare output clients exchange
         $this->channel->exchangeDeclare($this->serverToClientsExchangeName, "direct", false, true);
+
+        //declare error messages queue
+        $this->channel->queueDeclare($this->serverToClientsDeadNotificationsErrorMessagesQueueName, false, true);
+
+        //declare error messages exchange
+        $this->channel->exchangeDeclare($this->serverToClientsDeadNotificationsErrorMessagesExchangeName, "direct", false, true);
+
+        //bind output error messages queue to error messages exchange
+        $this->channel->queueBind($this->serverToClientsDeadNotificationsErrorMessagesQueueName, $this->serverToClientsDeadNotificationsErrorMessagesExchangeName);
+
     }
 
     /**
@@ -158,6 +218,15 @@ class ServerSetup extends BaseRabbitSetup
 
         //bind output dead letter queue to dead letter exchange
         $this->channel->queueBind($this->clientsToServerDeadLetterQueueName, $this->clientsToServerDeadLetterExchangeName);
+
+        //declare error messages queue
+        $this->channel->queueDeclare($this->clientsToServerDeadNotificationsErrorMessagesQueueName, false, true);
+
+        //declare error messages exchange
+        $this->channel->exchangeDeclare($this->clientsToServerDeadNotificationsErrorMessagesExchangeName, "direct", false, true);
+
+        //bind output error messages queue to error messages exchange
+        $this->channel->queueBind($this->clientsToServerDeadNotificationsErrorMessagesQueueName, $this->clientsToServerDeadNotificationsErrorMessagesExchangeName);
     }
 
 
@@ -207,15 +276,11 @@ class ServerSetup extends BaseRabbitSetup
 
 
     /**
-     * @inheritdoc
-     */
-    public function getListeningQueue()
-    {
-        return $this->clientsToServerQueueName;
-    }
-
-    /**
-     * @inheritdoc
+     * Get routing key which will be used to route messages to queue.
+     *
+     * @param array $data Additional data required to generate routing key.
+     *
+     * @return string
      */
     public function getOutputRoutingKey(array $data = [])
     {

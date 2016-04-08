@@ -7,8 +7,13 @@
  */
 
 namespace Trinity\NotificationBundle\RabbitMQ;
+use Trinity\Bundle\BunnyBundle\Producer\Producer;
 
 
+/**
+ * Class ServerProducer
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ServerProducer extends Producer
 {
     public function __construct(ServerSetup $serverSetup)
@@ -18,6 +23,8 @@ class ServerProducer extends Producer
 
     /**
      * @inheritdoc
+     * @param clientId string Client id
+     * @throws \Exception
      */
     public function publish(string $data, string $clientId = null)
     {
@@ -25,7 +32,7 @@ class ServerProducer extends Producer
 
         $channel = $this->rabbitSetup->getChannel();
 
-        //routingKey == queueName in this case
+        //routingKey = queueName in this case
         $routingKey = $this->rabbitSetup->getOutputRoutingKey(["clientId" => $clientId]);
 
         /** @var ServerSetup $setup */

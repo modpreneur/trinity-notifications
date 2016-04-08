@@ -6,14 +6,17 @@
  * Time: 14:58
  */
 
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers;
 
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+use Trinity\NotificationBundle\Entity\Server;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
+use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\RabbitMQ\ClientProducer;
 
@@ -45,6 +48,7 @@ class RabbitClientDriver extends BaseDriver
      * @param NotificationUtils $notificationUtils
      * @param ClientProducer $producer
      * @param TokenStorage $tokenStorage
+     * @param BatchManager $batchManager
      * @param string $clientId
      * @param string $clientSecret
      */
@@ -54,14 +58,17 @@ class RabbitClientDriver extends BaseDriver
         NotificationUtils $notificationUtils,
         ClientProducer $producer,
         TokenStorage $tokenStorage,
+        BatchManager $batchManager,
         string $clientId,
         string $clientSecret
     ) {
-        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $tokenStorage);
+        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $tokenStorage, $batchManager);
 
         $this->producer = $producer;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+
+        $this->batchManager->setProducer($producer);
     }
 
 
@@ -83,17 +90,18 @@ class RabbitClientDriver extends BaseDriver
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
 
-        $entityArray["clientId"] = $this->clientId;
-
         //get entity "name", e.g. "product", "user"
         $entityArray["entityName"] = $this->notificationUtils->getUrlPostfix($entity);
 
-        //encode object array to JSON
-        $json = $this->JSONEncodeObject($entityArray, $this->clientSecret);
+        $batch = $this->batchManager->createBatch($this->clientId);
+        $batch->setClientSecret($this->clientSecret);
+        $notification = new Notification();
+        $notification->setData($entityArray);
+        $notification->setMethod($params["HTTPMethod"]);
+        $notification->setBatchId($batch->getUId());
+        $batch->addNotification($notification);
 
-        $this->producer->publish($json);
-
-        //$entity->setNotificationStatus(null, 'unknown'); //todo: fix!
+        $entity->setNotificationStatus(new Server(), 'unknown');
     }
 
 

@@ -28,6 +28,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode("entities")
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->prototype("scalar")
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
                 ->enumNode("mode")
                     ->values(["client", "server"])
                     ->isRequired()
@@ -52,9 +59,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue("id")
                 ->end()
-                ->booleanNode("create_new_entity")
-                    ->defaultTrue()
-                ->end()
                     ->arrayNode("server_to_clients")
                         ->cannotBeEmpty()
                         ->children()
@@ -70,6 +74,16 @@ class Configuration implements ConfigurationInterface
                                 ->defaultValue("exchange.server.to.clients.notifications")
                                 ->cannotBeEmpty()
                             ->end()
+
+                            ->scalarNode("error_messages_queue_name")
+                                ->defaultValue("queue.server.to.clients.dead.notifications.error.messages")
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode("error_messages_exchange_name")
+                                ->defaultValue("exchange.server.to.clients.dead.notifications.error.messages")
+                                ->cannotBeEmpty()
+                            ->end()
+
                             ->scalarNode("queue_name_pattern")
                                 ->defaultValue("queue.client_:ID")
                                 ->cannotBeEmpty()
@@ -101,19 +115,42 @@ class Configuration implements ConfigurationInterface
                             ->cannotBeEmpty()
                             ->defaultValue("queue.clients.to.server.notifications")
                         ->end()
+
+                        ->scalarNode("error_messages_queue_name")
+                            ->cannotBeEmpty()
+                            ->defaultValue("queue.clients.to.server.dead.notifications.error.messages")
+                        ->end()
+                        ->scalarNode("error_messages_exchange_name")
+                            ->cannotBeEmpty()
+                            ->defaultValue("exchange.clients.to.server.dead.notifications.error.messages")
+                        ->end()
                     ->end()
-                ->end()
-                ->scalarNode("client_read_queue_name")
-                    ->cannotBeEmpty()
-                    ->defaultValue("queue.client_1")
                 ->end()
                 ->scalarNode("client_output_exchange_name")
                     ->cannotBeEmpty()
                     ->defaultValue("exchange.clients.to.server.notifications")
                 ->end()
-                ->scalarNode("client_output_routing_key")
+                ->scalarNode("error_messages_exchange_name")
                     ->cannotBeEmpty()
-                    ->defaultValue("queue.clients.to.server.notifications")
+                    ->defaultValue("exchange.server.to.clients.dead.notifications.error.messages")
+                ->end()
+                ->scalarNode("listening_queue_name")
+                    ->cannotBeEmpty()
+                    ->isRequired()
+                ->end()
+                ->scalarNode("client_secret_provider")
+                    ->cannotBeEmpty()
+                    ->beforeNormalization()
+                    ->ifTrue(function ($v) {
+                        return is_string($v) && 0 === strpos($v, '@'); })
+                    ->then(function ($v) {
+                        if (0 === strpos($v, '@@')) {
+                            return substr($v, 1);
+                        }
+
+                        return substr($v, 1);
+                    })
+                    ->end()
                 ->end()
             ;
 

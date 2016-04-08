@@ -10,64 +10,55 @@ namespace Trinity\NotificationBundle\RabbitMQ;
 
 
 use Bunny\Client;
+use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
 
+/**
+ * Class ClientSetup
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ClientSetup extends BaseRabbitSetup
 {
     /**
-     * @var
+     * @var string
      */
     protected $outputExchangeName;
 
 
     /**
-     * @var
+     * @var string
      */
     protected $outputRoutingKey;
 
 
     /**
-     * @var
-     */
-    protected $listeningQueue;
-
-    /**
      * ClientSetup constructor.
      * @param Client $client
-     * @param $outputExchangeName
-     * @param $outputRoutingKey
      * @param $listeningQueue
+     * @param $outputErrorMessagesExchangeName
+     * @param $outputExchangeName
+     * @internal param $outputRoutingKey
      */
-    public function __construct(Client $client, $outputExchangeName, $outputRoutingKey, $listeningQueue)
+    public function __construct(
+        Client $client,
+        $listeningQueue,
+        $outputErrorMessagesExchangeName,
+        $outputExchangeName
+    )
     {
-        parent::__construct($client);
+        parent::__construct($client, $listeningQueue, $outputErrorMessagesExchangeName);
 
         $this->outputExchangeName = $outputExchangeName;
-        $this->outputRoutingKey = $outputRoutingKey;
         $this->listeningQueue = $listeningQueue;
+        $this->outputErrorMessagesExchangeName = $outputErrorMessagesExchangeName;
     }
 
-
     /**
-     * @inheritdoc
+     * Get exchange name which will be used to produce messages
+     *
+     * @return string
      */
     public function getOutputExchangeName()
     {
         return $this->outputExchangeName;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOutputRoutingKey(array $data = [])
-    {
-        return $this->outputRoutingKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getListeningQueue()
-    {
-        return $this->listeningQueue;
     }
 }

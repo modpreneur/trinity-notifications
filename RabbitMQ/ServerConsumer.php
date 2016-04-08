@@ -10,16 +10,47 @@ namespace Trinity\NotificationBundle\RabbitMQ;
 
 
 use Bunny\Message;
+use Trinity\Bundle\BunnyBundle\Consumer\Consumer;
+use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
+use Trinity\NotificationBundle\Notification\NotificationReader;
 
+
+/**
+ * Class ServerConsumer
+ * @package Trinity\NotificationBundle\RabbitMQ
+ */
 class ServerConsumer extends Consumer
 {
+    protected $reader;
+
     /**
-     * @inheritdoc
+     * ClientConsumer constructor.
+     * @param BaseRabbitSetup $setup
+     * @param NotificationReader $reader
+     * @param ServerProducer $producer
+     */
+    public function __construct(BaseRabbitSetup $setup, NotificationReader $reader, ServerProducer $producer)
+    {
+        parent::__construct($setup, $producer);
+
+        $this->reader = $reader;
+    }
+
+
+    /**
+     * Consume message
+     *
+     * @param Message $message
+     *
+     * @throws \Exception On any error
+     * @return void
      */
     public function consume(Message $message)
     {
-        if(rand(0, 100) > 50) throw new \Exception("Exception!");
-
-        dump($message->content);
+        try {
+            $this->reader->read($message->content);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 }

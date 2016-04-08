@@ -22,11 +22,13 @@ class ClientProduceMessageCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $user = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:Product")->find($input->getArgument("product"));
+        $user = $this->getContainer()->get("doctrine")->getRepository("VeniceAppBundle:Product\\StandardProduct")->find($input->getArgument("product"));
 
         $driver = $this->getContainer()->get("trinity.notification.driver.rabbit.client");
 
-        $driver->execute($user);
+        $driver->execute($user, null, ["HTTPMethod" => "PUT"]);
+
+        $this->getContainer()->get("trinity.notification.batch_manager")->send();
 
         $output->writeln("message sent");
     }

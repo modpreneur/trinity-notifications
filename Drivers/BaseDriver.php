@@ -4,17 +4,14 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Driver;
+namespace Trinity\NotificationBundle\Drivers;
 
 use Doctrine\ORM\EntityManager;
-use Nette\Utils\Strings;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Exception\ClientException;
-use Trinity\NotificationBundle\Exception\MethodException;
-use Trinity\NotificationBundle\Notification\Annotations\NotificationUtils;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
+use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 
 
@@ -32,6 +29,7 @@ abstract class BaseDriver implements NotificationDriverInterface
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var TokenStorageInterface */
     protected $tokenStorage;
 
     /** @var  EntityManager */
@@ -47,24 +45,32 @@ abstract class BaseDriver implements NotificationDriverInterface
 
 
     /**
+     * @var BatchManager
+     */
+    protected $batchManager;
+
+    /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface   $eventDispatcher
-     * @param EntityConverter   $entityConverter
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityConverter $entityConverter
      * @param NotificationUtils $notificationUtils
-     * @param TokenStorage      $tokenStorage
+     * @param TokenStorageInterface $tokenStorage
+     * @param BatchManager $batchManager
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
-        TokenStorage $tokenStorage = null
-
-    ) {
+        TokenStorageInterface $tokenStorage = null,
+        BatchManager $batchManager
+    )
+    {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
         $this->tokenStorage = $tokenStorage;
+        $this->batchManager = $batchManager;
     }
 
 
@@ -81,10 +87,10 @@ abstract class BaseDriver implements NotificationDriverInterface
      * Returns object encoded in json.
      * Encode only first level (FK are expressed as ID strings).
      *
-     * @param array  $entity
+     * @param array $entity
      * @param string $secret
      *
-     * @param array  $extraFields
+     * @param array $extraFields
      *
      * @return string
      * @throws \Exception
@@ -96,7 +102,7 @@ abstract class BaseDriver implements NotificationDriverInterface
         }
 
         $entity['timestamp'] = (new \DateTime())->getTimestamp();
-        $entity['hash'] = hash('sha256', $secret.(implode(',', $entity)));
+        $entity['hash'] = hash('sha256', $secret . (implode(',', $entity)));
 
         // error fix...
         // todo: it is necessary to distinguish null and empty string
@@ -104,45 +110,7 @@ abstract class BaseDriver implements NotificationDriverInterface
 
         return json_encode($entity);
     }
-
-
-    /**
-     * Join client URL with entity url.
-     *
-     * Example: TestClient URL => "http://example.com"
-     *          Entity(Product) URL => "product" -> addicted to annotations (method and prefix)
-     *          result: http://example.com/product
-     *
-     * @param string $url
-     * @param NotificationEntityInterface $entity
-     * @param string $HTTPMethod
-     *
-     * @return array
-     *
-     * @throws ClientException
-     * @throws MethodException
-     */
-    protected function prepareURL($url, NotificationEntityInterface $entity, $HTTPMethod)
-    {
-        $methodName = 'getClients';
-        if (!is_callable([$entity, $methodName])) {
-            throw new MethodException("Method '$methodName' not exists in entity.");
-        }
-
-        if ($url === null || empty($url)) {
-            throw new ClientException('Notification: NULL client URL.');
-        }
-
-        $class = $this->notificationUtils->getUrlPostfix($entity, $HTTPMethod);
-
-        // add / to url
-        if (!Strings::endsWith($url, '/')) {
-            $url .= '/';
-        }
-
-        return $url.$class;
-    }
-
+    
 
     /**
      * Add entity to notifiedEntities array.

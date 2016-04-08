@@ -16,17 +16,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ServerProduceMessageCommand extends ContainerAwareCommand
 {
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $user = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:Product")->find($input->getArgument("product"));
+//        $product = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:Product")->find($input->getArgument("product"));
+        $user = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:User")->find($input->getArgument("user"));
+//        $billingPlan = $this->getContainer()->get("doctrine")->getRepository("NecktieAppBundle:BillingPlan")->find($input->getArgument("billing-plan"));
 
         $driver = $this->getContainer()->get("trinity.notification.driver.rabbit.server");
 
-        $driver->execute($user);
+//        $driver->execute($product, null, ["HTTPMethod" => "PUT"]);
+//        $driver->execute($billingPlan, null, ["HTTPMethod" => "PUT"]);
+        $driver->execute($user, null, ["HTTPMethod" => "PUT"]);
 
+        $this->getContainer()->get("trinity.notification.batch_manager")->send();
         $output->writeln("message sent");
     }
 
@@ -35,6 +40,8 @@ class ServerProduceMessageCommand extends ContainerAwareCommand
     {
         $this->setName('trinity:notification:server:message:produce');
 
-        $this->addArgument('product', InputArgument::OPTIONAL, 'Product id?');
+//        $this->addArgument('product', InputArgument::OPTIONAL, 'Product id?');
+        $this->addArgument('user', InputArgument::OPTIONAL, 'User id?');
+//        $this->addArgument('billing-plan', InputArgument::OPTIONAL, 'BP id?');
     }
 }
