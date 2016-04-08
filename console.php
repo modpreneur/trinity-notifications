@@ -1,8 +1,6 @@
 <?php
 
-
-
-require_once __DIR__.'/NotificationBundle/Tests/app/autoload.php';
+require_once __DIR__.'/Tests/app/autoload.php';
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
@@ -16,9 +14,7 @@ if(isset($argv[1])){
     }
 }
 
-
 $kernel = new AppKernel('dev', true, $port);
-
 
 $application = new Application($kernel);
 $application->add(new \Trinity\NotificationBundle\Tests\Command\NotificationCommand());

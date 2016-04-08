@@ -18,12 +18,12 @@
     "nette/utils": "~2.3",
     "sensio/framework-extra-bundle": "~3.0",
     "fzaninotto/faker": "^1.5",
-    "trinity/logger": "dev-master"
+    "trinity/logger": "dev-master",
+    "trinity/bunny": "dev-master"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
     "friendsofsymfony/user-bundle": "dev-master",
-    "trinity/framework": "dev-master",
     "sensio/generator-bundle": "~3.0",
     "phpunit/phpunit": "~5.0",
     "codeception/codeception" : "~2.1",
@@ -33,7 +33,7 @@
   },
 
   "autoload": {
-    "psr-4": { "Trinity\\NotificationBundle\\": "NotificationBundle" },
+    "psr-4": { "Trinity\\NotificationBundle\\": "" },
     "exclude-from-classmap": [
       "/Tests/"
     ]

@@ -6,6 +6,7 @@ services:
             - "@trinity.notification.annotations.utils"
             - "@logger"
             - "%trinity.notification.entity_id_field%"
+            - "%trinity.notification.is_client%"
 
 
     trinity.notification.services.notification_parser:
@@ -15,7 +16,6 @@ services:
             - "@trinity.notification.entity_converter"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
-            - "%trinity.notification.create_new_entity%"
         calls:
             - [ "setEntityManager", ["@doctrine.orm.entity_manager"]]
 
@@ -34,7 +34,7 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
             - "@event_dispatcher"
-            - "%trinity.notification.server_notify_url%"
+            - "@trinity.notification.batch_manager"
 
 
     trinity.notification.entity_listener:
@@ -44,32 +44,33 @@ services:
             - "@trinity.notification.utils"
             - "%trinity.notification.is_client%"
         tags:
-            - { name: doctrine.event_listener, event: onFlush, priority: 255 }
+            - { name: doctrine.event_listener, event: onFlush,     priority: 255 }
             - { name: doctrine.event_listener, event: postUpdate,  priority: 200 }
             - { name: doctrine.event_listener, event: postPersist, priority: 200 }
         calls:
             - [setRequestStack, ["@request_stack"]]
 
 
-    trinity.notification.driver.api:
-        class: Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver
+    trinity.notification.terminate_listener:
+        class: Trinity\NotificationBundle\EventListener\KernelTerminateListener
         arguments:
-            - "@event_dispatcher"
-            - "@trinity.notification.entity_converter"
-            - "@trinity.notification.utils"
-            - "@security.token_storage"
+            - "@trinity.notification.manager"
+            - "@logger"
+            - "%kernel.debug%"
         tags:
-            - { name: trinity.notification.driver }
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
 
 
-    trinity.notification.driver.client_api:
-        class: Trinity\NotificationBundle\Drivers\ClientApiDriver\ClientApiDriver
+    trinity.notification.batch_manager:
+        class: Trinity\NotificationBundle\Notification\BatchManager
+
+
+    trinity.bunny.client:
+        class: Bunny\Client
         arguments:
-            - "@event_dispatcher"
-            - "@trinity.notification.entity_converter"
-            - "@trinity.notification.utils"
-            - "%trinity.notification.server_oauth_url%"
-            - "%trinity.notification.server_client_secret%"
-            - "%trinity.notification.server_client_id%"
-        tags:
-            - { name: trinity.notification.driver }
+            - host: "%rabbit_url%"
+            - port: "%rabbit_port%"
+            - user: "%rabbit_user%"
+            - password: "%rabbit_password%"
+            - persistent: 2
+            - path: "/"

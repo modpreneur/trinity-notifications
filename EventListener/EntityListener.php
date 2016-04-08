@@ -137,7 +137,7 @@ class EntityListener
         $enable = $this->isNotificationEnabledForController();
         $entity = $args->getObject();
 
-        if ($enable && !$this->currentProcessEntity) {
+        if ($enable && $this->currentProcessEntity != $entity) {
             $this->currentProcessEntity = $entity;
             return $this->sendNotification($args->getEntityManager(), $entity, self::POST);
         }
@@ -162,7 +162,7 @@ class EntityListener
         $enable = $this->isNotificationEnabledForController();
         $array  = [];
 
-        if($enable && !$this->currentProcessEntity){
+        if($enable){
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
                 $this->currentProcessEntity = $entity;
                 $id = $entity->getId();

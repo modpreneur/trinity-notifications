@@ -1,0 +1,43 @@
+services:
+    trinity.notification.driver.rabbit.client:
+        class: Trinity\NotificationBundle\Drivers\RabbitClientDriver
+        arguments:
+            - "@event_dispatcher"
+            - "@trinity.notification.entity_converter"
+            - "@trinity.notification.utils"
+            - "@trinity.notification.client.producer"
+            - "@security.token_storage"
+            - "@trinity.notification.batch_manager"
+            - "%trinity.notification.client.id%"
+            - "%trinity.notification.client.secret%"
+        tags:
+            - { name: trinity.notification.driver }
+
+    trinity.noticifation.client.setup:
+        class: Trinity\NotificationBundle\RabbitMQ\ClientSetup
+        arguments:
+            - "@trinity.bunny.client"
+            - "%trinity.notification.listening.queue.name%"
+            - "%trinity.notification.output.error.exchange.name%"
+            - "%trinity.notification.output.exchange.name%"
+#            - "%trinity.notification.output.routing.key%"
+
+
+    trinity.notification.client.producer:
+        class: Trinity\NotificationBundle\RabbitMQ\ClientProducer
+        arguments:
+            - "@trinity.noticifation.client.setup"
+
+    trinity.notification.client.consumer:
+        class: Trinity\NotificationBundle\RabbitMQ\ClientConsumer
+        arguments:
+            - "@trinity.noticifation.client.setup"
+            - "@trinity.notification.reader"
+            - "@trinity.notification.client.producer"
+
+    trinity.notification.reader:
+        class: Trinity\NotificationBundle\Notification\NotificationReader
+        arguments:
+            - "@trinity.notification.services.notification_parser"
+            - "%trinity.notification.entities%"
+            - "%trinity.notification.client.secret%"

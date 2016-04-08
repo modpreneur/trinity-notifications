@@ -36,19 +36,22 @@ class NotificationManager
     /** @var  EntityManager */
     protected $entityManager;
 
+    /** @var  BatchManager */
+    protected $batchManager;
+
 
     /**
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param string $serverNotifyUri
+     * @param BatchManager $batchManager
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        $serverNotifyUri
+        BatchManager $batchManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->serverNotifyUri = $serverNotifyUri;
+        $this->batchManager = $batchManager;
         $this->drivers = [];
     }
 
@@ -72,7 +75,7 @@ class NotificationManager
 
 
     /**
-     *  Process notification.
+     * Process notification.
      *
      * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
@@ -94,19 +97,28 @@ class NotificationManager
 
 
     /**
+     * Send notifications in batch.
+     */
+    public function sendBatch()
+    {
+        $this->batchManager->send();
+    }
+
+
+    /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface $client
-     * @return array
+     * @return array|null Do not rely on this response as some drivers(rabbit) do not return responses!
      */
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
-        $responce = [];
+        $response = [];
 
         foreach ($this->drivers as $driver) {
-            $responce[] = $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+            $response[] = $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
         }
 
-        return $responce;
+        return $response;
     }
 
 
@@ -154,7 +166,6 @@ class NotificationManager
     {
         $response = [];
         $server = new Server();
-        $server->setNotificationUri($this->serverNotifyUri);
 
         foreach ($this->drivers as $driver) {
             // before send event
