@@ -1,0 +1,75 @@
+<?php
+
+namespace Trinity\NotificationBundle\Tests\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
+use Trinity\NotificationBundle\Annotations as Notification;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+
+
+/**
+ * Class TestEntity.
+ *
+ * @ORM\Entity()
+ *
+ * @Notification\Source(columns="id, name, description")
+ * @Notification\Methods(types={"put", "post", "delete"})
+ */
+class EntityInterfaceDisableClient implements NotificationEntityInterface
+{
+    /** @var  int */
+    private $id = 1;
+
+    /** @var  string */
+    private $name;
+
+    /** @var  string */
+    private $description;
+
+
+    /** @return int */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'Disable TestClient';
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return 'Disable client description.';
+    }
+
+
+    /** @return CI[] */
+    public function getClients()
+    {
+        $c = new Client();
+
+        return [$c];
+    }
+
+
+    /**
+     * @param CI $client
+     * @param string $status
+     * @return void
+     */
+    public function setSyncStatus(CI $client, $status)
+    {
+        // TODO: Implement setSyncStatus() method.
+    }
+}
