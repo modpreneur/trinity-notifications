@@ -55,6 +55,8 @@ services:
         class: Trinity\NotificationBundle\EventListener\KernelTerminateListener
         arguments:
             - "@trinity.notification.manager"
+            - "@logger"
+            - "%kernel.debug%"
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
 

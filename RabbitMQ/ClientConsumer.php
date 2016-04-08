@@ -50,8 +50,6 @@ class ClientConsumer extends Consumer
      */
     public function consume(Message $message)
     {
-        dump($message->content);
-
         try {
             $this->reader->read($message->content);
         } catch (\Exception $exception) {
