@@ -62,9 +62,18 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
 
+    trinity.notification.notification_events_listener:
+        class: Trinity\NotificationBundle\EventListener\NotificationEventsListener
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: notification.batchValidated,      method: onBatchValidated}
+            - { name: kernel.event_listener, event: notification.afterBatchProcessed, method: onAfterBatchProcessed}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
+        arguments:
+            - "@event_dispatcher"
 
 
     trinity.bunny.client:

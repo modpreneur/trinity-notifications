@@ -113,14 +113,12 @@ class NotificationParser
             );
 
             $this->entityManager->persist($entityObject);
-            $this->entityManager->flush();
 
             return $entityObject;
         } else {
             if ($method == "DELETE") {
                 $this->logger->info("METHOD: DELETE " . $method);
                 $this->entityManager->remove($entityObject);
-                $this->entityManager->flush();
 
                 return null;
             } else {

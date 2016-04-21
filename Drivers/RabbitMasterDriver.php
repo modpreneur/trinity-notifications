@@ -25,6 +25,7 @@ class RabbitMasterDriver extends BaseDriver
     /** @var  ServerProducer */
     protected $producer;
 
+    /** @var array */
     protected $messages;
 
     /**
@@ -60,9 +61,9 @@ class RabbitMasterDriver extends BaseDriver
      * @param ClientInterface $destinationClient
      * @param array $params
      *
-     * @return mixed|void
+     * @return void
      */
-    public function execute(NotificationEntityInterface $entity, ClientInterface $destinationClient = null, $params = [])
+    public function execute(NotificationEntityInterface $entity, ClientInterface $destinationClient = null, array $params = [])
     {
         if ($this->isEntityAlreadyProcessed($entity)) {
             return;
@@ -82,21 +83,20 @@ class RabbitMasterDriver extends BaseDriver
 
 
                 $batch = $this->batchManager->createBatch($client->getId());
+                //$batch is only pointer to the batch created and stored in BatchManager
                 $batch->setClientSecret($client->getSecret());
                 $notification = new Notification();
                 $notification->setData($entityArray);
                 $notification->setMethod($params["HTTPMethod"]);
                 $notification->setBatchId($batch->getUId());
                 $batch->addNotification($notification);
-
-                $entity->setNotificationStatus($client, 'unknown');
             }
         }
     }
 
 
     /**
-     * Return name of driver-.
+     * Return name of the driver.
      *
      * @return string
      */

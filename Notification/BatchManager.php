@@ -9,21 +9,34 @@
 namespace Trinity\NotificationBundle\Notification;
 
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\BunnyBundle\Producer\Producer;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Event\BeforeBatchPublish;
+use Trinity\NotificationBundle\Event\Events;
 
 class BatchManager
 {
-    /**
-     * @var NotificationBatch[]
-     */
+    /** @var NotificationBatch[] */
     protected $batches = [];
 
 
-    /**
-     * @var Producer
-     */
+    /** @var Producer */
     protected $producer;
+
+
+    /** @var  EventDispatcherInterface */
+    protected $eventDispatcher;
+
+
+    /**
+     * BatchManager constructor.
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
 
     /**
@@ -36,6 +49,8 @@ class BatchManager
 
 
     /**
+     * This method is called in driver.
+     * 
      * @param Producer $producer
      */
     public function setProducer(Producer $producer)
@@ -82,7 +97,16 @@ class BatchManager
      */
     public function send()
     {
+        $hasListeners = $this->eventDispatcher->hasListeners(Events::BEFORE_BATCH_PUBLISH);
+
         foreach ($this->batches as $batch) {
+            if ($hasListeners) {
+                $beforeBatchPublish = new BeforeBatchPublish($batch);
+                /** @var BeforeBatchPublish $beforeBatchPublish */
+                $beforeBatchPublish = $this->eventDispatcher->dispatch(Events::BEFORE_BATCH_PUBLISH, $beforeBatchPublish);
+                $batch = $beforeBatchPublish->getBatch();
+            }
+
             $this->producer->publish($batch->packBatch(), $batch->getClientId());
         }
     }
@@ -96,6 +120,7 @@ class BatchManager
         return $this->batches;
     }
 
+
     /**
      * @param NotificationBatch[] $batches
      * @return BatchManager
@@ -106,6 +131,4 @@ class BatchManager
 
         return $this;
     }
-
-
 }

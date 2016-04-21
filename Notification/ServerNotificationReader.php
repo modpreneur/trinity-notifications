@@ -33,7 +33,7 @@ class ServerNotificationReader extends NotificationReader
     /**
      * @inheritdoc
      */
-    public function getClientSecret(NotificationBatch $batch = null)
+    public function getClientSecret(NotificationBatch $batch)
     {
         return $this->clientSecretProvider->getClientSecret($batch->getClientId());
     }

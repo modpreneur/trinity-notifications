@@ -12,6 +12,7 @@ namespace Trinity\NotificationBundle\Notification;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Event\AfterBatchProcessedEvent;
 use Trinity\NotificationBundle\Event\BatchValidatedEvent;
 use Trinity\NotificationBundle\Event\BeforeMessageReadEvent;
 use Trinity\NotificationBundle\Event\Events;
@@ -104,16 +105,25 @@ class NotificationReader
             $batchValidatedEvent = $this->eventDispatcher->dispatch(Events::BATCH_VALIDATED, $batchValidatedEvent);
             $batch = $batchValidatedEvent->getBatch();
         }
-        
+
         /** @var Notification $notification */
         foreach ($batch->getNotifications() as $notification) {
             $entityName = $notification->getData()["entityName"];
 
-            if(!array_key_exists($entityName, $this->entities)) {
-                throw new \Exception("No classname found for entityName: \"".$entityName."\". Have you defined it in the configuration under trinity_notification:entities?");
+            if (!array_key_exists($entityName, $this->entities)) {
+                throw new \Exception("No classname found for entityName: \"" . $entityName . "\". 
+                Have you defined it in the configuration under trinity_notification:entities?"
+                );
             }
-            
+
             $this->parser->parseNotification($notification->getData(), $this->entities[$entityName], $notification->getMethod());
+        }
+
+        // If there are listeners for this event, fire it
+        if ($this->eventDispatcher->hasListeners(Events::AFTER_BATCH_PROCESSED)) {
+            $batchValidatedEvent = new AfterBatchProcessedEvent($batch);
+            /** @var BatchValidatedEvent $batchValidatedEvent */
+            $this->eventDispatcher->dispatch(Events::AFTER_BATCH_PROCESSED, $batchValidatedEvent);
         }
     }
 
@@ -127,7 +137,7 @@ class NotificationReader
      *
      * @return string
      */
-    public function getClientSecret(NotificationBatch $batch = null)
+    public function getClientSecret(NotificationBatch $batch)
     {
         return $this->clientSecret;
     }

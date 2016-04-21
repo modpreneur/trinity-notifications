@@ -315,13 +315,17 @@ class EntityConverter
                     ))
                 ) {
                     //Try to find an object with given server entity id.
-                    $propertyValue = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
+                    $foundEntity = $doctrineRepository->findOneBy([$this->entityIdFieldName => $propertyValue]);
 
-                    if (!$propertyValue) {
-                        $this->logger->error(
-                            "association entity not found " . $methodParameterType . "with id: " . $propertyValue
-                        );
-                        continue;
+                    if (!$foundEntity) {
+                        $exceptionData = [];
+                        $exceptionData["code"] = 1;
+                        $exceptionData["entityName"] = $data["entityName"];
+                        $exceptionData["property"] = $propertyName;
+                        $exceptionData["message"] = "Association entity of type $methodParameterType with id: $propertyValue  for property: $propertyName not found ";
+                        throw new \Exception(\json_encode($exceptionData));
+                    } else {
+                        $propertyValue = $foundEntity;
                     }
                 }
             }

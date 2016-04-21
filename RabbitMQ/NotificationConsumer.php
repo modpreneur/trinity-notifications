@@ -59,6 +59,7 @@ abstract class NotificationConsumer extends Consumer
     public function consume(Message $message)
     {
         try {
+            dump($message->content);
             $this->reader->read($message->content);
         } catch (\Exception $exception) {
             $this->dispatchErrorEvent($exception);

@@ -7,16 +7,15 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
+use Trinity\NotificationBundle\Event\AfterDriverExecuteEvent;
+use Trinity\NotificationBundle\Event\BeforeDriverExecuteEvent;
 use Trinity\NotificationBundle\Event\Events;
-use Trinity\NotificationBundle\Event\SendEvent;
-use Trinity\NotificationBundle\Exception\ClientException;
-use Trinity\NotificationBundle\Exception\MethodException;
 
 
 /**
@@ -33,7 +32,7 @@ class NotificationManager
     /** @var  string */
     protected $serverNotifyUri;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     protected $entityManager;
 
     /** @var  BatchManager */
@@ -49,7 +48,8 @@ class NotificationManager
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         BatchManager $batchManager
-    ) {
+    )
+    {
         $this->eventDispatcher = $eventDispatcher;
         $this->batchManager = $batchManager;
         $this->drivers = [];
@@ -66,9 +66,9 @@ class NotificationManager
 
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function setEntityManager($entityManager)
+    public function setEntityManager(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -82,17 +82,14 @@ class NotificationManager
      * @param bool $toClient
      *
      * @param array $options
-     * @return array
      */
-    public function send(NotificationEntityInterface $entity, $HTTPMethod = 'GET', $toClient = true, array $options = [])
+    public function send(NotificationEntityInterface $entity, string $HTTPMethod = 'GET', bool $toClient = true, array $options = [])
     {
         if ($toClient) {
-            $response = $this->sendToClient($entity, $HTTPMethod, $options);
+            $this->sendToClient($entity, $HTTPMethod, $options);
         } else {
-            $response = $this->sendToServer($entity, $HTTPMethod);
+            $this->sendToServer($entity, $HTTPMethod, $options);
         }
-
-        return $response;
     }
 
 
@@ -108,17 +105,12 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface $client
-     * @return array|null Do not rely on this response as some drivers(rabbit) do not return responses!
      */
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
-        $response = [];
-
         foreach ($this->drivers as $driver) {
-            $response[] = $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+            $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
         }
-
-        return $response;
     }
 
 
@@ -129,60 +121,35 @@ class NotificationManager
      * @param string $HTTPMethod
      *
      * @param array $options
-     * @return array
      */
     protected function sendToClient(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
     {
-        $response = [];
-
         /** @var ClientInterface[] $clients */
         $clients = $this->clientsToArray($entity->getClients());
 
         foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
-                    $response[] = $this->executeEntityInDriver($entity, $driver, $client, $HTTPMethod, $options);
-
+                    $this->executeEntityInDriver($entity, $driver, $client, $HTTPMethod, $options);
                 }
             }
         }
-
-        return $response;
     }
 
 
     /**
-     *  Send notification to server
+     * Send notification to server
      *
      * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
-     *
+     * @param array $options
      * @return array
-     *
-     * @throws ClientException
-     * @throws MethodException
      */
-    protected function sendToServer(NotificationEntityInterface $entity, $HTTPMethod = 'GET')
+    protected function sendToServer(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
     {
-        $response = [];
-        $server = new Server();
-
         foreach ($this->drivers as $driver) {
-            // before send event
-            $this->eventDispatcher->dispatch(Events::BEFORE_NOTIFICATION_SEND, new SendEvent($entity));
-
-            //execute notification
-            $resp = $driver->execute($entity, $server, ['HTTPMethod' => $HTTPMethod]);
-
-            if ($resp) {
-                $response[] = $resp;
-            }
-
-            // after
-            $this->eventDispatcher->dispatch(Events::AFTER_NOTIFICATION_SEND, new SendEvent($entity));
+            $this->executeEntityInDriver($entity, $driver, new Server(), $HTTPMethod, $options);
         }
-
-        return $response;
     }
 
 
@@ -192,8 +159,6 @@ class NotificationManager
      * @param ClientInterface|Collection|array $clientsCollection
      *
      * @return Object[]
-     *
-     * @throws ClientException
      */
     protected function clientsToArray($clientsCollection)
     {
@@ -226,40 +191,27 @@ class NotificationManager
         ClientInterface $client,
         $HTTPMethod = "POST",
         array $options = []
-    ) {
-        // before send event
-        $this->eventDispatcher
-            ->dispatch(
-                Events::BEFORE_NOTIFICATION_SEND,
-                new SendEvent($entity)
-            );
+    )
+    {
+        if ($this->eventDispatcher->hasListeners(Events::BEFORE_DRIVER_EXECUTE)) {
+            $beforeDriverExecute = new BeforeDriverExecuteEvent($entity);
+            /** @var BeforeDriverExecuteEvent $beforeDriverExecute */
+            $beforeDriverExecute = $this->eventDispatcher->dispatch(Events::BEFORE_DRIVER_EXECUTE, $beforeDriverExecute);
+            $entity = $beforeDriverExecute->getEntity();
+        }
 
         //execute notification
-        $resp = $driver
+        $driver
             ->execute(
                 $entity,
                 $client,
                 ['HTTPMethod' => $HTTPMethod, 'options' => $options]
             );
 
-
-        // after
-        $this->eventDispatcher
-            ->dispatch(
-                Events::AFTER_NOTIFICATION_SEND,
-                new SendEvent($entity)
-            );
-
-
-        if($this->entityManager && $this->entityManager->isOpen()){
-            $this->entityManager->persist($entity);
-            $this->entityManager->flush($entity);
-        }
-
-        if ($resp) {
-            return $resp;
+        if ($this->eventDispatcher->hasListeners(Events::AFTER_DRIVER_EXECUTE)) {
+            $afterDriverExecute = new AfterDriverExecuteEvent($entity);
+            /** @var AfterDriverExecuteEvent $afterDriverExecute */
+            $this->eventDispatcher->dispatch(Events::AFTER_DRIVER_EXECUTE, $afterDriverExecute);
         }
     }
-
-
 }

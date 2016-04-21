@@ -22,21 +22,15 @@ use Trinity\NotificationBundle\RabbitMQ\ClientProducer;
 
 class RabbitClientDriver extends BaseDriver
 {
-    /**
-     * @var  ClientProducer
-     */
+    /** @var  ClientProducer */
     protected $producer;
 
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $clientId;
 
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $clientSecret;
 
 
@@ -79,7 +73,7 @@ class RabbitClientDriver extends BaseDriver
      *
      * @return void
      */
-    public function execute(NotificationEntityInterface $entity, ClientInterface $client = null, $params = [])
+    public function execute(NotificationEntityInterface $entity, ClientInterface $client = null, array $params = [])
     {
         if ($this->isEntityAlreadyProcessed($entity)) {
             return;
@@ -94,14 +88,13 @@ class RabbitClientDriver extends BaseDriver
         $entityArray["entityName"] = $this->notificationUtils->getUrlPostfix($entity);
 
         $batch = $this->batchManager->createBatch($this->clientId);
+        //$batch is only pointer to the batch created and stored in BatchManager 
         $batch->setClientSecret($this->clientSecret);
         $notification = new Notification();
         $notification->setData($entityArray);
         $notification->setMethod($params["HTTPMethod"]);
         $notification->setBatchId($batch->getUId());
         $batch->addNotification($notification);
-
-        $entity->setNotificationStatus(new Server(), 'unknown');
     }
 
 
