@@ -186,7 +186,7 @@ class EntityListener
     private function sendNotification(EntityManager $entityManager, $entity, $method, array $options = [])
     {
 
-        $this->notificationManager->setEntityManager($this->entityManager);
+        $this->notificationManager->setEntityManager($entityManager);
 
         if (!$this->processor->isNotificationEntity($entity)) {
             return false;
@@ -214,7 +214,7 @@ class EntityListener
             $doSendNotification = true;
         }
 
-        if ($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification) || $method === 'DELETE') {
+        if (($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification)) || $method === 'DELETE') {
             return $this->notificationManager->send($entity, $method, !$this->isClient, $options);
         }
 
