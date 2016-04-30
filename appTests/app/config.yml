@@ -71,6 +71,7 @@ monolog:
              level: ERROR
 
 # @todo @TomasJancar what is it?
+# this is defined directly in framework, method setContainer is not there for some time
 services:
     trinity.logger_database:
         class: Trinity\FrameworkBundle\DatabaseLogger\DatabaseHandler
