@@ -21,20 +21,16 @@ class KernelTerminateListener
     /** @var  NotificationManager */
     protected $notificationManager;
 
-//  To Fikus: Logger is send here directly. Interface does not contain
-//  methods that our exception flow require(method addError in monolog/logger and following)
-//  Since exchange with different implementation of LoggerInterface would bring incorrect
-//  behavior I changed it. If it would be problem write me and i will do some inner logging
-//  method, but it would be reinventing of wheel so for now I set here directly monolog.
-//  Delete this when you read it :-)
-//    /** @var  LoggerInterface */
-
-    /** @var Logger */
+    /**
+     * Logger is send here directly. Interface does not contain
+     * methods that our exception flow require(method addError in monolog/logger and following)
+     * Exchange with different implementation of LoggerInterface would bring incorrect
+     * behavior.
+     *
+     * @var Logger
+     */
     protected $logger;
 
-
-    /** @var  bool */
-    protected $debugMode;
 
 
     /**
@@ -43,18 +39,17 @@ class KernelTerminateListener
      * @param Logger $logger
      * @param bool $debugMode
      */
-    public function __construct(NotificationManager $notificationManager, Logger $logger, bool $debugMode = false)
+    public function __construct(NotificationManager $notificationManager, Logger $logger)
     {
         $this->notificationManager = $notificationManager;
         $this->logger = $logger;
-        $this->debugMode = $debugMode;
     }
 
 
     /**
      * @param PostResponseEvent $event
      */
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelTerminate($event)
     {
 
         try {
