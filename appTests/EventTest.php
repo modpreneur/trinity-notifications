@@ -4,12 +4,12 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Trinity\NotificationBundle\Event\SendEvent;
 use Trinity\NotificationBundle\Event\StatusEvent;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
 
 /**

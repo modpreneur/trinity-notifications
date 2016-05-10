@@ -1,6 +1,6 @@
 <?php
 
-namespace Trinity\NotificationBundle\Tests\Entity;
+namespace Trinity\NotificationBundle\AppTests\Entity;
 
 use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;

@@ -32,7 +32,7 @@ doctrine:
                 type: annotation
                 dir: '%kernel.root_dir%/../Sandbox'
                 is_bundle: false
-                prefix: Trinity\NotificationBundle\Tests\Sandbox\Entity
+                prefix: Trinity\NotificationBundle\AppTests\Sandbox\Entity
 
 
 framework:

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trinity\NotificationBundle\Tests\Sandbox\Entity;
+namespace Trinity\NotificationBundle\AppTests\Sandbox\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;

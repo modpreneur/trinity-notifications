@@ -1,6 +1,6 @@
 <?php
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 /**
  * Class ControllerTest.

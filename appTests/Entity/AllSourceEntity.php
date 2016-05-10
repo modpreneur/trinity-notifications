@@ -1,6 +1,6 @@
 <?php
 
-namespace Trinity\NotificationBundle\Tests\Entity;
+namespace Trinity\NotificationBundle\AppTests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\FrameworkBundle\Entity\ClientInterface as CI;

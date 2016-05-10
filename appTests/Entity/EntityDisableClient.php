@@ -1,12 +1,12 @@
 <?php
 
-namespace Trinity\NotificationBundle\Tests\Entity;
+namespace Trinity\NotificationBundle\AppTests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 
 
 /**

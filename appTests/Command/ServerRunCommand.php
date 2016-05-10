@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trinity\NotificationBundle\Tests\Command;
+namespace Trinity\NotificationBundle\AppTests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Class ServerRunCommand
  *
- * @package Trinity\NotificationBundle\Tests\Command
+ * @package Trinity\NotificationBundle\AppTests\Command
  */
 class ServerRunCommand extends ContainerAwareCommand
 {

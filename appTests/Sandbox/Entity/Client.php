@@ -1,11 +1,11 @@
 <?php
-namespace Trinity\NotificationBundle\Tests\Sandbox\Entity;
+namespace Trinity\NotificationBundle\AppTests\Sandbox\Entity;
 use Trinity\NotificationBundle\Drivers\ApiDriver\ApiClientInterface;
 
 
 /**
  * Class TestClient
- * @package Trinity\NotificationBundle\Tests\Sandbox\Entity
+ * @package Trinity\NotificationBundle\AppTests\Sandbox\Entity
  */
 class Client implements ApiClientInterface
 {

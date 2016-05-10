@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trinity\NotificationBundle\Tests\Command;
+namespace Trinity\NotificationBundle\AppTests\Command;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -11,8 +11,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
 
 class NotificationCommand extends ContainerAwareCommand
