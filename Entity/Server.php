@@ -20,7 +20,7 @@ class Server implements ClientInterface
     protected $notificationUri;
 
     /** @var  boolean */
-    protected $isNotificationEnabled;
+    protected $notified;
 
     /** @var  string */
     protected $secret;
@@ -52,18 +52,18 @@ class Server implements ClientInterface
     /**
      * @return bool
      */
-    public function isNotificationEnabled()
+    public function isNotified()
     {
-        return $this->isNotificationEnabled;
+        return $this->notified;
     }
 
 
     /**
-     * @param boolean $isNotificationEnabled
+     * @param boolean $notified
      */
-    public function setIsNotificationEnabled($isNotificationEnabled)
+    public function setNotified($notified)
     {
-        $this->isNotificationEnabled = $isNotificationEnabled;
+        $this->notified = $notified;
     }
 
 
