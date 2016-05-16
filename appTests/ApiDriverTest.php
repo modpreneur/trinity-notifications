@@ -4,10 +4,10 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
 
 /**

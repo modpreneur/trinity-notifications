@@ -1,12 +1,12 @@
 <?php
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Trinity\FrameworkBundle\Entity\ClientInterface;
-use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
-use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutClient;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
+use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceDisableClient;
+use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceWithoutClient;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
 
 /**

@@ -4,7 +4,7 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Trinity\FrameworkBundle\Utils\BaseWebTest;
 

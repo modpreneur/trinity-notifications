@@ -17,7 +17,7 @@ use Trinity\NotificationBundle\Annotations\DisableNotification;
  * Class ClientController
  * @DisableNotification()
  *
- * @package Trinity\NotificationBundle\Tests\Controller
+ * @package Trinity\NotificationBundle\AppTests\Controller
  */
 class ClientController extends Controller
 {

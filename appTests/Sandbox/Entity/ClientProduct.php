@@ -6,7 +6,7 @@
  * Time: 15:51
  */
 
-namespace Trinity\NotificationBundle\Tests\Sandbox\Entity;
+namespace Trinity\NotificationBundle\AppTests\Sandbox\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\FrameworkBundle\Entity\BaseProduct;

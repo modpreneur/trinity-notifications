@@ -1,14 +1,14 @@
 <?php
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
-use Trinity\NotificationBundle\Tests\Entity\AllSourceEntityInterface;
-use Trinity\NotificationBundle\Tests\Entity\EEntityInterface;
-use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceErrorArray;
-use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceMethodDate;
-use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceWithoutSource;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
+use Trinity\NotificationBundle\AppTests\Entity\AllSourceEntityInterface;
+use Trinity\NotificationBundle\AppTests\Entity\EEntityInterface;
+use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceErrorArray;
+use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceMethodDate;
+use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceWithoutSource;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
 
 /**

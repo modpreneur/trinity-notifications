@@ -4,11 +4,11 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Closure;
 use Doctrine\Common\Collections\Collection;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Client;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 
 
 /**

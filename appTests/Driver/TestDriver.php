@@ -4,7 +4,7 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Tests\Driver;
+namespace Trinity\NotificationBundle\AppTests\Driver;
 
 use Trinity\NotificationBundle\Drivers\BaseDriver;
 

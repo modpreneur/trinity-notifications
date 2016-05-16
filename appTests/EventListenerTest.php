@@ -4,15 +4,15 @@
  * This file is part of the Trinity project.
  */
 
-namespace Trinity\NotificationBundle\Tests;
+namespace Trinity\NotificationBundle\AppTests;
 
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Tests\Common\Persistence\Mapping\TestClassMetadataFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Trinity\NotificationBundle\Tests\Entity\EntityInterfaceDisableClient;
-use Trinity\NotificationBundle\Tests\Sandbox\Entity\Product;
+use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceDisableClient;
+use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
 
 /**
