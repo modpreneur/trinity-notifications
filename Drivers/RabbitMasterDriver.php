@@ -77,7 +77,7 @@ class RabbitMasterDriver extends BaseDriver
         //send to all clients
         foreach ($entity->getClients() as $client) {
             //check if the client has enabled notifications
-            if ($client->isNotificationEnabled()) {
+            if ($client->isNotified()) {
                 //get entity "name", e.g. "product", "user"
                 $entityArray["entityName"] = $this->notificationUtils->getUrlPostfix($entity);
 
