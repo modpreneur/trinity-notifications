@@ -16,31 +16,30 @@ use Trinity\Bundle\BunnyBundle\Producer\Producer;
 use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
 use Trinity\NotificationBundle\Event\ConsumeMessageErrorEvent;
 use Trinity\NotificationBundle\Event\Events;
-use Trinity\NotificationBundle\Notification\NotificationReader;
+use Trinity\NotificationBundle\Message\MessageReader;
 
 abstract class NotificationConsumer extends Consumer
 {
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var  NotificationReader */
+    /** @var  MessageReader */
     protected $reader;
 
     /**
      * ServerConsumer constructor.
      *
-     * @param BaseRabbitSetup $setup
-     * @param NotificationReader $notificationReader
+     * @param BaseRabbitSetup          $setup
+     * @param MessageReader            $notificationReader
      * @param EventDispatcherInterface $eventDispatcher
-     * @param Producer $producer
+     * @param Producer                 $producer
      */
     public function __construct(
         BaseRabbitSetup $setup,
-        NotificationReader $notificationReader,
+        MessageReader $notificationReader,
         EventDispatcherInterface $eventDispatcher,
         Producer $producer = null
-    )
-    {
+    ) {
         parent::__construct($setup, $producer);
 
         $this->reader = $notificationReader;

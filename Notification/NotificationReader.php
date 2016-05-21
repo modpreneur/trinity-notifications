@@ -8,23 +8,22 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Trinity\NotificationBundle\Entity\Message;
 use Trinity\NotificationBundle\Entity\Notification;
-use Trinity\NotificationBundle\Entity\NotificationBatch;
-use Trinity\NotificationBundle\Event\AfterBatchProcessedEvent;
-use Trinity\NotificationBundle\Event\BatchValidatedEvent;
-use Trinity\NotificationBundle\Event\BeforeMessageReadEvent;
+use Trinity\NotificationBundle\Event\AssociationEntityNotFoundExceptionThrown;
+use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Event\Events;
+use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
+/**
+ * Class NotificationReader
+ *
+ * @package Trinity\NotificationBundle\Notification
+ */
 class NotificationReader
 {
-    /**
-     * @var string
-     */
-    protected $clientSecret;
-
-
     /**
      * @var NotificationParser
      */
@@ -38,109 +37,65 @@ class NotificationReader
 
 
     /**
-     * @var array Indexed array of entities' aliases and real class names.
-     * format:
-     * [
-     *    "user" => "App\Entity\User,
-     *    "product" => "App\Entity\Product,
-     *    ....
-     * ]
-     */
-    protected $entities;
-
-
-    /**
      * NotificationReader constructor.
      *
-     * @param NotificationParser $parser
+     * @param NotificationParser       $parser
      * @param EventDispatcherInterface $eventDispatcher
-     * @param string $entities
-     * @param string $clientSecret
      */
-    public function __construct(NotificationParser $parser, EventDispatcherInterface $eventDispatcher, string $entities, string $clientSecret = null)
-    {
+    public function __construct(
+        NotificationParser $parser,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->parser = $parser;
         $this->eventDispatcher = $eventDispatcher;
-        $this->clientSecret = $clientSecret;
-        $this->entities = json_decode($entities, true);
-
-        // Replace "_" for "-" in all keys
-        foreach ($this->entities as $key => $className) {
-            $newKey = str_replace("_", "-", $key);
-            unset($this->entities[$key]);
-            $this->entities[$newKey] = $className;
-        }
     }
 
 
     /**
-     * @param string $message
+     * Handle notification message.
+     * This method will be probably refactored to standalone class.
+     * This is the entry method for integration testing.
+     *
+     * @param Message $message
+     *
+     * @return array
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
+     * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
+     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      *
      * @throws \Exception
      */
-    public function read(string $message)
+    public function read(Message $message)
     {
-        // If there are listeners for this event, fire it and get the message from it(it allows changing the message)
-        if ($this->eventDispatcher->hasListeners(Events::BEFORE_MESSAGE_READ)) {
-            $beforeReadEvent = new BeforeMessageReadEvent($message);
-            $beforeReadEvent->setMessage($message);
-            /** @var BeforeMessageReadEvent $beforeReadEvent */
-            $beforeReadEvent = $this->eventDispatcher->dispatch(Events::BEFORE_MESSAGE_READ, $beforeReadEvent);
-            $message = $beforeReadEvent->getMessage();
+        /** @var array $notificationsArrays */
+        $notificationsArrays = $message->getRawData();
+        $notifications = [];
+
+        //convert all notifications to objects
+        foreach ($notificationsArrays as $notificationArray) {
+            $notifications[] = Notification::fromArray($notificationArray);
         }
 
-        $batch = new NotificationBatch();
-        $batch->unpackBatch($message);
+        try {
+            $entities = $this->parser->parseNotifications($notifications);
+        } catch (AssociationEntityNotFoundException $e) {
+            $e->setMessageId($message->getUid());
 
-        $batch->setClientSecret($this->getClientSecret($batch));
-
-        if (!$batch->isHashValid()) {
-            throw new \Exception("Hash does not match");
-        }
-
-        // If there are listeners for this event, fire it and get the message from it(it allows changing the batch)
-        if ($this->eventDispatcher->hasListeners(Events::BATCH_VALIDATED)) {
-            $batchValidatedEvent = new BatchValidatedEvent($batch);
-            /** @var BatchValidatedEvent $batchValidatedEvent */
-            $batchValidatedEvent = $this->eventDispatcher->dispatch(Events::BATCH_VALIDATED, $batchValidatedEvent);
-            $batch = $batchValidatedEvent->getBatch();
-        }
-
-        /** @var Notification $notification */
-        foreach ($batch->getNotifications() as $notification) {
-            $entityName = $notification->getData()["entityName"];
-
-            if (!array_key_exists($entityName, $this->entities)) {
-                throw new \Exception("No classname found for entityName: \"" . $entityName . "\". 
-                Have you defined it in the configuration under trinity_notification:entities?"
-                );
+            if ($this->eventDispatcher->hasListeners(Events::ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN)) {
+                $event = new AssociationEntityNotFoundExceptionThrown($e);
+                $this->eventDispatcher->dispatch(Events::ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN, $event);
             }
 
-            $this->parser->parseNotification($notification->getData(), $this->entities[$entityName], $notification->getMethod());
+            throw $e;
         }
 
-        // If there are listeners for this event, fire it
-        if ($this->eventDispatcher->hasListeners(Events::AFTER_BATCH_PROCESSED)) {
-            $batchValidatedEvent = new AfterBatchProcessedEvent($batch);
-            /** @var BatchValidatedEvent $batchValidatedEvent */
-            $this->eventDispatcher->dispatch(Events::AFTER_BATCH_PROCESSED, $batchValidatedEvent);
+        if ($this->eventDispatcher->hasListeners(Events::CHANGES_DONE_EVENT)) {
+            $event = new ChangesDoneEvent($entities);
+            $this->eventDispatcher->dispatch(Events::CHANGES_DONE_EVENT, $event);
         }
+
+        return $entities;
     }
-
-
-    /**
-     * Get client secret from the batch.
-     *
-     * Override this method to customize the behaviour.
-     *
-     * @param NotificationBatch $batch
-     *
-     * @return string
-     */
-    public function getClientSecret(NotificationBatch $batch)
-    {
-        return $this->clientSecret;
-    }
-
-
 }

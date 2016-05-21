@@ -11,11 +11,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="true"
-         bootstrap="Tests/app/autoload.php"
+         bootstrap="AppTests/app/autoload.php"
         >
     <php>
         <server name="SYMFONY" value="vendor"/>
-        <server name="KERNEL_DIR" value="Tests/app"/>
+        <server name="KERNEL_DIR" value="app/ests/app"/>
     </php>
 
     <logging>
@@ -27,7 +27,7 @@
 
     <testsuites>
         <testsuite name="Notification Test Suite">
-            <directory>./Tests/</directory>
+            <directory>./AppTests/</directory>
         </testsuite>
     </testsuites>
 
@@ -35,7 +35,7 @@
         <whitelist>
             <directory>/</directory>
             <exclude>
-                <directory suffix=".php">Tests/</directory>
+                <directory suffix=".php">app/Tests/</directory>
             </exclude>
         </whitelist>
     </filter>

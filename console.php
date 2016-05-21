@@ -17,8 +17,8 @@ if(isset($argv[1])){
 $kernel = new AppKernel('dev', true, $port);
 
 $application = new Application($kernel);
-$application->add(new \Trinity\NotificationBundle\Tests\Command\NotificationCommand());
-$application->add(new \Trinity\NotificationBundle\Tests\Command\ClientRunCommand());
-$application->add(new \Trinity\NotificationBundle\Tests\Command\ServerRunCommand());
+$application->add(new \Trinity\NotificationBundle\AppTests\Command\NotificationCommand());
+$application->add(new \Trinity\NotificationBundle\AppTests\Command\ClientRunCommand());
+$application->add(new \Trinity\NotificationBundle\AppTests\Command\ServerRunCommand());
 
 $application->run();

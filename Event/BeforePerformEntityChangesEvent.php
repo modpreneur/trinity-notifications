@@ -22,19 +22,13 @@ class BeforePerformEntityChangesEvent extends NotificationEvent
     protected $data;
 
 
-    /** @var  array */
-    protected $ignoredFields;
-
-
     /**
      * BeforePerformEntityChangesEvent constructor.
-     * @param array $ignoredFields
      * @param array $data
      * @param object $entityObject
      */
-    public function __construct($entityObject, array $data, array $ignoredFields)
+    public function __construct($entityObject, array $data)
     {
-        $this->ignoredFields = $ignoredFields;
         $this->data = $data;
         $this->entityObject = $entityObject;
     }
@@ -74,22 +68,5 @@ class BeforePerformEntityChangesEvent extends NotificationEvent
     {
         $this->data = $data;
     }
-
-
-    /**
-     * @return array
-     */
-    public function getIgnoredFields()
-    {
-        return $this->ignoredFields;
-    }
-
-
-    /**
-     * @param array $ignoredFields
-     */
-    public function setIgnoredFields($ignoredFields)
-    {
-        $this->ignoredFields = $ignoredFields;
-    }
 }
+

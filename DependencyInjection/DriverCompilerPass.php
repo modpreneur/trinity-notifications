@@ -19,7 +19,8 @@ class DriverCompilerPass implements CompilerPassInterface
     /**
      * @param ContainerBuilder $container
      *
-     * @api
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function process(ContainerBuilder $container)
     {
@@ -30,11 +31,14 @@ class DriverCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition('trinity.notification.manager');
 
         // Get enabled drivers string which was set in the TrinityNotificationExtension
-        $enabledDrivers = explode(",", $container->getParameter("trinity.notification.enabled_drivers"));
+        $enabledDrivers = $container->getParameter('trinity.notification.enabled_drivers');
 
+        //do not remove the $key variable!
         foreach ($container->findTaggedServiceIds('trinity.notification.driver') as $serviceId => $key) {
+            /** @noinspection PhpExpressionResultUnusedInspection */
+            $key;
             // If the driver was configured as enabled
-            if (in_array($serviceId, $enabledDrivers)) {
+            if (in_array($serviceId, $enabledDrivers, false)) {
                 $definition->addMethodCall('addDriver', [new Reference($serviceId)]);
             }
         }

@@ -10,13 +10,11 @@ namespace Trinity\NotificationBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use Doctrine\ORM\Event\PreFlushEventArgs;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\Notification\NotificationManager;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
 
 
 /**
@@ -35,19 +33,8 @@ class EntityListener
     /** @var  bool */
     protected $defaultValueForEnabledController;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /** @var  Object */
     protected $entity;
-
-    /** @var  ContainerInterface */
-    protected $containerInterface;
-
-    /** @var  EntityManager */
-    protected $entityManager;
 
     /** @var  NotificationManager */
     protected $notificationManager;
@@ -61,19 +48,22 @@ class EntityListener
     /** @var  bool Is the current application client? */
     protected $isClient;
 
-    /** @var NotificationEntityInterface  */
-    protected $currentProcessEntity = null;
+    /** @var NotificationEntityInterface */
+    protected $currentProcessEntity;
+
+    /** @var bool is listening enabled for this listener */
+    protected $notificationEnabled = true;
 
 
     /**
      * @param NotificationManager $notificationManager
-     * @param NotificationUtils $annotationProcessor
-     * @param bool $isClient
+     * @param NotificationUtils   $annotationProcessor
+     * @param bool                $isClient
      */
     public function __construct(
         NotificationManager $notificationManager,
         NotificationUtils $annotationProcessor,
-        $isClient
+        bool $isClient
     ) {
         $this->notificationManager = $notificationManager;
         $this->processor = $annotationProcessor;
@@ -100,25 +90,20 @@ class EntityListener
 
 
     /**
-     * Def in service.yml.
-     *
-     * @param LifecycleEventArgs $args
-     *
-     * @return array
-     *
-     * @throws \Exception
+     * Disable notification
      */
-    public function postUpdate(LifecycleEventArgs $args)
+    public function disableNotification()
     {
-        $this->entityManager = $args->getEntityManager();
-        $enable = $this->isNotificationEnabledForController();
-        $entity = $args->getObject();
+        $this->notificationEnabled = false;
+    }
 
-        if ($enable && !$this->currentProcessEntity) {
-            $this->currentProcessEntity = $entity;
-            return $this->sendNotification($args->getEntityManager(), $entity, self::PUT);
-        }
-        return false;
+
+    /**
+     * Enable notification
+     */
+    public function enableNotification()
+    {
+        $this->notificationEnabled = true;
     }
 
 
@@ -127,22 +112,40 @@ class EntityListener
      *
      * @param LifecycleEventArgs $args
      *
-     * @return bool
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
      *
-     * @throws \Exception
+     * @return array
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postUpdate(LifecycleEventArgs $args)
     {
-        $this->entityManager = $args->getEntityManager();
         $enable = $this->isNotificationEnabledForController();
         $entity = $args->getObject();
 
-        if ($enable && $this->currentProcessEntity != $entity) {
-            $this->currentProcessEntity = $entity;
-            return $this->sendNotification($args->getEntityManager(), $entity, self::POST);
+        if ($enable && $this->notificationEnabled) {
+            $this->sendNotification($args->getEntityManager(), $entity, self::PUT);
         }
+    }
 
-        return false;
+
+    /**
+     * Def in service.yml.
+     *
+     * @param LifecycleEventArgs $args
+     *
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     *
+     * @return bool
+     */
+    public function postPersist(LifecycleEventArgs $args)
+    {
+        $enable = $this->isNotificationEnabledForController();
+        $entity = $args->getObject();
+
+        if ($enable && $this->notificationEnabled) {
+            $this->sendNotification($args->getEntityManager(), $entity, self::POST);
+        }
     }
 
 
@@ -151,58 +154,52 @@ class EntityListener
      *
      * @param OnFlushEventArgs $eventArgs
      *
-     * @return array
-     *
-     * @throws \Exception
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
     public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $em     = $eventArgs->getEntityManager();
-        $uow    = $em->getUnitOfWork();
+        $entityManager = $eventArgs->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
         $enable = $this->isNotificationEnabledForController();
-        $array  = [];
 
-        if($enable){
-            foreach ($uow->getScheduledEntityDeletions() as $entity) {
-                $this->currentProcessEntity = $entity;
-                $id = $entity->getId();
-                $array[] = $this->sendNotification($em, ($entity), self::DELETE, ['id' => $id]);
+        if ($enable && $this->notificationEnabled) {
+            foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
+                $this->sendNotification($entityManager, $entity, self::DELETE);
             }
         }
-
-        return $array;
     }
 
 
     /**
      * @param EntityManager $entityManager
-     * @param $entity
-     * @param $method
+     * @param               $entity
+     * @param string        $method
      *
-     * @param array $options
-     * @return array|bool
+     * @param array         $options
+     *
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    private function sendNotification(EntityManager $entityManager, $entity, $method, array $options = [])
+    private function sendNotification(EntityManager $entityManager, $entity, string $method, array $options = [])
     {
-
         $this->notificationManager->setEntityManager($entityManager);
 
         if (!$this->processor->isNotificationEntity($entity)) {
-            return false;
+            return;
         }
 
-        $uow = $entityManager->getUnitOfWork();
+        $unitOfWork = $entityManager->getUnitOfWork();
         $list = [];
 
-        if ($uow) {
-            $uow->computeChangeSets();
-            $changeset = $uow->getEntityChangeSet($entity);
+        if ($unitOfWork) {
+            $unitOfWork->computeChangeSets();
+            $changeset = $unitOfWork->getEntityChangeSet($entity);
 
             foreach ($changeset as $index => $value) {
                 if ($this->processor->hasSource($entity, $index) || $this->processor->hasDependedSource(
-                        $entity,
-                        $index
+                    $entity,
+                    $index
                     )
                 ) {
                     $list[] = $index;
@@ -214,11 +211,11 @@ class EntityListener
             $doSendNotification = true;
         }
 
-        if (($this->processor->hasHTTPMethod($entity, $method) && ($doSendNotification)) || $method === 'DELETE') {
-            return $this->notificationManager->send($entity, $method, !$this->isClient, $options);
+        if ($this->processor->hasHTTPMethod($entity, strtolower($method)) && ($doSendNotification ||
+                strtoupper($method) === self::POST)
+        ) {
+            $this->notificationManager->queueEntity($entity, $method, !$this->isClient, $options);
         }
-
-        return false;
     }
 
 
@@ -227,7 +224,7 @@ class EntityListener
      *
      * @return bool
      */
-    private function isNotificationEnabledForController($default = true)
+    private function isNotificationEnabledForController(bool $default = true)
     {
         //for testing...
         if ($this->defaultValueForEnabledController !== null) {
@@ -239,12 +236,11 @@ class EntityListener
             $split = explode('::', $_controller);
 
             // No controller.
-            if (count($split) != 2) {
+            if (count($split) !== 2) {
                 return true;
             }
 
-            $controller = $split[0];
-            $action = $split[1];
+            list($controller, $action) = $split;
 
             return !$this->processor->isControllerOrActionDisabled($controller, $action);
         }

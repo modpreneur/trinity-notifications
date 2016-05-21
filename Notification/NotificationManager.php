@@ -38,6 +38,9 @@ class NotificationManager
     /** @var  BatchManager */
     protected $batchManager;
 
+    /** @var  array */
+    protected $queuedNotifications;
+
 
     /**
      * NotificationManager constructor.
@@ -53,6 +56,7 @@ class NotificationManager
         $this->eventDispatcher = $eventDispatcher;
         $this->batchManager = $batchManager;
         $this->drivers = [];
+        $this->queuedNotifications = [];
     }
 
 
@@ -75,21 +79,24 @@ class NotificationManager
 
 
     /**
-     * Process notification.
+     * Queue entity to be processed.
+     * Internally stores the pointer to the entity to an array.
      *
      * @param NotificationEntityInterface $entity
      * @param string $HTTPMethod
-     * @param bool $toClient
+     * @param bool $toClients
      *
      * @param array $options
      */
-    public function send(NotificationEntityInterface $entity, string $HTTPMethod = 'GET', bool $toClient = true, array $options = [])
+    public function queueEntity(NotificationEntityInterface $entity, string $HTTPMethod = 'GET', bool $toClients = true, array $options = [])
     {
-        if ($toClient) {
-            $this->sendToClient($entity, $HTTPMethod, $options);
-        } else {
-            $this->sendToServer($entity, $HTTPMethod, $options);
-        }
+        $array = [];
+        $array["entity"] = $entity;
+        $array["HTTPMethod"] = $HTTPMethod;
+        $array["toClients"] = $toClients;
+        $array["options"] = $options;
+
+        $this->queuedNotifications[] = $array;
     }
 
 
@@ -98,7 +105,16 @@ class NotificationManager
      */
     public function sendBatch()
     {
+        foreach ($this->queuedNotifications as $queuedNotification) {
+            if ($queuedNotification['toClients']) {
+                $this->sendToClients($queuedNotification['entity'], $queuedNotification['HTTPMethod'], $queuedNotification['options']);
+            } else {
+                $this->sendToServer($queuedNotification['entity'], $queuedNotification['HTTPMethod'], $queuedNotification['options']);
+            }
+        }
+
         $this->batchManager->send();
+        $this->clear();
     }
 
 
@@ -111,6 +127,31 @@ class NotificationManager
         foreach ($this->drivers as $driver) {
             $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
         }
+
+        $this->batchManager->send();
+        $this->clear();
+
+    }
+
+
+    /**
+     * @return BatchManager
+     * @throws \LogicException
+     * @internal
+     */
+    public function getBatchManager()
+    {
+        throw new \LogicException('Do not call batchManager->send() directly. Use $notificationManager->send() instead.');
+    }
+
+
+    /**
+     * Clear the queue notifications and BatchManager to prevent sending the notifications twice
+     */
+    public function clear()
+    {
+        $this->queuedNotifications = [];
+        $this->batchManager->clear();
     }
 
 
@@ -122,7 +163,7 @@ class NotificationManager
      *
      * @param array $options
      */
-    protected function sendToClient(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
+    protected function sendToClients(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
     {
         /** @var ClientInterface[] $clients */
         $clients = $this->clientsToArray($entity->getClients());

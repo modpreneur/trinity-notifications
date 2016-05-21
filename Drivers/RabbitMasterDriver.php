@@ -88,7 +88,7 @@ class RabbitMasterDriver extends BaseDriver
                 $notification = new Notification();
                 $notification->setData($entityArray);
                 $notification->setMethod($params["HTTPMethod"]);
-                $notification->setBatchId($batch->getUId());
+                $notification->setMessageId($batch->getUid());
                 $batch->addNotification($notification);
             }
         }

@@ -8,21 +8,27 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
+use Trinity\NotificationBundle\Exception\DataNotValidJsonException;
 
+/**
+ * Class Notification
+ *
+ * @package Trinity\NotificationBundle\Entity
+ */
 class Notification
 {
     const DELETE = 'DELETE';
     const POST = 'POST';
     const PUT = 'PUT';
 
-    const METHOD = "method";
-    const DATA = "data";
-    const BATCH_ID = "batchId";
+    const METHOD = 'method';
+    const DATA = 'data';
+    const MESSAGE_ID = 'messageId';
 
     /**
      * @var string
      */
-    protected $batchId;
+    protected $messageId;
 
 
     /**
@@ -36,6 +42,7 @@ class Notification
      */
     protected $method;
 
+
     /**
      * @return string
      */
@@ -47,6 +54,7 @@ class Notification
 
     /**
      * @param string $method
+     *
      * @return Notification
      */
     public function setMethod(string $method)
@@ -60,19 +68,20 @@ class Notification
     /**
      * @return string
      */
-    public function getBatchId()
+    public function getMessageId()
     {
-        return $this->batchId;
+        return $this->messageId;
     }
 
 
     /**
-     * @param string $batchId
+     * @param string $messageId
+     *
      * @return Notification
      */
-    public function setBatchId(string $batchId)
+    public function setMessageId(string $messageId)
     {
-        $this->batchId = $batchId;
+        $this->messageId = $messageId;
 
         return $this;
     }
@@ -89,6 +98,7 @@ class Notification
 
     /**
      * @param array $data
+     *
      * @return Notification
      */
     public function setData($data)
@@ -98,15 +108,14 @@ class Notification
         return $this;
     }
 
+
     /**
-     * Convert object into array.
-     *
      * @return array
      */
     public function toArray()
     {
         return [
-            self::BATCH_ID => $this->batchId,
+            self::MESSAGE_ID => $this->messageId,
             self::METHOD => $this->method,
             self::DATA => $this->data
         ];
@@ -114,19 +123,20 @@ class Notification
 
 
     /**
-     * Fill object with data.
+     * Create Notification from array
      *
-     * @param array $array
-     * @param string $batch
+     * @param array $notificationArray
+     *
      * @return $this
      */
-    public function fromArray(array $array, string $batch)
+    public static function fromArray(array $notificationArray = [])
     {
-        $this->batchId = $batch;
-        $this->data = $array[self::DATA];
-        $this->method = $array[self::METHOD];
+        $notificationObject = new self();
 
-        return $this;
+        $notificationObject->messageId = $notificationArray[self::MESSAGE_ID];
+        $notificationObject->data = $notificationArray[self::DATA];
+        $notificationObject->method = $notificationArray[self::METHOD];
+
+        return $notificationObject;
     }
-
 }

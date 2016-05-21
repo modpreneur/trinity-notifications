@@ -14,13 +14,13 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationParser
         arguments:
             - "@logger"
-            - "@trinity.notification.entity_converter"
+            - "@trinity.notification.entity_conversion_handler"
             - "@event_dispatcher"
+            - "@doctrine.orm.entity_manager"
+            - "@trinity.notification.entity_associator"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
-        calls:
-            - [ "setEntityManager", ["@doctrine.orm.entity_manager"]]
-
+            - "%trinity.notification.entities%"
 
     trinity.notification.annotations.utils:
         class: Trinity\NotificationBundle\Notification\AnnotationsUtils
@@ -49,6 +49,8 @@ services:
             - { name: doctrine.event_listener, event: onFlush,     priority: 255 }
             - { name: doctrine.event_listener, event: postUpdate,  priority: 200 }
             - { name: doctrine.event_listener, event: postPersist, priority: 200 }
+            - { name: kernel.event_listener,   event: notification.enableNotification, priority: 200, method: enableNotification}
+            - { name: kernel.event_listener,   event: notification.disableNotification, priority: 200, method: disableNotification }
         calls:
             - [setRequestStack, ["@request_stack"]]
 
@@ -58,22 +60,59 @@ services:
         arguments:
             - "@trinity.notification.manager"
             - "@logger"
-            - "%kernel.debug%"
         tags:
-            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelTerminate}
 
     trinity.notification.notification_events_listener:
         class: Trinity\NotificationBundle\EventListener\NotificationEventsListener
         arguments:
+            - "@trinity.notification.reader"
+            - "@event_dispatcher"
             - "@doctrine.orm.entity_manager"
         tags:
-            - { name: kernel.event_listener, event: notification.batchValidated,      method: onBatchValidated}
-            - { name: kernel.event_listener, event: notification.afterBatchProcessed, method: onAfterBatchProcessed}
+            - { name: kernel.event_listener, event: message.messageRead, method: onMessageRead}
+            - { name: kernel.event_listener, event: notification.changesDone, method: onChangesDone}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
         arguments:
             - "@event_dispatcher"
+
+    trinity.notification.entity_conversion_handler:
+        class: Trinity\NotificationBundle\Notification\EntityConversionHandler
+        arguments:
+            - "@event_dispatcher"
+            - "@form.factory"
+            - "%trinity.notification.forms%"
+            - "%trinity.notification.entities%"
+
+    trinity.notification.entity_associator:
+        class: Trinity\NotificationBundle\Notification\EntityAssociator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@trinity.notification.annotations.utils"
+            - "%trinity.notification.is_client%"
+            - "%trinity.notification.entity_id_field%"
+            - "%trinity.notification.entities%"
+
+    trinity.notification.message_reader:
+        class: Trinity\NotificationBundle\Message\MessageReader
+        arguments:
+            - "@event_dispatcher"
+
+    trinity.notification.reader:
+        class: Trinity\NotificationBundle\Notification\NotificationReader
+        arguments:
+            - "@trinity.notification.services.notification_parser"
+            - "@event_dispatcher"
+
+    trinity.notification.notification_request_listener:
+        class: Trinity\NotificationBundle\EventListener\NotificationRequestListener
+        arguments:
+            - "@trinity.notification.notification_request_handler"
+        tags:
+           - { name: kernel.event_listener, event: notification.associationEntityNotFoundExceptionThrown,  method: onAssociationEntityNotFoundExceptionThrown}
+           - { name: kernel.event_listener, event: notification.notificationRequestEvent,  method: onNotificationRequestEvent}
 
 
     trinity.bunny.client:

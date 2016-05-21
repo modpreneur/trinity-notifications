@@ -6,8 +6,11 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
+use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
+use Trinity\NotificationBundle\Annotations\AssociationGetter;
+use Trinity\NotificationBundle\Annotations\AssociationSetter;
 use Trinity\NotificationBundle\Exception\SourceException;
 
 
@@ -124,7 +127,7 @@ class AnnotationsUtils
         $classAnn = $this->getEntityAnnotation($this->getEntityClass($entity), self::ANNOTATION_CLASS);
 
         if (!$classAnn) {
-            throw new SourceException('Entity('.get_class($entity).') has not annotations source.');
+            throw new SourceException('Entity(' . get_class($entity) . ') has not annotations source.');
         }
 
         return $classAnn;
@@ -142,4 +145,50 @@ class AnnotationsUtils
 
         return $classAnn;
     }
+
+    /**
+     * @param $entity
+     *
+     * @return \ReflectionMethod[]
+     */
+    public function getNotificationSetterMethods($entity) : array
+    {
+        return $this->getClassMethodsWithAnnotation($entity, AssociationSetter::class);
+    }
+
+    /**
+     * @param $entity
+     *
+     * @return \ReflectionMethod[]
+     */
+    public function getNotificationGetterMethods($entity) : array
+    {
+        return $this->getClassMethodsWithAnnotation($entity, AssociationGetter::class);
+    }
+
+
+    /**
+     * @param $entity
+     * @param string $annotationClass
+     *
+     * @return \ReflectionMethod[]
+     */
+    protected function getClassMethodsWithAnnotation($entity, string $annotationClass) : array
+    {
+        $returnMethods = [];
+        $class = $this->getEntityClass($entity);
+        $reflectionClass = new \ReflectionClass($class);
+        $classMethods = $reflectionClass->getMethods();
+
+        foreach ($classMethods as $method) {
+            /** @var Annotation[] $methodAnnotations */
+            $methodAnnotations = $this->reader->getMethodAnnotations($method);
+            if (count($methodAnnotations) > 0 && $methodAnnotations[0] instanceof $annotationClass) {
+                $returnMethods[] = $method;
+            }
+        }
+
+        return $returnMethods;
+    }
+
 }

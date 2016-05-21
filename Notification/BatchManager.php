@@ -8,13 +8,18 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\BunnyBundle\Producer\Producer;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Event\BeforeBatchPublish;
 use Trinity\NotificationBundle\Event\Events;
+use Trinity\NotificationBundle\EventListener\NotificationEventsListener;
 
+/**
+ * Class BatchManager
+ *
+ * @package Trinity\NotificationBundle\Notification
+ */
 class BatchManager
 {
     /** @var NotificationBatch[] */
@@ -50,7 +55,7 @@ class BatchManager
 
     /**
      * This method is called in driver.
-     * 
+     *
      * @param Producer $producer
      */
     public function setProducer(Producer $producer)
@@ -88,12 +93,17 @@ class BatchManager
             $this->batches[] = $returnBatch;
         }
 
+        $returnBatch->setType(NotificationEventsListener::NOTIFICATION_MESSAGE_TYPE);
+        
         return $returnBatch;
     }
 
 
     /**
      * Send all batches to the rabbit.
+     *
+     * @throws \Trinity\NotificationBundle\Exception\MissingClientIdException
+     * @throws \Trinity\NotificationBundle\Exception\MissingClientSecretException
      */
     public function send()
     {
@@ -101,13 +111,13 @@ class BatchManager
 
         foreach ($this->batches as $batch) {
             if ($hasListeners) {
-                $beforeBatchPublish = new BeforeBatchPublish($batch);
-                /** @var BeforeBatchPublish $beforeBatchPublish */
-                $beforeBatchPublish = $this->eventDispatcher->dispatch(Events::BEFORE_BATCH_PUBLISH, $beforeBatchPublish);
-                $batch = $beforeBatchPublish->getBatch();
+                $event = new BeforeBatchPublish($batch);
+                /** @var BeforeBatchPublish $event */
+                $event = $this->eventDispatcher->dispatch(Events::BEFORE_BATCH_PUBLISH, $event);
+                $batch = $event->getBatch();
             }
 
-            $this->producer->publish($batch->packBatch(), $batch->getClientId());
+            $this->producer->publish($batch->pack(), $batch->getClientId());
         }
     }
 
@@ -130,5 +140,14 @@ class BatchManager
         $this->batches = $batches;
 
         return $this;
+    }
+
+
+    /**
+     * Clear the inner array to prevent sending the notifications twice
+     */
+    public function clear()
+    {
+        $this->batches = [];
     }
 }

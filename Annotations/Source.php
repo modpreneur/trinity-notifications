@@ -45,7 +45,7 @@ class Source
 
 
     /**
-     * @return array|null
+     * @return array
      */
     public function getColumns()
     {

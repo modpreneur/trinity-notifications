@@ -39,13 +39,14 @@ services:
         class: Trinity\NotificationBundle\RabbitMQ\ServerConsumer
         arguments:
             - "@trinity.noticifation.server.setup"
-            - "@trinity.notification.reader"
+            - "@trinity.notification.message_reader"
             - "@event_dispatcher"
             - "@trinity.notification.server.producer"
 
-    trinity.notification.reader:
-        class: Trinity\NotificationBundle\Notification\ServerNotificationReader
+    trinity.notification.notification_request_handler:
+        class: Trinity\NotificationBundle\Notification\NotificationRequestHandler
         arguments:
-            - "@trinity.notification.services.notification_parser"
-            - "@event_dispatcher"
+            - '@trinity.notification.server.producer'
+            - '@doctrine.orm.entity_manager'
+            - '@trinity.notification.manager'
             - "%trinity.notification.entities%"
