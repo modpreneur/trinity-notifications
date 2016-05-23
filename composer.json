@@ -19,11 +19,7 @@
     "sensio/framework-extra-bundle": "~3.0",
     "fzaninotto/faker": "^1.5",
     "trinity/logger": "dev-master",
-    "trinity/bunny": "dev-master",
-    "trinity/search": "dev-master",
-    "trinity/settings": "dev-master",
-    "symfony/monolog-bundle": "~2.8",
-    "symfony/console": "~2.8| ~3.0"
+    "trinity/bunny": "dev-master#9e01ca4a"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",
@@ -31,14 +27,15 @@
     "sensio/generator-bundle": "~3.0",
     "phpunit/phpunit": "~5.0",
     "codeception/codeception" : "~2.1",
-    "jms/serializer-bundle": "~1.1"
+    "jms/serializer-bundle": "~1.1",
+    "symfony/monolog-bundle": "~2.8",
+    "symfony/console": "~2.8| ~3.0"
   },
 
   "autoload": {
     "psr-4": { "Trinity\\NotificationBundle\\": "" },
     "exclude-from-classmap": [
-      "/Tests/",
-      "/AppTests/"
+      "/Tests/"
     ]
   },
 
