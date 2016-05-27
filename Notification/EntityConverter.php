@@ -7,8 +7,10 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\SourceException;
 
@@ -18,6 +20,8 @@ use Trinity\NotificationBundle\Exception\SourceException;
  */
 class EntityConverter
 {
+    const DATETIME_FORMAT = 'Y-m-d\TH:i:s';
+
     /** @var  AnnotationsUtils */
     private $annotationsUtils;
 
@@ -85,9 +89,8 @@ class EntityConverter
      * @return array
      *
      * @throws SourceException
-     * @throws \Exception
      */
-    public function toArray($entity)
+    public function toArray($entity) : array
     {
         $entityArray = [];
 
@@ -145,6 +148,15 @@ class EntityConverter
 
 
     /**
+     * @param $entityManager
+     */
+    public function setEntityManager(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+
+    /**
      * Transform property to array.
      *
      * ([ 'property-name' => 'property-value' ]).
@@ -156,7 +168,7 @@ class EntityConverter
      *
      * @return array
      */
-    private function processProperty($entity, $property, $methodName)
+    private function processProperty($entity, $property, $methodName) : array
     {
         $reflectionProperty = new \ReflectionProperty($entity, $property);
 
@@ -180,17 +192,17 @@ class EntityConverter
      *
      * @return array
      */
-    private function processGetMethod($entity, $name, $longName)
+    private function processGetMethod($entity, $name, $longName) : array
     {
         $resultArray[$name] = call_user_func_array([$entity, $longName], []);
         if ($resultArray[$name] instanceof \DateTime) {
             /** @noinspection PhpUndefinedMethodInspection */
-            $resultArray[$name] = $resultArray[$name]->format('Y-m-d H:i:s');
+            $resultArray[$name] = $resultArray[$name]->format(self::DATETIME_FORMAT);
         }
-
+        
         if (is_object($resultArray[$name])) {
             if (method_exists($resultArray[$name], 'getId')) {
-                $resultArray[$name] = $resultArray[$name]->getId();
+                $resultArray[$name] = $resultArray[$name]->{'get'.ucfirst($this->entityIdFieldName)}();
             } else {
                 $resultArray[$name] = null;
             }
@@ -207,7 +219,7 @@ class EntityConverter
      *
      * @return array
      */
-    private function processMethod($entity, $method, $methodName)
+    private function processMethod($entity, $method, $methodName) : array
     {
         if (method_exists($entity, $method)) {
             $methodName = $method;
@@ -225,11 +237,5 @@ class EntityConverter
         }
 
         return $this->processGetMethod($entity, $method, $methodName);
-    }
-
-
-    public function setEntityManager($entityManager)
-    {
-        $this->entityManager = $entityManager;
     }
 }

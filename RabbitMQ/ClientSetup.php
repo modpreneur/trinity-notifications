@@ -9,56 +9,13 @@
 namespace Trinity\NotificationBundle\RabbitMQ;
 
 
-use Bunny\Client;
-use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
+
+
 
 /**
  * Class ClientSetup
  * @package Trinity\NotificationBundle\RabbitMQ
  */
-class ClientSetup extends BaseRabbitSetup
+class ClientSetup extends NotificationSetup
 {
-    /**
-     * @var string
-     */
-    protected $outputExchangeName;
-
-
-    /**
-     * @var string
-     */
-    protected $outputRoutingKey;
-
-
-    /**
-     * ClientSetup constructor.
-     * @param Client $client
-     * @param $listeningQueue
-     * @param $outputErrorMessagesExchangeName
-     * @param $outputExchangeName
-     * @internal param $outputRoutingKey
-     */
-    public function __construct(
-        Client $client,
-        $listeningQueue,
-        $outputErrorMessagesExchangeName,
-        $outputExchangeName
-    )
-    {
-        parent::__construct($client, $listeningQueue, $outputErrorMessagesExchangeName);
-
-        $this->outputExchangeName = $outputExchangeName;
-        $this->listeningQueue = $listeningQueue;
-        $this->outputErrorMessagesExchangeName = $outputErrorMessagesExchangeName;
-    }
-
-    /**
-     * Get exchange name which will be used to produce messages
-     *
-     * @return string
-     */
-    public function getOutputExchangeName()
-    {
-        return $this->outputExchangeName;
-    }
 }

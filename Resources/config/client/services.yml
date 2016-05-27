@@ -6,10 +6,9 @@ services:
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
             - "@trinity.notification.client.producer"
-            - "@security.token_storage"
             - "@trinity.notification.batch_manager"
+            - "@clientse"
             - "%trinity.notification.client.id%"
-            - "%trinity.notification.client.secret%"
         tags:
             - { name: trinity.notification.driver }
 
@@ -17,10 +16,9 @@ services:
         class: Trinity\NotificationBundle\RabbitMQ\ClientSetup
         arguments:
             - "@trinity.bunny.client"
-            - "%trinity.notification.listening.queue.name%"
-            - "%trinity.notification.output.error.exchange.name%"
-            - "%trinity.notification.output.exchange.name%"
-#            - "%trinity.notification.output.routing.key%"
+            - "%trinity.notification.listening.queues%"
+            - "%trinity.notification.output.messages.exchange.name%"
+            - "%trinity.notification.output.notifications.exchange.name%"
 
 
     trinity.notification.client.producer:
@@ -36,10 +34,8 @@ services:
             - "@event_dispatcher"
             - "@trinity.notification.client.producer"
 
-    trinity.notification.notification_request_handler:
-        class: Trinity\NotificationBundle\Notification\NotificationRequestHandler
+    trinity.notification.message_manager:
+        class: Trinity\NotificationBundle\Message\MessageManager
         arguments:
-            - '@trinity.notification.client.producer'
-            - '@doctrine.orm.entity_manager'
-            - '@trinity.notification.manager'
-            - "%trinity.notification.entities%"
+            - "@trinity.notification.client.producer"
+            - "@event_dispatcher"

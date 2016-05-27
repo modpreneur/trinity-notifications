@@ -17,9 +17,7 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class ChangesDoneEvent extends Event
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $entities;
 
 
@@ -37,7 +35,7 @@ class ChangesDoneEvent extends Event
     /**
      * @return array
      */
-    public function getEntities()
+    public function getEntities() : array
     {
         return $this->entities;
     }
@@ -45,7 +43,7 @@ class ChangesDoneEvent extends Event
     /**
      * @param array $entities
      */
-    public function setEntities($entities)
+    public function setEntities(array $entities)
     {
         $this->entities = $entities;
     }

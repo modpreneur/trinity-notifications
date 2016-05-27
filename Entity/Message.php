@@ -26,6 +26,7 @@ class Message
     const CLIENT_ID = 'clientId';
     const CREATED_ON = 'createdOn';
     const TYPE = 'messageType';
+    const PARENT_MESSAGE_UID = 'parent';
 
     /** @var  string */
     protected $uid;
@@ -59,6 +60,9 @@ class Message
     protected $type;
 
 
+    /** @var  string */
+    protected $parentMessageUid;
+
     /**
      * Message constructor.
      */
@@ -67,6 +71,7 @@ class Message
         $this->uid = uniqid('', true);
         $this->createdOn = (new \DateTime('now'))->getTimestamp();
         $this->jsonData = null;
+        $this->parentMessageUid = null;
     }
 
 
@@ -90,7 +95,15 @@ class Message
             'sha256',
             implode(
                 ',',
-                [$this->uid, $this->clientId, json_encode($this->jsonData), $this->createdOn, $this->clientSecret, $this->type]
+                [
+                    $this->uid,
+                    $this->clientId,
+                    json_encode($this->jsonData),
+                    $this->createdOn,
+                    $this->clientSecret,
+                    $this->type,
+                    $this->parentMessageUid
+                ]
             )
         );
     }
@@ -103,7 +116,7 @@ class Message
      * @throws \Trinity\NotificationBundle\Exception\MissingClientSecretException
      * @throws \Trinity\NotificationBundle\Exception\MissingClientIdException
      */
-    public function isHashValid()
+    public function isHashValid() : bool
     {
         $oldHash = $this->hash;
         $this->makeHash();
@@ -131,9 +144,7 @@ class Message
             $this->jsonData = \json_encode($this->rawData);
         }
 
-        if (!$this->hash) {
-            $this->makeHash();
-        }
+        $this->makeHash();
 
         return $this->getAsJson();
     }
@@ -142,13 +153,15 @@ class Message
     /**
      * Unpack message
      *
+     * Method can not have return type because PHP sucks... @see https://wiki.php.net/rfc/return_types
+     *
      * @param string $messageJson
      *
      * @return Message
      *
      * @throws DataNotValidJsonException
      */
-    public static function unpack(string $messageJson) : self
+    public static function unpack(string $messageJson)
     {
         $messageObject = new self();
 
@@ -165,6 +178,7 @@ class Message
         $messageObject->hash = $messageArray[self::HASH];
         $messageObject->jsonData = $messageArray[self::DATA];
         $messageObject->rawData = \json_decode($messageObject->jsonData, true);
+        $messageObject->parentMessageUid = $messageArray[self::PARENT_MESSAGE_UID];
 
         return $messageObject;
     }
@@ -175,7 +189,7 @@ class Message
      *
      * @return string
      */
-    protected function getAsJson()
+    public function getAsJson() : string
     {
         return json_encode(
             [
@@ -184,7 +198,8 @@ class Message
                 self::CLIENT_ID => $this->clientId,
                 self::CREATED_ON => $this->createdOn,
                 self::HASH => $this->hash,
-                self::DATA => $this->jsonData
+                self::DATA => $this->jsonData,
+                self::PARENT_MESSAGE_UID => $this->parentMessageUid
             ]
         );
     }
@@ -193,7 +208,7 @@ class Message
     /**
      * @return string
      */
-    public function getUid()
+    public function getUid() : string
     {
         return $this->uid;
     }
@@ -202,7 +217,7 @@ class Message
     /**
      * @param string $uid
      */
-    public function setUid($uid)
+    public function setUid(string $uid)
     {
         $this->uid = $uid;
     }
@@ -211,7 +226,7 @@ class Message
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId() : string
     {
         return $this->clientId;
     }
@@ -220,7 +235,7 @@ class Message
     /**
      * @param string $clientId
      */
-    public function setClientId($clientId)
+    public function setClientId(string $clientId)
     {
         $this->clientId = $clientId;
     }
@@ -229,7 +244,7 @@ class Message
     /**
      * @return string
      */
-    public function getClientSecret()
+    public function getClientSecret() : string
     {
         return $this->clientSecret;
     }
@@ -238,7 +253,7 @@ class Message
     /**
      * @param string $clientSecret
      */
-    public function setClientSecret($clientSecret)
+    public function setClientSecret(string $clientSecret)
     {
         $this->clientSecret = $clientSecret;
     }
@@ -247,7 +262,7 @@ class Message
     /**
      * @return \DateTime
      */
-    public function getCreatedOn()
+    public function getCreatedOn() : \DateTime
     {
         return $this->createdOn;
     }
@@ -256,7 +271,7 @@ class Message
     /**
      * @param \DateTime $createdOn
      */
-    public function setCreatedOn($createdOn)
+    public function setCreatedOn(\DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
     }
@@ -265,7 +280,7 @@ class Message
     /**
      * @return string
      */
-    public function getHash()
+    public function getHash() : string
     {
         return $this->hash;
     }
@@ -274,7 +289,7 @@ class Message
     /**
      * @param string $hash
      */
-    public function setHash($hash)
+    public function setHash(string $hash)
     {
         $this->hash = $hash;
     }
@@ -283,7 +298,7 @@ class Message
     /**
      * @return string
      */
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
@@ -292,7 +307,7 @@ class Message
     /**
      * @param string $type
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         $this->type = $type;
     }
@@ -301,7 +316,7 @@ class Message
     /**
      * @return string
      */
-    public function getJsonData()
+    public function getJsonData() : string
     {
         return $this->jsonData;
     }
@@ -310,7 +325,7 @@ class Message
     /**
      * @param string $jsonData
      */
-    public function setJsonData($jsonData)
+    public function setJsonData(string $jsonData)
     {
         $this->jsonData = $jsonData;
     }
@@ -319,7 +334,7 @@ class Message
     /**
      * @return mixed
      */
-    public function getRawData()
+    public function getRawData() : mixed
     {
         return $this->rawData;
     }
@@ -328,9 +343,26 @@ class Message
     /**
      * @param mixed $rawData
      */
-    public function setRawData($rawData)
+    public function setRawData(mixed $rawData)
     {
         $this->rawData = $rawData;
     }
-}
 
+
+    /**
+     * @return string
+     */
+    public function getParentMessageUid() : string
+    {
+        return $this->parentMessageUid;
+    }
+
+
+    /**
+     * @param string $parentMessageUid
+     */
+    public function setParentMessageUid(string $parentMessageUid)
+    {
+        $this->parentMessageUid = $parentMessageUid;
+    }
+}

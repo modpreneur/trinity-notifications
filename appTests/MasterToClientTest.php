@@ -20,7 +20,7 @@ class ServerToClientTest extends BaseTest
      */
     public function send()
     {
-        $client = shell_exec("php console.php trinity:notification:client:run > /dev/null 2>/dev/null &");
+        $client = shell_exec('php console.php trinity:notification:client:run > /dev/null 2>/dev/null &');
     }
 
 }

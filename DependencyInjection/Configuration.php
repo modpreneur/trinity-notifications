@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
+            
             //full class names of the forms
                 ->arrayNode('forms')
                     ->isRequired()
@@ -44,112 +45,107 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
+            
                 ->enumNode('mode')
                     ->values(['client', 'server'])
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
+            
                 ->arrayNode('drivers')
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('scalar')
                     ->end()
                 ->end()
+            
                 ->scalarNode('client_id')
                     ->cannotBeEmpty()
                 ->end()
-                ->scalarNode('client_secret')
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('notify_url')
-                    ->cannotBeEmpty()
-                ->end()
+            
                 ->scalarNode('entity_id_field')
                     ->cannotBeEmpty()
-                    ->defaultValue('id')
                 ->end()
-                    ->arrayNode('server_to_clients')
-                        ->cannotBeEmpty()
-                        ->children()
-                            ->scalarNode('dead_letter_exchange_name')
-                                ->defaultValue('exchange.dead.server.to.clients.notifications')
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('dead_letter_queue_name')
-                                ->defaultValue('queue.dead.server.to.clients.notifications')
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('exchange_name')
-                                ->defaultValue('exchange.server.to.clients.notifications')
-                                ->cannotBeEmpty()
-                            ->end()
 
-                            ->scalarNode('error_messages_queue_name')
-                                ->defaultValue('queue.server.to.clients.dead.notifications.error.messages')
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('error_messages_exchange_name')
-                                ->defaultValue('exchange.server.to.clients.dead.notifications.error.messages')
-                                ->cannotBeEmpty()
-                            ->end()
+                ->arrayNode('server_to_clients')
+                    ->cannotBeEmpty()
+                    ->children()
 
-                            ->scalarNode('queue_name_pattern')
-                                ->defaultValue('queue.client_:ID')
-                                ->cannotBeEmpty()
-                                ->validate()
-                                ->ifTrue(
-                                    function ($s) {
-                                        return strpos($s, ':ID') === false;
-                                    }
-                                )
-                                    ->thenInvalid('The queue_name_pattern should contain :ID as wildcard for client id. %s given.')
-                                ->end()
+                        ->scalarNode('dead_letter_exchange_name')
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('dead_letter_queue_name')
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('exchange_name')
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('queue_name_pattern')
+                            ->cannotBeEmpty()
+                            ->validate()
+                            ->ifTrue(
+                                function ($s) {
+                                    return strpos($s, ':ID') === false;
+                                }
+                            )
+                                ->thenInvalid('The queue_name_pattern should contain :ID as wildcard for client id. %s given.')
                             ->end()
                         ->end()
+
                     ->end()
+                ->end()
+
                 ->arrayNode('clients_to_server')
                     ->cannotBeEmpty()
                     ->children()
+
                         ->scalarNode('dead_letter_exchange_name')
-                            ->defaultValue('exchange.dead.clients.to.server.notifications')
                             ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode('dead_letter_queue_name')
-                            ->defaultValue('queue.dead.clients.to.server.notifications')
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->scalarNode('exchange_name')
-                            ->cannotBeEmpty()
-                            ->defaultValue('exchange.clients.to.server.notifications')
-                        ->end()
-                        ->scalarNode('queue_name')
-                            ->cannotBeEmpty()
-                            ->defaultValue('queue.clients.to.server.notifications')
                         ->end()
 
-                        ->scalarNode('error_messages_queue_name')
+                        ->scalarNode('dead_letter_queue_name')
                             ->cannotBeEmpty()
-                            ->defaultValue('queue.clients.to.server.dead.notifications.error.messages')
                         ->end()
-                        ->scalarNode('error_messages_exchange_name')
+
+                        ->scalarNode('notifications_exchange_name')
                             ->cannotBeEmpty()
-                            ->defaultValue('exchange.clients.to.server.dead.notifications.error.messages')
                         ->end()
+
+                        ->scalarNode('notifications_queue_name')
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('messages_exchange_name')
+                            ->cannotBeEmpty()
+                        ->end()
+
+                        ->scalarNode('messages_queue_name')
+                            ->cannotBeEmpty()
+                        ->end()
+
                     ->end()
                 ->end()
-                ->scalarNode('client_output_exchange_name')
+
+                ->scalarNode('client_notifications_exchange_name')
                     ->cannotBeEmpty()
-                    ->defaultValue('exchange.clients.to.server.notifications')
                 ->end()
-                ->scalarNode('error_messages_exchange_name')
+
+                ->scalarNode('client_messages_exchange_name')
                     ->cannotBeEmpty()
-                    ->defaultValue('exchange.server.to.clients.dead.notifications.error.messages')
                 ->end()
-                ->scalarNode('listening_queue_name')
+
+                ->arrayNode('listening_queues')
                     ->cannotBeEmpty()
                     ->isRequired()
+                    ->prototype('scalar')
+                        ->cannotBeEmpty()
+                    ->end()
                 ->end()
-            //link to a service - starting with '@'
+
+            //reference to a service - starting with '@'
                 ->scalarNode('client_secret_provider')
                     ->cannotBeEmpty()
                     ->beforeNormalization()
@@ -159,10 +155,6 @@ class Configuration implements ConfigurationInterface
                         }
                     )
                     ->then(function ($v) {
-                        if (0 === strpos($v, '@@')) {
-                            return substr($v, 1);
-                        }
-
                         return substr($v, 1);
                     })
                     ->end()

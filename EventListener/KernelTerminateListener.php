@@ -37,7 +37,6 @@ class KernelTerminateListener
      * KernelTerminateListener constructor.
      * @param NotificationManager $notificationManager
      * @param Logger $logger
-     * @param bool $debugMode
      */
     public function __construct(NotificationManager $notificationManager, Logger $logger)
     {

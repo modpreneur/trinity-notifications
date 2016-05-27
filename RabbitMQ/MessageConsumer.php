@@ -18,7 +18,10 @@ use Trinity\NotificationBundle\Event\ConsumeMessageErrorEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Message\MessageReader;
 
-abstract class NotificationConsumer extends Consumer
+/**
+ * Class MessageConsumer
+ */
+abstract class MessageConsumer extends Consumer
 {
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
@@ -52,16 +55,17 @@ abstract class NotificationConsumer extends Consumer
      *
      * @param Message $message
      *
+     * @param string  $sourceQueue
+     *
      * @throws \Exception On any error
-     * @return void
      */
-    public function consume(Message $message)
+    public function consume(Message $message, string $sourceQueue)
     {
         try {
-            dump($message->content);
-            $this->reader->read($message->content);
+            dump("Reading from queue '$sourceQueue': " . $message->content);
+            $this->reader->read($message, $sourceQueue);
         } catch (\Exception $exception) {
-            $this->dispatchErrorEvent($exception);
+            $this->dispatchErrorEvent($exception, $message);
 
             throw $exception;
         }
@@ -69,16 +73,17 @@ abstract class NotificationConsumer extends Consumer
 
 
     /**
-     * @param \Exception $e
+     * @param \Exception $exception
+     * @param Message    $message
      */
-    public function dispatchErrorEvent(\Exception $e)
+    public function dispatchErrorEvent(\Exception $exception, Message $message)
     {
         // If there are listeners for this event, fire it and get the message from it
         //(it allows changing the entityObject, data and ignoredFields)
         if ($this->eventDispatcher->hasListeners(Events::CONSUME_MESSAGE_ERROR)) {
-            $consumeMessageErrorEvent = new ConsumeMessageErrorEvent($e);
-            /** @var ConsumeMessageErrorEvent $consumeMessageErrorEvent */
-            $this->eventDispatcher->dispatch(Events::CONSUME_MESSAGE_ERROR, $consumeMessageErrorEvent);
+            $event = new ConsumeMessageErrorEvent($exception, $message);
+            /** @var ConsumeMessageErrorEvent $event */
+            $this->eventDispatcher->dispatch(Events::CONSUME_MESSAGE_ERROR, $event);
         }
     }
 }

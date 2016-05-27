@@ -6,7 +6,6 @@ services:
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
             - "@trinity.notification.server.producer"
-            - "@security.token_storage"
             - "@trinity.notification.batch_manager"
         tags:
             - { name: trinity.notification.driver }
@@ -15,20 +14,17 @@ services:
         class: Trinity\NotificationBundle\RabbitMQ\ServerSetup
         arguments:
             - "@trinity.bunny.client"
-            - "%trinity.notification.listening.queue.name%"
-            - "%trinity.notification.output.error.exchange.name%"
+            - "%trinity.notification.listening.queues%"
             - "%trinity.notification.server.to.clients.dead.letter.exchange.name%"
             - "%trinity.notification.server.to.clients.dead.letter.queue.name%"
             - "%trinity.notification.server.to.clients.exchange.name%"
             - "%trinity.notification.server.to.clients.queue.name.pattern%"
             - "%trinity.notification.clients.to.server.dead.letter.exchange.name%"
             - "%trinity.notification.clients.to.server.dead.letter.queue.name%"
-            - "%trinity.notification.clients.to.server.exchange.name%"
-            - "%trinity.notification.clients.to.server.queue.name%"
-            - "%trinity.notification.clients_to_server.error.messages.exchange.name%"
-            - "%trinity.notification.clients_to_server.error.messages.queue.name%"
-            - "%trinity.notification.server.to.clients.error.messages.exchange.name%"
-            - "%trinity.notification.server.to.clients.error.messages.queue.name%"
+            - "%trinity.notification.clients.to.server.notifications.exchange.name%"
+            - "%trinity.notification.clients.to.server.notifications.queue.name%"
+            - "%trinity.notification.clients.to.server.messages.exchange.name%"
+            - "%trinity.notification.clients.to.server.messages.queue.name%"
 
     trinity.notification.server.producer:
         class: Trinity\NotificationBundle\RabbitMQ\ServerProducer
@@ -43,10 +39,9 @@ services:
             - "@event_dispatcher"
             - "@trinity.notification.server.producer"
 
-    trinity.notification.notification_request_handler:
-        class: Trinity\NotificationBundle\Notification\NotificationRequestHandler
+
+    trinity.notification.message_manager:
+        class: Trinity\NotificationBundle\Message\MessageManager
         arguments:
-            - '@trinity.notification.server.producer'
-            - '@doctrine.orm.entity_manager'
-            - '@trinity.notification.manager'
-            - "%trinity.notification.entities%"
+            - "@trinity.notification.server.producer"
+            - "@event_dispatcher"

@@ -8,14 +8,11 @@
 
 namespace Trinity\NotificationBundle\RabbitMQ;
 
-
-use Trinity\Bundle\BunnyBundle\Producer\Producer;
-
 /**
  * Class ClientProducer
  * @package Trinity\NotificationBundle\RabbitMQ
  */
-class ClientProducer extends Producer
+class ClientProducer extends NotificationProducer
 {
     /**
      * ClientProducer constructor.
@@ -30,7 +27,7 @@ class ClientProducer extends Producer
      * @inheritdoc
      * @throws \Exception
      */
-    public function publish(string $data, string $clientId = null)
+    public function publish(string $data, string $exchangeName, string $clientId = null)
     {
         $this->rabbitSetup->setUp();
 
@@ -39,8 +36,8 @@ class ClientProducer extends Producer
         $channel->publish(
             $data,
             [],
-            $this->rabbitSetup->getOutputExchangeName(),
-            ""
+            $exchangeName,
+            ''
         );
     }
 }

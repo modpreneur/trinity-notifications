@@ -13,6 +13,8 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
+use Trinity\NotificationBundle\Interfaces\NotificationEntityRepositoryInterface;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
 
@@ -114,8 +116,6 @@ class EntityListener
      *
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
-     *
-     * @return array
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
@@ -135,8 +135,6 @@ class EntityListener
      *
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
-     *
-     * @return bool
      */
     public function postPersist(LifecycleEventArgs $args)
     {
@@ -156,6 +154,7 @@ class EntityListener
      *
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
+     * @throws \Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException
      */
     public function onFlush(OnFlushEventArgs $eventArgs)
     {
@@ -165,7 +164,25 @@ class EntityListener
 
         if ($enable && $this->notificationEnabled) {
             foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
-                $this->sendNotification($entityManager, $entity, self::DELETE);
+                //todo: queuing notification in this phase is wrong.
+                //todo: If the deleting fail in the DB the notification will be still sent.
+
+                //Get the entity from the database EAGERly and clone it because in this phase it has the ID
+                //later on the entity is deleted and the ID is removed from the object
+                //but the cloned object remains untouched and the id is still there.
+                //NOTE: eager loading does not make sense when creating entities.
+                //      In that case the entity ID is not present(entity is not yet persisted) and thus it can not be retrieved from the DB.
+                $repository = $eventArgs->getEntityManager()->getRepository(get_class($entity));
+
+                if ($repository instanceof NotificationEntityRepositoryInterface) {
+                    $eagerLoadedEntity = $repository->findEagerly($entity->getId());
+                    $this->sendNotification($entityManager, clone $eagerLoadedEntity, self::DELETE);
+                } else {
+                    throw new RepositoryInterfaceNotImplementedException(
+                        'The repostory of the entity ' . get_class($entity)
+                        . ' must implement ' . NotificationEntityInterface::class
+                    );
+                }
             }
         }
     }
@@ -175,7 +192,6 @@ class EntityListener
      * @param EntityManager $entityManager
      * @param               $entity
      * @param string        $method
-     *
      * @param array         $options
      *
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
@@ -198,8 +214,8 @@ class EntityListener
 
             foreach ($changeset as $index => $value) {
                 if ($this->processor->hasSource($entity, $index) || $this->processor->hasDependedSource(
-                    $entity,
-                    $index
+                        $entity,
+                        $index
                     )
                 ) {
                     $list[] = $index;
@@ -212,7 +228,7 @@ class EntityListener
         }
 
         if ($this->processor->hasHTTPMethod($entity, strtolower($method)) && ($doSendNotification ||
-                strtoupper($method) === self::POST)
+                strtoupper($method) === self::POST || strtoupper($method) === self::DELETE)
         ) {
             $this->notificationManager->queueEntity($entity, $method, !$this->isClient, $options);
         }
@@ -224,7 +240,7 @@ class EntityListener
      *
      * @return bool
      */
-    private function isNotificationEnabledForController(bool $default = true)
+    private function isNotificationEnabledForController(bool $default = true) : bool
     {
         //for testing...
         if ($this->defaultValueForEnabledController !== null) {

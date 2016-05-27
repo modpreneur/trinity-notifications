@@ -46,13 +46,12 @@ class NotificationManager
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param BatchManager $batchManager
+     * @param BatchManager             $batchManager
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         BatchManager $batchManager
-    )
-    {
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->batchManager = $batchManager;
         $this->drivers = [];
@@ -83,18 +82,21 @@ class NotificationManager
      * Internally stores the pointer to the entity to an array.
      *
      * @param NotificationEntityInterface $entity
-     * @param string $HTTPMethod
-     * @param bool $toClients
-     *
-     * @param array $options
+     * @param string                      $HTTPMethod
+     * @param bool                        $toClients
+     * @param array                       $options
      */
-    public function queueEntity(NotificationEntityInterface $entity, string $HTTPMethod = 'GET', bool $toClients = true, array $options = [])
-    {
+    public function queueEntity(
+        NotificationEntityInterface $entity,
+        string $HTTPMethod = 'GET',
+        bool $toClients = true,
+        array $options = []
+    ) {
         $array = [];
-        $array["entity"] = $entity;
-        $array["HTTPMethod"] = $HTTPMethod;
-        $array["toClients"] = $toClients;
-        $array["options"] = $options;
+        $array['entity'] = $entity;
+        $array['HTTPMethod'] = $HTTPMethod;
+        $array['toClients'] = $toClients;
+        $array['options'] = $options;
 
         $this->queuedNotifications[] = $array;
     }
@@ -107,9 +109,17 @@ class NotificationManager
     {
         foreach ($this->queuedNotifications as $queuedNotification) {
             if ($queuedNotification['toClients']) {
-                $this->sendToClients($queuedNotification['entity'], $queuedNotification['HTTPMethod'], $queuedNotification['options']);
+                $this->sendToClients(
+                    $queuedNotification['entity'],
+                    $queuedNotification['HTTPMethod'],
+                    $queuedNotification['options']
+                );
             } else {
-                $this->sendToServer($queuedNotification['entity'], $queuedNotification['HTTPMethod'], $queuedNotification['options']);
+                $this->sendToServer(
+                    $queuedNotification['entity'],
+                    $queuedNotification['HTTPMethod'],
+                    $queuedNotification['options']
+                );
             }
         }
 
@@ -120,7 +130,7 @@ class NotificationManager
 
     /**
      * @param NotificationEntityInterface $entity
-     * @param ClientInterface $client
+     * @param ClientInterface             $client
      */
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
@@ -131,17 +141,6 @@ class NotificationManager
         $this->batchManager->send();
         $this->clear();
 
-    }
-
-
-    /**
-     * @return BatchManager
-     * @throws \LogicException
-     * @internal
-     */
-    public function getBatchManager()
-    {
-        throw new \LogicException('Do not call batchManager->send() directly. Use $notificationManager->send() instead.');
     }
 
 
@@ -159,9 +158,8 @@ class NotificationManager
      *  Send notification to client
      *
      * @param NotificationEntityInterface $entity
-     * @param string $HTTPMethod
-     *
-     * @param array $options
+     * @param string                      $HTTPMethod
+     * @param array                       $options
      */
     protected function sendToClients(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
     {
@@ -182,11 +180,16 @@ class NotificationManager
      * Send notification to server
      *
      * @param NotificationEntityInterface $entity
-     * @param string $HTTPMethod
-     * @param array $options
+     * @param string                      $HTTPMethod
+     * @param array                       $options
+     *
      * @return array
      */
-    protected function sendToServer(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
+    protected function sendToServer(
+        NotificationEntityInterface $entity,
+        $HTTPMethod = 'GET',
+        array $options = []
+    ) : array
     {
         foreach ($this->drivers as $driver) {
             $this->executeEntityInDriver($entity, $driver, new Server(), $HTTPMethod, $options);
@@ -201,7 +204,7 @@ class NotificationManager
      *
      * @return Object[]
      */
-    protected function clientsToArray($clientsCollection)
+    protected function clientsToArray($clientsCollection) : array
     {
         $clients = [];
 
@@ -220,24 +223,24 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface $entity
      * @param NotificationDriverInterface $driver
-     * @param ClientInterface $client
-     * @param string $HTTPMethod [POST, PUT, GET, DELETE, ...]
-     *
-     * @param array $options
-     * @return array|null
+     * @param ClientInterface             $client
+     * @param string                      $HTTPMethod [POST, PUT, GET, DELETE, ...]
+     * @param array                       $options
      */
     private function executeEntityInDriver(
         NotificationEntityInterface $entity,
         NotificationDriverInterface $driver,
         ClientInterface $client,
-        $HTTPMethod = "POST",
+        $HTTPMethod = 'POST',
         array $options = []
-    )
-    {
+    ) {
         if ($this->eventDispatcher->hasListeners(Events::BEFORE_DRIVER_EXECUTE)) {
             $beforeDriverExecute = new BeforeDriverExecuteEvent($entity);
             /** @var BeforeDriverExecuteEvent $beforeDriverExecute */
-            $beforeDriverExecute = $this->eventDispatcher->dispatch(Events::BEFORE_DRIVER_EXECUTE, $beforeDriverExecute);
+            $beforeDriverExecute = $this->eventDispatcher->dispatch(
+                Events::BEFORE_DRIVER_EXECUTE,
+                $beforeDriverExecute
+            );
             $entity = $beforeDriverExecute->getEntity();
         }
 

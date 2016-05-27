@@ -93,7 +93,7 @@ class EventListenerTest extends BaseTest
             $object, $em
         );
 
-        $object->setName("Name_".rand(1, 9999));
+        $object->setName('Name_' .rand(1, 9999));
         $result = $ev->postPersist($args);
 
         $this->assertEquals(

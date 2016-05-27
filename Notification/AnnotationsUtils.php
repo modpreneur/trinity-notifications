@@ -47,7 +47,7 @@ class AnnotationsUtils
     /**
      * @return AnnotationReader
      */
-    public function getReader()
+    public function getReader() : AnnotationReader
     {
         return $this->reader;
     }
@@ -58,7 +58,7 @@ class AnnotationsUtils
      *
      * @return string
      */
-    public function getEntityClass($entity)
+    public function getEntityClass($entity) : string
     {
         return str_replace(self::FIX_NAMESPACE, '', get_class($entity));
     }
@@ -72,8 +72,6 @@ class AnnotationsUtils
      */
     public function getEntityAnnotation($entity, $annotationClass)
     {
-        //$class = $this->getEntityClass($entity);
-
         return $this->getClassAnnotation($entity, $annotationClass);
     }
 
@@ -98,7 +96,7 @@ class AnnotationsUtils
      *
      * @return array
      */
-    public function getClassAnnotations($entity, $annotationClass)
+    public function getClassAnnotations($entity, $annotationClass) : array
     {
         $class = $this->getEntityClass($entity);
         $reflectionObject = new \ReflectionClass($class);
@@ -149,7 +147,7 @@ class AnnotationsUtils
     /**
      * @param $entity
      *
-     * @return \ReflectionMethod[]
+     * @return array Array of arrays with items('method' => \ReflectionMethod, 'annotation' => Annotation)
      */
     public function getNotificationSetterMethods($entity) : array
     {
@@ -159,7 +157,7 @@ class AnnotationsUtils
     /**
      * @param $entity
      *
-     * @return \ReflectionMethod[]
+     * @return array Array of arrays with items('method' => \ReflectionMethod, 'annotation' => Annotation)
      */
     public function getNotificationGetterMethods($entity) : array
     {
@@ -168,14 +166,14 @@ class AnnotationsUtils
 
 
     /**
-     * @param $entity
+     * @param        $entity
      * @param string $annotationClass
      *
-     * @return \ReflectionMethod[]
+     * @return array Array of arrays with items('method' => \ReflectionMethod, 'annotation' => Annotation)
      */
     protected function getClassMethodsWithAnnotation($entity, string $annotationClass) : array
     {
-        $returnMethods = [];
+        $return = [];
         $class = $this->getEntityClass($entity);
         $reflectionClass = new \ReflectionClass($class);
         $classMethods = $reflectionClass->getMethods();
@@ -183,12 +181,18 @@ class AnnotationsUtils
         foreach ($classMethods as $method) {
             /** @var Annotation[] $methodAnnotations */
             $methodAnnotations = $this->reader->getMethodAnnotations($method);
-            if (count($methodAnnotations) > 0 && $methodAnnotations[0] instanceof $annotationClass) {
-                $returnMethods[] = $method;
+            if (count($methodAnnotations) > 0) {
+                foreach ($methodAnnotations as $methodAnnotation) {
+                    if ($methodAnnotation instanceof $annotationClass) {
+                        $return[] = ['method' => $method, 'annotation' => $methodAnnotation];
+                    }
+                }
+
+//
             }
         }
 
-        return $returnMethods;
+        return $return;
     }
 
 }

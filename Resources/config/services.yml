@@ -61,7 +61,7 @@ services:
             - "@trinity.notification.manager"
             - "@logger"
         tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelTerminate}
+            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate}
 
     trinity.notification.notification_events_listener:
         class: Trinity\NotificationBundle\EventListener\NotificationEventsListener
@@ -71,12 +71,11 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: kernel.event_listener, event: message.messageRead, method: onMessageRead}
-            - { name: kernel.event_listener, event: notification.changesDone, method: onChangesDone}
+            - { name: kernel.event_listener, event: notification.deadLetteredMessageRead, method: onDeadLetteredMessageRead}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
-        arguments:
-            - "@event_dispatcher"
+        parent: trinity.notification.message_manager
 
     trinity.notification.entity_conversion_handler:
         class: Trinity\NotificationBundle\Notification\EntityConversionHandler
@@ -114,6 +113,15 @@ services:
            - { name: kernel.event_listener, event: notification.associationEntityNotFoundExceptionThrown,  method: onAssociationEntityNotFoundExceptionThrown}
            - { name: kernel.event_listener, event: notification.notificationRequestEvent,  method: onNotificationRequestEvent}
 
+    trinity.notification.notification_request_handler:
+        class: Trinity\NotificationBundle\Notification\NotificationRequestHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@trinity.notification.message_manager'
+            - "@trinity.notification.entity_converter"
+            - "@trinity.notification.utils"
+            - "%trinity.notification.entities%"
+            - "%trinity.notification.is_client%"
 
     trinity.bunny.client:
         class: Bunny\Client

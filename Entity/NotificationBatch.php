@@ -57,7 +57,7 @@ class NotificationBatch extends Message
      *
      * @return array
      */
-    public function getArrayOfNotificationsConvertedToArray()
+    public function getArrayOfNotificationsConvertedToArray() : array
     {
         $data = [];
         /** @var Notification $notification */
@@ -72,7 +72,7 @@ class NotificationBatch extends Message
     /**
      * @return ArrayCollection<Notification>
      */
-    public function getNotifications()
+    public function getNotifications() : ArrayCollection
     {
         return $this->rawData;
     }
@@ -80,9 +80,10 @@ class NotificationBatch extends Message
 
     /**
      * @param Notification $notification
-     * @return $this
+     *
+     * @return NotificationBatch
      */
-    public function addNotification(Notification $notification)
+    public function addNotification(Notification $notification) : NotificationBatch
     {
         if (!$this->rawData->contains($notification)) {
             $this->rawData->add($notification);
@@ -107,7 +108,7 @@ class NotificationBatch extends Message
      * @param Notification $notification
      * @return $this
      */
-    public function removeNotification(Notification $notification)
+    public function removeNotification(Notification $notification) : NotificationBatch
     {
         $this->rawData->remove($notification);
 

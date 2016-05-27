@@ -19,7 +19,7 @@
     "sensio/framework-extra-bundle": "~3.0",
     "fzaninotto/faker": "^1.5",
     "trinity/logger": "dev-master",
-    "trinity/bunny": "dev-master#9e01ca4a"
+    "trinity/bunny": "dev-master"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",

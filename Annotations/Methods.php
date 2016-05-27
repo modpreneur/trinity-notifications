@@ -8,9 +8,10 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class Events.
+ * Class Methods
  *
- * @author Tomáš Jančar
+ * @package Trinity\NotificationBundle\Annotations
+ *
  * @Annotation
  */
 class Methods
@@ -22,7 +23,7 @@ class Methods
     /**
      * @param array $metadata
      */
-    public function __construct($metadata = [])
+    public function __construct(array $metadata = [])
     {
         $this->types = (isset($metadata['types']) && $metadata['types'] != '') ? ($metadata['types']) : [];
     }
@@ -33,7 +34,7 @@ class Methods
      *
      * @return bool
      */
-    public function hasType($typeName)
+    public function hasType($typeName) : bool
     {
         return in_array(strtolower($typeName), $this->getTypes());
     }
@@ -42,7 +43,7 @@ class Methods
     /**
      * @return array
      */
-    public function getTypes()
+    public function getTypes() : array
     {
         return $this->types;
     }

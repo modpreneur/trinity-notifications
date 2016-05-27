@@ -10,6 +10,9 @@ namespace Trinity\NotificationBundle\Annotations;
 
 /**
  * Class AssociationGetter
+ *
+ * @package Trinity\NotificationBundle\Annotations
+ *
  * @Annotation
  */
 class AssociationGetter

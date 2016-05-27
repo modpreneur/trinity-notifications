@@ -10,7 +10,6 @@ namespace Trinity\NotificationBundle\Notification;
 use Trinity\NotificationBundle\Annotations\Methods;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\SourceException;
-use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 
 
 /**
@@ -41,7 +40,7 @@ class NotificationUtils
      *
      * @return bool
      */
-    public function hasHTTPMethod($entity, $method)
+    public function hasHTTPMethod($entity, $method) : bool
     {
         /** @var Methods $classAnnotation */
         $classAnnotation = $this->annotationsUtils->getEntityAnnotation(
@@ -62,7 +61,7 @@ class NotificationUtils
      * @return bool
      * @throws NotificationException
      */
-    public function isNotificationEntity($entity)
+    public function isNotificationEntity($entity) : bool
     {
         $class = $this->annotationsUtils->getEntityClass($entity);
 
@@ -131,7 +130,7 @@ class NotificationUtils
      *
      * @throws SourceException
      */
-    public function hasSource($entity, $source)
+    public function hasSource($entity, string $source)
     {
         return $this->annotationsUtils->getClassSourceAnnotation($entity)->hasColumn($source);
     }
@@ -143,7 +142,7 @@ class NotificationUtils
      *
      * @return bool
      */
-    public function hasDependedSource($entity, $source)
+    public function hasDependedSource($entity, string $source) : bool
     {
         $annotation = $this->annotationsUtils->getClassDependedSourceAnnotation($entity);
         if ($annotation === null) {
@@ -175,7 +174,7 @@ class NotificationUtils
 
         $actionAnnotations = [];
 
-        if ($annotationsSource) {
+        if (is_array($annotationsSource)) {
             foreach ($annotationsSource as $annotations) {
                 if ($annotations instanceof $annotationClass) {
                     $actionAnnotations[] = $annotations;
@@ -199,7 +198,7 @@ class NotificationUtils
      *
      * @return bool
      */
-    public function isControllerOrActionDisabled($controller, $action = null)
+    public function isControllerOrActionDisabled($controller, $action = null) : bool
     {
         $annotations = $this->annotationsUtils->getClassAnnotation(
             $controller,

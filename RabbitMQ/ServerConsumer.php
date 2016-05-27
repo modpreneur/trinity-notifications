@@ -14,7 +14,7 @@ namespace Trinity\NotificationBundle\RabbitMQ;
  * Class ServerConsumer
  * @package Trinity\NotificationBundle\RabbitMQ
  */
-class ServerConsumer extends NotificationConsumer
+class ServerConsumer extends MessageConsumer
 {
     
 }

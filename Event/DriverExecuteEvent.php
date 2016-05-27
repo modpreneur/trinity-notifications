@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\Event;
 
 
-use Symfony\Component\EventDispatcher\Event;
+
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 
@@ -35,7 +35,7 @@ class DriverExecuteEvent extends NotificationEvent
     /**
      * @return NotificationEntityInterface
      */
-    public function getEntity()
+    public function getEntity() : NotificationEntityInterface
     {
         return $this->entity;
     }
@@ -44,7 +44,7 @@ class DriverExecuteEvent extends NotificationEvent
     /**
      * @param NotificationEntityInterface $entity
      */
-    public function setEntity($entity)
+    public function setEntity(NotificationEntityInterface $entity)
     {
         $this->entity = $entity;
     }

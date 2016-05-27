@@ -8,7 +8,7 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-use Trinity\NotificationBundle\Exception\DataNotValidJsonException;
+
 
 /**
  * Class Notification
@@ -25,28 +25,22 @@ class Notification
     const DATA = 'data';
     const MESSAGE_ID = 'messageId';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $messageId;
 
 
-    /**
-     * @var array Array of notification data(e.g. name, description)
-     */
+    /** @var array Array of notification data(e.g. name, description) */
     protected $data;
 
 
-    /**
-     * @var string HTTP method of the message.
-     */
+    /** @var string HTTP method of the message. */
     protected $method;
 
 
     /**
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->method;
     }
@@ -68,7 +62,7 @@ class Notification
     /**
      * @return string
      */
-    public function getMessageId()
+    public function getMessageId() : string
     {
         return $this->messageId;
     }
@@ -90,7 +84,7 @@ class Notification
     /**
      * @return array
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
     }
@@ -101,7 +95,7 @@ class Notification
      *
      * @return Notification
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $this->data = $data;
 
@@ -112,7 +106,7 @@ class Notification
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray() : array
     {
         return [
             self::MESSAGE_ID => $this->messageId,
@@ -127,9 +121,9 @@ class Notification
      *
      * @param array $notificationArray
      *
-     * @return $this
+     * @return Notification
      */
-    public static function fromArray(array $notificationArray = [])
+    public static function fromArray(array $notificationArray = []) : self
     {
         $notificationObject = new self();
 

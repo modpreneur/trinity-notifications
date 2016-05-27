@@ -11,10 +11,10 @@ namespace Trinity\NotificationBundle\EventListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\Message;
-use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\MessageReadEvent;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
+use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
 use Trinity\NotificationBundle\Interfaces\ClientSecretProviderInterface;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
@@ -47,8 +47,9 @@ class NotificationEventsListener
     /**
      * NotificationEventsListener constructor.
      *
-     * @param NotificationReader $notificationReader
+     * @param NotificationReader       $notificationReader
      * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityManagerInterface   $entityManager
      */
     public function __construct(
         NotificationReader $notificationReader,
@@ -69,6 +70,7 @@ class NotificationEventsListener
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Exception
      */
     public function onMessageRead(MessageReadEvent $event)
     {
@@ -90,24 +92,10 @@ class NotificationEventsListener
 
 
     /**
-     * @param ChangesDoneEvent $event
-     */
-    public function onChangesDone(ChangesDoneEvent $event)
-    {
-        $entities = $event->getEntities();
-
-        foreach ($entities as $entity) {
-            $this->entityManager->persist($entity);
-        }
-        
-        $this->entityManager->flush();
-    }
-
-
-    /**
      * @param Message $message
      *
      * @return array
+     *
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
@@ -118,7 +106,17 @@ class NotificationEventsListener
      */
     protected function handleNotificationMessage(Message $message)
     {
-        return $this->notificationReader->read($message);
+        try {
+            $entities = $this->notificationReader->read($message);
+
+            $this->dispatchSetMessageStatusEvent($message, 'ok');
+
+            return $entities;
+        } catch (\Exception $exception) {
+            $this->dispatchSetMessageStatusEvent($message, 'error');
+
+            throw $exception;
+        }
     }
 
     /**
@@ -132,6 +130,22 @@ class NotificationEventsListener
             $this->eventDispatcher->dispatch(Events::NOTIFICATION_REQUEST_EVENT, $event);
         }
     }
+
+
+    /**
+     * @param Message $message
+     * @param string  $status
+     *
+     * @internal param $Message $
+     */
+    protected function dispatchSetMessageStatusEvent(Message $message, string $status)
+    {
+        if ($this->eventDispatcher->hasListeners(Events::SET_MESSAGE_STATUS)) {
+            /** @var MessageReadEvent $event */
+            $this->eventDispatcher->dispatch(Events::SET_MESSAGE_STATUS, new SetMessageStatusEvent($message, $status));
+        }
+    }
+
 
     /**
      * Set event as processed and stop propagation of the event

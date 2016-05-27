@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\Notification;
-use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\NotificationException;
@@ -92,24 +92,18 @@ class NotificationParser
         $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;
         $this->entities = $entities;
-
-        // Replace "_" for "-" in all keys
-        foreach ($this->entities as $key => $className) {
-            $newKey = str_replace('_', '-', $key);
-            unset($this->entities[$key]);
-            $this->entities[$newKey] = $className;
-        }
     }
 
     /**
      * @param array $notifications
      *
      * @return array
+     *
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws NotificationException
      */
-    public function parseNotifications(array $notifications = [])
+    public function parseNotifications(array $notifications = []) : array
     {
         $processedEntities = [];
 
@@ -119,8 +113,8 @@ class NotificationParser
 
             if (!array_key_exists($entityName, $this->entities)) {
                 throw new NotificationException(
-                    "No classname found for entityName: \"" . $entityName . "\".
-                    Have you defined it in the configuration under trinity_notification:entities?"
+                    "No classname found for entityName: '$entityName'." .
+                    'Have you defined it in the configuration under trinity_notification:entities?'
                 );
             }
 
@@ -214,9 +208,9 @@ class NotificationParser
      * @param $fullClassName string Full classname(with namespace) of the entity.
      * e.g. AppBundle\\Entity\\Product\\StandardProduct
      *
-     * @return null|object
+     * @return null|NotificationEntityInterface
      */
-    protected function getEntityObject($fullClassName)
+    protected function getEntityObject(string $fullClassName) : NotificationEntityInterface
     {
         return $this->entityManager->getRepository($fullClassName)->findOneBy(
             [$this->entityIdFieldName => $this->notificationData['id']]
@@ -232,11 +226,15 @@ class NotificationParser
      *
      * @throws NotificationException
      */
-    public function checkLogicalViolations($entityObject, $fullClassName, $method)
-    {
+    public function checkLogicalViolations(
+        NotificationEntityInterface $entityObject,
+        string $fullClassName,
+        string $method
+    ) {
         if ($entityObject === null && $method === 'DELETE') {
             throw new NotificationException(
                 "Trying to delete entity of class $fullClassName with id " . $this->notificationData['id']
+                . ' but the entity does not exist'
             );
         }
 

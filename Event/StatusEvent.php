@@ -59,15 +59,15 @@ class StatusEvent extends Event
      * @param BaseUser $user
      */
     public function __construct(
-        $client,
-        $entityName,
-        $entityId,
-        $url,
-        $json,
-        $method,
+        ClientInterface $client,
+        string $entityName,
+        int $entityId,
+        string $url,
+        string $json,
+        string $method,
         \Exception $exception = null,
-        $message = self::NULL_MESSAGE,
-        $user = null
+        string $message = self::NULL_MESSAGE,
+        BaseUser $user = null
     ) {
         $this->exception = $exception;
         $this->entityName = $entityName;
@@ -77,11 +77,10 @@ class StatusEvent extends Event
         $this->client = $client;
         $this->entityId = $entityId;
         $this->user = $user;
+        $this->message = $message;
 
-        if ($exception && $message === null) {
+        if ($exception !== null && $message === null) {
             $this->message = $exception->getMessage();
-        } else {
-            $this->message = $message;
         }
     }
 
@@ -89,7 +88,7 @@ class StatusEvent extends Event
     /**
      * @return \Exception
      */
-    public function getException()
+    public function getException() : \Exception
     {
         return $this->exception;
     }
@@ -98,7 +97,7 @@ class StatusEvent extends Event
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage() : string
     {
         return $this->message;
     }
@@ -107,7 +106,7 @@ class StatusEvent extends Event
     /**
      * @return string
      */
-    public function getEntityName()
+    public function getEntityName() : string
     {
         return $this->entityName;
     }
@@ -116,7 +115,7 @@ class StatusEvent extends Event
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl() : string
     {
         return $this->url;
     }
@@ -125,7 +124,7 @@ class StatusEvent extends Event
     /**
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->method;
     }
@@ -134,7 +133,7 @@ class StatusEvent extends Event
     /**
      * @return string
      */
-    public function getJson()
+    public function getJson() : string
     {
         return $this->json;
     }
@@ -143,7 +142,7 @@ class StatusEvent extends Event
     /**
      * @return bool
      */
-    public function hasError()
+    public function hasError() : bool
     {
         return $this->exception !== null;
     }
@@ -152,7 +151,7 @@ class StatusEvent extends Event
     /**
      * @return ClientInterface
      */
-    public function getClient()
+    public function getClient() : ClientInterface
     {
         return $this->client;
     }
@@ -161,7 +160,7 @@ class StatusEvent extends Event
     /**
      * @return int
      */
-    public function getEntityId()
+    public function getEntityId() : int
     {
         return $this->entityId;
     }
@@ -170,7 +169,7 @@ class StatusEvent extends Event
     /**
      * @param int $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId(int $entityId)
     {
         $this->entityId = $entityId;
     }
@@ -179,7 +178,7 @@ class StatusEvent extends Event
     /**
      * @return BaseUser
      */
-    public function getUser()
+    public function getUser() : BaseUser
     {
         return $this->user;
     }
@@ -188,9 +187,9 @@ class StatusEvent extends Event
     /**
      * @param BaseUser $user
      */
-    public function setUser($user)
+    public function setUser(BaseUser $user)
     {
         $this->user = $user;
     }
-
 }
+

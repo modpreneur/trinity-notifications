@@ -7,9 +7,10 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class DependentSources.
+ * Class DependentSources
  *
- * @author Tomáš Jančar
+ * @package Trinity\NotificationBundle\Annotations
+ *
  * @Annotation
  */
 class DependentSources extends Source

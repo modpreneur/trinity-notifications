@@ -8,7 +8,7 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\Message;
 use Trinity\NotificationBundle\Entity\Notification;
@@ -24,15 +24,11 @@ use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
  */
 class NotificationReader
 {
-    /**
-     * @var NotificationParser
-     */
+    /** @var NotificationParser */
     protected $parser;
 
 
-    /**
-     * @var  EventDispatcherInterface
-     */
+    /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
 
@@ -59,6 +55,7 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
+     *
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
@@ -67,7 +64,7 @@ class NotificationReader
      *
      * @throws \Exception
      */
-    public function read(Message $message)
+    public function read(Message $message) : array
     {
         /** @var array $notificationsArrays */
         $notificationsArrays = $message->getRawData();
@@ -81,7 +78,7 @@ class NotificationReader
         try {
             $entities = $this->parser->parseNotifications($notifications);
         } catch (AssociationEntityNotFoundException $e) {
-            $e->setMessageId($message->getUid());
+            $e->setMessageObject($message);
 
             if ($this->eventDispatcher->hasListeners(Events::ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN)) {
                 $event = new AssociationEntityNotFoundExceptionThrown($e);

@@ -8,9 +8,9 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class Source.
+ * Class Source
  *
- * @author  Tomáš Jančar
+ * @package Trinity\NotificationBundle\Annotations
  *
  * @Annotation
  */
@@ -26,7 +26,7 @@ class Source
     /**
      * @param array $metadata
      */
-    public function __construct($metadata = [])
+    public function __construct(array $metadata = [])
     {
         $this->columns = (isset($metadata['columns']) && $metadata['columns'] != '') ? array_map(
             'trim',
@@ -47,7 +47,7 @@ class Source
     /**
      * @return array
      */
-    public function getColumns()
+    public function getColumns() : array
     {
         return $this->columns;
     }
@@ -56,7 +56,7 @@ class Source
     /**
      * @return bool
      */
-    public function hasColumns()
+    public function hasColumns() : bool
     {
         return !empty($this->columns);
     }
@@ -67,7 +67,7 @@ class Source
      *
      * @return bool
      */
-    public function isAllColumnsSelected()
+    public function isAllColumnsSelected() : bool
     {
         return $this->allColumnsSelected;
     }
@@ -78,7 +78,7 @@ class Source
      *
      * @return bool
      */
-    public function hasColumn($column)
+    public function hasColumn(string $column) : bool
     {
         $cols = [];
         foreach ($this->columns as $c) {

@@ -14,28 +14,21 @@ namespace Trinity\NotificationBundle\Event;
  */
 final class Events
 {
-    //todo: cleanup the events!
     const BEFORE_DRIVER_EXECUTE = 'notification.beforeDriverExecute';
 
     const AFTER_DRIVER_EXECUTE = 'notification.afterDriverExecute';
-
-    const BEFORE_BATCH_PUBLISH = 'notification.beforeBatchPublish';
+    
+    const BEFORE_MESSAGE_PUBLISH = 'message.beforeMessagePublish';
 
     const BEFORE_MESSAGE_READ = 'message.beforeMessageRead';
 
     const MESSAGE_READ = 'message.messageRead';
 
-    const BATCH_VALIDATED = 'notification.batchValidated';
+    const DEAD_LETTERED_MESSAGE_READ = 'message.deadLetteredMessageRead';
 
     const BEFORE_PARSE_NOTIFICATION = 'notification.beforeParseNotification';
-
-    const BEFORE_PERFORM_ENTITY_CHANGES = 'notification.beforePerformEntityChanges';
-
-    const AFTER_PERFORM_ENTITY_CHANGES= 'notification.afterPerformEntityChanges';
     
-    const AFTER_BATCH_PROCESSED = 'notification.afterBatchProcessed';
-
-    const CONSUME_MESSAGE_ERROR= 'notification.consumeMessageError';
+    const CONSUME_MESSAGE_ERROR = 'notification.consumeMessageError';
 
     const NOTIFICATION_REQUEST_EVENT = 'notification.notificationRequestEvent';
 
@@ -47,4 +40,7 @@ final class Events
 
     const CHANGES_DONE_EVENT = 'notification.changesDone';
 
+    const AFTER_MESSAGE_UNPACKED = 'message.afterMessageUnpacked';
+
+    const SET_MESSAGE_STATUS = 'message.setMessageStatus';
 }

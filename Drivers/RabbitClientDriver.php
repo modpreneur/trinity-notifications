@@ -8,18 +8,21 @@
 
 namespace Trinity\NotificationBundle\Drivers;
 
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Entity\Server;
-use Trinity\NotificationBundle\Notification\NotificationUtils;
+use Trinity\NotificationBundle\Interfaces\ClientSecretProviderInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
+use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\RabbitMQ\ClientProducer;
 
+/**
+ * Class RabbitClientDriver
+ *
+ * @package Trinity\NotificationBundle\Drivers
+ */
 class RabbitClientDriver extends BaseDriver
 {
     /** @var  ClientProducer */
@@ -30,37 +33,32 @@ class RabbitClientDriver extends BaseDriver
     protected $clientId;
 
 
-    /** @var string */
-    protected $clientSecret;
+    /** @var ClientSecretProviderInterface */
+    protected $clientSecretProvider;
 
 
     /**
      * NotificationManager constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityConverter $entityConverter
-     * @param NotificationUtils $notificationUtils
-     * @param ClientProducer $producer
-     * @param TokenStorage $tokenStorage
-     * @param BatchManager $batchManager
-     * @param string $clientId
-     * @param string $clientSecret
+     * @param EntityConverter          $entityConverter
+     * @param NotificationUtils        $notificationUtils
+     * @param ClientProducer           $producer
+     * @param BatchManager             $batchManager
+     * @param string                   $clientId
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         ClientProducer $producer,
-        TokenStorage $tokenStorage,
         BatchManager $batchManager,
-        string $clientId,
-        string $clientSecret
+        string $clientId
     ) {
-        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $tokenStorage, $batchManager);
+        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
 
         $this->producer = $producer;
         $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
 
         $this->batchManager->setProducer($producer);
     }
@@ -85,16 +83,25 @@ class RabbitClientDriver extends BaseDriver
         $entityArray = $this->entityConverter->toArray($entity);
 
         //get entity "name", e.g. "product", "user"
-        $entityArray["entityName"] = $this->notificationUtils->getUrlPostfix($entity);
+        $entityArray['entityName'] = $this->notificationUtils->getUrlPostfix($entity);
 
         $batch = $this->batchManager->createBatch($this->clientId);
-        //$batch is only pointer to the batch created and stored in BatchManager 
-        $batch->setClientSecret($this->clientSecret);
+        //$batch is only pointer to the batch created and stored in BatchManager
+        $batch->setClientSecret($this->clientSecretProvider->getClientSecret($this->clientId));
         $notification = new Notification();
         $notification->setData($entityArray);
-        $notification->setMethod($params["HTTPMethod"]);
+        $notification->setMethod($params['HTTPMethod']);
         $notification->setMessageId($batch->getUid());
         $batch->addNotification($notification);
+    }
+
+
+    /**
+     * @param ClientSecretProviderInterface $clientSecretProvider
+     */
+    public function setClientSecretProvider(ClientSecretProviderInterface $clientSecretProvider)
+    {
+        $this->clientSecretProvider = $clientSecretProvider;
     }
 
 
@@ -103,8 +110,8 @@ class RabbitClientDriver extends BaseDriver
      *
      * @return string
      */
-    public function getName()
+    public function getName() : string
     {
-        return "rabbit_server_driver";
+        return 'rabbit_server_driver';
     }
 }

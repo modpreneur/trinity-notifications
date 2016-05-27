@@ -9,17 +9,14 @@
 namespace Trinity\NotificationBundle\RabbitMQ;
 
 
-use Bunny\Message;
-use Trinity\Bundle\BunnyBundle\Consumer\Consumer;
-use Trinity\Bundle\BunnyBundle\Setup\BaseRabbitSetup;
-use Trinity\NotificationBundle\Notification\NotificationReader;
+
 
 
 /**
  * Class ClientConsumer
  * @package Trinity\NotificationBundle\RabbitMQ
  */
-class ClientConsumer extends NotificationConsumer
+class ClientConsumer extends MessageConsumer
 {
 
 }

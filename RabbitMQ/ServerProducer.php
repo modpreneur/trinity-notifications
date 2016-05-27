@@ -7,36 +7,42 @@
  */
 
 namespace Trinity\NotificationBundle\RabbitMQ;
-use Trinity\Bundle\BunnyBundle\Producer\Producer;
-
 
 /**
  * Class ServerProducer
+ *
  * @package Trinity\NotificationBundle\RabbitMQ
  */
-class ServerProducer extends Producer
+class ServerProducer extends NotificationProducer
 {
+    /**
+     * ServerProducer constructor.
+     *
+     * @param ServerSetup $serverSetup
+     */
     public function __construct(ServerSetup $serverSetup)
     {
         parent::__construct($serverSetup);
     }
 
+
     /**
      * @inheritdoc
+     *
      * @param clientId string Client id
+     *
      * @throws \Exception
      */
-    public function publish(string $data, string $clientId = null)
+    public function publish(string $data, string $exchangeName, string $clientId = null)
     {
-        $this->rabbitSetup->setUp();
-
-        $channel = $this->rabbitSetup->getChannel();
-
-        //routingKey = queueName in this case
-        $routingKey = $this->rabbitSetup->getOutputRoutingKey(["clientId" => $clientId]);
-
         /** @var ServerSetup $setup */
         $setup = $this->rabbitSetup;
+        $setup->setUp();
+
+        $channel = $setup->getChannel();
+
+        //routingKey = queueName in this case
+        $routingKey = $setup->getOutputRoutingKey(['clientId' => $clientId]);
 
         $setup->declareServerToClientQueue($routingKey);
         $setup->bindServerToClientQueueToExchange($routingKey);
@@ -44,8 +50,8 @@ class ServerProducer extends Producer
         $channel->publish(
             $data,
             [],
-            $this->rabbitSetup->getOutputExchangeName(),
-            $this->rabbitSetup->getOutputRoutingKey(["clientId" => $clientId])
+            $exchangeName,
+            $setup->getOutputRoutingKey(['clientId' => $clientId])
         );
     }
 }

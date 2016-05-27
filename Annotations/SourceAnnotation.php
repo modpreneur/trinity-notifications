@@ -8,7 +8,11 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class SourceAnnotation.
+ * Class SourceAnnotation
+ *
+ * @package Trinity\NotificationBundle\Annotations
+ *
+ * @Annotation
  */
 class SourceAnnotation
 {

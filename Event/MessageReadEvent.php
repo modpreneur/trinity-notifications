@@ -22,27 +22,31 @@ class MessageReadEvent extends Event
     protected $message;
 
 
+    /** @var  string */
+    protected $sourceQueue;
+
+
     /**
      * @var bool Was the event processed by any listener?
      */
     protected $eventProcessed = false;
 
-    
     /**
      * MessageReadEvent constructor.
      *
      * @param Message $message
+     * @param string  $sourceQueue
      */
-    public function __construct(Message $message)
+    public function __construct(Message $message, string $sourceQueue)
     {
         $this->message = $message;
+        $this->sourceQueue = $sourceQueue;
     }
-
 
     /**
      * @return Message
      */
-    public function getMessage()
+    public function getMessage() : Message
     {
         return $this->message;
     }
@@ -51,16 +55,34 @@ class MessageReadEvent extends Event
     /**
      * @param Message $message
      */
-    public function setMessage($message)
+    public function setMessage(Message $message)
     {
         $this->message = $message;
     }
 
 
     /**
+     * @return string
+     */
+    public function getSourceQueue() : string
+    {
+        return $this->sourceQueue;
+    }
+
+
+    /**
+     * @param string $sourceQueue
+     */
+    public function setSourceQueue(string $sourceQueue)
+    {
+        $this->sourceQueue = $sourceQueue;
+    }
+
+
+    /**
      * @return boolean
      */
-    public function isEventProcessed()
+    public function isEventProcessed() : bool
     {
         return $this->eventProcessed;
     }
@@ -69,8 +91,9 @@ class MessageReadEvent extends Event
     /**
      * @param boolean $eventProcessed
      */
-    public function setEventProcessed($eventProcessed)
+    public function setEventProcessed(bool $eventProcessed)
     {
         $this->eventProcessed = $eventProcessed;
     }
 }
+

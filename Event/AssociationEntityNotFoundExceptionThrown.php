@@ -7,11 +7,14 @@
  */
 
 namespace Trinity\NotificationBundle\Event;
+
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
 
 /**
  * Class AssociationEntityNotFoundExceptionThrown
+ *
+ * @package Trinity\NotificationBundle\Event
  */
 class AssociationEntityNotFoundExceptionThrown extends NotificationEvent
 {
@@ -32,7 +35,7 @@ class AssociationEntityNotFoundExceptionThrown extends NotificationEvent
     /**
      * @return AssociationEntityNotFoundException
      */
-    public function getException()
+    public function getException() : AssociationEntityNotFoundException
     {
         return $this->exception;
     }
@@ -41,8 +44,9 @@ class AssociationEntityNotFoundExceptionThrown extends NotificationEvent
     /**
      * @param AssociationEntityNotFoundException $exception
      */
-    public function setException($exception)
+    public function setException(AssociationEntityNotFoundException $exception)
     {
         $this->exception = $exception;
     }
 }
+

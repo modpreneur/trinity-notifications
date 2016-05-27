@@ -20,9 +20,10 @@ class BeforeMessageReadEvent extends NotificationEvent
 
     /**
      * BeforeMessageReadEvent constructor.
+     *
      * @param string $message
      */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         $this->message = $message;
     }
@@ -31,7 +32,7 @@ class BeforeMessageReadEvent extends NotificationEvent
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage() : string
     {
         return $this->message;
     }
@@ -40,9 +41,9 @@ class BeforeMessageReadEvent extends NotificationEvent
     /**
      * @param string $message
      */
-    public function setMessage($message)
+    public function setMessage(string $message)
     {
         $this->message = $message;
     }
-    
+
 }

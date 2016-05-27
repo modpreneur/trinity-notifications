@@ -8,15 +8,17 @@
 
 namespace Trinity\NotificationBundle\Exception;
 
+use Trinity\NotificationBundle\Entity\Message;
 
 /**
  * Class AssociationEntityNotFoundException
+ *
+ * @package Trinity\NotificationBundle\Exception
  */
 class AssociationEntityNotFoundException extends NotificationException
 {
-//todo: remove constructor!!! in all exceptions
-    /** @var  string */
-    protected $messageId;
+    /** @var  Message */
+    protected $messageObject;
 
     /** @var  string */
     protected $entityName;
@@ -24,42 +26,29 @@ class AssociationEntityNotFoundException extends NotificationException
     /** @var  string */
     protected $entityId;
 
+    
     /**
-     * AssociationEntityNotFoundException constructor.
-     *
-     * @param string $messageId
-     * @param string $entityName
-     * @param string $entityId
+     * @return Message
      */
-    public function __construct(string $messageId = null, string $entityName = null, string $entityId = null)
+    public function getMessageObject() : Message
     {
-        $this->messageId = $messageId;
-        $this->entityName = $entityName;
-        $this->entityId = $entityId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessageId()
-    {
-        return $this->messageId;
+        return $this->messageObject;
     }
 
 
     /**
-     * @param string $messageId
+     * @param Message $message
      */
-    public function setMessageId($messageId)
+    public function setMessageObject(Message $message)
     {
-        $this->messageId = $messageId;
+        $this->messageObject = $message;
     }
 
 
     /**
      * @return string
      */
-    public function getEntityName()
+    public function getEntityName() : string
     {
         return $this->entityName;
     }
@@ -68,7 +57,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @param string $entityName
      */
-    public function setEntityName($entityName)
+    public function setEntityName(string $entityName)
     {
         $this->entityName = $entityName;
     }
@@ -77,7 +66,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @return string
      */
-    public function getEntityId()
+    public function getEntityId() : string
     {
         return $this->entityId;
     }
@@ -86,7 +75,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @param string $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId(string $entityId)
     {
         $this->entityId = $entityId;
     }

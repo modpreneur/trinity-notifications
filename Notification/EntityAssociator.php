@@ -10,6 +10,7 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
+use Trinity\NotificationBundle\Annotations\AssociationSetter;
 use Trinity\NotificationBundle\Entity\Association;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
@@ -53,10 +54,10 @@ class EntityAssociator
      * EntityAssociator constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param AnnotationsUtils $annotationsUtils
-     * @param bool $isClient
-     * @param string $serverIdField
-     * @param array $entities
+     * @param AnnotationsUtils       $annotationsUtils
+     * @param bool                   $isClient
+     * @param string                 $serverIdField
+     * @param array                  $entities
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -71,13 +72,6 @@ class EntityAssociator
         $this->serverIdField = $serverIdField;
         $this->entities = $entities;
         $this->getServerIdMethod = 'get' . ucfirst($serverIdField);
-
-        // Replace "_" for "-" in all keys
-        foreach ($this->entities as $key => $className) {
-            $newKey = str_replace('_', '-', $key);
-            unset($this->entities[$key]);
-            $this->entities[$newKey] = $className;
-        }
     }
 
 
@@ -132,7 +126,6 @@ class EntityAssociator
                 }
             }
         }
-
     }
 
 
@@ -140,9 +133,9 @@ class EntityAssociator
      * Associate given $entity with $associatedEntity.
      *
      * @param NotificationEntityInterface $entity
-     * @param Association $entityAssociation
+     * @param Association                 $entityAssociation
      * @param NotificationEntityInterface $associatedEntity
-     * @param array $entities
+     * @param array                       $entities
      *
      * @throws AssociationEntityNotFoundException
      */
@@ -167,11 +160,11 @@ class EntityAssociator
 
         //the entity was not associated
         //probably the entityToAssociate does not exist
-        throw new AssociationEntityNotFoundException(
-            null,
-            array_search(get_class($associatedEntity), $this->entities, false),
-            $associatedEntity->$getServerIdMethod()
-        );
+        $exception = new AssociationEntityNotFoundException();
+        $exception->setEntityName(array_search(get_class($associatedEntity), $this->entities, false));
+        $exception->setEntityId($associatedEntity->$getServerIdMethod());
+
+        throw $exception;
     }
 
 
@@ -194,15 +187,16 @@ class EntityAssociator
      */
     protected function prepareEntityAssociations(NotificationEntityInterface $entity)
     {
-        $setterMethods = $this->annotationsUtils->getNotificationSetterMethods($entity);
-        $getterMethods = $this->annotationsUtils->getNotificationGetterMethods($entity);
+        $setterMethodsInfo = $this->annotationsUtils->getNotificationSetterMethods($entity);
+        $getterMethodsInfo = $this->annotationsUtils->getNotificationGetterMethods($entity);
+        $this->preparedAssociations[get_class($entity)] = [];
 
-        /** @var \ReflectionMethod $setterMethod */
-        foreach ($setterMethods as $setterMethod) {
-            $setterParameterClass = $setterMethod->getParameters()[0]->getClass();
-            $setterParameterType = is_object($setterParameterClass)
-                ? $setterParameterClass->getName()
-                : null;
+        foreach ($setterMethodsInfo as $setterMethodInfo) {
+            /** @var \ReflectionMethod $setterMethod */
+            $setterMethod = $setterMethodInfo['method'];
+            /** @var AssociationSetter $setterAnnotation */
+            $setterAnnotation = $setterMethodInfo['annotation'];
+            $setterParameterType = $setterAnnotation->getTargetEntity();
 
             //if the parameter type is class
             if ($setterParameterType !== null) {
@@ -211,7 +205,10 @@ class EntityAssociator
 
                 if ($repository !== null) {
                     //find a getter method
-                    foreach ($getterMethods as $getterMethod) {
+                    foreach ($getterMethodsInfo as $getterMethodInfo) {
+                        /** @var \ReflectionMethod $getterMethod */
+                        $getterMethod = $getterMethodInfo['method'];
+
                         $setterName = str_replace('get', 'set', $getterMethod->getName());
                         //if the name without set and get is the same
                         if ($setterName === $setterMethod->getName()) {

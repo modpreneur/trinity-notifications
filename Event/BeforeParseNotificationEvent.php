@@ -14,21 +14,15 @@ namespace Trinity\NotificationBundle\Event;
  */
 class BeforeParseNotificationEvent extends NotificationEvent
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $data;
 
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $classname;
 
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $httpMethod;
 
 
@@ -38,7 +32,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
      * @param string $classname
      * @param string $httpMethod
      */
-    public function __construct(array $data, $classname, $httpMethod)
+    public function __construct(array $data, string $classname, string $httpMethod)
     {
         $this->data = $data;
         $this->classname = $classname;
@@ -48,7 +42,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @return array
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
     }
@@ -57,7 +51,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @param array $data
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $this->data = $data;
     }
@@ -66,7 +60,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @return string
      */
-    public function getClassname()
+    public function getClassname() : string
     {
         return $this->classname;
     }
@@ -75,7 +69,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @param string $classname
      */
-    public function setClassname($classname)
+    public function setClassname(string $classname)
     {
         $this->classname = $classname;
     }
@@ -84,7 +78,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod() : string
     {
         return $this->httpMethod;
     }
@@ -93,7 +87,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @param string $httpMethod
      */
-    public function setHttpMethod($httpMethod)
+    public function setHttpMethod(string $httpMethod)
     {
         $this->httpMethod = $httpMethod;
     }

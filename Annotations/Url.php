@@ -9,11 +9,11 @@ namespace Trinity\NotificationBundle\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationException;
 
-
 /**
- * Class Url.
+ * Class Url
  *
- * @author Tomáš Jančar
+ * @package Trinity\NotificationBundle\Annotations
+ * 
  * @Annotation
  */
 class Url
@@ -30,7 +30,7 @@ class Url
      *
      * @throws AnnotationException
      */
-    public function __construct($metadata = [])
+    public function __construct(array $metadata = [])
     {
         $this->postfix = null;
 
@@ -49,7 +49,7 @@ class Url
     /**
      * @return string
      */
-    public function getPostfix()
+    public function getPostfix() : string
     {
         return $this->postfix;
     }
@@ -58,7 +58,7 @@ class Url
     /**
      * @return bool
      */
-    public function isWithoutMethods()
+    public function isWithoutMethods() : bool
     {
         return empty($this->getMethods()) || count($this->getMethods()) == 0;
     }
@@ -67,7 +67,7 @@ class Url
     /**
      * @return array
      */
-    public function getMethods()
+    public function getMethods() : array
     {
         return $this->methods;
     }
@@ -78,7 +78,7 @@ class Url
      *
      * @return bool
      */
-    public function hasMethod($method)
+    public function hasMethod(string $method) : bool
     {
         if (empty($this->getMethods())) {
             return true;
