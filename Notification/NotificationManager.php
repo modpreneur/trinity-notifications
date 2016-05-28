@@ -182,14 +182,12 @@ class NotificationManager
      * @param NotificationEntityInterface $entity
      * @param string                      $HTTPMethod
      * @param array                       $options
-     *
-     * @return array
      */
     protected function sendToServer(
         NotificationEntityInterface $entity,
         $HTTPMethod = 'GET',
         array $options = []
-    ) : array
+    )
     {
         foreach ($this->drivers as $driver) {
             $this->executeEntityInDriver($entity, $driver, new Server(), $HTTPMethod, $options);

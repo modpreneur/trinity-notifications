@@ -26,5 +26,5 @@ interface NotificationEntityRepositoryInterface
      *
      * @return NotificationEntityInterface
      */
-    public function findEagerly($id) : NotificationEntityInterface;
+    public function findEagerly($id);
 }

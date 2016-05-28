@@ -68,11 +68,11 @@ class RabbitMasterDriver extends BaseDriver
         ClientInterface $destinationClient = null,
         array $params = []
     ) {
-        if ($this->isEntityAlreadyProcessed($entity)) {
+        if ($this->isEntityAlreadyProcessed($entity, $destinationClient->getId())) {
             return;
         }
 
-        $this->addEntityToNotifiedEntities($entity);
+        $this->addEntityToNotifiedEntities($entity, $destinationClient->getId());
 
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);

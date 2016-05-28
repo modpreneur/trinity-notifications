@@ -96,4 +96,9 @@ class Server implements ClientInterface
         $this->id = $id;
     }
 
+    /** @return string */
+    public function getNotificationUri() : string
+    {
+        return '';
+    }
 }

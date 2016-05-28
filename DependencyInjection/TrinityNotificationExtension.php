@@ -46,6 +46,13 @@ class TrinityNotificationExtension extends Extension
         //load services for client or server
         if ($container->getParameter('trinity.notification.is_client')) {
             $loader->load('client/services.yml');
+
+            // Inject client secret provider into
+            $container->getDefinition('trinity.notification.driver.rabbit.client')
+                ->addMethodCall(
+                    'setClientSecretProvider',
+                    [new Reference($config['client_secret_provider'])]
+                );
         } else {
             $loader->load('server/services.yml');
         }
@@ -64,12 +71,7 @@ class TrinityNotificationExtension extends Extension
                 [new Reference($config['client_secret_provider'])]
             );
 
-        // Inject client secret provider into
-        $container->getDefinition('trinity.notification.driver.rabbit.client')
-            ->addMethodCall(
-                'setClientSecretProvider',
-                [new Reference($config['client_secret_provider'])]
-            );
+
     }
 
 

@@ -334,7 +334,7 @@ class Message
     /**
      * @return mixed
      */
-    public function getRawData() : mixed
+    public function getRawData()
     {
         return $this->rawData;
     }

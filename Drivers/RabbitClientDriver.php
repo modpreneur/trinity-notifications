@@ -73,11 +73,11 @@ class RabbitClientDriver extends BaseDriver
      */
     public function execute(NotificationEntityInterface $entity, ClientInterface $client = null, array $params = [])
     {
-        if ($this->isEntityAlreadyProcessed($entity)) {
+        if ($this->isEntityAlreadyProcessed($entity, 'server')) {
             return;
         }
 
-        $this->addEntityToNotifiedEntities($entity);
+        $this->addEntityToNotifiedEntities($entity, 'server');
 
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);

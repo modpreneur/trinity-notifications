@@ -210,7 +210,7 @@ class NotificationParser
      *
      * @return null|NotificationEntityInterface
      */
-    protected function getEntityObject(string $fullClassName) : NotificationEntityInterface
+    protected function getEntityObject(string $fullClassName)
     {
         return $this->entityManager->getRepository($fullClassName)->findOneBy(
             [$this->entityIdFieldName => $this->notificationData['id']]
@@ -227,7 +227,7 @@ class NotificationParser
      * @throws NotificationException
      */
     public function checkLogicalViolations(
-        NotificationEntityInterface $entityObject,
+        $entityObject,
         string $fullClassName,
         string $method
     ) {

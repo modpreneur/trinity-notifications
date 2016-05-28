@@ -7,7 +7,6 @@ services:
             - "@trinity.notification.utils"
             - "@trinity.notification.client.producer"
             - "@trinity.notification.batch_manager"
-            - "@clientse"
             - "%trinity.notification.client.id%"
         tags:
             - { name: trinity.notification.driver }
