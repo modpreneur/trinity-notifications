@@ -48,7 +48,7 @@ class KernelTerminateListener
     /**
      * @param PostResponseEvent $event
      */
-    public function onKernelTerminate($event)
+    public function onKernelTerminate(PostResponseEvent $event)
     {
 
         try {
@@ -56,7 +56,9 @@ class KernelTerminateListener
             if ($event->getResponse()->getStatusCode() < 400) {
                 $this->notificationManager->sendBatch();
             }
-        } catch (\Exception $e) {
+
+            //catch exceptions and php7 errors
+        } catch (\Throwable $e) {
             /*
              * It may show multiple times store multiple logs when exception is thrown,
              * because of api calls (each call store same exception)
