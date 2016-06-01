@@ -130,7 +130,8 @@ class EntityConversionHandler
         if (!$form->isValid()) {
             $errorStrings = [];
             foreach ($form->getErrors(true) as $error) {
-                $errorStrings[] = $error->serialize();
+                $errorStrings[] = $error->getOrigin()->getName(). ' with cause ' . $error->getCause() . ' caused message:' . $error->getMessage() . 'because of invalid value';
+
             }
 
             throw new InvalidDataException(implode(';', $errorStrings));

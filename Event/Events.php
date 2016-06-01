@@ -32,6 +32,8 @@ final class Events
 
     const NOTIFICATION_REQUEST_EVENT = 'notification.notificationRequestEvent';
 
+    const STATUS_MESSAGE_EVENT = 'message.statusMessageEvent';
+
     const ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN = 'notification.associationEntityNotFoundExceptionThrown';
 
     const ENABLE_NOTIFICATION = 'notification.enableNotification';

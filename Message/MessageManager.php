@@ -68,30 +68,46 @@ class MessageManager
     /**
      * Send all messages to the rabbit.
      *
-     * @throws \Trinity\NotificationBundle\Exception\MissingClientIdException
-     * @throws \Trinity\NotificationBundle\Exception\MissingClientSecretException
-     * @throws \Trinity\NotificationBundle\Exception\MissingMessageTypeException
+     * @param string $messageType
      */
-    public function send()
+    public function send(string $messageType = 'notification')
     {
-        $hasListeners = $this->eventDispatcher->hasListeners(Events::BEFORE_MESSAGE_PUBLISH);
-
         foreach ($this->messages as $message) {
-            if ($hasListeners) {
-                $event = new BeforeMessagePublish($message);
-                /** @var BeforeMessagePublish $event */
-                $event = $this->eventDispatcher->dispatch(Events::BEFORE_MESSAGE_PUBLISH, $event);
-                $message = $event->getMessage();
-            }
-
-            $this->producer->publish(
-                $message->pack(),
-                $this->producer->getRabbitSetup()->getOutputNotificationsExchange(),
-                $message->getClientId()
-            );
+            $this->sendMessage($message, $messageType);
         }
 
         $this->clear();
+    }
+
+
+    /**
+     * Send one message
+     *
+     * @param Message $message
+     * @param string  $messageType
+     *
+     * @throws \Trinity\NotificationBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\NotificationBundle\Exception\MissingClientIdException
+     * @throws \Trinity\NotificationBundle\Exception\MissingClientSecretException
+     */
+    public function sendMessage(Message $message, string $messageType)
+    {
+        $hasListeners = $this->eventDispatcher->hasListeners(Events::BEFORE_MESSAGE_PUBLISH);
+
+        if ($hasListeners) {
+            $event = new BeforeMessagePublish($message);
+            /** @var BeforeMessagePublish $event */
+            $event = $this->eventDispatcher->dispatch(Events::BEFORE_MESSAGE_PUBLISH, $event);
+            $message = $event->getMessage();
+        }
+
+        $this->producer->publish(
+            $message->pack(),
+            ($messageType === 'notification') ?
+                $this->producer->getRabbitSetup()->getOutputNotificationsExchange() :
+                $this->producer->getRabbitSetup()->getOutputMessagesExchangeName(),
+            $message->getClientId()
+        );
     }
 
 

@@ -20,13 +20,14 @@ use Trinity\NotificationBundle\Exception\MissingMessageTypeException;
  */
 class Message
 {
-    const UID = 'uid';
-    const DATA = 'data';
-    const HASH = 'hash';
-    const CLIENT_ID = 'clientId';
-    const CREATED_ON = 'createdOn';
-    const TYPE = 'messageType';
-    const PARENT_MESSAGE_UID = 'parent';
+    const UID_KEY = 'uid';
+    const DATA_KEY = 'data';
+    const HASH_KEY = 'hash';
+    const CLIENT_ID_KEY = 'clientId';
+    const CREATED_ON_KEY = 'createdOn';
+    const MESSAGE_TYPE_KEY = 'messageType';
+    const PARENT_MESSAGE_UID_KEY = 'parent';
+    const MESSAGE_TYPE = 'message';
 
     /** @var  string */
     protected $uid;
@@ -68,6 +69,7 @@ class Message
      */
     public function __construct()
     {
+        $this->type = self::MESSAGE_TYPE;
         $this->uid = uniqid('', true);
         $this->createdOn = (new \DateTime('now'))->getTimestamp();
         $this->jsonData = null;
@@ -171,14 +173,14 @@ class Message
             throw new DataNotValidJsonException('Could not convert JSON to Message');
         }
 
-        $messageObject->type = $messageArray[self::TYPE];
-        $messageObject->uid = $messageArray[self::UID];
-        $messageObject->clientId = $messageArray[self::CLIENT_ID];
-        $messageObject->createdOn = $messageArray[self::CREATED_ON];
-        $messageObject->hash = $messageArray[self::HASH];
-        $messageObject->jsonData = $messageArray[self::DATA];
+        $messageObject->type = $messageArray[self::MESSAGE_TYPE_KEY];
+        $messageObject->uid = $messageArray[self::UID_KEY];
+        $messageObject->clientId = $messageArray[self::CLIENT_ID_KEY];
+        $messageObject->createdOn = $messageArray[self::CREATED_ON_KEY];
+        $messageObject->hash = $messageArray[self::HASH_KEY];
+        $messageObject->jsonData = $messageArray[self::DATA_KEY];
         $messageObject->rawData = \json_decode($messageObject->jsonData, true);
-        $messageObject->parentMessageUid = $messageArray[self::PARENT_MESSAGE_UID];
+        $messageObject->parentMessageUid = $messageArray[self::PARENT_MESSAGE_UID_KEY];
 
         return $messageObject;
     }
@@ -193,15 +195,50 @@ class Message
     {
         return json_encode(
             [
-                self::TYPE => $this->type,
-                self::UID => $this->uid,
-                self::CLIENT_ID => $this->clientId,
-                self::CREATED_ON => $this->createdOn,
-                self::HASH => $this->hash,
-                self::DATA => $this->jsonData,
-                self::PARENT_MESSAGE_UID => $this->parentMessageUid
+                self::MESSAGE_TYPE_KEY => $this->type,
+                self::UID_KEY => $this->uid,
+                self::CLIENT_ID_KEY => $this->clientId,
+                self::CREATED_ON_KEY => $this->createdOn,
+                self::HASH_KEY => $this->hash,
+                self::DATA_KEY => $this->jsonData,
+                self::PARENT_MESSAGE_UID_KEY => $this->parentMessageUid
             ]
         );
+    }
+
+
+    /**
+     * @param Message $message
+     *
+     * @return Message
+     */
+    public function copyTo(Message $message)
+    {
+        $message->type = $this->type;
+        $message->uid = $this->uid;
+        $message->clientId = $this->clientId;
+        $message->createdOn = $this->createdOn;
+        $message->hash = $this->hash;
+        $message->jsonData = $this->jsonData;
+        $message->parentMessageUid = $this->parentMessageUid;
+        $message->rawData = $this->rawData;
+
+        return $message;
+    }
+
+
+    /**
+     * @param Message $message
+     *
+     * @return Message
+     */
+    public static function createFromMessage(Message $message)
+    {
+        $returnMessage = new self();
+
+        $message->copyTo($returnMessage);
+
+        return $returnMessage;
     }
 
 

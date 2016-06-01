@@ -69,9 +69,18 @@ services:
             - "@trinity.notification.reader"
             - "@event_dispatcher"
             - "@doctrine.orm.entity_manager"
+            - "@trinity.notification.message_reader"
         tags:
             - { name: kernel.event_listener, event: message.messageRead, method: onMessageRead}
-            - { name: kernel.event_listener, event: notification.deadLetteredMessageRead, method: onDeadLetteredMessageRead}
+            - { name: kernel.event_listener, event: trinity.bunny.rabbitMessageConsumed, method: onRabbitMessageConsumed}
+
+    trinity.notification.message_status_listener:
+        class: Trinity\NotificationBundle\EventListener\MessageStatusListener
+        arguments:
+            - "@trinity.notification.message_manager"
+            - "%trinity.notification.is_client%"
+        tags:
+            - { name: kernel.event_listener, event: message.setMessageStatus, method: onSetMessageStatus}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager

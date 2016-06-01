@@ -30,7 +30,7 @@ class ClientConsumeMessageCommand extends ContainerAwareCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $consumer = $this->getContainer()->get('trinity.notification.client.consumer');
-        $consumer->startConsuming();
+        $consumer->startConsuming("client_3", 2);
     }
 
 

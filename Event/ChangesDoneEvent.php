@@ -8,14 +8,12 @@
 
 namespace Trinity\NotificationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
  * Class ChangesDoneEvent
  *
  * @package Trinity\NotificationBundle\Event
  */
-class ChangesDoneEvent extends Event
+class ChangesDoneEvent extends NotificationEvent
 {
     /** @var array */
     protected $entities;

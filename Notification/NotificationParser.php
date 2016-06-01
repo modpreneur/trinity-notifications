@@ -37,9 +37,6 @@ class NotificationParser
     /** @var  EntityAssociator */
     protected $entityAssociator;
 
-    /** @var string TestClient secret */
-    protected $clientSecret;
-
     /** @var array Array of request data */
     protected $notificationData;
 
@@ -132,15 +129,16 @@ class NotificationParser
     }
 
     /**
-     * @param  $data           array  Notification data as named array
-     * @param  $fullClassName  string Full classname(with namespace) of the entity.e.g.
-     *     AppBundle\\Entity\\Product\\StandardProduct
+     * @param  $data               array  Notification data as named array
+     * @param  $fullClassName      string Full classname(with namespace) of the entity.e.g.
+     *                             AppBundle\\Entity\\Product\\StandardProduct
      * @param  $HTTPMethod         string HTTP method of the request
      *
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws NotificationException
      *
      * @return null|object Returns changed entity(on new[POST] or update[PUT]) or null on delete[DELETE]
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function parseNotification(array $data, string $fullClassName, string $HTTPMethod)
@@ -173,7 +171,6 @@ class NotificationParser
         !exist && put      - use form to create an entity from notification
         exist  && put      - use form to edit the entity with notification data
         */
-
         $this->checkLogicalViolations($entityObject, $fullClassName, $HTTPMethod);
 
         //delete entity, without form
@@ -206,7 +203,7 @@ class NotificationParser
      * Get existing entity or null
      *
      * @param $fullClassName string Full classname(with namespace) of the entity.
-     * e.g. AppBundle\\Entity\\Product\\StandardProduct
+     *                       e.g. AppBundle\\Entity\\Product\\StandardProduct
      *
      * @return null|NotificationEntityInterface
      */
@@ -238,8 +235,6 @@ class NotificationParser
             );
         }
 
-        //todo: should throw exception or be quiet and edit existing entity?
-        //exception in my opinion
         if ($entityObject !== null && $method === 'POST') {
             throw new NotificationException(
                 "Trying to create entity of class $fullClassName with id " . $this->notificationData['id'] .

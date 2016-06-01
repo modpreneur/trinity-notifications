@@ -23,6 +23,10 @@ class MessageReadEvent extends Event
 
 
     /** @var  string */
+    protected $messageJson;
+
+
+    /** @var  string */
     protected $sourceQueue;
 
 
@@ -31,17 +35,39 @@ class MessageReadEvent extends Event
      */
     protected $eventProcessed = false;
 
+
     /**
      * MessageReadEvent constructor.
      *
      * @param Message $message
+     * @param string  $messageJson
      * @param string  $sourceQueue
      */
-    public function __construct(Message $message, string $sourceQueue)
+    public function __construct(Message $message, string $messageJson, string $sourceQueue)
     {
         $this->message = $message;
+        $this->messageJson = $messageJson;
         $this->sourceQueue = $sourceQueue;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getMessageJson()
+    {
+        return $this->messageJson;
+    }
+
+
+    /**
+     * @param string $messageJson
+     */
+    public function setMessageJson($messageJson)
+    {
+        $this->messageJson = $messageJson;
+    }
+
 
     /**
      * @return Message

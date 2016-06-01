@@ -10,7 +10,7 @@ services:
         tags:
             - { name: trinity.notification.driver }
 
-    trinity.noticifation.server.setup:
+    trinity.notification.server.setup:
         class: Trinity\NotificationBundle\RabbitMQ\ServerSetup
         arguments:
             - "@trinity.bunny.client"
@@ -29,16 +29,13 @@ services:
     trinity.notification.server.producer:
         class: Trinity\NotificationBundle\RabbitMQ\ServerProducer
         arguments:
-            - "@trinity.noticifation.server.setup"
+            - "@trinity.notification.server.setup"
 
     trinity.notification.server.consumer:
         class: Trinity\NotificationBundle\RabbitMQ\ServerConsumer
         arguments:
-            - "@trinity.noticifation.server.setup"
-            - "@trinity.notification.message_reader"
             - "@event_dispatcher"
-            - "@trinity.notification.server.producer"
-
+            - "@trinity.notification.server.setup"
 
     trinity.notification.message_manager:
         class: Trinity\NotificationBundle\Message\MessageManager

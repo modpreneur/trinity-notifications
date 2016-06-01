@@ -22,9 +22,11 @@ class NotificationTransformer implements DataTransformerInterface
     /** @var EntityManagerInterface */
     protected $entityManager;
 
-
     /** @var  string */
     protected $entityName;
+
+    /** @var  string If server mode, this property contains name of the method which is used to set the server id */
+    protected $serverIdSetterMethod;
 
 
     /**
@@ -32,12 +34,17 @@ class NotificationTransformer implements DataTransformerInterface
      * It is called in the Type class.
      *
      * @param EntityManagerInterface $entityManager
-     * @param                        $entityName
+     * @param string                 $entityName
+     * @param string                 $serverIdSetterMethod
      */
-    public function __construct(EntityManagerInterface $entityManager, $entityName)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        string $entityName,
+        string $serverIdSetterMethod = null
+    ) {
         $this->entityManager = $entityManager;
         $this->entityName = $entityName;
+        $this->serverIdSetterMethod = $serverIdSetterMethod;
     }
 
 
@@ -76,13 +83,14 @@ class NotificationTransformer implements DataTransformerInterface
             ->getRepository($this->entityName)
             ->find($value);
 
-//        todo: should uncomment and solve necktieId or it is not needed? needs more tests
-//        if ($entity === null) {
-//            $entityClass = new \ReflectionClass($this->entityName);
-//
-//            $entity = $entityClass->newInstanceArgs();
-//            $entity->setNecktieId((int)$value);
-//        }
+        if ($entity === null) {
+            $entityClass = new \ReflectionClass($this->entityName);
+
+            $entity = $entityClass->newInstanceArgs();
+            if ($this->serverIdSetterMethod !== null) {
+                $entity->{$this->serverIdSetterMethod}((int)$value);
+            }
+        }
 
         return $entity;
     }

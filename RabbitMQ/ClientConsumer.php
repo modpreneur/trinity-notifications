@@ -9,11 +9,9 @@
 namespace Trinity\NotificationBundle\RabbitMQ;
 
 
-
-
-
 /**
  * Class ClientConsumer
+ *
  * @package Trinity\NotificationBundle\RabbitMQ
  */
 class ClientConsumer extends MessageConsumer

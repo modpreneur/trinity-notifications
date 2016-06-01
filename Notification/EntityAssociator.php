@@ -102,7 +102,7 @@ class EntityAssociator
                 $associatedEntity = $entity->$getterMethod();
 
                 if ($associatedEntity === null) {
-                    throw new NotificationException('Associated entity is null.');
+                    throw new NotificationException('Associated entity is null. This should not happen when using data transformer in the form');
                 }
 
                 //get id of the association entity
@@ -198,11 +198,10 @@ class EntityAssociator
             $setterAnnotation = $setterMethodInfo['annotation'];
             $setterParameterType = $setterAnnotation->getTargetEntity();
 
-            //if the parameter type is class
+            //if the annotation was not empty
             if ($setterParameterType !== null) {
-                //and the class is entity
                 $repository = $this->getEntityRepository($setterParameterType);
-
+                //and the annotation value was classname of an entity
                 if ($repository !== null) {
                     //find a getter method
                     foreach ($getterMethodsInfo as $getterMethodInfo) {

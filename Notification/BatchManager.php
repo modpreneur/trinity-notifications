@@ -9,7 +9,6 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Trinity\NotificationBundle\Entity\NotificationBatch;
-use Trinity\NotificationBundle\EventListener\NotificationEventsListener;
 use Trinity\NotificationBundle\Message\MessageManager;
 
 /**
@@ -53,7 +52,7 @@ class BatchManager extends MessageManager
             $this->messages[] = $returnBatch;
         }
 
-        $returnBatch->setType(NotificationEventsListener::NOTIFICATION_MESSAGE_TYPE);
+        $returnBatch->setType(NotificationBatch::MESSAGE_TYPE);
 
         return $returnBatch;
     }

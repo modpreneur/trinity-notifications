@@ -18,9 +18,11 @@ class ConsumeMessageErrorEvent extends NotificationEvent
     /** @var  \Exception */
     protected $exception;
 
-
     /** @var  Message */
     protected $message;
+
+    /** @var  string */
+    protected $sourceQueue;
 
 
     /**
@@ -28,11 +30,13 @@ class ConsumeMessageErrorEvent extends NotificationEvent
      *
      * @param \Exception $exception
      * @param Message    $message
+     * @param string     $sourceQueue
      */
-    public function __construct(\Exception $exception, Message $message)
+    public function __construct(\Exception $exception, Message $message, string $sourceQueue)
     {
         $this->exception = $exception;
         $this->message = $message;
+        $this->sourceQueue = $sourceQueue;
     }
 
     /**
@@ -67,5 +71,19 @@ class ConsumeMessageErrorEvent extends NotificationEvent
         $this->exception = $exception;
     }
 
+    /**
+     * @return string
+     */
+    public function getSourceQueue()
+    {
+        return $this->sourceQueue;
+    }
 
+    /**
+     * @param string $sourceQueue
+     */
+    public function setSourceQueue($sourceQueue)
+    {
+        $this->sourceQueue = $sourceQueue;
+    }
 }

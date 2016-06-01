@@ -15,7 +15,7 @@ use Trinity\NotificationBundle\Entity\Message;
  *
  * @package Trinity\NotificationBundle\Event
  */
-class BeforeMessagePublish
+class BeforeMessagePublish extends NotificationEvent
 {
     /** @var  Message */
     protected $message;

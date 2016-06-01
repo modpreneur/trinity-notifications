@@ -21,6 +21,8 @@ class SetMessageStatusEvent extends Event
     /** @var  Message */
     protected $message;
 
+    /** @var  string */
+    protected $statusMessage;
 
     /** @var  string */
     protected $status;
@@ -30,12 +32,32 @@ class SetMessageStatusEvent extends Event
      * SetMessageStatusEvent constructor.
      *
      * @param Message $message
+     * @param string  $statusMessage
      * @param string  $status
      */
-    public function __construct(Message $message, string $status)
+    public function __construct(Message $message, string $status, string $statusMessage)
     {
         $this->message = $message;
+        $this->statusMessage = $statusMessage;
         $this->status = $status;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getStatusMessage()
+    {
+        return $this->statusMessage;
+    }
+
+
+    /**
+     * @param string $statusMessage
+     */
+    public function setStatusMessage($statusMessage)
+    {
+        $this->statusMessage = $statusMessage;
     }
 
 

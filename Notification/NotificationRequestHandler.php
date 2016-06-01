@@ -16,7 +16,6 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\NotificationRequest;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
-use Trinity\NotificationBundle\EventListener\NotificationEventsListener;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 use Trinity\NotificationBundle\Exception\DataNotValidJsonException;
 use Trinity\NotificationBundle\Interfaces\ClientSecretProviderInterface;
@@ -112,7 +111,7 @@ class NotificationRequestHandler
         }
 
         $responseMessage = new NotificationRequestMessage();
-        $responseMessage->setType(NotificationEventsListener::NOTIFICATION_REQUEST_MESSAGE_TYPE);
+        $responseMessage->setType(NotificationRequestMessage::MESSAGE_TYPE);
         $responseMessage->setParentMessageUid($requestMessage->getUid());
         $responseMessage->setClientId($requestMessage->getClientId());
         $responseMessage->setClientSecret($this->clientSecretProvider->getClientSecret($requestMessage->getClientId()));
@@ -121,8 +120,7 @@ class NotificationRequestHandler
         $notificationRequest = new NotificationRequest($exception->getEntityName(), $exception->getEntityId());
         $responseMessage->setRequest($notificationRequest);
 
-        $this->messageManager->addMessage($responseMessage);
-        $this->messageManager->send();
+        $this->messageManager->sendMessage($responseMessage, 'message');
     }
 
 
@@ -188,7 +186,7 @@ class NotificationRequestHandler
         $responseMessage->setClientSecret($this->clientSecretProvider->getClientSecret($message->getClientId()));
         $responseMessage->setClientId($message->getClientId());
         $responseMessage->setParentMessageUid($message->getUid());
-        $responseMessage->setType(NotificationEventsListener::NOTIFICATION_MESSAGE_TYPE);
+        $responseMessage->setType(NotificationBatch::MESSAGE_TYPE);
 
         $notification = new Notification();
         $notification->setData($entityArray);

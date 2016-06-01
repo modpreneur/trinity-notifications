@@ -19,14 +19,26 @@ use Trinity\NotificationBundle\Exception\MissingClientSecretException;
  */
 class NotificationRequestMessage extends Message
 {
-    const REQUEST = 'request';
-    const NOTIFICATIONS = 'notifications';
+    const REQUEST_KEY = 'request';
+    const NOTIFICATIONS_KEY = 'notifications';
+    const MESSAGE_TYPE = 'notificationRequest';
 
     /** @var  Notification[] */
     protected $previousNotifications = [];
 
     /** @var  NotificationRequest */
     protected $request;
+
+
+    /**
+     * NotificationRequestMessage constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->type = self::MESSAGE_TYPE;
+    }
 
 
     /**
@@ -41,10 +53,10 @@ class NotificationRequestMessage extends Message
     public function pack() : string
     {
         $data = [];
-        $data[self::REQUEST] = $this->request->toArray();
+        $data[self::REQUEST_KEY] = $this->request->toArray();
         
         foreach ($this->previousNotifications as $notification) {
-            $data[self::NOTIFICATIONS][] = $notification->toArray();
+            $data[self::NOTIFICATIONS_KEY][] = $notification->toArray();
         }
 
         $this->jsonData = json_encode($data);
@@ -75,20 +87,11 @@ class NotificationRequestMessage extends Message
      */
     public static function createFromMessage(Message $message) : self
     {
-        $requestMessage = new self();
+        $requestMessage = new self;
+        $message->copyTo($requestMessage);
 
-        //copy data from parent object
-        $requestMessage->type = $message->type;
-        $requestMessage->uid = $message->uid;
-        $requestMessage->clientId = $message->clientId;
-        $requestMessage->createdOn = $message->createdOn;
-        $requestMessage->hash = $message->hash;
-        $requestMessage->jsonData = $message->jsonData;
-        $requestMessage->parentMessageUid = $message->parentMessageUid;
-        $requestMessage->rawData = $message->rawData;
-
-        $requestMessage->request = NotificationRequest::fromArray($requestMessage->rawData[self::REQUEST]);
-        foreach ($requestMessage->rawData[self::NOTIFICATIONS] as $item) {
+        $requestMessage->request = NotificationRequest::fromArray($requestMessage->rawData[self::REQUEST_KEY]);
+        foreach ($requestMessage->rawData[self::NOTIFICATIONS_KEY] as $item) {
             $requestMessage->previousNotifications[] = Notification::fromArray($item);
         }
 

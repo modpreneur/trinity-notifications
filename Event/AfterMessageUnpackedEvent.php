@@ -21,13 +21,14 @@ class AfterMessageUnpackedEvent extends Event
     /** @var  Message */
     protected $messageObject;
 
-
     /** @var string */
     protected $messageJson = '';
 
-
     /** @var  \Exception */
     protected $exception;
+
+    /** @var  string */
+    protected $sourceQueue;
 
 
     /**
@@ -36,12 +37,18 @@ class AfterMessageUnpackedEvent extends Event
      * @param Message    $messageObject
      * @param string     $messageJson
      * @param \Exception $exception
+     * @param string     $sourceQueue
      */
-    public function __construct(Message $messageObject = null, string $messageJson = null, \Exception $exception = null)
-    {
+    public function __construct(
+        Message $messageObject = null,
+        string $messageJson = null,
+        \Exception $exception = null,
+        string $sourceQueue = ''
+    ) {
         $this->messageObject = $messageObject;
         $this->messageJson = $messageJson;
         $this->exception = $exception;
+        $this->sourceQueue = $sourceQueue;
     }
 
 
@@ -96,5 +103,23 @@ class AfterMessageUnpackedEvent extends Event
     public function setException(\Exception $exception)
     {
         $this->exception = $exception;
+    }
+
+    
+    /**
+     * @return string
+     */
+    public function getSourceQueue()
+    {
+        return $this->sourceQueue;
+    }
+
+
+    /**
+     * @param string $sourceQueue
+     */
+    public function setSourceQueue($sourceQueue)
+    {
+        $this->sourceQueue = $sourceQueue;
     }
 }

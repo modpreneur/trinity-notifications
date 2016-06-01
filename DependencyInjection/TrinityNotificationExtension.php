@@ -71,6 +71,13 @@ class TrinityNotificationExtension extends Extension
                 [new Reference($config['client_secret_provider'])]
             );
 
+        // Inject client secret provider into request handler
+        $container->getDefinition('trinity.notification.message_status_listener')
+            ->addMethodCall(
+                'setClientSecretProvider',
+                [new Reference($config['client_secret_provider'])]
+            );
+
 
     }
 

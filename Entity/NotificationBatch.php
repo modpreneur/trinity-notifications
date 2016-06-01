@@ -17,6 +17,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class NotificationBatch extends Message
 {
+    const MESSAGE_TYPE = 'notification';
+
     /** @var  ArrayCollection<Notification> */
     protected $rawData;
 
@@ -27,6 +29,7 @@ class NotificationBatch extends Message
     {
         parent::__construct();
 
+        $this->type = self::MESSAGE_TYPE;
         $this->rawData = new ArrayCollection();
     }
 

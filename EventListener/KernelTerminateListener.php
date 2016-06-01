@@ -50,13 +50,11 @@ class KernelTerminateListener
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {
-
         try {
             //send batch only on successful requests
             if ($event->getResponse()->getStatusCode() < 400) {
                 $this->notificationManager->sendBatch();
             }
-
             //catch exceptions and php7 errors
         } catch (\Throwable $e) {
             /*
