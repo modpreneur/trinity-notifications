@@ -149,11 +149,13 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('client_secret_provider')
                     ->cannotBeEmpty()
                     ->beforeNormalization()
+            //if the string starts with @, e.g. @service.name
                     ->ifTrue(
                         function ($v) {
                             return is_string($v) && 0 === strpos($v, '@');
                         }
                     )
+            //return it's name without '@', e.g. service.name
                     ->then(function ($v) {
                         return substr($v, 1);
                     })
