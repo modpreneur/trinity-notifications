@@ -95,6 +95,7 @@ class NotificationParser
      * @param array $notifications
      *
      * @return array
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      *
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
@@ -115,12 +116,15 @@ class NotificationParser
                 );
             }
 
-            $processedEntities[] = $this->parseNotification(
+            $processedEntity = $this->parseNotification(
                 $notification->getData(),
                 $this->entities[$entityName],
                 $notification->getMethod()
             );
 
+            if ($processedEntity !== null) {
+                $processedEntities[] = $processedEntity;
+            }
         }
 
         $this->entityAssociator->associate($processedEntities);
@@ -173,17 +177,19 @@ class NotificationParser
         */
         $this->checkLogicalViolations($entityObject, $fullClassName, $HTTPMethod);
 
-        //delete entity, without form
+        //delete entity, without form(only on client)
         if ($entityObject !== null && $HTTPMethod === 'DELETE') {
             $this->logger->info('METHOD: DELETE ' . $HTTPMethod);
             $this->entityManager->remove($entityObject);
 
             return null;
+            //allow creating entities only on client
         } elseif ($entityObject === null && $HTTPMethod === 'POST') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
                 $data
             );
+            //allow creating entities only on client
         } elseif ($entityObject === null && $HTTPMethod === 'PUT') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
@@ -194,7 +200,8 @@ class NotificationParser
         } else {
             throw new NotificationException(
                 "Unsupported combination of input conditions. Tried to apply method $HTTPMethod on " .
-                ($entityObject ? 'existing' : 'non existing') . ' entity.'
+                ($entityObject ? 'existing' : 'non existing') . ' entity. ' .
+                'This may be because creation of entities on server is prohibited.'
             );
         }
     }
@@ -241,5 +248,28 @@ class NotificationParser
                 ' but entity with the id already exists'
             );
         }
+
+        if ($entityObject !== null && $method === 'DELETE' && !$this->isClient) {
+            throw new NotificationException(
+                "Trying to delete entity of class $fullClassName with id " . $this->notificationData['id']
+                . ' but it is not allowed on the server.'
+            );
+        }
+
+        if ($entityObject === null && $method === 'POST' && !$this->isClient) {
+            throw new NotificationException(
+                "Trying to create entity of class $fullClassName with id " . $this->notificationData['id']
+                . ' but it is not allowed on the server.'
+            );
+        }
+
+        if ($entityObject === null && $method === 'PUT' && !$this->isClient) {
+            throw new NotificationException(
+                "Trying to create(PUT has the same effect as POST on non-existing entity now)' . 
+                ' entity of class $fullClassName with id " . $this->notificationData['id']
+                . ' but it is not allowed on the server.'
+            );
+        }
+
     }
 }
