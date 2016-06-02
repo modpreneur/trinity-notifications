@@ -106,7 +106,7 @@ class NotificationEventsListener
     /**
      * @param RabbitMessageConsumedEvent $event
      */
-    public function onRabbitMessageConsume6(RabbitMessageConsumedEvent $event)
+    public function onRabbitMessageConsumed(RabbitMessageConsumedEvent $event)
     {
         $this->messageReader->read($event->getMessage(), $event->getSourceQueue());
     }
