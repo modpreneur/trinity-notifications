@@ -175,21 +175,21 @@ class NotificationParser
         !exist && put      - use form to create an entity from notification
         exist  && put      - use form to edit the entity with notification data
         */
+
+        //check if there are specific conditions which are strictly prohibited
         $this->checkLogicalViolations($entityObject, $fullClassName, $HTTPMethod);
 
-        //delete entity, without form(only on client)
+        //delete entity, without form
         if ($entityObject !== null && $HTTPMethod === 'DELETE') {
             $this->logger->info('METHOD: DELETE ' . $HTTPMethod);
             $this->entityManager->remove($entityObject);
 
             return null;
-            //allow creating entities only on client
         } elseif ($entityObject === null && $HTTPMethod === 'POST') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
                 $data
             );
-            //allow creating entities only on client
         } elseif ($entityObject === null && $HTTPMethod === 'PUT') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
@@ -197,6 +197,7 @@ class NotificationParser
             );
         } elseif ($entityObject !== null && $HTTPMethod === 'PUT') {
             return $this->conversionHandler->performEntityUpdate($entityObject, $data);
+            //other strange combination of input conditions
         } else {
             throw new NotificationException(
                 "Unsupported combination of input conditions. Tried to apply method $HTTPMethod on " .
@@ -249,6 +250,7 @@ class NotificationParser
             );
         }
 
+        //allow deleting entities only on client
         if ($entityObject !== null && $method === 'DELETE' && !$this->isClient) {
             throw new NotificationException(
                 "Trying to delete entity of class $fullClassName with id " . $this->notificationData['id']
@@ -256,6 +258,7 @@ class NotificationParser
             );
         }
 
+        //allow creating entities only on client
         if ($entityObject === null && $method === 'POST' && !$this->isClient) {
             throw new NotificationException(
                 "Trying to create entity of class $fullClassName with id " . $this->notificationData['id']
@@ -263,6 +266,7 @@ class NotificationParser
             );
         }
 
+        //allow creating entities only on client
         if ($entityObject === null && $method === 'PUT' && !$this->isClient) {
             throw new NotificationException(
                 "Trying to create(PUT has the same effect as POST on non-existing entity now)' . 
