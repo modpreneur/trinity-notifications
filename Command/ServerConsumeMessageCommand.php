@@ -8,37 +8,30 @@
 
 namespace Trinity\NotificationBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Trinity\NotificationBundle\RabbitMQ\MessageConsumer;
 
 /**
  * Class ServerConsumeMessageCommand
  *
  * @package Trinity\NotificationBundle\Command
  */
-class ServerConsumeMessageCommand extends ContainerAwareCommand
+class ServerConsumeMessageCommand extends BaseConsumerCommand
 {
     /**
-     * @return int|null|void
-     * @throws \LogicException
+     * @return MessageConsumer
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \LogicException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @throws \Exception
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function getConsumer() : MessageConsumer
     {
-        $consumer = $this->getContainer()->get('trinity.notification.server.consumer');
-
-        $consumer->startConsuming();
+        return $this->getContainer()->get('trinity.notification.server.consumer');
     }
 
-
-    /**
-     * 
-     */
-    protected function configure()
+    public function configure()
     {
+        parent::configure();
+
         $this->setName('trinity:notification:server:consume');
     }
 }
