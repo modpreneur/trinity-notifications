@@ -20,7 +20,7 @@
     "fzaninotto/faker": "^1.5",
     "doctrine/orm": "~2.5",
     "trinity/logger": "dev-master",
-    "trinity/bunny": "dev-master",
+    "trinity/bunny-bundle": "dev-master",
     "trinity/settings": "dev-master",
     "trinity/search": "dev-master"
   },
