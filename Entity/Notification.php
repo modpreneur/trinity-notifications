@@ -8,8 +8,6 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-
-
 /**
  * Class Notification
  *

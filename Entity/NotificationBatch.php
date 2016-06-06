@@ -9,6 +9,7 @@
 namespace Trinity\NotificationBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Trinity\MessagesBundle\Message\Message;
 
 /**
  * Class NotificationBatch
@@ -109,7 +110,8 @@ class NotificationBatch extends Message
 
     /**
      * @param Notification $notification
-     * @return $this
+     *
+     * @return NotificationBatch
      */
     public function removeNotification(Notification $notification) : NotificationBatch
     {
@@ -118,4 +120,3 @@ class NotificationBatch extends Message
         return $this;
     }
 }
-

@@ -8,9 +8,7 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-use Trinity\NotificationBundle\Exception\DataNotValidJsonException;
-use Trinity\NotificationBundle\Exception\MissingClientIdException;
-use Trinity\NotificationBundle\Exception\MissingClientSecretException;
+use Trinity\MessagesBundle\Message\Message;
 
 /**
  * Class NotificationRequestMessage
@@ -45,16 +43,16 @@ class NotificationRequestMessage extends Message
      * Encode message to JSON.
      *
      * @return string
+     * @throws \Trinity\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\MessagesBundle\Exception\MissingSecretKeyException
      *
-     * @throws \Trinity\NotificationBundle\Exception\MissingMessageTypeException
-     * @throws MissingClientIdException
-     * @throws MissingClientSecretException
      */
     public function pack() : string
     {
         $data = [];
         $data[self::REQUEST_KEY] = $this->request->toArray();
-        
+
         foreach ($this->previousNotifications as $notification) {
             $data[self::NOTIFICATIONS_KEY][] = $notification->toArray();
         }
@@ -63,7 +61,7 @@ class NotificationRequestMessage extends Message
 
         return parent::pack();
     }
-    
+
 
     /**
      * Unpack message
@@ -72,7 +70,7 @@ class NotificationRequestMessage extends Message
      *
      * @return NotificationRequestMessage
      *
-     * @throws DataNotValidJsonException
+     * @throws \Trinity\MessagesBundle\Exception\DataNotValidJsonException
      */
     public static function unpack(string $messageJson) : self
     {
@@ -113,7 +111,7 @@ class NotificationRequestMessage extends Message
     {
         $this->previousNotifications = $previousNotifications;
     }
-    
+
     /**
      * @param Notification $notification
      */

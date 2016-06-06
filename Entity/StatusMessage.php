@@ -8,9 +8,8 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
+use Trinity\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Exception\InvalidMessageStatusException;
-use Trinity\NotificationBundle\Exception\MissingClientIdException;
-use Trinity\NotificationBundle\Exception\MissingClientSecretException;
 
 /**
  * Class StatusMessage
@@ -46,10 +45,10 @@ class StatusMessage extends Message
      * Encode message to JSON.
      *
      * @return string
+     * @throws \Trinity\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\MessagesBundle\Exception\MissingSecretKeyException
      *
-     * @throws \Trinity\NotificationBundle\Exception\MissingMessageTypeException
-     * @throws MissingClientIdException
-     * @throws MissingClientSecretException
      */
     public function pack() : string
     {
@@ -134,7 +133,7 @@ class StatusMessage extends Message
     /**
      * @param string $status
      *
-     * @throws InvalidMessageStatusException
+     * @throws \Trinity\NotificationBundle\Exception\InvalidMessageStatusException
      */
     public function setStatus(string $status)
     {
