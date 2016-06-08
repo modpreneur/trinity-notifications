@@ -2,7 +2,7 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-use Trinity\Bundle\MessagesBundle\Message\MessageSender;
+use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 
 /**

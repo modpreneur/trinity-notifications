@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException;
 use Trinity\Bundle\MessagesBundle\Interfaces\SecretKeyProviderInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
-use Trinity\Bundle\MessagesBundle\Message\MessageSender;
+use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;

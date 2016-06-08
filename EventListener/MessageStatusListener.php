@@ -8,7 +8,7 @@
 
 namespace Trinity\NotificationBundle\EventListener;
 
-use Trinity\Bundle\MessagesBundle\Message\MessageSender;
+use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 use Trinity\NotificationBundle\Entity\StatusMessage;
 use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
 
@@ -59,6 +59,7 @@ class MessageStatusListener
             $message->setStatus($event->getStatus());
             $message->setParentMessageUid($event->getMessage()->getUid());
             $message->setClientId($event->getMessage()->getClientId());
+            $message->setDestination('server');
 
             //send it
             $this->messageSender->sendMessage($message);
