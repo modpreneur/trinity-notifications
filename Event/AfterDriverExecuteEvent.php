@@ -8,7 +8,6 @@
 
 namespace Trinity\NotificationBundle\Event;
 
-
 /**
  * Class AfterDriverExecuteEvent
  */

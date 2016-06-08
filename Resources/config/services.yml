@@ -69,22 +69,22 @@ services:
             - "@trinity.notification.reader"
             - "@event_dispatcher"
             - "@doctrine.orm.entity_manager"
-            - "@trinity.notification.message_reader"
         tags:
             - { name: kernel.event_listener, event: message.messageRead, method: onMessageRead}
-            - { name: kernel.event_listener, event: trinity.bunny.rabbitMessageConsumed, method: onRabbitMessageConsumed}
 
     trinity.notification.message_status_listener:
         class: Trinity\NotificationBundle\EventListener\MessageStatusListener
         arguments:
-            - "@trinity.notification.message_manager"
+            - "@trinity.messages.message_sender"
             - "%trinity.notification.is_client%"
         tags:
             - { name: kernel.event_listener, event: message.setMessageStatus, method: onSetMessageStatus}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
-        parent: trinity.notification.message_manager
+        arguments:
+            - "@event_dispatcher"
+            - "%trinity.messages.sender_identification"
 
     trinity.notification.entity_conversion_handler:
         class: Trinity\NotificationBundle\Notification\EntityConversionHandler
@@ -102,11 +102,6 @@ services:
             - "%trinity.notification.is_client%"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.entities%"
-
-    trinity.notification.message_reader:
-        class: Trinity\NotificationBundle\Message\MessageReader
-        arguments:
-            - "@event_dispatcher"
 
     trinity.notification.reader:
         class: Trinity\NotificationBundle\Notification\NotificationReader
@@ -126,7 +121,7 @@ services:
         class: Trinity\NotificationBundle\Notification\NotificationRequestHandler
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@trinity.notification.message_manager'
+            - '@trinity.messages.message_sender'
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
             - "%trinity.notification.entities%"

@@ -21,7 +21,6 @@ class Server implements ClientInterface
     /** @var  string */
     protected $secret;
 
-
     /** @var string */
     protected $name;
 

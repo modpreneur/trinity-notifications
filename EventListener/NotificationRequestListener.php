@@ -39,6 +39,13 @@ class NotificationRequestListener
      * notification request. The request will contain the original message uid.
      *
      * @param AssociationEntityNotFoundExceptionThrown $event
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
     public function onAssociationEntityNotFoundExceptionThrown(AssociationEntityNotFoundExceptionThrown $event)
     {
@@ -53,10 +60,13 @@ class NotificationRequestListener
      *
      * @param NotificationRequestEvent $event
      *
-     * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
     public function onNotificationRequestEvent(NotificationRequestEvent $event)
     {
-        $this->requestHandler->handleMissingEntityRequestEvent($event);
+        $this->requestHandler->handleMissingEntityRequestMessage($event->getMessage());
     }
 }

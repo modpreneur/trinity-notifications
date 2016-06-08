@@ -8,10 +8,9 @@
 
 namespace Trinity\NotificationBundle\EventListener;
 
+use Trinity\Bundle\MessagesBundle\Message\MessageSender;
 use Trinity\NotificationBundle\Entity\StatusMessage;
 use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
-use Trinity\NotificationBundle\Interfaces\ClientSecretProviderInterface;
-use Trinity\NotificationBundle\Message\MessageManager;
 
 /**
  * Class MessageStatusListener
@@ -20,11 +19,8 @@ use Trinity\NotificationBundle\Message\MessageManager;
  */
 class MessageStatusListener
 {
-    /** @var  MessageManager */
-    protected $messageManager;
-
-    /** @var  ClientSecretProviderInterface */
-    protected $clientSecretProvider;
+    /** @var  MessageSender */
+    protected $messageSender;
 
     /** @var  bool */
     protected $isClient;
@@ -33,14 +29,14 @@ class MessageStatusListener
     /**
      * MessageStatusListener constructor.
      *
-     * @param MessageManager $messageManager
-     * @param bool           $isClient
+     * @param MessageSender $messageSender
+     * @param bool          $isClient
      */
     public function __construct(
-        MessageManager $messageManager,
+        MessageSender $messageSender,
         bool $isClient
     ) {
-        $this->messageManager = $messageManager;
+        $this->messageSender = $messageSender;
         $this->isClient = $isClient;
     }
 
@@ -48,10 +44,12 @@ class MessageStatusListener
     /**
      * @param SetMessageStatusEvent $event
      *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidMessageStatusException
-     * @throws \Trinity\NotificationBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\NotificationBundle\Exception\MissingClientIdException
-     * @throws \Trinity\NotificationBundle\Exception\MissingClientSecretException
      */
     public function onSetMessageStatus(SetMessageStatusEvent $event)
     {
@@ -61,23 +59,9 @@ class MessageStatusListener
             $message->setStatus($event->getStatus());
             $message->setParentMessageUid($event->getMessage()->getUid());
             $message->setClientId($event->getMessage()->getClientId());
-            $message->setClientSecret(
-                $this->clientSecretProvider->getClientSecret(
-                    $event->getMessage()->getClientId()
-                )
-            );
 
             //send it
-            $this->messageManager->sendMessage($message, 'message');
+            $this->messageSender->sendMessage($message);
         }
-    }
-
-
-    /**
-     * @param ClientSecretProviderInterface $clientSecretProvider
-     */
-    public function setClientSecretProvider(ClientSecretProviderInterface $clientSecretProvider)
-    {
-        $this->clientSecretProvider = $clientSecretProvider;
     }
 }

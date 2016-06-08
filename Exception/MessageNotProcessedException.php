@@ -8,7 +8,7 @@
 
 namespace Trinity\NotificationBundle\Exception;
 
-use Trinity\NotificationBundle\Entity\Message;
+use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
  * Class MessageNotProcessedException

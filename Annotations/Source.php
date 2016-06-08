@@ -39,7 +39,7 @@ class Source
                 unset($column);
 
                 return;
-            };
+            }
         }
     }
 

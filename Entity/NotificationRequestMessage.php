@@ -8,7 +8,7 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-use Trinity\MessagesBundle\Message\Message;
+use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
  * Class NotificationRequestMessage
@@ -43,9 +43,9 @@ class NotificationRequestMessage extends Message
      * Encode message to JSON.
      *
      * @return string
-     * @throws \Trinity\MessagesBundle\Exception\MissingClientIdException
-     * @throws \Trinity\MessagesBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      *
      */
     public function pack() : string
@@ -70,7 +70,7 @@ class NotificationRequestMessage extends Message
      *
      * @return NotificationRequestMessage
      *
-     * @throws \Trinity\MessagesBundle\Exception\DataNotValidJsonException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
     public static function unpack(string $messageJson) : self
     {

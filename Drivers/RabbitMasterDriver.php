@@ -24,9 +24,6 @@ use Trinity\NotificationBundle\RabbitMQ\ServerProducer;
  */
 class RabbitMasterDriver extends BaseDriver
 {
-    /** @var  ServerProducer */
-    protected $producer;
-
     /** @var array */
     protected $messages;
 
@@ -36,22 +33,17 @@ class RabbitMasterDriver extends BaseDriver
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityConverter          $entityConverter
      * @param NotificationUtils        $notificationUtils
-     * @param ServerProducer           $producer
      * @param BatchManager             $batchManager
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
-        ServerProducer $producer,
         BatchManager $batchManager
     ) {
         parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
 
-        $this->producer = $producer;
         $this->messages = [];
-
-        $this->batchManager->setProducer($producer);
     }
 
 
@@ -110,7 +102,9 @@ class RabbitMasterDriver extends BaseDriver
 
             $batch = $this->batchManager->createBatch($client->getId());
             //$batch is only pointer to the batch created and stored in BatchManager
-            $batch->setClientSecret($client->getSecret());
+            $batch->setSecretKey($client->getSecret());
+            $batch->setDestination('client_' . $client->getId());
+            
             $notification = new Notification();
             $notification->setData($entityArray);
             $notification->setMethod($params['HTTPMethod']);

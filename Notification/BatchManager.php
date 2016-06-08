@@ -1,22 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Jakub Fajkus
- * Date: 24.03.16
- * Time: 16:48
- */
 
 namespace Trinity\NotificationBundle\Notification;
 
+use Trinity\Bundle\MessagesBundle\Message\MessageSender;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
-use Trinity\NotificationBundle\Message\MessageManager;
 
 /**
  * Class BatchManager
  *
  * @package Trinity\NotificationBundle\Notification
  */
-class BatchManager extends MessageManager
+class BatchManager extends MessageSender
 {
     /** @var NotificationBatch[] */
     protected $messages = [];
@@ -51,8 +45,6 @@ class BatchManager extends MessageManager
 
             $this->messages[] = $returnBatch;
         }
-
-        $returnBatch->setType(NotificationBatch::MESSAGE_TYPE);
 
         return $returnBatch;
     }

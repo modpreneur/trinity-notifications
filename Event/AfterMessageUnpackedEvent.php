@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Trinity\NotificationBundle\Entity\Message;
+use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
  * Class AfterMessageUnpackedEvent

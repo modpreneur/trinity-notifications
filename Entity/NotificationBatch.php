@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Trinity\MessagesBundle\Message\Message;
+use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
  * Class NotificationBatch

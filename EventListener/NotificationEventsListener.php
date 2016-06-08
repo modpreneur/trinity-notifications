@@ -10,18 +10,15 @@ namespace Trinity\NotificationBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\Bundle\BunnyBundle\Event\RabbitMessageConsumedEvent;
-use Trinity\NotificationBundle\Entity\Message;
+use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
+use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Entity\StatusMessage;
 use Trinity\NotificationBundle\Event\Events;
-use Trinity\NotificationBundle\Event\MessageReadEvent;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
 use Trinity\NotificationBundle\Event\StatusMessageEvent;
-use Trinity\NotificationBundle\Interfaces\ClientSecretProviderInterface;
-use Trinity\NotificationBundle\Message\MessageReader;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
 /**
@@ -40,15 +37,8 @@ class NotificationEventsListener
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var ClientSecretProviderInterface */
-    protected $clientSecretProvider;
-
     /** @var  EntityManagerInterface */
     protected $entityManager;
-
-    /** @var  MessageReader */
-    protected $messageReader;
-
 
     /**
      * NotificationEventsListener constructor.
@@ -56,32 +46,28 @@ class NotificationEventsListener
      * @param NotificationReader       $notificationReader
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManagerInterface   $entityManager
-     * @param MessageReader            $messageReader
      */
     public function __construct(
         NotificationReader $notificationReader,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager,
-        MessageReader $messageReader
+        EntityManagerInterface $entityManager
     ) {
         $this->notificationReader = $notificationReader;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
-        $this->messageReader = $messageReader;
     }
 
 
     /**
-     * @param MessageReadEvent $event
+     * @param ReadMessageEvent $event
      *
-     * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
-     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
-     * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Exception
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
+     * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
+     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
      */
-    public function onMessageRead(MessageReadEvent $event)
+    public function onMessageRead(ReadMessageEvent $event)
     {
         $message = $event->getMessage();
 
@@ -104,21 +90,11 @@ class NotificationEventsListener
 
 
     /**
-     * @param RabbitMessageConsumedEvent $event
-     */
-    public function onRabbitMessageConsumed(RabbitMessageConsumedEvent $event)
-    {
-        $this->messageReader->read($event->getMessage(), $event->getSourceQueue());
-    }
-
-
-    /**
      * @param Message $message
      *
      * @return array
      *
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
-     * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
@@ -184,7 +160,7 @@ class NotificationEventsListener
     protected function dispatchSetMessageStatusEvent(Message $message, string $status, string $statusMessage)
     {
         if ($this->eventDispatcher->hasListeners(Events::SET_MESSAGE_STATUS)) {
-            /** @var MessageReadEvent $event */
+            /** @var ReadMessageEvent $event */
             $this->eventDispatcher->dispatch(
                 Events::SET_MESSAGE_STATUS,
                 new SetMessageStatusEvent($message, $status, $statusMessage)
@@ -196,9 +172,9 @@ class NotificationEventsListener
     /**
      * Set event as processed and stop propagation of the event
      *
-     * @param MessageReadEvent $event
+     * @param ReadMessageEvent $event
      */
-    protected function setEventAsProcessed(MessageReadEvent $event)
+    protected function setEventAsProcessed(ReadMessageEvent $event)
     {
         $event->stopPropagation();
         //This call is important!

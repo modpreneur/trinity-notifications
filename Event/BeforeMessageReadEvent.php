@@ -10,16 +10,16 @@ namespace Trinity\NotificationBundle\Event;
 
 
 /**
- * Class BeforeMessageReadEvent
+ * Class BeforeReadMessageEvent
  */
-class BeforeMessageReadEvent extends NotificationEvent
+class BeforeReadMessageEvent extends NotificationEvent
 {
     /** @var string */
     protected $message;
 
 
     /**
-     * BeforeMessageReadEvent constructor.
+     * BeforeReadMessageEvent constructor.
      *
      * @param string $message
      */

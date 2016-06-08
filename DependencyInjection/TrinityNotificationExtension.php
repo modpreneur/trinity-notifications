@@ -50,34 +50,27 @@ class TrinityNotificationExtension extends Extension
             // Inject client secret provider into
             $container->getDefinition('trinity.notification.driver.rabbit.client')
                 ->addMethodCall(
-                    'setClientSecretProvider',
+                    'setSecretKeyProvider',
                     [new Reference($config['client_secret_provider'])]
                 );
         } else {
             $loader->load('server/services.yml');
         }
 
-        // Inject client secret provider into reader service
-        $container->getDefinition('trinity.notification.message_reader')
-            ->addMethodCall(
-                'setClientSecretProvider',
-                [new Reference($config['client_secret_provider'])]
-            );
-
         // Inject client secret provider into request handler
         $container->getDefinition('trinity.notification.notification_request_handler')
             ->addMethodCall(
-                'setClientSecretProvider',
+                'setSecretKeyProvider',
                 [new Reference($config['client_secret_provider'])]
             );
 
-        // Inject client secret provider into request handler
-        $container->getDefinition('trinity.notification.message_status_listener')
-            ->addMethodCall(
-                'setClientSecretProvider',
-                [new Reference($config['client_secret_provider'])]
-            );
-
+//         Inject client secret provider into request handler
+//        $container->getDefinition('trinity.notification.message_status_listener')
+//            ->addMethodCall(
+//                'setSecretKeyProvider',
+//                [new Reference($config['client_secret_provider'])]
+//            );
+//
 
     }
 

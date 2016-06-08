@@ -10,7 +10,7 @@ namespace Trinity\NotificationBundle\Notification;
 
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\NotificationBundle\Entity\Message;
+use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Event\AssociationEntityNotFoundExceptionThrown;
 use Trinity\NotificationBundle\Event\ChangesDoneEvent;

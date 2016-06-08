@@ -21,8 +21,8 @@
     "doctrine/orm": "~2.5",
     "trinity/logger": "dev-master",
     "trinity/bunny-bundle": "dev-master",
-    "trinity/settings": "dev-master",
-    "trinity/search": "dev-master"
+    "trinity/search": "dev-master",
+    "trinity/messages": "dev-master"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",

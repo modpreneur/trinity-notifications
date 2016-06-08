@@ -104,6 +104,10 @@ class NotificationManager
 
     /**
      * Send notifications in batch.
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      */
     public function sendBatch()
     {
@@ -123,7 +127,7 @@ class NotificationManager
             }
         }
 
-        $this->batchManager->send();
+        $this->batchManager->sendAll();
         $this->clear();
     }
 
@@ -131,6 +135,10 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      */
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
@@ -138,7 +146,7 @@ class NotificationManager
             $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
         }
 
-        $this->batchManager->send();
+        $this->batchManager->sendAll();
         $this->clear();
 
     }

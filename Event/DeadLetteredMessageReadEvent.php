@@ -9,11 +9,11 @@
 namespace Trinity\NotificationBundle\Event;
 
 /**
- * Class DeadLetteredMessageReadEvent
+ * Class DeadLetteredReadMessageEvent
  *
  * @package Trinity\NotificationBundle\Event
  */
-class DeadLetteredMessageReadEvent extends MessageReadEvent
+class DeadLetteredReadMessageEvent extends ReadMessageEvent
 {
 
 }
