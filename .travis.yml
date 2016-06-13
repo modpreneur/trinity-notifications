@@ -1,0 +1,39 @@
+sudo: required
+
+language: php
+
+php:
+  - '7.0'
+
+services:
+  - docker
+
+before_script:
+  - phpenv config-add travis.ini
+  - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta;
+    echo yes | pecl install apcu; fi;
+
+
+script:
+  - docker-compose build
+  - docker-compose up
+  - vendor/codeception/codeception/codecept run
+
+
+notifications:
+  hipchat:
+    rooms:
+      secure: yVWQc8vFHmzpIQsRzXVUlrb0oBOy8HHeax7Ftwr/2HwMRqDoiu0RZjt9Vg8S73xOiNc99bz1pECLY95nAqU+4ARRMyJdhqG6lWEGhsZdkDOd2SsN0/G3oHRxbEyarrLfQvn2UUYmeiaxtli01WUWIZ5aWxvdPnnna4+K6cutPH/c/nVT7p99g9gfUy5qb1zmJW3o7WY6DRrSPAA00m/7zMw0Ud+uKBgZiBNQFRJha6hkJ9/Bt7AkcXjamZypZdpLo+xdwON+IfdaIFIBztq5l6UKxGR1+ig3FoikkQLw3xbPOINo1oIshpfeQEhxw7FU04SwqaKGNJPfkfFfINivnpmeewPaRYmM4Hhk8p0ocwNW4Xh6wnFw9eLdDsjNsshEHTbvt6qF31CpBYyPxvLcDoRncR62px+IVv4l2EzFXJdom5LX54XBJiG0uKLBeeRzt+6bVoYX0IHNKcwynWY1fw7mHr3PzX+oho+SG9MVayODK+aKKJzcdkatltSVEziBUXG2RIniRlM0txMtIRKJdfky1arnqhKF5V0j+cN4WgfxKw1ICeTtgtCOZC3vSreXBJCI4R4QSFed3wxCxkd2IbvManfQEA63XxAEO5DHoOSOgGi5DE8sIf+EZbilCZJfvyoHs4KGVHhUZWfm+zocXXN6+PpKY1f3YHv6NAShLEA=
+    on_success: never
+    on_failure: always
+
+
+after_success:
+  - sh -c 'php vendor/bin/coveralls -v'
+
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+

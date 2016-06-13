@@ -1,4 +1,4 @@
-FROM modpreneur/trinity-test:0.1.1
+FROM modpreneur/trinity-test
 
 MAINTAINER Tomáš Jančar <jancar@modpreneur.com>
 
@@ -10,5 +10,3 @@ WORKDIR /var/app
 
 RUN chmod +x entrypoint.sh
 ENTRYPOINT ["sh", "entrypoint.sh"]
-
-#blabla test

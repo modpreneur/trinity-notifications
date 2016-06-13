@@ -25,8 +25,8 @@
     "braincrafted/testing-bundle": "@stable",
     "friendsofsymfony/user-bundle": "dev-master",
     "sensio/generator-bundle": "~3.0",
-    "phpunit/phpunit": "~5.0",
-    "codeception/codeception" : "~2.1",
+    "phpunit/phpunit": "~5.4",
+    "codeception/codeception" : "~2.2",
     "jms/serializer-bundle": "~1.1",
     "symfony/monolog-bundle": "~2.8",
     "symfony/console": "~2.8| ~3.0"
