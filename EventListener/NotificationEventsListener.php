@@ -8,7 +8,6 @@
 
 namespace Trinity\NotificationBundle\EventListener;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
 use Trinity\Bundle\MessagesBundle\Message\Message;
@@ -17,8 +16,10 @@ use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Entity\StatusMessage;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
+use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
 use Trinity\NotificationBundle\Event\StatusMessageEvent;
+use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
 /**
@@ -37,24 +38,31 @@ class NotificationEventsListener
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var  EntityManagerInterface */
-    protected $entityManager;
+    /** @var  NotificationManager */
+    protected $notificationManager;
+
+    /** @var  bool */
+    protected $isClient;
+
 
     /**
      * NotificationEventsListener constructor.
      *
      * @param NotificationReader       $notificationReader
      * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManagerInterface   $entityManager
+     * @param NotificationManager      $notificationManager
+     * @param bool                     $isClient
      */
     public function __construct(
         NotificationReader $notificationReader,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        NotificationManager $notificationManager,
+        bool $isClient
     ) {
         $this->notificationReader = $notificationReader;
         $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
+        $this->notificationManager = $notificationManager;
+        $this->isClient = $isClient;
     }
 
 
@@ -86,6 +94,20 @@ class NotificationEventsListener
             $this->handleStatusMessage($message);
             $this->setEventAsProcessed($event);
         }
+    }
+
+
+    /**
+     * @param SendNotificationEvent $event
+     */
+    public function onSendNotificationEvent(SendNotificationEvent $event)
+    {
+        $this->notificationManager->queueEntity(
+            $event->getEntity(),
+            $event->getMethod(),
+            !$this->isClient,
+            $event->getOptions()
+        );
     }
 
 

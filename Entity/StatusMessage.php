@@ -44,17 +44,19 @@ class StatusMessage extends Message
     /**
      * Encode message to JSON.
      *
+     * @param bool $getAsArray
+     *
      * @return string
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
-     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack() : string
+    public function pack(bool $getAsArray = false) : string
     {
         $this->jsonData = json_encode($this->rawData);
 
-        return parent::pack();
+        return parent::pack($getAsArray);
     }
 
 

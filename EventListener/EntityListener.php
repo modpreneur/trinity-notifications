@@ -10,14 +10,15 @@ namespace Trinity\NotificationBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Event\Events;
+use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
 use Trinity\NotificationBundle\Interfaces\NotificationEntityRepositoryInterface;
-use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
-
 
 /**
  * Class EntityListener.
@@ -38,9 +39,6 @@ class EntityListener
     /** @var  Object */
     protected $entity;
 
-    /** @var  NotificationManager */
-    protected $notificationManager;
-
     /** @var  NotificationUtils */
     protected $processor;
 
@@ -56,20 +54,25 @@ class EntityListener
     /** @var bool is listening enabled for this listener */
     protected $notificationEnabled = true;
 
+    /** @var  EventDispatcherInterface */
+    protected $eventDispatcher;
+
 
     /**
-     * @param NotificationManager $notificationManager
-     * @param NotificationUtils   $annotationProcessor
-     * @param bool                $isClient
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param NotificationUtils        $annotationProcessor
+     * @param bool                     $isClient
+     *
+     * @internal param NotificationManager $notificationManager
      */
     public function __construct(
-        NotificationManager $notificationManager,
+        EventDispatcherInterface $eventDispatcher,
         NotificationUtils $annotationProcessor,
         bool $isClient
     ) {
-        $this->notificationManager = $notificationManager;
         $this->processor = $annotationProcessor;
         $this->isClient = $isClient;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
 
@@ -179,7 +182,7 @@ class EntityListener
                     $this->sendNotification($entityManager, clone $eagerLoadedEntity, self::DELETE);
                 } else {
                     throw new RepositoryInterfaceNotImplementedException(
-                        'The repostory of the entity ' . get_class($entity)
+                        'The repository of the entity ' . get_class($entity)
                         . ' must implement ' . NotificationEntityInterface::class
                     );
                 }
@@ -199,8 +202,6 @@ class EntityListener
      */
     private function sendNotification(EntityManager $entityManager, $entity, string $method, array $options = [])
     {
-        $this->notificationManager->setEntityManager($entityManager);
-
         if (!$this->processor->isNotificationEntity($entity)) {
             return;
         }
@@ -208,6 +209,7 @@ class EntityListener
         $unitOfWork = $entityManager->getUnitOfWork();
         $list = [];
 
+        //todo: this may be bad practice
         if ($unitOfWork) {
             $unitOfWork->computeChangeSets();
             $changeset = $unitOfWork->getEntityChangeSet($entity);
@@ -230,7 +232,11 @@ class EntityListener
         if ($this->processor->hasHTTPMethod($entity, strtolower($method)) && ($doSendNotification ||
                 strtoupper($method) === self::POST || strtoupper($method) === self::DELETE)
         ) {
-            $this->notificationManager->queueEntity($entity, $method, !$this->isClient, $options);
+            $this->eventDispatcher->dispatch(
+                Events::SEND_NOTIFICATION,
+                new SendNotificationEvent($entity, $method, $options)
+            );
+
         }
     }
 

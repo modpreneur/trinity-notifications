@@ -160,9 +160,13 @@ class EntityAssociator
 
         //the entity was not associated
         //probably the entityToAssociate does not exist
-        $exception = new AssociationEntityNotFoundException();
-        $exception->setEntityName(array_search(get_class($associatedEntity), $this->entities, false));
-        $exception->setEntityId($associatedEntity->$getServerIdMethod());
+        $entityName = array_search(get_class($associatedEntity), $this->entities, false);
+        $entityId = $associatedEntity->$getServerIdMethod();
+        $exception = new AssociationEntityNotFoundException(
+            "Association entity '$entityName' with id '$entityId'' was not found"
+        );
+        $exception->setEntityName($entityName);
+        $exception->setEntityId($entityId);
 
         throw $exception;
     }
@@ -228,7 +232,7 @@ class EntityAssociator
      * Get doctrine repository of given className or null
      *
      * @param $className string Full classname(with namespace) of the entity. e.g.
-     *     AppBundle\\Entity\\Product\\StandardProduct
+     *                   AppBundle\\Entity\\Product\\StandardProduct
      *
      * @return \Doctrine\ORM\EntityRepository|null
      */

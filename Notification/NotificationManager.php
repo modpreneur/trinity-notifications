@@ -7,7 +7,6 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
@@ -31,9 +30,6 @@ class NotificationManager
 
     /** @var  string */
     protected $serverNotifyUri;
-
-    /** @var  EntityManagerInterface */
-    protected $entityManager;
 
     /** @var  BatchManager */
     protected $batchManager;
@@ -69,15 +65,6 @@ class NotificationManager
 
 
     /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function setEntityManager(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-
-    /**
      * Queue entity to be processed.
      * Internally stores the pointer to the entity to an array.
      *
@@ -108,6 +95,8 @@ class NotificationManager
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      */
     public function sendBatch()
     {
@@ -139,6 +128,8 @@ class NotificationManager
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      */
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
@@ -195,8 +186,7 @@ class NotificationManager
         NotificationEntityInterface $entity,
         $HTTPMethod = 'GET',
         array $options = []
-    )
-    {
+    ) {
         foreach ($this->drivers as $driver) {
             $this->executeEntityInDriver($entity, $driver, new Server(), $HTTPMethod, $options);
         }

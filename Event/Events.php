@@ -17,7 +17,7 @@ final class Events
     const BEFORE_DRIVER_EXECUTE = 'notification.beforeDriverExecute';
 
     const AFTER_DRIVER_EXECUTE = 'notification.afterDriverExecute';
-    
+
     const BEFORE_MESSAGE_PUBLISH = 'message.beforeMessagePublish';
 
     const BEFORE_MESSAGE_READ = 'message.beforeMessageRead';
@@ -27,7 +27,7 @@ final class Events
     const DEAD_LETTERED_MESSAGE_READ = 'message.deadLetteredMessageRead';
 
     const BEFORE_PARSE_NOTIFICATION = 'notification.beforeParseNotification';
-    
+
     const CONSUME_MESSAGE_ERROR = 'notification.consumeMessageError';
 
     const NOTIFICATION_REQUEST_EVENT = 'notification.notificationRequestEvent';
@@ -40,9 +40,9 @@ final class Events
 
     const DISABLE_NOTIFICATION = 'notification.disableNotification';
 
-    const CHANGES_DONE_EVENT = 'notification.changesDone';
-
-    const AFTER_MESSAGE_UNPACKED = 'message.afterMessageUnpacked';
+    const CHANGES_DONE_EVENT = 'trinity.notifications.changesDone';
 
     const SET_MESSAGE_STATUS = 'message.setMessageStatus';
+    
+    const SEND_NOTIFICATION = 'trinity.notification.sendNotification';
 }

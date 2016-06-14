@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('entities')
+                    ->normalizeKeys(false)
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('scalar')
@@ -39,6 +40,7 @@ class Configuration implements ConfigurationInterface
             
             //full class names of the forms
                 ->arrayNode('forms')
+                    ->normalizeKeys(false)
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('scalar')
@@ -65,84 +67,6 @@ class Configuration implements ConfigurationInterface
             
                 ->scalarNode('entity_id_field')
                     ->cannotBeEmpty()
-                ->end()
-
-                ->arrayNode('server_to_clients')
-                    ->cannotBeEmpty()
-                    ->children()
-
-                        ->scalarNode('dead_letter_exchange_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('dead_letter_queue_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('exchange_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('queue_name_pattern')
-                            ->cannotBeEmpty()
-                            ->validate()
-                            ->ifTrue(
-                                function ($s) {
-                                    return strpos($s, ':ID') === false;
-                                }
-                            )
-                                ->thenInvalid('The queue_name_pattern should contain :ID as wildcard for client id. %s given.')
-                            ->end()
-                        ->end()
-
-                    ->end()
-                ->end()
-
-                ->arrayNode('clients_to_server')
-                    ->cannotBeEmpty()
-                    ->children()
-
-                        ->scalarNode('dead_letter_exchange_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('dead_letter_queue_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('notifications_exchange_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('notifications_queue_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('messages_exchange_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                        ->scalarNode('messages_queue_name')
-                            ->cannotBeEmpty()
-                        ->end()
-
-                    ->end()
-                ->end()
-
-                ->scalarNode('client_notifications_exchange_name')
-                    ->cannotBeEmpty()
-                ->end()
-
-                ->scalarNode('client_messages_exchange_name')
-                    ->cannotBeEmpty()
-                ->end()
-
-                ->arrayNode('listening_queues')
-                    ->cannotBeEmpty()
-                    ->isRequired()
-                    ->prototype('scalar')
-                        ->cannotBeEmpty()
-                    ->end()
                 ->end()
 
             //reference to a service - starting with '@'

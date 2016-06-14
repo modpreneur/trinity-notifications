@@ -42,13 +42,12 @@ class NotificationRequestMessage extends Message
     /**
      * Encode message to JSON.
      *
-     * @return string
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @param bool $getAsArray
      *
+     * @return string
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack() : string
+    public function pack(bool $getAsArray = false) : string
     {
         $data = [];
         $data[self::REQUEST_KEY] = $this->request->toArray();
@@ -59,7 +58,7 @@ class NotificationRequestMessage extends Message
 
         $this->jsonData = json_encode($data);
 
-        return parent::pack();
+        return parent::pack($getAsArray);
     }
 
 

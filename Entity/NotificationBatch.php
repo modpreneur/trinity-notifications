@@ -36,11 +36,18 @@ class NotificationBatch extends Message
 
 
     /**
-     * Pack batch
+     * Encode message to JSON or array.
      *
-     * @inheritdoc
+     * @param bool $getAsArray
+     *
+     * @return string
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      */
-    public function pack() : string
+    public function pack(bool $getAsArray = false) : string
     {
         $notificationsArray = [];
         /** @var Notification $notification */
@@ -50,9 +57,7 @@ class NotificationBatch extends Message
 
         $this->jsonData = \json_encode($notificationsArray);
 
-        $this->makeHash();
-
-        return $this->getAsJson();
+        return parent::pack($getAsArray);
     }
 
 

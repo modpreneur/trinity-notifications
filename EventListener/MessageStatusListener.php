@@ -50,6 +50,7 @@ class MessageStatusListener
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidMessageStatusException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function onSetMessageStatus(SetMessageStatusEvent $event)
     {
@@ -57,6 +58,7 @@ class MessageStatusListener
             //create confirmation message
             $message = new StatusMessage();
             $message->setStatus($event->getStatus());
+            $message->setStatusMessage($event->getStatusMessage());
             $message->setParentMessageUid($event->getMessage()->getUid());
             $message->setClientId($event->getMessage()->getClientId());
             $message->setDestination('server');

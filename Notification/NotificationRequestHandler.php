@@ -33,9 +33,6 @@ class NotificationRequestHandler
     /** @var  EntityManagerInterface */
     protected $entityManager;
 
-    /** @var SecretKeyProviderInterface */
-    protected $clientSecretProvider;
-
     /** @var  EntityConverter */
     protected $entityConverter;
 
@@ -93,6 +90,7 @@ class NotificationRequestHandler
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function handleMissingEntityException(AssociationEntityNotFoundException $exception)
     {
@@ -113,7 +111,6 @@ class NotificationRequestHandler
         $responseMessage->setType(NotificationRequestMessage::MESSAGE_TYPE);
         $responseMessage->setParentMessageUid($requestMessage->getUid());
         $responseMessage->setClientId($requestMessage->getClientId());
-        $responseMessage->setSecretKey($this->clientSecretProvider->getSecretKey($requestMessage->getClientId()));
         $responseMessage->setPreviousNotifications($notifications);
 
         $notificationRequest = new NotificationRequest($exception->getEntityName(), $exception->getEntityId());
@@ -131,6 +128,7 @@ class NotificationRequestHandler
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      */
     public function handleMissingEntityRequestMessage(Message $message)
     {
@@ -169,6 +167,9 @@ class NotificationRequestHandler
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     protected function sendNotificationResponse(
         NotificationRequestMessage $message,
@@ -181,7 +182,6 @@ class NotificationRequestHandler
         $entityArray['entityName'] = $this->notificationUtils->getUrlPostfix($entity);
 
         $responseMessage = new NotificationBatch();
-        $responseMessage->setSecretKey($this->clientSecretProvider->getSecretKey($message->getClientId()));
         $responseMessage->setClientId($message->getClientId());
         $responseMessage->setParentMessageUid($message->getUid());
         $responseMessage->setType(NotificationBatch::MESSAGE_TYPE);
@@ -195,19 +195,6 @@ class NotificationRequestHandler
         $responseMessage->addNotifications($message->getPreviousNotifications());
 
         //send a notification about the entity
-        $this->messageSender->addMessage($responseMessage);
-        $this->messageSender->sendAll();
-    }
-
-    /**
-     * Get client secret from the message.
-     *
-     * @param Message $message
-     *
-     * @return string
-     */
-    protected function getSecretKey(Message $message) : string
-    {
-        return $this->clientSecretProvider->getSecretKey($message->getClientId());
+        $this->messageSender->sendMessage($responseMessage);
     }
 }

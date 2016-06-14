@@ -42,7 +42,7 @@ services:
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
         arguments:
-            - "@trinity.notification.manager"
+            - "@event_dispatcher"
             - "@trinity.notification.utils"
             - "%trinity.notification.is_client%"
         tags:
@@ -68,9 +68,11 @@ services:
         arguments:
             - "@trinity.notification.reader"
             - "@event_dispatcher"
-            - "@doctrine.orm.entity_manager"
+            - "@trinity.notification.manager"
+            - "%trinity.notification.is_client%"
         tags:
-            - { name: kernel.event_listener, event: message.messageRead, method: onMessageRead}
+            - { name: kernel.event_listener, event: trinity.messages.readMessage, method: onMessageRead}
+            - { name: kernel.event_listener, event: trinity.notification.sendNotification, method: onSendNotificationEvent}
 
     trinity.notification.message_status_listener:
         class: Trinity\NotificationBundle\EventListener\MessageStatusListener
@@ -82,9 +84,7 @@ services:
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
-        arguments:
-            - "@event_dispatcher"
-            - "%trinity.messages.sender_identification"
+        parent: "trinity.messages.message_sender"
 
     trinity.notification.entity_conversion_handler:
         class: Trinity\NotificationBundle\Notification\EntityConversionHandler
