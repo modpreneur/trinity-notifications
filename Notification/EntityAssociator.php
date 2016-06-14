@@ -102,7 +102,9 @@ class EntityAssociator
                 $associatedEntity = $entity->$getterMethod();
 
                 if ($associatedEntity === null) {
-                    throw new NotificationException('Associated entity is null. This should not happen when using data transformer in the form');
+                    throw new NotificationException(
+                        'Associated entity is null. This should not happen when using data transformer in the form'
+                    );
                 }
 
                 //get id of the association entity

@@ -16,7 +16,6 @@ use Trinity\NotificationBundle\Event\AfterDriverExecuteEvent;
 use Trinity\NotificationBundle\Event\BeforeDriverExecuteEvent;
 use Trinity\NotificationBundle\Event\Events;
 
-
 /**
  * Class NotificationManager.
  */

@@ -9,16 +9,17 @@
 namespace Trinity\NotificationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Trinity\Bundle\MessagesBundle\Event\Events as MessagesEvents;
 use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
+use Trinity\Bundle\MessagesBundle\Event\SetMessageStatusEvent;
+use Trinity\Bundle\MessagesBundle\Event\StatusMessageEvent;
 use Trinity\Bundle\MessagesBundle\Message\Message;
+use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
-use Trinity\NotificationBundle\Entity\StatusMessage;
-use Trinity\NotificationBundle\Event\Events;
+use Trinity\NotificationBundle\Event\Events as NotificationsEvents;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
-use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
-use Trinity\NotificationBundle\Event\StatusMessageEvent;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
@@ -153,9 +154,9 @@ class NotificationEventsListener
     protected function handleNotificationRequest(Message $message)
     {
         $event = new NotificationRequestEvent($message);
-        if ($this->eventDispatcher->hasListeners(Events::NOTIFICATION_REQUEST_EVENT)) {
+        if ($this->eventDispatcher->hasListeners(NotificationsEvents::NOTIFICATION_REQUEST_EVENT)) {
             /** @var NotificationRequestEvent $event */
-            $this->eventDispatcher->dispatch(Events::NOTIFICATION_REQUEST_EVENT, $event);
+            $this->eventDispatcher->dispatch(NotificationsEvents::NOTIFICATION_REQUEST_EVENT, $event);
         }
     }
 
@@ -167,9 +168,12 @@ class NotificationEventsListener
     {
         $statusMessage = StatusMessage::createFromMessage($message);
 
-        if ($this->eventDispatcher->hasListeners(Events::STATUS_MESSAGE_EVENT)) {
+        if ($this->eventDispatcher->hasListeners(MessagesEvents::STATUS_MESSAGE_EVENT)) {
             /** @var StatusMessageEvent $event */
-            $this->eventDispatcher->dispatch(Events::STATUS_MESSAGE_EVENT, new StatusMessageEvent($statusMessage));
+            $this->eventDispatcher->dispatch(
+                MessagesEvents::STATUS_MESSAGE_EVENT,
+                new StatusMessageEvent($statusMessage)
+            );
         }
     }
 
@@ -181,10 +185,10 @@ class NotificationEventsListener
      */
     protected function dispatchSetMessageStatusEvent(Message $message, string $status, string $statusMessage)
     {
-        if ($this->eventDispatcher->hasListeners(Events::SET_MESSAGE_STATUS)) {
+        if ($this->eventDispatcher->hasListeners(MessagesEvents::SET_MESSAGE_STATUS)) {
             /** @var ReadMessageEvent $event */
             $this->eventDispatcher->dispatch(
-                Events::SET_MESSAGE_STATUS,
+                MessagesEvents::SET_MESSAGE_STATUS,
                 new SetMessageStatusEvent($message, $status, $statusMessage)
             );
         }

@@ -48,4 +48,3 @@ class AssociationEntityNotFoundExceptionThrown extends NotificationEvent
         $this->exception = $exception;
     }
 }
-

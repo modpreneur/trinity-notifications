@@ -72,7 +72,7 @@ services:
             - "%trinity.notification.is_client%"
         tags:
             - { name: kernel.event_listener, event: trinity.messages.readMessage, method: onMessageRead}
-            - { name: kernel.event_listener, event: trinity.notification.sendNotification, method: onSendNotificationEvent}
+            - { name: kernel.event_listener, event: trinity.notifications.sendNotification, method: onSendNotificationEvent}
 
     trinity.notification.message_status_listener:
         class: Trinity\NotificationBundle\EventListener\MessageStatusListener
@@ -80,7 +80,7 @@ services:
             - "@trinity.messages.message_sender"
             - "%trinity.notification.is_client%"
         tags:
-            - { name: kernel.event_listener, event: message.setMessageStatus, method: onSetMessageStatus}
+            - { name: kernel.event_listener, event: trinity.messages.setMessageStatus, method: onSetMessageStatus}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
@@ -114,8 +114,8 @@ services:
         arguments:
             - "@trinity.notification.notification_request_handler"
         tags:
-           - { name: kernel.event_listener, event: notification.associationEntityNotFoundExceptionThrown,  method: onAssociationEntityNotFoundExceptionThrown}
-           - { name: kernel.event_listener, event: notification.notificationRequestEvent,  method: onNotificationRequestEvent}
+           - { name: kernel.event_listener, event: trinity.notifications.associationEntityNotFoundExceptionThrown,  method: onAssociationEntityNotFoundExceptionThrown}
+           - { name: kernel.event_listener, event: trinity.notifications.notificationRequestEvent,  method: onNotificationRequestEvent}
 
     trinity.notification.notification_request_handler:
         class: Trinity\NotificationBundle\Notification\NotificationRequestHandler

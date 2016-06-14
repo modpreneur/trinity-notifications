@@ -83,6 +83,4 @@ class Association
     {
         $this->targetClassName = $targetClassName;
     }
-
-
 }

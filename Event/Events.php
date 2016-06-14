@@ -14,27 +14,20 @@ namespace Trinity\NotificationBundle\Event;
  */
 final class Events
 {
+//todo: cleanup!
     const BEFORE_DRIVER_EXECUTE = 'notification.beforeDriverExecute';
 
     const AFTER_DRIVER_EXECUTE = 'notification.afterDriverExecute';
-
-    const BEFORE_MESSAGE_PUBLISH = 'message.beforeMessagePublish';
-
-    const BEFORE_MESSAGE_READ = 'message.beforeMessageRead';
-
-    const MESSAGE_READ = 'message.messageRead';
-
+    
     const DEAD_LETTERED_MESSAGE_READ = 'message.deadLetteredMessageRead';
 
     const BEFORE_PARSE_NOTIFICATION = 'notification.beforeParseNotification';
 
     const CONSUME_MESSAGE_ERROR = 'notification.consumeMessageError';
 
-    const NOTIFICATION_REQUEST_EVENT = 'notification.notificationRequestEvent';
+    const NOTIFICATION_REQUEST_EVENT = 'trinity.notifications.notificationRequestEvent';
 
-    const STATUS_MESSAGE_EVENT = 'message.statusMessageEvent';
-
-    const ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN = 'notification.associationEntityNotFoundExceptionThrown';
+    const ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN = 'trinity.notifications.associationEntityNotFoundExceptionThrown';
 
     const ENABLE_NOTIFICATION = 'notification.enableNotification';
 
@@ -42,7 +35,5 @@ final class Events
 
     const CHANGES_DONE_EVENT = 'trinity.notifications.changesDone';
 
-    const SET_MESSAGE_STATUS = 'message.setMessageStatus';
-    
-    const SEND_NOTIFICATION = 'trinity.notification.sendNotification';
+    const SEND_NOTIFICATION = 'trinity.notifications.sendNotification';
 }

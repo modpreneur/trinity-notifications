@@ -15,7 +15,6 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
-use Trinity\NotificationBundle\RabbitMQ\ServerProducer;
 
 /**
  * Class RabbitMasterDriver

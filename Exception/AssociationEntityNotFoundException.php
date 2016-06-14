@@ -10,7 +10,6 @@ namespace Trinity\NotificationBundle\Exception;
 
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
-
 /**
  * Class AssociationEntityNotFoundException
  *

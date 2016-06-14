@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\Event;
 use Trinity\FrameworkBundle\Entity\BaseUser;
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 
-
 /**
  *
  */
@@ -192,4 +191,3 @@ class StatusEvent extends Event
         $this->user = $user;
     }
 }
-

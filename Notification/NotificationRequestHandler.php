@@ -194,6 +194,10 @@ class NotificationRequestHandler
         $responseMessage->addNotification($notification);
         $responseMessage->addNotifications($message->getPreviousNotifications());
 
+        if (!$this->isClient) {
+            $responseMessage->setDestination('client_'.$message->getClientId());
+        }
+
         //send a notification about the entity
         $this->messageSender->sendMessage($responseMessage);
     }

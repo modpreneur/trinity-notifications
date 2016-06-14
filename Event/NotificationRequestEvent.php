@@ -49,4 +49,3 @@ class NotificationRequestEvent extends NotificationEvent
         $this->message = $message;
     }
 }
-

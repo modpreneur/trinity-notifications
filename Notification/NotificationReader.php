@@ -55,9 +55,9 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
-     *
+     * 
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
-     * @throws \Trinity\NotificationBundle\Exception\DataNotValidJsonException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException

@@ -41,4 +41,3 @@ class MessageNotProcessedException extends \Exception
         return $this;
     }
 }
-

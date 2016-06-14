@@ -11,6 +11,7 @@ namespace Trinity\NotificationBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
+//todo: delete
 /**
  * Class AfterMessageUnpackedEvent
  *

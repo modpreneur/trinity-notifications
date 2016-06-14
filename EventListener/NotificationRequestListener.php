@@ -46,6 +46,7 @@ class NotificationRequestListener
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function onAssociationEntityNotFoundExceptionThrown(AssociationEntityNotFoundExceptionThrown $event)
     {
@@ -64,6 +65,7 @@ class NotificationRequestListener
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      */
     public function onNotificationRequestEvent(NotificationRequestEvent $event)
     {

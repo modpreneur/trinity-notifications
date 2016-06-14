@@ -8,6 +8,8 @@
 
 namespace Trinity\NotificationBundle\Event;
 
+use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
+
 /**
  * Class DeadLetteredReadMessageEvent
  *

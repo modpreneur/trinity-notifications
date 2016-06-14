@@ -69,6 +69,7 @@ class EntityConversionHandler
      * @param array                       $data
      *
      * @return NotificationEntityInterface
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
@@ -130,7 +131,8 @@ class EntityConversionHandler
         if (!$form->isValid()) {
             $errorStrings = [];
             foreach ($form->getErrors(true) as $error) {
-                $errorStrings[] = $error->getOrigin()->getName(). ' with cause ' . $error->getCause() . ' caused message:' . $error->getMessage() . 'because of invalid value';
+                $errorStrings[] = $error->getOrigin()->getName() . ' with cause ' . $error->getCause() .
+                    ' caused message:' . $error->getMessage() . 'because of invalid value';
 
             }
 
@@ -172,8 +174,7 @@ class EntityConversionHandler
         string $entityName,
         NotificationEntityInterface $entity,
         array $options = []
-    ) : FormInterface
-    {
+    ) : FormInterface {
         return $this->formFactory->create(
             $this->getFormClassName($entityName),
             $entity,

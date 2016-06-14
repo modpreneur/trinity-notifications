@@ -8,9 +8,7 @@
 
 namespace Trinity\NotificationBundle\Event;
 
-
 use Symfony\Component\EventDispatcher\Event;
-
 
 /**
  * Class NotificationEvent

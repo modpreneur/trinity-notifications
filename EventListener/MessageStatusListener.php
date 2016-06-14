@@ -8,9 +8,9 @@
 
 namespace Trinity\NotificationBundle\EventListener;
 
+use Trinity\Bundle\MessagesBundle\Event\SetMessageStatusEvent;
+use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
-use Trinity\NotificationBundle\Entity\StatusMessage;
-use Trinity\NotificationBundle\Event\SetMessageStatusEvent;
 
 /**
  * Class MessageStatusListener
@@ -49,8 +49,8 @@ class MessageStatusListener
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\NotificationBundle\Exception\InvalidMessageStatusException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\InvalidMessageStatusException
      */
     public function onSetMessageStatus(SetMessageStatusEvent $event)
     {

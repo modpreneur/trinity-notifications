@@ -101,8 +101,6 @@ abstract class BaseDriver implements NotificationDriverInterface
 
         return array_key_exists($clientId, $this->notifiedEntities) && //if the client array exists
         array_key_exists($class, $this->notifiedEntities[$clientId]) && // and the class array exists
-        in_array($entity->getId(), $this->notifiedEntities[$clientId][$class],
-            false); // and the entity id exists in the class array
+        in_array($entity->getId(), $this->notifiedEntities[$clientId][$class], false); // and the entity id exists in the class array
     }
 }
-
