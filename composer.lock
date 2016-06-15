@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5a163a0e8eef8d6c51cb6543a3a9c3e2",
-    "content-hash": "a854734ccb22449cb7ab46ab3bd4417b",
+    "hash": "e8ff5c456b404cfdc79afb6d68194a4b",
+    "content-hash": "a40474163961db69ef6be1e38a6347b3",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2618,6 +2618,46 @@
             "time": "2016-03-25 17:08:27"
         },
         {
+            "name": "skrz/autowiring-bundle",
+            "version": "v1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/skrz/autowiring-bundle.git",
+                "reference": "44c30b867b6b94b6c7f558ea4d5d271e0eec7fac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/skrz/autowiring-bundle/zipball/44c30b867b6b94b6c7f558ea4d5d271e0eec7fac",
+                "reference": "44c30b867b6b94b6c7f558ea4d5d271e0eec7fac",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "~1.2",
+                "php": ">=5.4",
+                "symfony/config": "~2.7|~3.0",
+                "symfony/dependency-injection": "~2.7|~3.0",
+                "symfony/http-kernel": "~2.7|~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skrz\\Bundle\\AutowiringBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Kulhan",
+                    "email": "jakub.kulhan@gmail.com"
+                }
+            ],
+            "description": "Symfony bundle providing autowiring/autoscanning capabilities to DI container",
+            "time": "2016-04-08 13:40:45"
+        },
+        {
             "name": "symfony/monolog-bundle",
             "version": "2.11.1",
             "source": {
@@ -3157,6 +3197,44 @@
             "time": "2016-04-07 13:48:16"
         },
         {
+            "name": "trinity/bunny-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/modpreneur/trinity-bunny-bundle.git",
+                "reference": "3325f154a757e9675e21580130d4dee3eae11759"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/modpreneur/trinity-bunny-bundle/zipball/3325f154a757e9675e21580130d4dee3eae11759",
+                "reference": "3325f154a757e9675e21580130d4dee3eae11759",
+                "shasum": ""
+            },
+            "require": {
+                "bunny/bunny": "~0.2.2",
+                "php": ">=5.4",
+                "skrz/autowiring-bundle": "~1.1",
+                "symfony/console": "~3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6",
+                "symfony/framework-bundle": "~2.7|~3",
+                "symfony/yaml": "~2.7|~3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Trinity\\Bundle\\BunnyBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony bundle that makes using RabbitMQ easy. Without meta classes.",
+            "time": "2016-06-08 15:43:03"
+        },
+        {
             "name": "trinity/framework",
             "version": "dev-master",
             "source": {
@@ -3271,31 +3349,74 @@
             "time": "2016-06-15 10:15:10"
         },
         {
+            "name": "trinity/messages",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/modpreneur/trinity-messages.git",
+                "reference": "ab2a4aaf2ec04bf967dc9994a18acdc7071e2768"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/modpreneur/trinity-messages/zipball/ab2a4aaf2ec04bf967dc9994a18acdc7071e2768",
+                "reference": "ab2a4aaf2ec04bf967dc9994a18acdc7071e2768",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7",
+                "symfony/config": "~3",
+                "symfony/dependency-injection": "~3",
+                "symfony/event-dispatcher": "~3",
+                "symfony/http-kernel": "~3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Trinity\\Bundle\\MessagesBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ME",
+                    "email": "info@modpreneur.com"
+                }
+            ],
+            "description": "Trinity Messages bundle",
+            "time": "2016-06-14 15:05:03"
+        },
+        {
             "name": "trinity/search",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity-search.git",
-                "reference": "a4d3ee25d2380a820f26cffc3844e21beeb0c32f"
+                "reference": "83285fe5e3c54a563005e6e9e1909f95f3359e3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity-search/zipball/a4d3ee25d2380a820f26cffc3844e21beeb0c32f",
-                "reference": "a4d3ee25d2380a820f26cffc3844e21beeb0c32f",
+                "url": "https://api.github.com/repos/modpreneur/trinity-search/zipball/83285fe5e3c54a563005e6e9e1909f95f3359e3f",
+                "reference": "83285fe5e3c54a563005e6e9e1909f95f3359e3f",
                 "shasum": ""
             },
             "require": {
                 "doctrine/doctrine-bundle": "~1",
+                "doctrine/orm": "~2.5",
                 "friendsofsymfony/rest-bundle": "~1.7",
-                "friendsofsymfony/user-bundle": "master-dev",
                 "jms/serializer-bundle": "~1.1",
                 "knplabs/doctrine-behaviors": "~1",
-                "nette/utils": "~2.3",
                 "php": ">=7",
                 "sensio/framework-extra-bundle": "~3.0",
                 "symfony/framework-bundle": "~2.8 | ~3.0",
                 "symfony/symfony": "~3.0",
-                "trinity/settings": "dev-master",
                 "trinity/utils": "dev-master"
             },
             "require-dev": {
@@ -3305,7 +3426,6 @@
                 "phpunit/phpunit": "5.1.*",
                 "satooshi/php-coveralls": "1.0.*",
                 "sensio/generator-bundle": "~3.0",
-                "symfony/swiftmailer-bundle": "~2.3",
                 "symfony/var-dumper": "~3.0"
             },
             "type": "symfony-bundle",
@@ -3328,12 +3448,12 @@
             ],
             "authors": [
                 {
-                    "name": "Trinity Team",
-                    "email": "info@modpreneur.com"
+                    "name": "Martin Matejka",
+                    "email": "matejka@webvalley.cz"
                 }
             ],
             "description": "Trinity Search bundle",
-            "time": "2016-06-15 07:16:25"
+            "time": "2016-06-15 12:25:12"
         },
         {
             "name": "trinity/settings",
@@ -5139,12 +5259,14 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "trinity/framework": 20,
         "trinity/logger": 20,
-        "trinity/bunny": 20,
-        "trinity/utils": 20,
+        "trinity/framework": 20,
         "trinity/search": 20,
         "trinity/settings": 20,
+        "trinity/bunny": 20,
+        "trinity/utils": 20,
+        "trinity/bunny-bundle": 20,
+        "trinity/messages": 20,
         "braincrafted/testing-bundle": 0,
         "friendsofsymfony/user-bundle": 20
     },
