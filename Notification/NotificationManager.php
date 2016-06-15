@@ -96,6 +96,7 @@ class NotificationManager
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function sendBatch()
     {
@@ -129,11 +130,37 @@ class NotificationManager
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
         foreach ($this->drivers as $driver) {
             $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+        }
+
+        $this->batchManager->sendAll();
+        $this->clear();
+
+    }
+
+
+    /**
+     * @param NotificationEntityInterface[] $entities
+     * @param ClientInterface               $client
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     */
+    public function syncEntities(array $entities, ClientInterface $client)
+    {
+        foreach ($this->drivers as $driver) {
+            foreach ($entities as $entity) {
+                $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+            }
         }
 
         $this->batchManager->sendAll();
