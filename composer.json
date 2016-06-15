@@ -26,7 +26,6 @@
     "trinity/search": "dev-master",
     "trinity/settings": "dev-master",
     "trinity/bunny-bundle": "dev-master",
-    "trinity/search": "dev-master",
     "trinity/messages": "dev-master"
   },
   "require-dev": {
