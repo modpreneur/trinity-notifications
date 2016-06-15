@@ -1,6 +1,6 @@
-FROM modpreneur/trinity-test
+FROM modpreneur/trinity-test:alpine
 
-MAINTAINER Tomáš Jančar <jancar@modpreneur.com>
+MAINTAINER Barbora Čápová <capova@modpreneur.com>
 
 # Install app
 RUN rm -rf /var/app/*
