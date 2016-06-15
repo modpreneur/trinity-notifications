@@ -13,13 +13,18 @@
     "php": ">=5.6",
     "symfony/symfony": "~2.8 | ~3",
     "trinity/framework": "dev-master",
-    "trinity/settings": "~1.0",
     "guzzlehttp/guzzle": "~6.0",
     "nette/utils": "~2.3",
     "sensio/framework-extra-bundle": "~3.0",
     "fzaninotto/faker": "^1.5",
+
     "doctrine/orm": "~2.5",
     "trinity/logger": "dev-master",
+    "trinity/bunny": "dev-master#9e01ca4a",
+    "trinity/utils": "dev-master",
+    "trinity/search": "dev-master",
+    "trinity/settings": "dev-master"
+
     "trinity/bunny-bundle": "dev-master",
     "trinity/search": "dev-master",
     "trinity/messages": "dev-master"
@@ -28,8 +33,8 @@
     "braincrafted/testing-bundle": "@stable",
     "friendsofsymfony/user-bundle": "dev-master",
     "sensio/generator-bundle": "~3.0",
-    "phpunit/phpunit": "~5.0",
-    "codeception/codeception" : "~2.1",
+    "phpunit/phpunit": "~5.4",
+    "codeception/codeception" : "~2.2",
     "jms/serializer-bundle": "~1.1",
     "symfony/monolog-bundle": "~2.8",
     "symfony/console": "~2.8| ~3"
@@ -43,6 +48,7 @@
   },
 
   "minimum-stability": "stable",
+
   "extra": {
     "branch-alias": {
       "dev-master": "1.0-dev"
