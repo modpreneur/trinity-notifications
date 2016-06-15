@@ -24,7 +24,7 @@
     "trinity/bunny": "dev-master#9e01ca4a",
     "trinity/utils": "dev-master",
     "trinity/search": "dev-master",
-    "trinity/settings": "dev-master"
+    "trinity/settings": "dev-master",
     "trinity/bunny-bundle": "dev-master",
     "trinity/search": "dev-master",
     "trinity/messages": "dev-master"
