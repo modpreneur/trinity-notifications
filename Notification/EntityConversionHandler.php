@@ -114,7 +114,14 @@ class EntityConversionHandler
      */
     public function useForm(NotificationEntityInterface $entity, array $data) : NotificationEntityInterface
     {
-        $form = $this->createForm(array_search(get_class($entity), $this->entities, true), $entity);
+        $form = $this->createForm(
+            array_search(
+                str_replace('Proxies\__CG__\\', '', get_class($entity)),
+                $this->entities,
+                true
+            ),
+            $entity
+        );
 
         /** @var array $keys */
         $keys = array_keys($data);
@@ -174,7 +181,8 @@ class EntityConversionHandler
         string $entityName,
         NotificationEntityInterface $entity,
         array $options = []
-    ) : FormInterface {
+    ) : FormInterface
+    {
         return $this->formFactory->create(
             $this->getFormClassName($entityName),
             $entity,

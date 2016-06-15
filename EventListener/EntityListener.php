@@ -170,6 +170,9 @@ class EntityListener
                 //todo: queuing notification in this phase is wrong.
                 //todo: If the deleting fail in the DB the notification will be still sent.
 
+                if (!$entity instanceof NotificationEntityInterface) {
+                    continue;
+                }
                 //Get the entity from the database EAGERly and clone it because in this phase it has the ID
                 //later on the entity is deleted and the ID is removed from the object
                 //but the cloned object remains untouched and the id is still there.
@@ -177,7 +180,8 @@ class EntityListener
                 //      In that case the entity ID is not present(entity is not yet persisted) and thus it can not be retrieved from the DB.
                 $repository = $eventArgs->getEntityManager()->getRepository(get_class($entity));
 
-                if ($repository instanceof NotificationEntityRepositoryInterface) {
+                if ($repository instanceof NotificationEntityRepositoryInterface
+                ) {
                     $eagerLoadedEntity = $repository->findEagerly($entity->getId());
                     $this->sendNotification($entityManager, clone $eagerLoadedEntity, self::DELETE);
                 } else {
