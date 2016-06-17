@@ -187,7 +187,7 @@ class EntityListener
                 } else {
                     throw new RepositoryInterfaceNotImplementedException(
                         'The repository of the entity ' . get_class($entity)
-                        . ' must implement ' . NotificationEntityInterface::class
+                        . ' must implement ' . NotificationEntityRepositoryInterface::class
                     );
                 }
             }
@@ -216,13 +216,11 @@ class EntityListener
         //todo: this may be bad practice
         if ($unitOfWork) {
             $unitOfWork->computeChangeSets();
-            $changeset = $unitOfWork->getEntityChangeSet($entity);
+            $changeSet = $unitOfWork->getEntityChangeSet($entity);
 
-            foreach ($changeset as $index => $value) {
-                if ($this->processor->hasSource($entity, $index) || $this->processor->hasDependedSource(
-                        $entity,
-                        $index
-                    )
+            foreach ($changeSet as $index => $value) {
+                if ($this->processor->hasSource($entity, $index)
+                    || $this->processor->hasDependedSource($entity, $index)
                 ) {
                     $list[] = $index;
                 }
