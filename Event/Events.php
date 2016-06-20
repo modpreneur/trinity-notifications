@@ -36,4 +36,9 @@ final class Events
     const CHANGES_DONE_EVENT = 'trinity.notifications.changesDone';
 
     const SEND_NOTIFICATION = 'trinity.notifications.sendNotification';
+
+    /** todo: add to all Events.php
+     * @Event("Trinity\NotificationBundle\Event\BeforeDeleteEntityEvent")
+     */
+    const BEFORE_DELETE_ENTITY = 'trinity.notifications.beforeDeleteEntity';
 }

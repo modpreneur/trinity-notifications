@@ -210,9 +210,7 @@ class EntityListener
             return;
         }
 
-        if ($this->processor->hasHTTPMethod($entity, strtolower($method)) &&
-            (strtoupper($method) === self::POST || strtoupper($method) === self::DELETE)
-        ) {
+        if ($this->processor->hasHTTPMethod($entity, strtolower($method))) {
             $this->eventDispatcher->dispatch(
                 Events::SEND_NOTIFICATION,
                 new SendNotificationEvent($entity, $method, $options)

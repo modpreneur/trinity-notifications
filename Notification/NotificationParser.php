@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Event\BeforeDeleteEntityEvent;
 use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\NotificationException;
@@ -182,6 +183,13 @@ class NotificationParser
         //delete entity, without form
         if ($entityObject !== null && $HTTPMethod === 'DELETE') {
             $this->logger->info('METHOD: DELETE ' . $HTTPMethod);
+            /** @var BeforeDeleteEntityEvent $event */
+            $event = $this->eventDispatcher->dispatch(
+                Events::BEFORE_DELETE_ENTITY,
+                new BeforeDeleteEntityEvent($entityObject)
+            );
+            $entityObject = $event->getEntity();
+            
             $this->entityManager->remove($entityObject);
 
             return null;
