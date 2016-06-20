@@ -49,8 +49,8 @@ services:
             - { name: doctrine.event_listener, event: onFlush,     priority: 255 }
             - { name: doctrine.event_listener, event: postUpdate,  priority: 200 }
             - { name: doctrine.event_listener, event: postPersist, priority: 200 }
-            - { name: kernel.event_listener,   event: notification.enableNotification, priority: 200, method: enableNotification}
-            - { name: kernel.event_listener,   event: notification.disableNotification, priority: 200, method: disableNotification }
+            - { name: kernel.event_listener,   event: trinity.notifications.enableNotification, priority: 200, method: enableNotification}
+            - { name: kernel.event_listener,   event: trinity.notifications.disableNotification, priority: 200, method: disableNotification }
         calls:
             - [setRequestStack, ["@request_stack"]]
 
@@ -114,7 +114,7 @@ services:
         arguments:
             - "@trinity.notification.notification_request_handler"
         tags:
-           - { name: kernel.event_listener, event: trinity.notifications.associationEntityNotFoundExceptionThrown,  method: onAssociationEntityNotFoundExceptionThrown}
+           - { name: kernel.event_listener, event: trinity.notifications.associationEntityNotFound,  method: onAssociationEntityNotFoundEvent}
            - { name: kernel.event_listener, event: trinity.notifications.notificationRequestEvent,  method: onNotificationRequestEvent}
 
     trinity.notification.notification_request_handler:

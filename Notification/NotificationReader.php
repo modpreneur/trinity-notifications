@@ -8,11 +8,10 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Entity\Notification;
-use Trinity\NotificationBundle\Event\AssociationEntityNotFoundExceptionThrown;
+use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
 use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
@@ -80,9 +79,9 @@ class NotificationReader
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($message);
 
-            if ($this->eventDispatcher->hasListeners(Events::ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN)) {
-                $event = new AssociationEntityNotFoundExceptionThrown($e);
-                $this->eventDispatcher->dispatch(Events::ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN, $event);
+            if ($this->eventDispatcher->hasListeners(Events::ASSOCIATION_ENTITY_NOT_FOUND)) {
+                $event = new AssociationEntityNotFoundEvent($e);
+                $this->eventDispatcher->dispatch(Events::ASSOCIATION_ENTITY_NOT_FOUND, $event);
             }
 
             throw $e;

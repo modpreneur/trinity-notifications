@@ -8,7 +8,7 @@
 
 namespace Trinity\NotificationBundle\EventListener;
 
-use Trinity\NotificationBundle\Event\AssociationEntityNotFoundExceptionThrown;
+use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Notification\NotificationRequestHandler;
 
@@ -35,10 +35,10 @@ class NotificationRequestListener
 
 
     /**
-     * Listen to a AssociationEntityNotFoundExceptionThrown. When the event is fired, publish a message with
+     * Listen to a AssociationEntityNotFoundEvent. When the event is fired, publish a message with
      * notification request. The request will contain the original message uid.
      *
-     * @param AssociationEntityNotFoundExceptionThrown $event
+     * @param AssociationEntityNotFoundEvent $event
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
@@ -48,7 +48,7 @@ class NotificationRequestListener
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
-    public function onAssociationEntityNotFoundExceptionThrown(AssociationEntityNotFoundExceptionThrown $event)
+    public function onAssociationEntityNotFoundEvent(AssociationEntityNotFoundEvent $event)
     {
         $this->requestHandler->handleMissingEntityException($event->getException());
     }

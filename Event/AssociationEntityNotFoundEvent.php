@@ -11,18 +11,18 @@ namespace Trinity\NotificationBundle\Event;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
 /**
- * Class AssociationEntityNotFoundExceptionThrown
+ * Class AssociationEntityNotFoundEvent
  *
  * @package Trinity\NotificationBundle\Event
- *//*todo: add 'Event' to the name*/
-class AssociationEntityNotFoundExceptionThrown extends NotificationEvent
+ */
+class AssociationEntityNotFoundEvent extends NotificationEvent
 {
     /** @var  AssociationEntityNotFoundException */
     protected $exception;
 
 
     /**
-     * AssociationEntityNotFoundExceptionThrown constructor.
+     * AssociationEntityNotFoundEvent constructor.
      * @param AssociationEntityNotFoundException $exception
      */
     public function __construct(AssociationEntityNotFoundException $exception)

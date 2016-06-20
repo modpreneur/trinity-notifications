@@ -14,6 +14,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Event\DisableNotificationEvent;
+use Trinity\NotificationBundle\Event\EnableNotificationEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
@@ -96,8 +98,10 @@ class EntityListener
 
     /**
      * Disable notification
+     *
+     * @param DisableNotificationEvent $event
      */
-    public function disableNotification()
+    public function disableNotification(DisableNotificationEvent $event)
     {
         $this->notificationEnabled = false;
     }
@@ -105,8 +109,10 @@ class EntityListener
 
     /**
      * Enable notification
+     *
+     * @param EnableNotificationEvent $event
      */
-    public function enableNotification()
+    public function enableNotification(EnableNotificationEvent $event)
     {
         $this->notificationEnabled = true;
     }

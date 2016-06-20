@@ -154,9 +154,9 @@ class NotificationEventsListener
     protected function handleNotificationRequest(Message $message)
     {
         $event = new NotificationRequestEvent($message);
-        if ($this->eventDispatcher->hasListeners(NotificationsEvents::NOTIFICATION_REQUEST_EVENT)) {
+        if ($this->eventDispatcher->hasListeners(NotificationsEvents::NOTIFICATION_REQUEST)) {
             /** @var NotificationRequestEvent $event */
-            $this->eventDispatcher->dispatch(NotificationsEvents::NOTIFICATION_REQUEST_EVENT, $event);
+            $this->eventDispatcher->dispatch(NotificationsEvents::NOTIFICATION_REQUEST, $event);
         }
     }
 

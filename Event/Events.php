@@ -14,30 +14,52 @@ namespace Trinity\NotificationBundle\Event;
  */
 final class Events
 {
-//todo: cleanup!
-    const BEFORE_DRIVER_EXECUTE = 'notification.beforeDriverExecute';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\BeforeDriverExecuteEvent")
+     */
+    const BEFORE_DRIVER_EXECUTE = 'trinity.notifications.beforeDriverExecute';
 
-    const AFTER_DRIVER_EXECUTE = 'notification.afterDriverExecute';
-    
-    const DEAD_LETTERED_MESSAGE_READ = 'message.deadLetteredMessageRead';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\AfterDriverExecuteEvent")
+     */
+    const AFTER_DRIVER_EXECUTE = 'trinity.notifications.afterDriverExecute';
 
-    const BEFORE_PARSE_NOTIFICATION = 'notification.beforeParseNotification';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\BeforeParseNotificationEvent")
+     */
+    const BEFORE_PARSE_NOTIFICATION = 'trinity.notifications.beforeParseNotification';
 
-    const CONSUME_MESSAGE_ERROR = 'notification.consumeMessageError';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\NotificationRequestEvent")
+     */
+    const NOTIFICATION_REQUEST = 'trinity.notifications.notificationRequestEvent';
 
-    const NOTIFICATION_REQUEST_EVENT = 'trinity.notifications.notificationRequestEvent';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent")
+     */
+    const ASSOCIATION_ENTITY_NOT_FOUND = 'trinity.notifications.associationEntityNotFound';
 
-    const ASSOCIATION_ENTITY_NOT_FOUND_EXCEPTION_THROWN = 'trinity.notifications.associationEntityNotFoundExceptionThrown';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\EnableNotificationEvent")
+     */
+    const ENABLE_NOTIFICATION = 'trinity.notifications.enableNotification';
 
-    const ENABLE_NOTIFICATION = 'notification.enableNotification';
+    /**
+     * @Event("Trinity\NotificationBundle\Event\DisableNotificationEvent")
+     */
+    const DISABLE_NOTIFICATION = 'trinity.notifications.disableNotification';
 
-    const DISABLE_NOTIFICATION = 'notification.disableNotification';
-
+    /**
+     * @Event("Trinity\NotificationBundle\Event\ChangesDoneEvent")
+     */
     const CHANGES_DONE_EVENT = 'trinity.notifications.changesDone';
 
+    /**
+     * @Event("Trinity\NotificationBundle\Event\SendNotificationEvent")
+     */
     const SEND_NOTIFICATION = 'trinity.notifications.sendNotification';
 
-    /** todo: add to all Events.php
+    /**
      * @Event("Trinity\NotificationBundle\Event\BeforeDeleteEntityEvent")
      */
     const BEFORE_DELETE_ENTITY = 'trinity.notifications.beforeDeleteEntity';
