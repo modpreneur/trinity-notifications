@@ -210,29 +210,8 @@ class EntityListener
             return;
         }
 
-        $unitOfWork = $entityManager->getUnitOfWork();
-        $list = [];
-
-        //todo: this may be bad practice
-        if ($unitOfWork) {
-            $unitOfWork->computeChangeSets();
-            $changeSet = $unitOfWork->getEntityChangeSet($entity);
-
-            foreach ($changeSet as $index => $value) {
-                if ($this->processor->hasSource($entity, $index)
-                    || $this->processor->hasDependedSource($entity, $index)
-                ) {
-                    $list[] = $index;
-                }
-            }
-
-            $doSendNotification = (count($list) > 0);
-        } else {
-            $doSendNotification = true;
-        }
-
-        if ($this->processor->hasHTTPMethod($entity, strtolower($method)) && ($doSendNotification ||
-                strtoupper($method) === self::POST || strtoupper($method) === self::DELETE)
+        if ($this->processor->hasHTTPMethod($entity, strtolower($method)) &&
+            (strtoupper($method) === self::POST || strtoupper($method) === self::DELETE)
         ) {
             $this->eventDispatcher->dispatch(
                 Events::SEND_NOTIFICATION,
