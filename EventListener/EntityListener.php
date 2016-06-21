@@ -9,7 +9,6 @@ namespace Trinity\NotificationBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,7 +17,9 @@ use Trinity\NotificationBundle\Event\DisableNotificationEvent;
 use Trinity\NotificationBundle\Event\EnableNotificationEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
+use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
+use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Interfaces\NotificationEntityRepositoryInterface;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
 
@@ -58,6 +59,9 @@ class EntityListener
 
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
+
+    /** @var  array */
+    protected $entityDeletions = [];
 
 
     /**
@@ -119,12 +123,59 @@ class EntityListener
 
 
     /**
+     * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws \Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException
+     */
+    public function preRemove(LifecycleEventArgs $eventArgs)
+    {
+        $entity = $eventArgs->getEntity();
+        $repository = $eventArgs->getEntityManager()->getRepository(get_class($entity));
+
+        if ($repository instanceof NotificationEntityRepositoryInterface) {
+            $eagerLoadedEntity = $repository->findEagerly($entity->getId());
+            $this->entityDeletions[] = [
+                'eagerLoaded' => $eagerLoadedEntity,
+                'entity' => $entity
+            ];
+        } else {
+            throw new RepositoryInterfaceNotImplementedException(
+                'The repository of the entity ' . get_class($entity)
+                . ' must implement ' . NotificationEntityRepositoryInterface::class
+            );
+        }
+    }
+
+    /**
+     * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws SourceException
+     * @throws NotificationException
+     */
+    public function postRemove(LifecycleEventArgs $eventArgs)
+    {
+        $postRemoveEntity = $eventArgs->getEntity();
+
+        foreach ($this->entityDeletions as $item) {
+            $preRemoveEntity = $item['entity'];
+
+            // if the entity which was added in preRemove is the same entity as the entity from postRemove
+            // the database delete query was successful and we can send a notification
+            // because the $post(pre)removeEntity does not have an id we use eager loaded entity which has the id
+            if ($postRemoveEntity === $preRemoveEntity) {
+                $this->sendNotification($eventArgs->getEntityManager(), $item['eagerLoaded'], self::DELETE);
+            }
+        }
+    }
+
+
+    /**
      * Def in service.yml.
      *
      * @param LifecycleEventArgs $args
      *
-     * @throws \Trinity\NotificationBundle\Exception\SourceException
-     * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws SourceException
+     * @throws NotificationException
      */
     public function postUpdate(LifecycleEventArgs $args)
     {
@@ -152,51 +203,6 @@ class EntityListener
 
         if ($enable && $this->notificationEnabled) {
             $this->sendNotification($args->getEntityManager(), $entity, self::POST);
-        }
-    }
-
-
-    /**
-     * Def in service.yml.
-     *
-     * @param OnFlushEventArgs $eventArgs
-     *
-     * @throws \Trinity\NotificationBundle\Exception\NotificationException
-     * @throws \Trinity\NotificationBundle\Exception\SourceException
-     * @throws \Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException
-     */
-    public function onFlush(OnFlushEventArgs $eventArgs)
-    {
-        $entityManager = $eventArgs->getEntityManager();
-        $unitOfWork = $entityManager->getUnitOfWork();
-        $enable = $this->isNotificationEnabledForController();
-
-        if ($enable && $this->notificationEnabled) {
-            foreach ($unitOfWork->getScheduledEntityDeletions() as $entity) {
-                //todo: queuing notification in this phase is wrong.
-                //todo: If the deleting fail in the DB the notification will be still sent.
-
-                if (!$entity instanceof NotificationEntityInterface) {
-                    continue;
-                }
-                //Get the entity from the database EAGERly and clone it because in this phase it has the ID
-                //later on the entity is deleted and the ID is removed from the object
-                //but the cloned object remains untouched and the id is still there.
-                //NOTE: eager loading does not make sense when creating entities.
-                //      In that case the entity ID is not present(entity is not yet persisted) and thus it can not be retrieved from the DB.
-                $repository = $eventArgs->getEntityManager()->getRepository(get_class($entity));
-
-                if ($repository instanceof NotificationEntityRepositoryInterface
-                ) {
-                    $eagerLoadedEntity = $repository->findEagerly($entity->getId());
-                    $this->sendNotification($entityManager, clone $eagerLoadedEntity, self::DELETE);
-                } else {
-                    throw new RepositoryInterfaceNotImplementedException(
-                        'The repository of the entity ' . get_class($entity)
-                        . ' must implement ' . NotificationEntityRepositoryInterface::class
-                    );
-                }
-            }
         }
     }
 

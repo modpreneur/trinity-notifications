@@ -46,7 +46,8 @@ services:
             - "@trinity.notification.utils"
             - "%trinity.notification.is_client%"
         tags:
-            - { name: doctrine.event_listener, event: onFlush,     priority: 255 }
+            - { name: doctrine.event_listener, event: postRemove,  priority: 255 }
+            - { name: doctrine.event_listener, event: preRemove,  priority: 255 }
             - { name: doctrine.event_listener, event: postUpdate,  priority: 200 }
             - { name: doctrine.event_listener, event: postPersist, priority: 200 }
             - { name: kernel.event_listener,   event: trinity.notifications.enableNotification, priority: 200, method: enableNotification}
