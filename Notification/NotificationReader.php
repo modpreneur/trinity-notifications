@@ -54,7 +54,7 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
-     * 
+     *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
@@ -75,7 +75,7 @@ class NotificationReader
         }
 
         try {
-            $entities = $this->parser->parseNotifications($notifications);
+            $entities = $this->parser->parseNotifications($notifications, $message->getCreatedOn());
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($message);
 

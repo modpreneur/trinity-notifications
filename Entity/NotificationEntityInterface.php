@@ -7,7 +7,6 @@ namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\FrameworkBundle\Entity\ClientInterface;
 
-
 /**
  * Interface NotificationEntityInterface
  *
@@ -30,4 +29,10 @@ interface NotificationEntityInterface
      */
     public function setNotificationStatus(ClientInterface $client, $status);
 
+    /**
+     * Returns updatedAt value.
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }
