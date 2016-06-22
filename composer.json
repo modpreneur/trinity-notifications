@@ -21,7 +21,6 @@
     "symfony/form": "~2.8 | ~3",
 
     "trinity/logger": "dev-master",
-    "trinity/bunny": "dev-master#9e01ca4a",
     "trinity/utils": "dev-master",
     "trinity/search": "dev-master",
     "trinity/settings": "dev-master",
