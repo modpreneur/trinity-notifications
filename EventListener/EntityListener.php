@@ -132,17 +132,19 @@ class EntityListener
         $entity = $eventArgs->getEntity();
         $repository = $eventArgs->getEntityManager()->getRepository(get_class($entity));
 
-        if ($repository instanceof NotificationEntityRepositoryInterface) {
-            $eagerLoadedEntity = $repository->findEagerly($entity->getId());
-            $this->entityDeletions[] = [
-                'eagerLoaded' => $eagerLoadedEntity,
-                'entity' => $entity
-            ];
-        } else {
-            throw new RepositoryInterfaceNotImplementedException(
-                'The repository of the entity ' . get_class($entity)
-                . ' must implement ' . NotificationEntityRepositoryInterface::class
-            );
+        if ($entity instanceof NotificationEntityInterface) {
+            if ($repository instanceof NotificationEntityRepositoryInterface) {
+                $eagerLoadedEntity = $repository->findEagerly($entity->getId());
+                $this->entityDeletions[] = [
+                    'eagerLoaded' => $eagerLoadedEntity,
+                    'entity' => $entity
+                ];
+            } else {
+                throw new RepositoryInterfaceNotImplementedException(
+                    'The repository of the entity ' . get_class($entity)
+                    . ' must implement ' . NotificationEntityRepositoryInterface::class
+                );
+            }
         }
     }
 
@@ -158,6 +160,10 @@ class EntityListener
 
         foreach ($this->entityDeletions as $item) {
             $preRemoveEntity = $item['entity'];
+
+            if (!($preRemoveEntity instanceof NotificationEntityInterface)) {
+                continue;
+            }
 
             // if the entity which was added in preRemove is the same entity as the entity from postRemove
             // the database delete query was successful and we can send a notification
