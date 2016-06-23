@@ -296,9 +296,9 @@ class NotificationParser
      *
      * @throws EntityWasUpdatedBeforeException
      */
-    protected function checkTimeViolations(NotificationEntityInterface $entity, \DateTime $notificationCreatedOn)
+    protected function checkTimeViolations(NotificationEntityInterface $entity = null, \DateTime $notificationCreatedOn)
     {
-        if ($entity->getUpdatedAt() > $notificationCreatedOn) {
+        if ($entity !== null && $entity->getUpdatedAt() > $notificationCreatedOn) {
             throw new EntityWasUpdatedBeforeException(
                 'The entity of class "' . get_class($entity) .
                 '" has been updated after the notification message was created'
