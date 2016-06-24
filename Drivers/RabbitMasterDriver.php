@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\Component\EntityCore\Entity\ClientInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;
@@ -103,12 +103,14 @@ class RabbitMasterDriver extends BaseDriver
             //$batch is only pointer to the batch created and stored in BatchManager
             $batch->setSecretKey($client->getSecret());
             $batch->setDestination('client_' . $client->getId());
-            
+
             $notification = new Notification();
             $notification->setData($entityArray);
             $notification->setMethod($params['HTTPMethod']);
             $notification->setMessageId($batch->getUid());
             $batch->addNotification($notification);
+
+            $entity->setNotificationInProgress($client, $batch->getUid());
         }
     }
 

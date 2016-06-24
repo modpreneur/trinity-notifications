@@ -104,7 +104,7 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotifications(array $notifications, \DateTime $notificationCreatedOn) : array
+    public function parseNotifications(array $notifications, \DateTime $notificationCreatedOn = null) : array
     {
         $processedEntities = [];
 
@@ -145,11 +145,16 @@ class NotificationParser
      * @param \DateTime $notificationCreated
      *
      * @return null|object
+     *
      * @throws EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotification(array $data, string $fullClassName, string $HTTPMethod, \DateTime $notificationCreated)
-    {
+    public function parseNotification(
+        array $data,
+        string $fullClassName,
+        string $HTTPMethod,
+        \DateTime $notificationCreated = null
+    ) {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
         if ($this->eventDispatcher->hasListeners(Events::BEFORE_PARSE_NOTIFICATION)) {
@@ -167,7 +172,7 @@ class NotificationParser
         $HTTPMethod = strtoupper($HTTPMethod);
         $this->notificationData = $data;
 
-        //get existing entity from database or create a new one
+        //get existing entity from database or null
         $entityObject = $this->getEntityObject($fullClassName);
 
         /*
@@ -182,8 +187,10 @@ class NotificationParser
         //check if there are specific conditions which are strictly prohibited
         $this->checkLogicalViolations($entityObject, $fullClassName, $HTTPMethod);
 
-        //check if the entity's updatedAt < msg#timestamp
-        $this->checkTimeViolations($entityObject, $notificationCreated);
+        if ($notificationCreated !== null) {
+            //check if the entity's updatedAt < msg#timestamp
+            $this->checkTimeViolations($entityObject, $notificationCreated);
+        }
 
         //delete entity, without form
         if ($entityObject !== null && $HTTPMethod === 'DELETE') {
@@ -291,12 +298,12 @@ class NotificationParser
 
 
     /**
-     * @param NotificationEntityInterface $entity
-     * @param \DateTime                   $notificationCreatedOn
+     * @param NotificationEntityInterface|null $entity
+     * @param \DateTime                        $notificationCreatedOn
      *
      * @throws EntityWasUpdatedBeforeException
      */
-    protected function checkTimeViolations(NotificationEntityInterface $entity = null, \DateTime $notificationCreatedOn)
+    protected function checkTimeViolations($entity, \DateTime $notificationCreatedOn)
     {
         if ($entity !== null && $entity->getUpdatedAt() > $notificationCreatedOn) {
             throw new EntityWasUpdatedBeforeException(

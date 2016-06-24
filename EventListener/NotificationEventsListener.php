@@ -123,7 +123,7 @@ class NotificationEventsListener
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Exception
      *
-     * @throws \Throwable Catches all catchable errors and exceptiond and then throws it again
+     * @throws \Throwable Catches all catchable errors and exceptions and then throws them again
      *
      */
     protected function handleNotificationMessage(Message $message)

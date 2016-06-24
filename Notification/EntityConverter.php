@@ -98,13 +98,6 @@ class EntityConverter
         $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
         $columns = $entityDataSource->getColumns();
 
-        $refCLass = new \ReflectionClass($entity);
-        if ($entityDataSource->isAllColumnsSelected()) {
-            foreach ($refCLass->getProperties() as $prop) {
-                $columns[] = $prop->getName();
-            }
-        }
-
         foreach ($columns as $property) {
             if ($property === '*') {
                 continue;

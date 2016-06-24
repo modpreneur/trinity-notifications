@@ -5,7 +5,7 @@
  */
 namespace Trinity\NotificationBundle\Drivers;
 
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\Component\EntityCore\Entity\ClientInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 

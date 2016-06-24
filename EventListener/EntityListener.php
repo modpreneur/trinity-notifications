@@ -21,6 +21,7 @@ use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Interfaces\NotificationEntityRepositoryInterface;
+use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
 
 /**
@@ -60,13 +61,16 @@ class EntityListener
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var  AnnotationsUtils */
+    protected $annotationsUtils;
+
     /** @var  array */
     protected $entityDeletions = [];
-
 
     /**
      * @param EventDispatcherInterface $eventDispatcher
      * @param NotificationUtils        $annotationProcessor
+     * @param AnnotationsUtils         $annotationsUtils
      * @param bool                     $isClient
      *
      * @internal param NotificationManager $notificationManager
@@ -74,11 +78,13 @@ class EntityListener
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         NotificationUtils $annotationProcessor,
+        AnnotationsUtils $annotationsUtils,
         bool $isClient
     ) {
         $this->processor = $annotationProcessor;
         $this->isClient = $isClient;
         $this->eventDispatcher = $eventDispatcher;
+        $this->annotationsUtils = $annotationsUtils;
     }
 
 
@@ -229,11 +235,20 @@ class EntityListener
         }
 
         if ($this->processor->hasHTTPMethod($entity, strtolower($method))) {
-            $this->eventDispatcher->dispatch(
-                Events::SEND_NOTIFICATION,
-                new SendNotificationEvent($entity, $method, $options)
-            );
+            $changeset = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
 
+            /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
+            $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
+            $columns = array_flip($entityDataSource->getColumns());
+
+            $columnsToNotify = array_keys(array_intersect_key($columns, $changeset));
+
+            if (count($columnsToNotify) > 0) {
+                $this->eventDispatcher->dispatch(
+                    Events::SEND_NOTIFICATION,
+                    new SendNotificationEvent($entity, $method, $options)
+                );
+            }
         }
     }
 

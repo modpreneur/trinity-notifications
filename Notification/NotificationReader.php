@@ -10,7 +10,7 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
-use Trinity\NotificationBundle\Entity\Notification;
+use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
 use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Event\Events;
@@ -54,6 +54,7 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
+     * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
@@ -65,19 +66,15 @@ class NotificationReader
      */
     public function read(Message $message) : array
     {
-        /** @var array $notificationsArrays */
-        $notificationsArrays = $message->getRawData();
-        $notifications = [];
-
-        //convert all notifications to objects
-        foreach ($notificationsArrays as $notificationArray) {
-            $notifications[] = Notification::fromArray($notificationArray);
-        }
+        $notificationBatch = NotificationBatch::createFromMessage($message);
 
         try {
-            $entities = $this->parser->parseNotifications($notifications, $message->getCreatedOn());
+            $entities = $this->parser->parseNotifications(
+                $notificationBatch->getNotifications()->toArray(),
+                $notificationBatch->getCreatedOn()
+            );
         } catch (AssociationEntityNotFoundException $e) {
-            $e->setMessageObject($message);
+            $e->setMessageObject($notificationBatch);
 
             if ($this->eventDispatcher->hasListeners(Events::ASSOCIATION_ENTITY_NOT_FOUND)) {
                 $event = new AssociationEntityNotFoundEvent($e);
@@ -88,7 +85,7 @@ class NotificationReader
         }
 
         if ($this->eventDispatcher->hasListeners(Events::CHANGES_DONE_EVENT)) {
-            $event = new ChangesDoneEvent($entities);
+            $event = new ChangesDoneEvent($entities, $notificationBatch);
             $this->eventDispatcher->dispatch(Events::CHANGES_DONE_EVENT, $event);
         }
 

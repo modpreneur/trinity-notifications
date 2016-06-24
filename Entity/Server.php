@@ -6,7 +6,7 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\Component\EntityCore\Entity\ClientInterface;
 
 /**
  * Class Server

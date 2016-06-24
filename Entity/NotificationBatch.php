@@ -124,4 +124,47 @@ class NotificationBatch extends Message
 
         return $this;
     }
+
+
+    /**
+     * @param Message $message
+     *
+     * @return NotificationBatch
+     */
+    public static function createFromMessage(Message $message) : self
+    {
+        $notificationBatch = new self;
+        $message->copyTo($notificationBatch);
+
+        if (!$notificationBatch->rawData) {
+            $notificationBatch->rawData = json_decode($notificationBatch->jsonData, true);
+        }
+
+        $notifications = [];
+        //conversion succeeded
+        if (is_array($notificationBatch->rawData)) {
+            foreach ($notificationBatch->rawData as $item) {
+                $notifications[] = Notification::fromArray($item);
+            }
+        }
+
+        $notificationBatch->rawData = new ArrayCollection($notifications);
+
+        return $notificationBatch;
+    }
+
+
+    /**
+     * Unpack message
+     *
+     * @param string $messageJson
+     *
+     * @return NotificationBatch
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
+     */
+    public static function unpack(string $messageJson) : self
+    {
+        return self::createFromMessage(parent::unpack($messageJson));
+    }
 }

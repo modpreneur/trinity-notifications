@@ -19,9 +19,6 @@ class Source
     /** @var array */
     protected $columns;
 
-    /** @var bool */
-    protected $allColumnsSelected = false;
-
 
     /**
      * @param array $metadata
@@ -32,15 +29,6 @@ class Source
             'trim',
             explode(',', $metadata['columns'])
         ) : [];
-
-        foreach ($this->getColumns() as &$column) {
-            if ($column == '*') {
-                $this->allColumnsSelected = true;
-                unset($column);
-
-                return;
-            }
-        }
     }
 
 
@@ -60,18 +48,6 @@ class Source
     {
         return !empty($this->columns);
     }
-
-
-    /**
-     * Rename?
-     *
-     * @return bool
-     */
-    public function isAllColumnsSelected() : bool
-    {
-        return $this->allColumnsSelected;
-    }
-
 
     /**
      * @param string $column

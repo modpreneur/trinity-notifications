@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\Component\EntityCore\Entity\ClientInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;
@@ -54,7 +54,6 @@ class RabbitClientDriver extends BaseDriver
      * @param ClientInterface             $client
      * @param array                       $params
      *
-     * @return void
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
     public function execute(NotificationEntityInterface $entity, ClientInterface $client = null, array $params = [])
@@ -80,6 +79,8 @@ class RabbitClientDriver extends BaseDriver
         $notification->setMethod($params['HTTPMethod']);
         $notification->setMessageId($batch->getUid());
         $batch->addNotification($notification);
+
+        $entity->setNotificationInProgress($client, $batch->getUid());
     }
 
 

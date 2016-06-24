@@ -8,7 +8,7 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\Component\EntityCore\Entity\ClientInterface;
 use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
@@ -214,7 +214,10 @@ class NotificationManager
         array $options = []
     ) {
         foreach ($this->drivers as $driver) {
-            $this->executeEntityInDriver($entity, $driver, new Server(), $HTTPMethod, $options);
+            $server = new Server();
+            $server->setId(0);
+            $server->setName('client');
+            $this->executeEntityInDriver($entity, $driver, $server, $HTTPMethod, $options);
         }
     }
 
