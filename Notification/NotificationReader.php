@@ -45,7 +45,6 @@ class NotificationReader
         $this->eventDispatcher = $eventDispatcher;
     }
 
-
     /**
      * Handle notification message.
      * This method will be probably refactored to standalone class.
@@ -54,7 +53,8 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
-     *
+     * 
+     * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
