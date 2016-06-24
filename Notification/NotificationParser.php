@@ -27,7 +27,7 @@ class NotificationParser
     /** @var LoggerInterface */
     protected $logger;
 
-    /** @var object EntityManagerInterface */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
     /** @var  EntityConversionHandler */
@@ -93,12 +93,13 @@ class NotificationParser
         $this->entities = $entities;
     }
 
+
     /**
-     * @param array  $notifications
-     *
-     * @param string $notificationCreatedOn Timestamp from the message
+     * @param array $notifications
+     * @param \DateTime $notificationCreatedOn Timestamp from the message
      *
      * @return array
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
@@ -136,6 +137,7 @@ class NotificationParser
         return $processedEntities;
     }
 
+
     /**
      * @param           $data               array  Notification data as named array
      * @param           $fullClassName      string Full classname(with namespace) of the entity.e.g.
@@ -145,7 +147,9 @@ class NotificationParser
      * @param \DateTime $notificationCreated
      *
      * @return null|object
-     *
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
+     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
@@ -153,7 +157,7 @@ class NotificationParser
         array $data,
         string $fullClassName,
         string $HTTPMethod,
-        \DateTime $notificationCreated = null
+        \DateTime $notificationCreated
     ) {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
@@ -227,6 +231,7 @@ class NotificationParser
         }
     }
 
+
     /**
      * Get existing entity or null
      *
@@ -241,6 +246,7 @@ class NotificationParser
             [$this->entityIdFieldName => $this->notificationData['id']]
         );
     }
+
 
     /**
      * Check if the conditions violate the expectations
@@ -298,8 +304,8 @@ class NotificationParser
 
 
     /**
-     * @param NotificationEntityInterface|null $entity
-     * @param \DateTime                        $notificationCreatedOn
+     * @param NotificationEntityInterface | null $entity
+     * @param \DateTime $notificationCreatedOn
      *
      * @throws EntityWasUpdatedBeforeException
      */
