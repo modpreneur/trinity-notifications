@@ -124,7 +124,7 @@ class NotificationParser
                 $notification->getData(),
                 $this->entities[$entityName],
                 $notification->getMethod(),
-                $notificationCreatedOn
+                $notificationCreatedOn? : new \DateTime('now')
             );
 
             if ($processedEntity !== null) {
