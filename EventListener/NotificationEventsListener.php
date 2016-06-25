@@ -137,14 +137,14 @@ class NotificationEventsListener
             );
 
             return $entities;
-        } catch (\Throwable $exception) {
+        } catch (\Throwable $error) {
             $this->dispatchSetMessageStatusEvent(
                 $message,
                 StatusMessage::STATUS_ERROR,
-                $exception->getMessage()
+                (string)$error
             );
 
-            throw $exception;
+            throw $error;
         }
     }
 
