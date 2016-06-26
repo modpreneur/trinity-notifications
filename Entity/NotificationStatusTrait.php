@@ -17,7 +17,7 @@ trait NotificationStatusTrait
     public static $SYNCHRONIZED = 'SYNCHRONIZED';
     public static $SYNCHRONIZATION_MESSAGE_TYPE_FIELD = 'messageType';
     public static $SYNCHRONIZATION_MESSAGE_UID_FIELD = 'messageUid';
-    public static $SYNCHRONIZATION_CHANGED_ON = 'changedOn';
+    public static $SYNCHRONIZATION_CHANGED_AT = 'changedAt';
 
     /**
      * @var []
@@ -30,17 +30,17 @@ trait NotificationStatusTrait
      * @param ClientInterface $client
      * @param string          $statusMessageType
      * @param string          $statusMessageUid
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationStatus(
         ClientInterface $client,
         string $statusMessageType,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     ) {
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_TYPE_FIELD] = $statusMessageType;
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_UID_FIELD] = $statusMessageUid;
-        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_ON] = ($changedOn !== null) ?: new \DateTime('now');
+        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_AT] = ($changedAt !== null) ?: new \DateTime('now');
     }
 
     /**
@@ -55,61 +55,61 @@ trait NotificationStatusTrait
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationInProgress(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     ) {
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_TYPE_FIELD] = self::$SYNCHRONIZATION_IN_PROGRESS;
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_UID_FIELD] = $statusMessageUid;
-        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_ON] = ($changedOn !== null) ?: new \DateTime('now');
+        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_AT] = ($changedAt !== null) ?: new \DateTime('now');
     }
 
     /**
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationNotSynchronized(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     ) {
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_TYPE_FIELD] = self::$NOT_SYNCHRONIZED;
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_UID_FIELD] = $statusMessageUid;
-        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_ON] = ($changedOn !== null) ?: new \DateTime('now');
+        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_AT] = ($changedAt !== null) ?: new \DateTime('now');
     }
 
     /**
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
-    public function setNotificationError(ClientInterface $client, string $statusMessageUid, \DateTime $changedOn = null)
+    public function setNotificationError(ClientInterface $client, string $statusMessageUid, \DateTime $changedAt = null)
     {
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_TYPE_FIELD] = self::$SYNCHRONIZATION_ERROR;
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_UID_FIELD] = $statusMessageUid;
-        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_ON] = ($changedOn !== null) ?: new \DateTime('now');
+        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_AT] = ($changedAt !== null) ?: new \DateTime('now');
     }
 
     /**
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationSynchronized(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     ) {
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_TYPE_FIELD] = self::$SYNCHRONIZED;
         $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_MESSAGE_UID_FIELD] = $statusMessageUid;
-        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_ON] = ($changedOn !== null) ?: new \DateTime('now');
+        $this->notificationStatus[$client->getId()][self::$SYNCHRONIZATION_CHANGED_AT] = ($changedAt !== null) ?: new \DateTime('now');
     }
 
     /**

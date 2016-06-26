@@ -25,7 +25,7 @@ interface NotificationEntityInterface
      * @param ClientInterface $client
      * @param string          $statusMessageType Type of the message, which is displayed to the user.
      * @param string          $statusMessageUid  Identification of the message.
-     * @param \DateTime       $changedOn         DateTime when the status was changed. Default value is new
+     * @param \DateTime       $changedAt         DateTime when the status was changed. Default value is new
      *                                           \DateTime('now')
      *
      * @return
@@ -34,7 +34,7 @@ interface NotificationEntityInterface
         ClientInterface $client,
         string $statusMessageType,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     );
 
     /**
@@ -48,47 +48,47 @@ interface NotificationEntityInterface
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationInProgress(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     );
 
     /**
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationNotSynchronized(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     );
 
     /**
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationError(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     );
 
     /**
      * @param ClientInterface $client
      * @param string          $statusMessageUid
      *
-     * @param \DateTime       $changedOn DateTime when the status was changed. Default value is new \DateTime('now')
+     * @param \DateTime       $changedAt DateTime when the status was changed. Default value is new \DateTime('now')
      */
     public function setNotificationSynchronized(
         ClientInterface $client,
         string $statusMessageUid,
-        \DateTime $changedOn = null
+        \DateTime $changedAt = null
     );
 }

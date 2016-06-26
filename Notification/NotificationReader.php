@@ -70,7 +70,7 @@ class NotificationReader
         try {
             $entities = $this->parser->parseNotifications(
                 $notificationBatch->getNotifications()->toArray(),
-                $notificationBatch->getCreatedOn()
+                (new \DateTime('now'))->setTimestamp($notificationBatch->getCreatedAt())
             );
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($notificationBatch);

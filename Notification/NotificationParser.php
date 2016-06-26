@@ -96,7 +96,7 @@ class NotificationParser
 
     /**
      * @param array $notifications
-     * @param \DateTime $notificationCreatedOn Timestamp from the message
+     * @param \DateTime $notificationCreatedAt Timestamp from the message
      *
      * @return array
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
@@ -105,7 +105,7 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotifications(array $notifications, \DateTime $notificationCreatedOn = null) : array
+    public function parseNotifications(array $notifications, \DateTime $notificationCreatedAt = null) : array
     {
         $processedEntities = [];
 
@@ -124,7 +124,7 @@ class NotificationParser
                 $notification->getData(),
                 $this->entities[$entityName],
                 $notification->getMethod(),
-                $notificationCreatedOn? : new \DateTime('now')
+                $notificationCreatedAt? : new \DateTime('now')
             );
 
             if ($processedEntity !== null) {
@@ -305,13 +305,13 @@ class NotificationParser
 
     /**
      * @param NotificationEntityInterface | null $entity
-     * @param \DateTime $notificationCreatedOn
+     * @param \DateTime $notificationCreatedAt
      *
      * @throws EntityWasUpdatedBeforeException
      */
-    protected function checkTimeViolations($entity, \DateTime $notificationCreatedOn)
+    protected function checkTimeViolations($entity, \DateTime $notificationCreatedAt)
     {
-        if ($entity !== null && $entity->getUpdatedAt() > $notificationCreatedOn) {
+        if ($entity !== null && $entity->getUpdatedAt() > $notificationCreatedAt) {
             throw new EntityWasUpdatedBeforeException(
                 'The entity of class "' . get_class($entity) .
                 '" has been updated after the notification message was created'
