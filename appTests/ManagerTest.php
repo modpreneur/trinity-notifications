@@ -2,7 +2,7 @@
 
 namespace Trinity\NotificationBundle\AppTests;
 
-use Trinity\FrameworkBundle\Entity\ClientInterface;
+use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceDisableClient;
 use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceWithoutClient;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;

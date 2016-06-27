@@ -2,7 +2,7 @@
 
 namespace Trinity\NotificationBundle\AppTests\Entity;
 
-use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
+use Trinity\Component\Core\Interfaces\ClientInterface as CI;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 

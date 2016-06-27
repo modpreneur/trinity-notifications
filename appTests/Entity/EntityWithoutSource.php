@@ -2,7 +2,7 @@
 namespace Trinity\NotificationBundle\AppTests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Trinity\FrameworkBundle\Entity\ClientInterface as CI;
+use Trinity\Component\Core\Interfaces\ClientInterface as CI;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 

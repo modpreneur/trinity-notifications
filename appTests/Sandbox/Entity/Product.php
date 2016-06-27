@@ -5,8 +5,8 @@ namespace Trinity\NotificationBundle\AppTests\Sandbox\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\FrameworkBundle\Entity\BaseProduct;
-use Trinity\FrameworkBundle\Entity\ClientInterface;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
