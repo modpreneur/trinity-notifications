@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\Component\EntityCore\Entity\ClientInterface;
+use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;

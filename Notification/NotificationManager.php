@@ -8,7 +8,7 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\Component\EntityCore\Entity\ClientInterface;
+use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
