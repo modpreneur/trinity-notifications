@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c666fe040364133654ecd07436d037db",
-    "content-hash": "a4b0e991b789c677558d3fac06a204c1",
+    "hash": "b73435ca2995dffbdacccd77e0be1780",
+    "content-hash": "db3d147f024e2a9515ac59d43e4e93db",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1594,24 +1594,27 @@
         },
         {
             "name": "jms-serializer/serializer-bundle",
-            "version": "1.1.0",
+            "version": "1.1.4",
             "target-dir": "JMS/SerializerBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jms-serializer/JMSSerializerBundle.git",
-                "reference": "3e396c980545350c2efb65a50041d2a9f9d6562e"
+                "reference": "62d38eff284ffc8ba58b5922d4005571319057f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jms-serializer/JMSSerializerBundle/zipball/3e396c980545350c2efb65a50041d2a9f9d6562e",
-                "reference": "3e396c980545350c2efb65a50041d2a9f9d6562e",
+                "url": "https://api.github.com/repos/jms-serializer/JMSSerializerBundle/zipball/62d38eff284ffc8ba58b5922d4005571319057f3",
+                "reference": "62d38eff284ffc8ba58b5922d4005571319057f3",
                 "shasum": ""
             },
             "require": {
-                "jms/serializer": "^1.0.0",
+                "jms-serializer/serializer": ">=1.3.1",
                 "php": ">=5.4.0",
                 "phpoption/phpoption": "^1.1.0",
                 "symfony/framework-bundle": "~2.3|~3.0"
+            },
+            "replace": {
+                "jms/serializer-bundle": "1.*"
             },
             "require-dev": {
                 "doctrine/doctrine-bundle": "*",
@@ -1660,7 +1663,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2015-11-10 12:26:42"
+            "time": "2016-04-25 15:25:41"
         },
         {
             "name": "jms/metadata",
@@ -4877,12 +4880,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity-core-interfaces.git",
-                "reference": "f8dd586340a70214f2eef1449f99ce2b2a49f6c1"
+                "reference": "8e32f94cd1060777987867d9d7c4ce8c130cf01c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity-core-interfaces/zipball/f8dd586340a70214f2eef1449f99ce2b2a49f6c1",
-                "reference": "f8dd586340a70214f2eef1449f99ce2b2a49f6c1",
+                "url": "https://api.github.com/repos/modpreneur/trinity-core-interfaces/zipball/8e32f94cd1060777987867d9d7c4ce8c130cf01c",
+                "reference": "8e32f94cd1060777987867d9d7c4ce8c130cf01c",
                 "shasum": ""
             },
             "require": {
@@ -4916,7 +4919,7 @@
                 }
             ],
             "description": "Trinity Framework",
-            "time": "2016-06-27 11:41:12"
+            "time": "2016-06-27 14:39:23"
         },
         {
             "name": "trinity/logger",
@@ -4978,12 +4981,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity-messages.git",
-                "reference": "83c769777c89c004862b38500ddd6894f509c772"
+                "reference": "8764bf5c8f050511b2704d97700af8676722d46e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modpreneur/trinity-messages/zipball/83c769777c89c004862b38500ddd6894f509c772",
-                "reference": "83c769777c89c004862b38500ddd6894f509c772",
+                "url": "https://api.github.com/repos/modpreneur/trinity-messages/zipball/8764bf5c8f050511b2704d97700af8676722d46e",
+                "reference": "8764bf5c8f050511b2704d97700af8676722d46e",
                 "shasum": ""
             },
             "require": {
@@ -5015,7 +5018,7 @@
                 }
             ],
             "description": "Trinity Messages bundle",
-            "time": "2016-06-26 09:19:55"
+            "time": "2016-06-27 12:59:24"
         },
         {
             "name": "trinity/search",
@@ -5648,76 +5651,6 @@
                 "webdriver"
             ],
             "time": "2016-06-04 00:02:34"
-        },
-        {
-            "name": "jms/serializer-bundle",
-            "version": "1.1.0",
-            "target-dir": "JMS/SerializerBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSSerializerBundle.git",
-                "reference": "3e396c980545350c2efb65a50041d2a9f9d6562e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/3e396c980545350c2efb65a50041d2a9f9d6562e",
-                "reference": "3e396c980545350c2efb65a50041d2a9f9d6562e",
-                "shasum": ""
-            },
-            "require": {
-                "jms/serializer": "^1.0.0",
-                "php": ">=5.4.0",
-                "phpoption/phpoption": "^1.1.0",
-                "symfony/framework-bundle": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "*",
-                "doctrine/orm": "*",
-                "symfony/browser-kit": "*",
-                "symfony/class-loader": "*",
-                "symfony/css-selector": "*",
-                "symfony/finder": "*",
-                "symfony/form": "*",
-                "symfony/process": "*",
-                "symfony/stopwatch": "*",
-                "symfony/twig-bundle": "*",
-                "symfony/validator": "*",
-                "symfony/yaml": "*"
-            },
-            "suggest": {
-                "jms/di-extra-bundle": "Required to get lazy loading (de)serialization visitors, ~1.3"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "JMS\\SerializerBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Allows you to easily serialize, and deserialize data of any complexity",
-            "homepage": "http://jmsyst.com/bundles/JMSSerializerBundle",
-            "keywords": [
-                "deserialization",
-                "jaxb",
-                "json",
-                "serialization",
-                "xml"
-            ],
-            "time": "2015-11-10 12:26:42"
         },
         {
             "name": "myclabs/deep-copy",
@@ -7238,8 +7171,8 @@
         "trinity/settings": 20,
         "trinity/bunny-bundle": 20,
         "trinity/messages": 20,
-        "trinity/core-entities": 20,
         "trinity/core-interfaces": 20,
+        "trinity/core-entities": 20,
         "braincrafted/testing-bundle": 0,
         "friendsofsymfony/user-bundle": 20
     },
