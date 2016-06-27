@@ -9,12 +9,14 @@
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\Component\EntityCore\Entity\ClientInterface;
+use Trinity\Component\Core\Interfaces\ClientInterface;
+use Trinity\NotificationBundle\Entity\EntityStatusLog;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
+use Trinity\NotificationBundle\Services\NotificationStatusManager;
 
 /**
  * Class RabbitMasterDriver
@@ -26,22 +28,28 @@ class RabbitMasterDriver extends BaseDriver
     /** @var array */
     protected $messages;
 
+    /** @var  NotificationStatusManager */
+    protected $statusManager;
+
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityConverter          $entityConverter
-     * @param NotificationUtils        $notificationUtils
-     * @param BatchManager             $batchManager
+     * @param EventDispatcherInterface  $eventDispatcher
+     * @param EntityConverter           $entityConverter
+     * @param NotificationUtils         $notificationUtils
+     * @param BatchManager              $batchManager
+     * @param NotificationStatusManager $statusManager
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
-        BatchManager $batchManager
+        BatchManager $batchManager,
+        NotificationStatusManager $statusManager
     ) {
         parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
 
+        $this->statusManager = $statusManager;
         $this->messages = [];
     }
 
@@ -110,7 +118,7 @@ class RabbitMasterDriver extends BaseDriver
             $notification->setMessageId($batch->getUid());
             $batch->addNotification($notification);
 
-            $entity->setNotificationInProgress($client, $batch->getUid());
+            $this->statusManager->setEntityStatus($entity, $client, time(), $batch->getUid(), EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS);
         }
     }
 

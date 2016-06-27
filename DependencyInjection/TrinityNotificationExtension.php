@@ -46,13 +46,6 @@ class TrinityNotificationExtension extends Extension
         } else {
             $loader->load('server/services.yml');
         }
-
-        // Inject client secret provider into request handler
-        $container->getDefinition('trinity.notification.notification_request_handler')
-            ->addMethodCall(
-                'setSecretKeyProvider',
-                [new Reference($config['client_secret_provider'])]
-            );
     }
 
 

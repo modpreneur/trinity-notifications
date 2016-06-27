@@ -138,3 +138,9 @@ services:
             - password: "%rabbit_password%"
             - persistent: 2
             - path: "/"
+
+    trinity.notificaiton.notification_status_manager:
+        class: Trinity\NotificationBundle\Services\NotificationStatusManager
+        arguments:
+            - "@trinity.logger.elastic_read_log_service"
+            - "@trinity.logger.elastic_log_service"

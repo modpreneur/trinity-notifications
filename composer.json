@@ -26,7 +26,8 @@
     "trinity/settings": "dev-master",
     "trinity/bunny-bundle": "dev-master",
     "trinity/messages": "dev-master",
-    "trinity/core-entities": "dev-master"
+    "trinity/core-entities": "dev-master",
+    "trinity/core-interfaces": "dev-master"
   },
   "require-dev": {
     "braincrafted/testing-bundle": "@stable",

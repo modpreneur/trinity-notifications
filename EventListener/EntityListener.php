@@ -212,9 +212,10 @@ class EntityListener
     {
         $enable = $this->isNotificationEnabledForController();
         $entity = $args->getObject();
+        $entityManager = $args->getEntityManager();
 
         if ($enable && $this->notificationEnabled) {
-            $this->sendNotification($args->getEntityManager(), $entity, self::POST);
+            $this->sendNotification($entityManager, $entity, self::POST);
         }
     }
 

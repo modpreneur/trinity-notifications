@@ -6,5 +6,6 @@ services:
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
             - "@trinity.notification.batch_manager"
+            - "@trinity.notificaiton.notification_status_manager"
         tags:
             - { name: trinity.notification.driver }

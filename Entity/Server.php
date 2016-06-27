@@ -6,7 +6,7 @@
 
 namespace Trinity\NotificationBundle\Entity;
 
-use Trinity\Component\EntityCore\Entity\ClientInterface;
+use Trinity\Component\Core\Interfaces\ClientInterface;
 
 /**
  * Class Server
@@ -99,5 +99,13 @@ class Server implements ClientInterface
     public function getNotificationUri() : string
     {
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

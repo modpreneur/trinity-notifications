@@ -9,12 +9,14 @@
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\Component\EntityCore\Entity\ClientInterface;
+use Trinity\Component\Core\Interfaces\ClientInterface;
+use Trinity\NotificationBundle\Entity\EntityStatusLog;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
+use Trinity\NotificationBundle\Services\NotificationStatusManager;
 
 /**
  * Class RabbitClientDriver
@@ -26,25 +28,30 @@ class RabbitClientDriver extends BaseDriver
     /** @var string */
     protected $clientId;
 
+    /** @var  NotificationStatusManager */
+    protected $statusManager;
 
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityConverter          $entityConverter
-     * @param NotificationUtils        $notificationUtils
-     * @param BatchManager             $batchManager
-     * @param string                   $clientId
+     * @param EventDispatcherInterface  $eventDispatcher
+     * @param EntityConverter           $entityConverter
+     * @param NotificationUtils         $notificationUtils
+     * @param BatchManager              $batchManager
+     * @param NotificationStatusManager $statusManager
+     * @param string                    $clientId
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         BatchManager $batchManager,
+        NotificationStatusManager $statusManager,
         string $clientId
     ) {
         parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
 
+        $this->statusManager = $statusManager;
         $this->clientId = $clientId;
     }
 
@@ -80,7 +87,7 @@ class RabbitClientDriver extends BaseDriver
         $notification->setMessageId($batch->getUid());
         $batch->addNotification($notification);
 
-        $entity->setNotificationInProgress($client, $batch->getUid());
+        $this->statusManager->setEntityStatus($entity, $client, time(), $batch->getUid(), EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS);
     }
 
 
