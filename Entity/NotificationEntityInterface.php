@@ -7,6 +7,7 @@ namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\Component\Core\Interfaces\ClientInterface;
 
+
 /**
  * Interface NotificationEntityInterface
  *
