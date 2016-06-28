@@ -142,7 +142,9 @@ class EntityListener
             if ($repository instanceof NotificationEntityRepositoryInterface) {
                 $eagerLoadedEntity = $repository->findEagerly($entity->getId());
                 $this->entityDeletions[] = [
-                    'eagerLoaded' => $eagerLoadedEntity,
+                    // The clone has be be there!
+                    // Without it the object is still bounded to entity manager which removes it's id.
+                    'eagerLoaded' => clone $eagerLoadedEntity,
                     'entity' => $entity
                 ];
             } else {
@@ -244,7 +246,7 @@ class EntityListener
 
             $columnsToNotify = array_keys(array_intersect_key($columns, $changeset));
 
-            if (count($columnsToNotify) > 0) {
+            if (count($columnsToNotify) > 0 || strtolower($method) === 'delete') {
                 $this->eventDispatcher->dispatch(
                     Events::SEND_NOTIFICATION,
                     new SendNotificationEvent($entity, $method, $options)
