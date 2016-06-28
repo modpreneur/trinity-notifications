@@ -139,7 +139,7 @@ services:
             - persistent: 2
             - path: "/"
 
-    trinity.notificaiton.notification_status_manager:
+    trinity.notification.notification_status_manager:
         class: Trinity\NotificationBundle\Services\NotificationStatusManager
         arguments:
             - "@trinity.logger.elastic_read_log_service"
