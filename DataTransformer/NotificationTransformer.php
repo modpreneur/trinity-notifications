@@ -26,7 +26,13 @@ class NotificationTransformer implements DataTransformerInterface
     protected $entityName;
 
     /** @var  string If server mode, this property contains name of the method which is used to set the server id */
-    protected $serverIdSetterMethod;
+    protected $idSetterMethod;
+
+    /** @var  string Name of the field which is mapped to the id field from notification*/
+    protected $idFieldName;
+
+    /** @var  string */
+    protected $idGetterMethod;
 
 
     /**
@@ -35,16 +41,18 @@ class NotificationTransformer implements DataTransformerInterface
      *
      * @param EntityManagerInterface $entityManager
      * @param string                 $entityName
-     * @param string                 $serverIdSetterMethod
+     * @param string                 $idFieldName
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         string $entityName,
-        string $serverIdSetterMethod = null
+        string $idFieldName
     ) {
         $this->entityManager = $entityManager;
         $this->entityName = $entityName;
-        $this->serverIdSetterMethod = $serverIdSetterMethod;
+        $this->idFieldName = $idFieldName;
+        $this->idSetterMethod = 'set' . ucfirst($idFieldName);
+        $this->idGetterMethod = 'get' . ucfirst($idFieldName);
     }
 
 
@@ -69,6 +77,7 @@ class NotificationTransformer implements DataTransformerInterface
      * @param mixed $value The value in the transformed representation
      *
      * @return mixed The value in the original representation
+     * @throws \UnexpectedValueException
      *
      * @throws TransformationFailedException When the transformation fails.
      */
@@ -81,14 +90,14 @@ class NotificationTransformer implements DataTransformerInterface
         $entity = $this
             ->entityManager
             ->getRepository($this->entityName)
-            ->find($value);
+            ->findOneBy([$this->idFieldName => $value]);
 
         if ($entity === null) {
             $entityClass = new \ReflectionClass($this->entityName);
 
             $entity = $entityClass->newInstanceArgs();
-            if ($this->serverIdSetterMethod !== null) {
-                $entity->{$this->serverIdSetterMethod}((int)$value);
+            if ($this->idSetterMethod !== null) {
+                $entity->{$this->idSetterMethod}((int)$value);
             }
         }
 
@@ -119,6 +128,7 @@ class NotificationTransformer implements DataTransformerInterface
      * @param mixed $value The value in the original representation. Entity in this case.
      *
      * @return mixed The value in the transformed representation
+     * @throws \Symfony\Component\Form\Exception\TransformationFailedException
      *
      * @throws TransformationFailedException When the transformation fails.
      */
@@ -129,15 +139,13 @@ class NotificationTransformer implements DataTransformerInterface
         }
 
         if (is_object($value)) {
-            if (method_exists($value, 'getId')) {
-                return $value->getId();
-            } elseif (property_exists($value, 'id')) {
-                return $value->id;
+            if (method_exists($value, $this->idGetterMethod)) {
+                return $value->{$this->idGetterMethod}();
+            } elseif (property_exists($value, $this->idFieldName)) {
+                return $value->{$this->idFieldName};
             }
         }
 
-
         throw new TransformationFailedException('Given value is not an object');
     }
-
 }
