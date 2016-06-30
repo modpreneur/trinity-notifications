@@ -118,7 +118,13 @@ class RabbitMasterDriver extends BaseDriver
             $notification->setMessageId($batch->getUid());
             $batch->addNotification($notification);
 
-            $this->statusManager->setEntityStatus($entity, $client, time(), $batch->getUid(), EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS);
+            $this->statusManager->setEntityStatus(
+                $entity,
+                $client,
+                time(),
+                $batch->getUid(),
+                EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS
+            );
         }
     }
 

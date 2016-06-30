@@ -238,13 +238,13 @@ class EntityListener
         }
 
         if ($this->processor->hasHTTPMethod($entity, strtolower($method))) {
-            $changeset = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
+            $changeSet = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
 
             /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
             $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
             $columns = array_flip($entityDataSource->getColumns());
 
-            $columnsToNotify = array_keys(array_intersect_key($columns, $changeset));
+            $columnsToNotify = array_keys(array_intersect_key($columns, $changeSet));
 
             if (count($columnsToNotify) > 0 || strtolower($method) === 'delete') {
                 $this->eventDispatcher->dispatch(

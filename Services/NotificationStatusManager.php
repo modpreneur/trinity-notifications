@@ -50,7 +50,13 @@ class NotificationStatusManager
         $query['query']['bool']['must'][] = ['match' => ['entityId' => $entity->getId()]];
         $query['query']['bool']['must'][] = ['match' => ['clientId' => $clientId]];
 
-        $result = $this->elasticReader->getMatchingEntities(EntityStatusLog::TYPE, $query, 1, [], [[$orderBy => ['order' => 'desc']]]);
+        $result = $this->elasticReader->getMatchingEntities(
+            EntityStatusLog::TYPE,
+            $query,
+            1,
+            [],
+            [[$orderBy => ['order' => 'desc']]]
+        );
 
         if (count($result) > 0) {
             return $result[0];
@@ -59,6 +65,7 @@ class NotificationStatusManager
         return null;
     }
 
+
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface|int         $client
@@ -66,8 +73,13 @@ class NotificationStatusManager
      * @param string                      $messageUid
      * @param string                      $status
      */
-    public function setEntityStatus(NotificationEntityInterface $entity, $client, int $changedAt, string $messageUid, string $status)
-    {
+    public function setEntityStatus(
+        NotificationEntityInterface $entity,
+        $client,
+        int $changedAt,
+        string $messageUid,
+        string $status
+    ) {
         //todo @GabrielBordovsky delete old status!
 
         $log = new EntityStatusLog();
@@ -80,6 +92,7 @@ class NotificationStatusManager
 
         $this->elasticWriter->writeInto(EntityStatusLog::TYPE, $log);
     }
+
 
     /**
      * Get entity class
