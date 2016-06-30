@@ -8,7 +8,7 @@
 namespace Trinity\NotificationBundle\Event;
 
 /**
- * Class StoreEvents.
+ * Class Events.
  *
  * @author Tomáš Jančar
  */

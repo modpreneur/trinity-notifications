@@ -73,7 +73,7 @@ services:
             - "@trinity.notification.manager"
             - "%trinity.notification.is_client%"
         tags:
-            - { name: kernel.event_listener, event: trinity.messages.readMessage, method: onMessageRead}
+            - { name: kernel.event_listener, event: trinity.messages.readMessage, method: onMessageRead, priority: 100}
             - { name: kernel.event_listener, event: trinity.notifications.sendNotification, method: onSendNotificationEvent}
 
     trinity.notification.message_status_listener:

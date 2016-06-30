@@ -14,7 +14,6 @@ use Trinity\NotificationBundle\Annotations\AssociationSetter;
 use Trinity\NotificationBundle\Entity\Association;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
-use Trinity\NotificationBundle\Exception\NotificationException;
 
 /**
  * Class EntityAssociator
@@ -102,9 +101,13 @@ class EntityAssociator
                 $associatedEntity = $entity->$getterMethod();
 
                 if ($associatedEntity === null) {
-                    throw new NotificationException(
-                        'Associated entity is null. This should not happen when using data transformer in the form'
-                    );
+                    continue; //do not throw, just continue with the next association
+                    //todo: fails when the product does not have a default billing plan.
+                    //should log somewhere as error to be viewed by @JakubFajkus
+
+//                    throw new NotificationException(
+//                        'Associated entity is null. This should not happen when using data transformer in the form'
+//                    );
                 }
 
                 //get id of the association entity
