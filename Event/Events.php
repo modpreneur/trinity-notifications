@@ -30,6 +30,16 @@ final class Events
     const BEFORE_PARSE_NOTIFICATION = 'trinity.notifications.beforeParseNotification';
 
     /**
+     * @Event("Trinity\NotificationBundle\Event\BeforeNotificationBatchProcessEvent")
+     */
+    const BEFORE_NOTIFICATION_BATCH_PROCESS = 'trinity.notifications.beforeNotificationBatchProcess';
+    
+    /**
+     * @Event("Trinity\NotificationBundle\Event\AfterNotificationBatchProcessEvent")
+     */
+    const AFTER_NOTIFICATION_BATCH_PROCESS = 'trinity.notifications.afterNotificationBatchProcess';
+
+    /**
      * @Event("Trinity\NotificationBundle\Event\NotificationRequestEvent")
      */
     const NOTIFICATION_REQUEST = 'trinity.notifications.notificationRequestEvent';

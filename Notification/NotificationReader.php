@@ -11,7 +11,9 @@ namespace Trinity\NotificationBundle\Notification;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Event\AfterNotificationBatchProcessEvent;
 use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
+use Trinity\NotificationBundle\Event\BeforeNotificationBatchProcessEvent;
 use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
@@ -53,7 +55,7 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
-     * 
+     *
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
@@ -66,12 +68,19 @@ class NotificationReader
     public function read(Message $message) : array
     {
         $notificationBatch = NotificationBatch::createFromMessage($message);
+        
+        $this->eventDispatcher->dispatch(
+            Events::BEFORE_NOTIFICATION_BATCH_PROCESS,
+            new BeforeNotificationBatchProcessEvent($notificationBatch->getUser(), $notificationBatch->getClientId())
+        );
 
         try {
             $entities = $this->parser->parseNotifications(
                 $notificationBatch->getNotifications()->toArray(),
                 (new \DateTime('now'))->setTimestamp($notificationBatch->getCreatedAt())
             );
+
+            $this->dispatchEndEvent($notificationBatch);
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($notificationBatch);
 
@@ -79,6 +88,12 @@ class NotificationReader
                 $event = new AssociationEntityNotFoundEvent($e);
                 $this->eventDispatcher->dispatch(Events::ASSOCIATION_ENTITY_NOT_FOUND, $event);
             }
+
+            $this->dispatchEndEvent($notificationBatch, $e);
+
+            throw $e;
+        } catch (\Exception $e) {
+            $this->dispatchEndEvent($notificationBatch, $e);
 
             throw $e;
         }
@@ -89,5 +104,21 @@ class NotificationReader
         }
 
         return $entities;
+    }
+
+    /**
+     * @param NotificationBatch $batch
+     * @param \Exception|null   $exception
+     */
+    protected function dispatchEndEvent(NotificationBatch $batch, \Exception $exception = null)
+    {
+        $this->eventDispatcher->dispatch(
+            Events::AFTER_NOTIFICATION_BATCH_PROCESS,
+            new AfterNotificationBatchProcessEvent(
+                $batch->getUser(),
+                $batch->getClientId(),
+                $exception
+            )
+        );
     }
 }

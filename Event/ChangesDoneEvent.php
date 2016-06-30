@@ -8,6 +8,8 @@
 
 namespace Trinity\NotificationBundle\Event;
 
+use Trinity\NotificationBundle\Entity\NotificationBatch;
+
 /**
  * Class ChangesDoneEvent
  *
@@ -18,17 +20,20 @@ class ChangesDoneEvent extends NotificationEvent
     /** @var array */
     protected $entities;
 
+    /** @var  NotificationBatch */
+    protected $batch;
 
     /**
      * ChangesDoneEvent constructor.
      *
-     * @param array $entities
+     * @param array             $entities
+     * @param NotificationBatch $batch
      */
-    public function __construct(array $entities)
+    public function __construct(array $entities, NotificationBatch $batch)
     {
         $this->entities = $entities;
+        $this->batch = $batch;
     }
-
 
     /**
      * @return array
@@ -45,4 +50,21 @@ class ChangesDoneEvent extends NotificationEvent
     {
         $this->entities = $entities;
     }
+
+    /**
+     * @return NotificationBatch
+     */
+    public function getBatch()
+    {
+        return $this->batch;
+    }
+
+    /**
+     * @param NotificationBatch $batch
+     */
+    public function setBatch($batch)
+    {
+        $this->batch = $batch;
+    }
 }
+
