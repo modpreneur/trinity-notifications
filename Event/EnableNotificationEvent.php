@@ -13,5 +13,5 @@ namespace Trinity\NotificationBundle\Event;
  */
 class EnableNotificationEvent extends NotificationEvent
 {
-
+    const NAME = 'trinity.notifications.enableNotification';
 }

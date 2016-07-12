@@ -9,6 +9,8 @@ namespace Trinity\NotificationBundle\Event;
  */
 class AfterNotificationBatchProcessEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.afterNotificationBatchProcess';
+    
     /** @var  string Integer representing user's id or string representing system(e.g. client_3, necktie) */
     protected $userIdentification;
 

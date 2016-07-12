@@ -13,5 +13,5 @@ namespace Trinity\NotificationBundle\Event;
  */
 class DisableNotificationEvent extends NotificationEvent
 {
-
+    const NAME = 'trinity.notifications.disableNotification';
 }

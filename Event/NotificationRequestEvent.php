@@ -17,6 +17,8 @@ use Trinity\Bundle\MessagesBundle\Message\Message;
  */
 class NotificationRequestEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.notificationRequestEvent';
+    
     /** @var  Message */
     protected $message;
 

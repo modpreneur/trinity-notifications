@@ -17,6 +17,8 @@ use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
  */
 class AssociationEntityNotFoundEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.associationEntityNotFound';
+    
     /** @var  AssociationEntityNotFoundException */
     protected $exception;
 

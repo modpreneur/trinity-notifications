@@ -9,7 +9,7 @@
 namespace Trinity\NotificationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Trinity\Bundle\MessagesBundle\Event\Events as MessagesEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
 use Trinity\Bundle\MessagesBundle\Event\SetMessageStatusEvent;
 use Trinity\Bundle\MessagesBundle\Event\StatusMessageEvent;
@@ -17,7 +17,6 @@ use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
-use Trinity\NotificationBundle\Event\Events as NotificationsEvents;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Notification\NotificationManager;
@@ -31,7 +30,7 @@ use Trinity\NotificationBundle\Notification\NotificationReader;
  *
  * @package Trinity\NotificationBundle\EventListener
  */
-class NotificationEventsListener
+class NotificationEventsListener implements EventSubscriberInterface
 {
     /** @var  NotificationReader */
     protected $notificationReader;
@@ -154,9 +153,9 @@ class NotificationEventsListener
     protected function handleNotificationRequest(Message $message)
     {
         $event = new NotificationRequestEvent($message);
-        if ($this->eventDispatcher->hasListeners(NotificationsEvents::NOTIFICATION_REQUEST)) {
+        if ($this->eventDispatcher->hasListeners(NotificationRequestEvent::NAME)) {
             /** @var NotificationRequestEvent $event */
-            $this->eventDispatcher->dispatch(NotificationsEvents::NOTIFICATION_REQUEST, $event);
+            $this->eventDispatcher->dispatch(NotificationRequestEvent::NAME, $event);
         }
     }
 
@@ -168,10 +167,10 @@ class NotificationEventsListener
     {
         $statusMessage = StatusMessage::createFromMessage($message);
 
-        if ($this->eventDispatcher->hasListeners(MessagesEvents::STATUS_MESSAGE_EVENT)) {
+        if ($this->eventDispatcher->hasListeners(StatusMessageEvent::NAME)) {
             /** @var StatusMessageEvent $event */
             $this->eventDispatcher->dispatch(
-                MessagesEvents::STATUS_MESSAGE_EVENT,
+                StatusMessageEvent::NAME,
                 new StatusMessageEvent($statusMessage)
             );
         }
@@ -185,10 +184,10 @@ class NotificationEventsListener
      */
     protected function dispatchSetMessageStatusEvent(Message $message, string $status, string $statusMessage)
     {
-        if ($this->eventDispatcher->hasListeners(MessagesEvents::SET_MESSAGE_STATUS)) {
+        if ($this->eventDispatcher->hasListeners(SetMessageStatusEvent::NAME)) {
             /** @var ReadMessageEvent $event */
             $this->eventDispatcher->dispatch(
-                MessagesEvents::SET_MESSAGE_STATUS,
+                SetMessageStatusEvent::NAME,
                 new SetMessageStatusEvent($message, $status, $statusMessage)
             );
         }
@@ -206,5 +205,31 @@ class NotificationEventsListener
         //This call is important!
         //The class which dispatched the event will check whether any listener handled the message or not.
         $event->setEventProcessed(true);
+    }
+
+    /**
+     * Returns an array of event names this subscriber wants to listen to.
+     *
+     * The array keys are event names and the value can be:
+     *
+     *  * The method name to call (priority defaults to 0)
+     *  * An array composed of the method name to call and the priority
+     *  * An array of arrays composed of the method names to call and respective
+     *    priorities, or 0 if unset
+     *
+     * For instance:
+     *
+     *  * array('eventName' => 'methodName')
+     *  * array('eventName' => array('methodName', $priority))
+     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2')))
+     *
+     * @return array The event names to listen to
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            ReadMessageEvent::NAME      => ['onMessageRead', 100],
+            SendNotificationEvent::NAME => ['onSendNotificationEvent']
+        ];
     }
 }

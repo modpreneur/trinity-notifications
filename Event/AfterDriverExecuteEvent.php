@@ -13,5 +13,5 @@ namespace Trinity\NotificationBundle\Event;
  */
 class AfterDriverExecuteEvent extends DriverExecuteEvent
 {
-
+    const NAME = 'trinity.notifications.afterDriverExecute';
 }

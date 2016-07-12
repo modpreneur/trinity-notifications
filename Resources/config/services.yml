@@ -39,6 +39,7 @@ services:
             - "@trinity.notification.batch_manager"
 
 
+# this event listener can not be refactored to subscriber because one class can not be symfony and doctrine subscriber
     trinity.notification.entity_listener:
         class: Trinity\NotificationBundle\EventListener\EntityListener
         arguments:
@@ -73,8 +74,7 @@ services:
             - "@trinity.notification.manager"
             - "%trinity.notification.is_client%"
         tags:
-            - { name: kernel.event_listener, event: trinity.messages.readMessage, method: onMessageRead, priority: 100}
-            - { name: kernel.event_listener, event: trinity.notifications.sendNotification, method: onSendNotificationEvent}
+            - { name: kernel.event_subscriber}
 
     trinity.notification.message_status_listener:
         class: Trinity\NotificationBundle\EventListener\MessageStatusListener
@@ -82,7 +82,7 @@ services:
             - "@trinity.messages.message_sender"
             - "%trinity.notification.is_client%"
         tags:
-            - { name: kernel.event_listener, event: trinity.messages.setMessageStatus, method: onSetMessageStatus}
+            - { name: kernel.event_subscriber}
 
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
@@ -116,8 +116,7 @@ services:
         arguments:
             - "@trinity.notification.notification_request_handler"
         tags:
-           - { name: kernel.event_listener, event: trinity.notifications.associationEntityNotFound,  method: onAssociationEntityNotFoundEvent}
-           - { name: kernel.event_listener, event: trinity.notifications.notificationRequestEvent,  method: onNotificationRequestEvent}
+           - { name: kernel.event_subscriber}
 
     trinity.notification.notification_request_handler:
         class: Trinity\NotificationBundle\Notification\NotificationRequestHandler

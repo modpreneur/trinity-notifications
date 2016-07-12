@@ -16,5 +16,5 @@ use Symfony\Component\EventDispatcher\Event;
  */
 abstract class NotificationEvent extends Event
 {
-
+    const NAME = 'trinity.notifications.base_event';
 }

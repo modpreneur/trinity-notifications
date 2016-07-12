@@ -15,7 +15,6 @@ use Trinity\NotificationBundle\Event\AfterNotificationBatchProcessEvent;
 use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
 use Trinity\NotificationBundle\Event\BeforeNotificationBatchProcessEvent;
 use Trinity\NotificationBundle\Event\ChangesDoneEvent;
-use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
 /**
@@ -70,7 +69,7 @@ class NotificationReader
         $notificationBatch = NotificationBatch::createFromMessage($message);
         
         $this->eventDispatcher->dispatch(
-            Events::BEFORE_NOTIFICATION_BATCH_PROCESS,
+            BeforeNotificationBatchProcessEvent::NAME,
             new BeforeNotificationBatchProcessEvent($notificationBatch->getUser(), $notificationBatch->getClientId())
         );
 
@@ -84,9 +83,9 @@ class NotificationReader
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($notificationBatch);
 
-            if ($this->eventDispatcher->hasListeners(Events::ASSOCIATION_ENTITY_NOT_FOUND)) {
+            if ($this->eventDispatcher->hasListeners(AssociationEntityNotFoundEvent::NAME)) {
                 $event = new AssociationEntityNotFoundEvent($e);
-                $this->eventDispatcher->dispatch(Events::ASSOCIATION_ENTITY_NOT_FOUND, $event);
+                $this->eventDispatcher->dispatch(AssociationEntityNotFoundEvent::NAME, $event);
             }
 
             $this->dispatchEndEvent($notificationBatch, $e);
@@ -98,9 +97,9 @@ class NotificationReader
             throw $e;
         }
 
-        if ($this->eventDispatcher->hasListeners(Events::CHANGES_DONE_EVENT)) {
+        if ($this->eventDispatcher->hasListeners(ChangesDoneEvent::NAME)) {
             $event = new ChangesDoneEvent($entities, $notificationBatch);
-            $this->eventDispatcher->dispatch(Events::CHANGES_DONE_EVENT, $event);
+            $this->eventDispatcher->dispatch(ChangesDoneEvent::NAME, $event);
         }
 
         return $entities;
@@ -113,7 +112,7 @@ class NotificationReader
     protected function dispatchEndEvent(NotificationBatch $batch, \Exception $exception = null)
     {
         $this->eventDispatcher->dispatch(
-            Events::AFTER_NOTIFICATION_BATCH_PROCESS,
+            AfterNotificationBatchProcessEvent::NAME,
             new AfterNotificationBatchProcessEvent(
                 $batch->getUser(),
                 $batch->getClientId(),

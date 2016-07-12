@@ -17,6 +17,8 @@ use Trinity\NotificationBundle\Entity\NotificationBatch;
  */
 class ChangesDoneEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.changesDone';
+    
     /** @var array */
     protected $entities;
 

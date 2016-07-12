@@ -13,7 +13,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
@@ -246,7 +245,7 @@ class EntityListener
 
             if (count($columnsToNotify) > 0 || strtolower($method) === 'delete') {
                 $this->eventDispatcher->dispatch(
-                    Events::SEND_NOTIFICATION,
+                    SendNotificationEvent::NAME,
                     new SendNotificationEvent($entity, $method, $options)
                 );
             }

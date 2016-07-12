@@ -11,6 +11,8 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  */
 class BeforeDeleteEntityEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.beforeDeleteEntity';
+    
     /** @var  NotificationEntityInterface */
     protected $entity;
 

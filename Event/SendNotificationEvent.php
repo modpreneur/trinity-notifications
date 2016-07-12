@@ -20,6 +20,8 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  */
 class SendNotificationEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.sendNotification';
+
     /** @var  NotificationEntityInterface */
     protected $entity;
 

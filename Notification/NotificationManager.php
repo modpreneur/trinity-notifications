@@ -14,7 +14,6 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
 use Trinity\NotificationBundle\Event\AfterDriverExecuteEvent;
 use Trinity\NotificationBundle\Event\BeforeDriverExecuteEvent;
-use Trinity\NotificationBundle\Event\Events;
 
 /**
  * Class NotificationManager.
@@ -259,11 +258,11 @@ class NotificationManager
         $HTTPMethod = 'POST',
         array $options = []
     ) {
-        if ($this->eventDispatcher->hasListeners(Events::BEFORE_DRIVER_EXECUTE)) {
+        if ($this->eventDispatcher->hasListeners(BeforeDriverExecuteEvent::NAME)) {
             $beforeDriverExecute = new BeforeDriverExecuteEvent($entity);
             /** @var BeforeDriverExecuteEvent $beforeDriverExecute */
             $beforeDriverExecute = $this->eventDispatcher->dispatch(
-                Events::BEFORE_DRIVER_EXECUTE,
+                BeforeDriverExecuteEvent::NAME,
                 $beforeDriverExecute
             );
             $entity = $beforeDriverExecute->getEntity();
@@ -277,10 +276,10 @@ class NotificationManager
                 ['HTTPMethod' => $HTTPMethod, 'options' => $options]
             );
 
-        if ($this->eventDispatcher->hasListeners(Events::AFTER_DRIVER_EXECUTE)) {
+        if ($this->eventDispatcher->hasListeners(AfterDriverExecuteEvent::NAME)) {
             $afterDriverExecute = new AfterDriverExecuteEvent($entity);
             /** @var AfterDriverExecuteEvent $afterDriverExecute */
-            $this->eventDispatcher->dispatch(Events::AFTER_DRIVER_EXECUTE, $afterDriverExecute);
+            $this->eventDispatcher->dispatch(AfterDriverExecuteEvent::NAME, $afterDriverExecute);
         }
     }
 }

@@ -8,15 +8,12 @@
 
 namespace Trinity\NotificationBundle\Event;
 
-
-
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-
 
 /**
  * Class DriverExecuteEvent
  */
-class DriverExecuteEvent extends NotificationEvent
+abstract class DriverExecuteEvent extends NotificationEvent
 {
     /** @var NotificationEntityInterface */
     protected $entity;

@@ -13,7 +13,6 @@ use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Event\BeforeDeleteEntityEvent;
 use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
-use Trinity\NotificationBundle\Event\Events;
 use Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException;
 use Trinity\NotificationBundle\Exception\NotificationException;
 
@@ -161,11 +160,11 @@ class NotificationParser
     ) {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
-        if ($this->eventDispatcher->hasListeners(Events::BEFORE_PARSE_NOTIFICATION)) {
+        if ($this->eventDispatcher->hasListeners(BeforeParseNotificationEvent::NAME)) {
             $event = new BeforeParseNotificationEvent($data, $fullClassName, $HTTPMethod);
             /** @var BeforeParseNotificationEvent $event */
             $event = $this->eventDispatcher->dispatch(
-                Events::BEFORE_PARSE_NOTIFICATION,
+                BeforeParseNotificationEvent::NAME,
                 $event
             );
             $data = $event->getData();
@@ -201,7 +200,7 @@ class NotificationParser
             $this->logger->info('METHOD: DELETE ' . $HTTPMethod);
             /** @var BeforeDeleteEntityEvent $event */
             $event = $this->eventDispatcher->dispatch(
-                Events::BEFORE_DELETE_ENTITY,
+                BeforeDeleteEntityEvent::NAME,
                 new BeforeDeleteEntityEvent($entityObject)
             );
             $entityObject = $event->getEntity();

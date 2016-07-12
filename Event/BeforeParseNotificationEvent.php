@@ -14,6 +14,8 @@ namespace Trinity\NotificationBundle\Event;
  */
 class BeforeParseNotificationEvent extends NotificationEvent
 {
+    const NAME = 'trinity.notifications.beforeParseNotification';
+    
     /** @var array */
     protected $data;
 
