@@ -10,6 +10,7 @@ namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Trinity\NotificationBundle\Annotations\AssociationSetter;
 use Trinity\NotificationBundle\Entity\Association;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
@@ -37,6 +38,9 @@ class EntityAssociator
 
     /** @var  string Name of the method which is used to get property with name $serverIdField from entity */
     protected $getServerIdMethod;
+    
+    /** @var  LoggerInterface */
+    protected $logger;
 
     /**
      * @var array Indexed array of entities' aliases and real class names.
@@ -54,6 +58,7 @@ class EntityAssociator
      *
      * @param EntityManagerInterface $entityManager
      * @param AnnotationsUtils       $annotationsUtils
+     * @param LoggerInterface        $logger
      * @param bool                   $isClient
      * @param string                 $serverIdField
      * @param array                  $entities
@@ -61,6 +66,7 @@ class EntityAssociator
     public function __construct(
         EntityManagerInterface $entityManager,
         AnnotationsUtils $annotationsUtils,
+        LoggerInterface $logger,
         bool $isClient,
         string $serverIdField,
         array $entities
@@ -68,6 +74,7 @@ class EntityAssociator
         $this->isClient = $isClient;
         $this->entityManager = $entityManager;
         $this->annotationsUtils = $annotationsUtils;
+        $this->logger = $logger;
         $this->serverIdField = $serverIdField;
         $this->entities = $entities;
         $this->getServerIdMethod = 'get' . ucfirst($serverIdField);
@@ -101,13 +108,8 @@ class EntityAssociator
                 $associatedEntity = $entity->$getterMethod();
 
                 if ($associatedEntity === null) {
-                    continue; //do not throw, just continue with the next association
-                    //todo: fails when the product does not have a default billing plan.
-                    //should log somewhere as error to be viewed by @JakubFajkus
-
-//                    throw new NotificationException(
-//                        'Associated entity is null. This should not happen when using data transformer in the form'
-//                    );
+                    $this->logAssociationEntityNull($entities);
+                    continue; //log and continue with the next association
                 }
 
                 //get id of the association entity
@@ -119,7 +121,7 @@ class EntityAssociator
                     //if the associated entity was already in the database
                     $repository = $this->getEntityRepository(get_class($associatedEntity));
                     if ($repository && $persistedEntity = $repository->findOneBy(
-                            [$this->serverIdField => $associatedEntity->$getServerIdMethod()]
+                        [$this->serverIdField => $associatedEntity->$getServerIdMethod()]
                         )
                     ) {
                         //call the setter method
@@ -259,5 +261,22 @@ class EntityAssociator
         foreach ($entities as $entity) {
             $this->prepareEntityAssociations($entity);
         }
+    }
+
+    /**
+     * @param array $entities
+     */
+    protected function logAssociationEntityNull(array $entities)
+    {
+        $entitiesClasses = [];
+        foreach ($entities as $entityToLog) {
+            $entitiesClasses[] = get_class($entityToLog);
+        }
+
+        $this->logger->error(
+            'Associated entity is null. This can be caused by some unhandled error or in special case ' .
+            'when the product has no default billing plan. The classes of the entities to associate are: ' .
+            implode(',', $entitiesClasses)
+        );
     }
 }
