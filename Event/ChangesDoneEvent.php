@@ -69,4 +69,3 @@ class ChangesDoneEvent extends NotificationEvent
         $this->batch = $batch;
     }
 }
-
