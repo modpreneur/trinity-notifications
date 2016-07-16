@@ -50,13 +50,20 @@ class NotificationStatusManager
         $query['query']['bool']['must'][] = ['match' => ['entityId' => $entity->getId()]];
         $query['query']['bool']['must'][] = ['match' => ['clientId' => $clientId]];
 
-        $result = $this->elasticReader->getMatchingEntities(
-            EntityStatusLog::TYPE,
-            $query,
-            1,
-            [],
-            [[$orderBy => ['order' => 'desc']]]
-        );
+        //todo: @JakubFajkus \Throwable is just tempoary solution
+        try {
+            $result = $this->elasticReader->getMatchingEntities(
+                EntityStatusLog::TYPE,
+                $query,
+                1,
+                [],
+                [[$orderBy => ['order' => 'desc']]]
+            );
+        } catch (\Throwable $e) {
+            //todo: @JakubFajkus log somewhere?
+
+            return null;
+        }
 
         if (count($result) > 0) {
             return $result[0];
@@ -90,7 +97,12 @@ class NotificationStatusManager
         $log->setMessageUid($messageUid);
         $log->setStatus($status);
 
-        $this->elasticWriter->writeInto(EntityStatusLog::TYPE, $log);
+        //todo: @JakubFajkus \Throwable is just tempoary solution
+        try {
+            $this->elasticWriter->writeInto(EntityStatusLog::TYPE, $log);
+        } catch (\Throwable $e) {
+            //todo: @JakubFajkus log somewhere?
+        }
     }
 
 
