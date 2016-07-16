@@ -120,8 +120,9 @@ class EntityAssociator
                 } elseif ($associatedEntity->$getServerIdMethod() !== null) {
                     //if the associated entity was already in the database
                     $repository = $this->getEntityRepository(get_class($associatedEntity));
-                    if ($repository && $persistedEntity = $repository->findOneBy(
-                        [$this->serverIdField => $associatedEntity->$getServerIdMethod()]
+                    if ($repository
+                        && $persistedEntity = $repository->findOneBy(
+                            [$this->serverIdField => $associatedEntity->$getServerIdMethod()]
                         )
                     ) {
                         //call the setter method
