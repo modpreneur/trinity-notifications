@@ -31,16 +31,18 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('entities')
                     ->normalizeKeys(false)
+                    ->performNoDeepMerging()
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('scalar')
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
-            
+
             //full class names of the forms
                 ->arrayNode('forms')
                     ->normalizeKeys(false)
+                    ->performNoDeepMerging()
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('scalar')
