@@ -10,7 +10,6 @@ namespace Trinity\NotificationBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-
 /**
  * This is the class that validates and merges configuration from your app/config files.
  *
@@ -20,6 +19,7 @@ class Configuration implements ConfigurationInterface
 {
     /**
      * @return TreeBuilder
+     *
      * @throws \RuntimeException
      */
     public function getConfigTreeBuilder()
@@ -49,24 +49,24 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
-            
+
                 ->enumNode('mode')
                     ->values(['client', 'server'])
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
-            
+
                 ->arrayNode('drivers')
                     ->isRequired()
                     ->cannotBeEmpty()
                     ->prototype('scalar')
                     ->end()
                 ->end()
-            
+
                 ->scalarNode('client_id')
                     ->cannotBeEmpty()
                 ->end()
-            
+
                 ->scalarNode('entity_id_field')
                     ->cannotBeEmpty()
                 ->end()

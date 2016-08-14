@@ -3,13 +3,12 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 29.04.16
- * Time: 11:53
+ * Time: 11:53.
  */
-
 namespace Trinity\NotificationBundle\Entity;
 
 /**
- * Class Association
+ * Class Association.
  */
 class Association
 {

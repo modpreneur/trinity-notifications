@@ -3,23 +3,19 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 18.05.16
- * Time: 13:32
+ * Time: 13:32.
  */
-
 namespace Trinity\NotificationBundle\Exception;
 
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
- * Class MessageNotProcessedException
- *
- * @package Trinity\NotificationBundle\Exception
+ * Class MessageNotProcessedException.
  */
 class MessageNotProcessedException extends \Exception
 {
     /** @var  Message */
     protected $messageObject;
-
 
     /**
      * @return Message
@@ -29,7 +25,6 @@ class MessageNotProcessedException extends \Exception
         return $this->messageObject;
     }
 
-
     /**
      * @param Message $messageObject
      *
@@ -38,6 +33,7 @@ class MessageNotProcessedException extends \Exception
     public function setMessageObject($messageObject)
     {
         $this->messageObject = $messageObject;
+
         return $this;
     }
 }

@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 28.04.16
- * Time: 19:07
+ * Time: 19:07.
  */
-
 namespace Trinity\NotificationBundle\DataTransformer;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +12,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Class NotificationFormTransformer
- *
- * @package Trinity\NotificationBundle\DataTransformer
+ * Class NotificationFormTransformer.
  */
 class NotificationTransformer implements DataTransformerInterface
 {
@@ -34,7 +31,6 @@ class NotificationTransformer implements DataTransformerInterface
     /** @var  string */
     protected $idGetterMethod;
 
-
     /**
      * NotificationFormTransformer constructor.
      * It is called in the Type class.
@@ -51,10 +47,9 @@ class NotificationTransformer implements DataTransformerInterface
         $this->entityManager = $entityManager;
         $this->entityName = $entityName;
         $this->idFieldName = $idFieldName;
-        $this->idSetterMethod = 'set' . ucfirst($idFieldName);
-        $this->idGetterMethod = 'get' . ucfirst($idFieldName);
+        $this->idSetterMethod = 'set'.ucfirst($idFieldName);
+        $this->idGetterMethod = 'get'.ucfirst($idFieldName);
     }
-
 
     /**
      * Transforms a value from the transformed representation to its original
@@ -77,8 +72,8 @@ class NotificationTransformer implements DataTransformerInterface
      * @param mixed $value The value in the transformed representation
      *
      * @return mixed The value in the original representation
-     * @throws \UnexpectedValueException
      *
+     * @throws \UnexpectedValueException
      * @throws TransformationFailedException When the transformation fails.
      */
     public function reverseTransform($value)
@@ -97,7 +92,7 @@ class NotificationTransformer implements DataTransformerInterface
 
             $entity = $entityClass->newInstanceArgs();
             if ($this->idSetterMethod !== null) {
-                $entity->{$this->idSetterMethod}((int)$value);
+                $entity->{$this->idSetterMethod}((int) $value);
             }
         }
 
@@ -128,9 +123,9 @@ class NotificationTransformer implements DataTransformerInterface
      * @param mixed $value The value in the original representation. Entity in this case.
      *
      * @return mixed The value in the transformed representation
-     * @throws \Symfony\Component\Form\Exception\TransformationFailedException
      *
-     * @throws TransformationFailedException When the transformation fails.
+     * @throws \Symfony\Component\Form\Exception\TransformationFailedException
+     * @throws TransformationFailedException                                   When the transformation fails.
      */
     public function transform($value)
     {

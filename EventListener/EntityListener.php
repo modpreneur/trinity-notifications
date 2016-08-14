@@ -37,7 +37,7 @@ class EntityListener
     /** @var  bool */
     protected $defaultValueForEnabledController;
 
-    /** @var  Object */
+    /** @var  object */
     protected $entity;
 
     /** @var  NotificationUtils */
@@ -84,7 +84,6 @@ class EntityListener
         $this->annotationsUtils = $annotationsUtils;
     }
 
-
     /**
      * @param RequestStack $requestStack
      */
@@ -92,7 +91,6 @@ class EntityListener
     {
         $this->request = $requestStack->getCurrentRequest();
     }
-
 
     /**
      * @param Request $request
@@ -124,7 +122,6 @@ class EntityListener
 //        $this->notificationEnabled = true;
 //    }
 
-
     /**
      * @param LifecycleEventArgs $eventArgs
      *
@@ -142,12 +139,12 @@ class EntityListener
                     // The clone has be be there!
                     // Without it the object is still bounded to entity manager which removes it's id.
                     'eagerLoaded' => clone $eagerLoadedEntity,
-                    'entity' => $entity
+                    'entity' => $entity,
                 ];
             } else {
                 throw new RepositoryInterfaceNotImplementedException(
-                    'The repository of the entity ' . get_class($entity)
-                    . ' must implement ' . NotificationEntityRepositoryInterface::class
+                    'The repository of the entity '.get_class($entity)
+                    .' must implement '.NotificationEntityRepositoryInterface::class
                 );
             }
         }
@@ -179,7 +176,6 @@ class EntityListener
         }
     }
 
-
     /**
      * Def in service.yml.
      *
@@ -197,7 +193,6 @@ class EntityListener
             $this->sendNotification($args->getEntityManager(), $entity, self::PUT);
         }
     }
-
 
     /**
      * Def in service.yml.
@@ -217,7 +212,6 @@ class EntityListener
             $this->sendNotification($entityManager, $entity, self::POST);
         }
     }
-
 
     /**
      * @param EntityManager $entityManager
@@ -251,7 +245,6 @@ class EntityListener
             }
         }
     }
-
 
     /**
      * @param bool $default (if request not set)

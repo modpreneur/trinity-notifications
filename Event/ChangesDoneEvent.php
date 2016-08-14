@@ -3,22 +3,19 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 21.05.16
- * Time: 18:20
+ * Time: 18:20.
  */
-
 namespace Trinity\NotificationBundle\Event;
 
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 
 /**
- * Class ChangesDoneEvent
- *
- * @package Trinity\NotificationBundle\Event
+ * Class ChangesDoneEvent.
  */
 class ChangesDoneEvent extends NotificationEvent
 {
     const NAME = 'trinity.notifications.changesDone';
-    
+
     /** @var array */
     protected $entities;
 

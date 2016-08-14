@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 29.05.16
- * Time: 9:00
+ * Time: 9:00.
  */
-
 namespace Trinity\NotificationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,9 +13,7 @@ use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 
 /**
- * Class MessageStatusListener
- *
- * @package Trinity\NotificationBundle\EventListener
+ * Class MessageStatusListener.
  */
 class MessageStatusListener implements EventSubscriberInterface
 {
@@ -25,7 +22,6 @@ class MessageStatusListener implements EventSubscriberInterface
 
     /** @var  bool */
     protected $isClient;
-
 
     /**
      * MessageStatusListener constructor.
@@ -40,7 +36,6 @@ class MessageStatusListener implements EventSubscriberInterface
         $this->messageSender = $messageSender;
         $this->isClient = $isClient;
     }
-
 
     /**
      * @param SetMessageStatusEvent $event
@@ -90,7 +85,7 @@ class MessageStatusListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            SetMessageStatusEvent::NAME => 'onSetMessageStatus'
+            SetMessageStatusEvent::NAME => 'onSetMessageStatus',
         ];
     }
 }

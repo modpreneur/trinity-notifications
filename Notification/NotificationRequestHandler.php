@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 21.05.16
- * Time: 19:23
+ * Time: 19:23.
  */
-
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,9 +20,7 @@ use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
 /**
- * Class NotificationRequestHandler
- *
- * @package Trinity\NotificationBundle\Notification
+ * Class NotificationRequestHandler.
  */
 class NotificationRequestHandler
 {
@@ -41,18 +38,17 @@ class NotificationRequestHandler
 
     /**
      * @var array Indexed array of entities' aliases and real class names.
-     * format:
-     * [
-     *    "user" => "App\Entity\User,
-     *    "product" => "App\Entity\Product,
-     *    ....
-     * ]
+     *            format:
+     *            [
+     *            "user" => "App\Entity\User,
+     *            "product" => "App\Entity\Product,
+     *            ....
+     *            ]
      */
     protected $entities;
 
     /** @var  bool */
     protected $isClient;
-
 
     /**
      * NotificationRequestListener constructor.
@@ -79,7 +75,6 @@ class NotificationRequestHandler
         $this->entities = $entities;
         $this->isClient = $isClient;
     }
-
 
     /**
      * @param AssociationEntityNotFoundException $exception
@@ -120,7 +115,6 @@ class NotificationRequestHandler
         $this->messageSender->sendMessage($responseMessage);
     }
 
-
     /**
      * @param Message $message
      *
@@ -129,6 +123,8 @@ class NotificationRequestHandler
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function handleMissingEntityRequestMessage(Message $message)
     {
@@ -147,7 +143,6 @@ class NotificationRequestHandler
         $this->sendNotificationResponse($requestMessage, $entity);
     }
 
-
     /**
      * @param SecretKeyProviderInterface $clientSecretProvider
      */
@@ -156,9 +151,8 @@ class NotificationRequestHandler
         $this->clientSecretProvider = $clientSecretProvider;
     }
 
-
     /**
-     * Send response for the notification request message
+     * Send response for the notification request message.
      *
      * @param NotificationRequestMessage  $message
      * @param NotificationEntityInterface $entity

@@ -3,34 +3,30 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 08.04.16
- * Time: 14:51
+ * Time: 14:51.
  */
-
 namespace Trinity\NotificationBundle\Event;
 
-
 /**
- * Class BeforeParseNotificationEvent
+ * Class BeforeParseNotificationEvent.
  */
 class BeforeParseNotificationEvent extends NotificationEvent
 {
     const NAME = 'trinity.notifications.beforeParseNotification';
-    
+
     /** @var array */
     protected $data;
-
 
     /** @var string */
     protected $classname;
 
-
     /** @var string */
     protected $httpMethod;
 
-
     /**
      * BeforeParseNotificationEvent constructor.
-     * @param array $data
+     *
+     * @param array  $data
      * @param string $classname
      * @param string $httpMethod
      */
@@ -49,7 +45,6 @@ class BeforeParseNotificationEvent extends NotificationEvent
         return $this->data;
     }
 
-
     /**
      * @param array $data
      */
@@ -57,7 +52,6 @@ class BeforeParseNotificationEvent extends NotificationEvent
     {
         $this->data = $data;
     }
-
 
     /**
      * @return string
@@ -67,7 +61,6 @@ class BeforeParseNotificationEvent extends NotificationEvent
         return $this->classname;
     }
 
-
     /**
      * @param string $classname
      */
@@ -76,7 +69,6 @@ class BeforeParseNotificationEvent extends NotificationEvent
         $this->classname = $classname;
     }
 
-
     /**
      * @return string
      */
@@ -84,7 +76,6 @@ class BeforeParseNotificationEvent extends NotificationEvent
     {
         return $this->httpMethod;
     }
-
 
     /**
      * @param string $httpMethod

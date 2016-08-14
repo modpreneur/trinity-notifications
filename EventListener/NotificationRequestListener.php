@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 21.04.16
- * Time: 16:22
+ * Time: 16:22.
  */
-
 namespace Trinity\NotificationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,15 +13,12 @@ use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Notification\NotificationRequestHandler;
 
 /**
- * Class NotificationRequestListener
- *
- * @package Trinity\NotificationBundle\EventListener
+ * Class NotificationRequestListener.
  */
 class NotificationRequestListener implements EventSubscriberInterface
 {
     /** @var  NotificationRequestHandler */
     protected $requestHandler;
-
 
     /**
      * NotificationRequestListener constructor.
@@ -33,7 +29,6 @@ class NotificationRequestListener implements EventSubscriberInterface
     {
         $this->requestHandler = $requestHandler;
     }
-
 
     /**
      * Listen to a AssociationEntityNotFoundEvent. When the event is fired, publish a message with
@@ -54,7 +49,6 @@ class NotificationRequestListener implements EventSubscriberInterface
         $this->requestHandler->handleMissingEntityException($event->getException());
     }
 
-
     /**
      * Listen to a NotificationRequestEvent. When the event is fired, handle it.
      * This means understanding the request and performing actions.
@@ -67,6 +61,8 @@ class NotificationRequestListener implements EventSubscriberInterface
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      */
     public function onNotificationRequestEvent(NotificationRequestEvent $event)
     {
@@ -95,7 +91,7 @@ class NotificationRequestListener implements EventSubscriberInterface
     {
         return [
             AssociationEntityNotFoundEvent::NAME => 'onAssociationEntityNotFoundEvent',
-            NotificationRequestEvent::NAME => 'onNotificationRequestEvent'
+            NotificationRequestEvent::NAME => 'onNotificationRequestEvent',
         ];
     }
 }

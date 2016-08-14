@@ -35,7 +35,6 @@ class NotificationManager
     /** @var  array */
     protected $queuedNotifications;
 
-
     /**
      * NotificationManager constructor.
      *
@@ -52,7 +51,6 @@ class NotificationManager
         $this->queuedNotifications = [];
     }
 
-
     /**
      * @param NotificationDriverInterface $driver
      */
@@ -60,7 +58,6 @@ class NotificationManager
     {
         $this->drivers[] = $driver;
     }
-
 
     /**
      * Queue entity to be processed.
@@ -85,7 +82,6 @@ class NotificationManager
 
         $this->queuedNotifications[] = $array;
     }
-
 
     /**
      * Send notifications in batch.
@@ -119,7 +115,6 @@ class NotificationManager
         $this->clear();
     }
 
-
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
@@ -139,9 +134,7 @@ class NotificationManager
 
         $this->batchManager->sendAll();
         $this->clear();
-
     }
-
 
     /**
      * @param NotificationEntityInterface[] $entities
@@ -164,12 +157,10 @@ class NotificationManager
 
         $this->batchManager->sendAll();
         $this->clear();
-
     }
 
-
     /**
-     * Clear the queue notifications and BatchManager to prevent sending the notifications twice
+     * Clear the queue notifications and BatchManager to prevent sending the notifications twice.
      */
     public function clear()
     {
@@ -177,9 +168,8 @@ class NotificationManager
         $this->batchManager->clear();
     }
 
-
     /**
-     *  Send notification to client
+     *  Send notification to client.
      *
      * @param NotificationEntityInterface $entity
      * @param string                      $HTTPMethod
@@ -199,9 +189,8 @@ class NotificationManager
         }
     }
 
-
     /**
-     * Send notification to server
+     * Send notification to server.
      *
      * @param NotificationEntityInterface $entity
      * @param string                      $HTTPMethod
@@ -220,13 +209,12 @@ class NotificationManager
         }
     }
 
-
     /**
      * Transform clients collection to array.
      *
      * @param ClientInterface|Collection|array $clientsCollection
      *
-     * @return Object[]
+     * @return object[]
      */
     protected function clientsToArray($clientsCollection) : array
     {
@@ -242,7 +230,6 @@ class NotificationManager
 
         return $clients;
     }
-
 
     /**
      * @param NotificationEntityInterface $entity
@@ -278,7 +265,7 @@ class NotificationManager
 
         if ($this->eventDispatcher->hasListeners(AfterDriverExecuteEvent::NAME)) {
             $afterDriverExecute = new AfterDriverExecuteEvent($entity);
-            /** @var AfterDriverExecuteEvent $afterDriverExecute */
+            /* @var AfterDriverExecuteEvent $afterDriverExecute */
             $this->eventDispatcher->dispatch(AfterDriverExecuteEvent::NAME, $afterDriverExecute);
         }
     }

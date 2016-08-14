@@ -10,10 +10,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\SourceException;
-
 
 /**
  * Class EntityConverter.
@@ -73,7 +71,6 @@ class EntityConverter
         $this->isClient = $isClient;
     }
 
-
     /**
      * Return entity convert to array.
      * Property can be rename via SerializedName annotations.
@@ -105,9 +102,9 @@ class EntityConverter
 
             $ucFirst = ucfirst($property);
             $methodNames = [
-                'get' => 'get' . $ucFirst,
-                'is' => 'is' . $ucFirst,
-                'has' => 'has' . $ucFirst
+                'get' => 'get'.$ucFirst,
+                'is' => 'is'.$ucFirst,
+                'has' => 'has'.$ucFirst,
             ];
 
             $array = [];
@@ -139,7 +136,6 @@ class EntityConverter
         return $entityArray;
     }
 
-
     /**
      * @param $entityManager
      */
@@ -147,7 +143,6 @@ class EntityConverter
     {
         $this->entityManager = $entityManager;
     }
-
 
     /**
      * Transform property to array.
@@ -177,7 +172,6 @@ class EntityConverter
         return $this->processGetMethod($entity, $property, $methodName);
     }
 
-
     /**
      * @param object $entity
      * @param string $name
@@ -189,10 +183,10 @@ class EntityConverter
     {
         $resultArray[$name] = call_user_func_array([$entity, $longName], []);
         if ($resultArray[$name] instanceof \DateTime) {
-            /** @noinspection PhpUndefinedMethodInspection */
+            /* @noinspection PhpUndefinedMethodInspection */
             $resultArray[$name] = $resultArray[$name]->format(self::DATETIME_FORMAT);
         }
-        
+
         if (is_object($resultArray[$name])) {
             if (method_exists($resultArray[$name], 'getId')) {
                 $resultArray[$name] = $resultArray[$name]->{'get'.ucfirst($this->entityIdFieldName)}();
@@ -203,7 +197,6 @@ class EntityConverter
 
         return $resultArray;
     }
-
 
     /**
      * @param object $entity

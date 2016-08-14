@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 11.03.16
- * Time: 16:13
+ * Time: 16:13.
  */
-
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -19,9 +18,7 @@ use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\Services\NotificationStatusManager;
 
 /**
- * Class RabbitMasterDriver
- *
- * @package Trinity\NotificationBundle\Drivers
+ * Class RabbitMasterDriver.
  */
 class RabbitMasterDriver extends BaseDriver
 {
@@ -53,13 +50,11 @@ class RabbitMasterDriver extends BaseDriver
         $this->messages = [];
     }
 
-
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $destinationClient
      * @param array                       $params
      *
-     * @return void
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
     public function execute(
@@ -85,8 +80,6 @@ class RabbitMasterDriver extends BaseDriver
                 $this->executeForClient($entity, $entityArray, $client, $params);
             }
         }
-
-
     }
 
     /**
@@ -106,11 +99,10 @@ class RabbitMasterDriver extends BaseDriver
             //get entity "name", e.g. "product", "user"
             $entityArray['entityName'] = $this->notificationUtils->getUrlPostfix($entity);
 
-
             $batch = $this->batchManager->createBatch($client->getId());
             //$batch is only pointer to the batch created and stored in BatchManager
             $batch->setSecretKey($client->getSecret());
-            $batch->setDestination('client_' . $client->getId());
+            $batch->setDestination('client_'.$client->getId());
 
             $notification = new Notification();
             $notification->setData($entityArray);
@@ -127,7 +119,6 @@ class RabbitMasterDriver extends BaseDriver
             );
         }
     }
-
 
     /**
      * Return name of the driver.

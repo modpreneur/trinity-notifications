@@ -5,9 +5,7 @@ namespace Trinity\NotificationBundle\Entity;
 use Trinity\Bundle\LoggerBundle\Entity\BaseElasticLog;
 
 /**
- * Class EntityStatusLog
- *
- * @package Trinity\NotificationBundle\Entity
+ * Class EntityStatusLog.
  */
 class EntityStatusLog extends BaseElasticLog
 {
@@ -51,7 +49,6 @@ class EntityStatusLog extends BaseElasticLog
         $this->createdAt = time();
         $this->status = self::NOT_SYNCHRONIZED;
     }
-
 
     /**
      * @return int

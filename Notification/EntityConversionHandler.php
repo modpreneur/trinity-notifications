@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 28.04.16
- * Time: 12:15
+ * Time: 12:15.
  */
-
 namespace Trinity\NotificationBundle\Notification;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -15,33 +14,29 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\InvalidDataException;
 
 /**
- * Class EntityConversionHandler
+ * Class EntityConversionHandler.
  */
 class EntityConversionHandler
 {
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
-
     /** @var  FormFactoryInterface */
     protected $formFactory;
-
 
     /** @var  array */
     protected $forms;
 
-
     /**
      * @var array Indexed array of entities' aliases and real class names.
-     * format:
-     * [
-     *    "user" => "App\Entity\User,
-     *    "product" => "App\Entity\Product,
-     *    ....
-     * ]
+     *            format:
+     *            [
+     *            "user" => "App\Entity\User,
+     *            "product" => "App\Entity\Product,
+     *            ....
+     *            ]
      */
     protected $entities;
-
 
     /**
      * EntityConversionHandler constructor.
@@ -63,12 +58,12 @@ class EntityConversionHandler
         $this->entities = $entities;
     }
 
-
     /**
      * @param NotificationEntityInterface $entity
      * @param array                       $data
      *
      * @return NotificationEntityInterface
+     *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
@@ -79,7 +74,6 @@ class EntityConversionHandler
 
         return $entity;
     }
-
 
     /**
      * @param string $entityName
@@ -97,19 +91,17 @@ class EntityConversionHandler
         $this->useForm($entity, $data);
 
         return $entity;
-
     }
-
 
     /**
      * @param NotificationEntityInterface $entity
-     *
      * @param array                       $data
      *
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      *
      * @return NotificationEntityInterface
+     *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      */
     public function useForm(NotificationEntityInterface $entity, array $data) : NotificationEntityInterface
@@ -138,9 +130,8 @@ class EntityConversionHandler
         if (!$form->isValid()) {
             $errorStrings = [];
             foreach ($form->getErrors(true) as $error) {
-                $errorStrings[] = $error->getOrigin()->getName() . ' with cause ' . $error->getCause() .
-                    ' caused message:' . $error->getMessage() . 'because of invalid value';
-
+                $errorStrings[] = $error->getOrigin()->getName().' with cause '.$error->getCause().
+                    ' caused message:'.$error->getMessage().'because of invalid value';
             }
 
             throw new InvalidDataException(implode(';', $errorStrings));
@@ -149,12 +140,10 @@ class EntityConversionHandler
         return $entity;
     }
 
-
     /**
-     * Create instance of given class
+     * Create instance of given class.
      *
      * @param string $entityName
-     *
      * @param array  $constructorArguments
      *
      * @return NotificationEntityInterface
@@ -168,28 +157,26 @@ class EntityConversionHandler
         return $entityClass->newInstanceArgs($constructorArguments);
     }
 
-
     /**
      * @param string                      $entityName
      * @param NotificationEntityInterface $entity
      * @param array                       $options
      *
      * @return FormInterface
+     *
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     protected function createForm(
         string $entityName,
         NotificationEntityInterface $entity,
         array $options = []
-    ) : FormInterface
-    {
+    ) : FormInterface {
         return $this->formFactory->create(
             $this->getFormClassName($entityName),
             $entity,
             $options
         );
     }
-
 
     /**
      * @param string $entityName
@@ -200,7 +187,6 @@ class EntityConversionHandler
     {
         return $this->forms[$entityName];
     }
-
 
     /**
      * @param string $entityName

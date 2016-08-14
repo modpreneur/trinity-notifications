@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 25.03.16
- * Time: 14:54
+ * Time: 14:54.
  */
-
 namespace Trinity\NotificationBundle\Notification;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -18,19 +17,15 @@ use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
 /**
- * Class NotificationReader
- *
- * @package Trinity\NotificationBundle\Notification
+ * Class NotificationReader.
  */
 class NotificationReader
 {
     /** @var NotificationParser */
     protected $parser;
 
-
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
-
 
     /**
      * NotificationReader constructor.
@@ -61,13 +56,12 @@ class NotificationReader
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
-     *
      * @throws \Exception
      */
     public function read(Message $message) : array
     {
         $notificationBatch = NotificationBatch::createFromMessage($message);
-        
+
         $this->eventDispatcher->dispatch(
             BeforeNotificationBatchProcessEvent::NAME,
             new BeforeNotificationBatchProcessEvent($notificationBatch->getUser(), $notificationBatch->getClientId())

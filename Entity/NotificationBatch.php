@@ -3,18 +3,15 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 24.03.16
- * Time: 15:38
+ * Time: 15:38.
  */
-
 namespace Trinity\NotificationBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
- * Class NotificationBatch
- *
- * @package Trinity\NotificationBundle\Entity
+ * Class NotificationBatch.
  */
 class NotificationBatch extends Message
 {
@@ -34,13 +31,13 @@ class NotificationBatch extends Message
         $this->rawData = new ArrayCollection();
     }
 
-
     /**
      * Encode message to JSON or array.
      *
      * @param bool $getAsArray
      *
      * @return string
+     *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
@@ -60,7 +57,6 @@ class NotificationBatch extends Message
         return parent::pack($getAsArray);
     }
 
-
     /**
      * Convert each notification to array and return array of that arrays.
      *
@@ -77,7 +73,6 @@ class NotificationBatch extends Message
         return $data;
     }
 
-
     /**
      * @return ArrayCollection<Notification>
      */
@@ -85,7 +80,6 @@ class NotificationBatch extends Message
     {
         return $this->rawData;
     }
-
 
     /**
      * @param Notification $notification
@@ -101,7 +95,6 @@ class NotificationBatch extends Message
         return $this;
     }
 
-
     /**
      * @param array $notifications
      */
@@ -111,7 +104,6 @@ class NotificationBatch extends Message
             $this->addNotification($notification);
         }
     }
-
 
     /**
      * @param Notification $notification
@@ -125,7 +117,6 @@ class NotificationBatch extends Message
         return $this;
     }
 
-
     /**
      * @param Message $message
      *
@@ -133,7 +124,7 @@ class NotificationBatch extends Message
      */
     public static function createFromMessage(Message $message) : self
     {
-        $notificationBatch = new self;
+        $notificationBatch = new self();
         $message->copyTo($notificationBatch);
 
         if (!$notificationBatch->rawData) {
@@ -153,9 +144,8 @@ class NotificationBatch extends Message
         return $notificationBatch;
     }
 
-
     /**
-     * Unpack message
+     * Unpack message.
      *
      * @param string $messageJson
      *

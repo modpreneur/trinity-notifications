@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 28.04.16
- * Time: 18:58
+ * Time: 18:58.
  */
-
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
@@ -17,7 +16,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
 
 /**
- * Class EntityAssociator
+ * Class EntityAssociator.
  */
 class EntityAssociator
 {
@@ -38,18 +37,18 @@ class EntityAssociator
 
     /** @var  string Name of the method which is used to get property with name $serverIdField from entity */
     protected $getServerIdMethod;
-    
+
     /** @var  LoggerInterface */
     protected $logger;
 
     /**
      * @var array Indexed array of entities' aliases and real class names.
-     * format:
-     * [
-     *    "user" => "App\Entity\User,
-     *    "product" => "App\Entity\Product,
-     *    ....
-     * ]
+     *            format:
+     *            [
+     *            "user" => "App\Entity\User,
+     *            "product" => "App\Entity\Product,
+     *            ....
+     *            ]
      */
     protected $entities;
 
@@ -77,13 +76,12 @@ class EntityAssociator
         $this->logger = $logger;
         $this->serverIdField = $serverIdField;
         $this->entities = $entities;
-        $this->getServerIdMethod = 'get' . ucfirst($serverIdField);
+        $this->getServerIdMethod = 'get'.ucfirst($serverIdField);
     }
-
 
     /**
      * Associate given entities
-     * This action makes sense only when creating entities
+     * This action makes sense only when creating entities.
      *
      * @param array $entities
      *
@@ -136,7 +134,6 @@ class EntityAssociator
         }
     }
 
-
     /**
      * Associate given $entity with $associatedEntity.
      *
@@ -162,16 +159,18 @@ class EntityAssociator
                 //it is the same entity
                 //call the set method on the $entity, pass the $entityToAssociate
                 $entity->{$entityAssociation->getSetterMethod()}($entityToAssociate);
+
                 return;
             }
         }
 
         //the entity was not associated
         //probably the entityToAssociate does not exist
-        $entityName = array_search(get_class($associatedEntity), $this->entities, false);
+        $associatedEntityClass = get_class($associatedEntity);
+        $entityName = array_search($associatedEntityClass, $this->entities, false);
         $entityId = $associatedEntity->$getServerIdMethod();
         $exception = new AssociationEntityNotFoundException(
-            "Association entity '$entityName' with id '$entityId'' was not found"
+            "Association entity with name: '$entityName' and class: '${associatedEntityClass}' with id '$entityId' was not found"
         );
         $exception->setEntityName($entityName);
         $exception->setEntityId($entityId);
@@ -179,9 +178,8 @@ class EntityAssociator
         throw $exception;
     }
 
-
     /**
-     * Get prepared associations for given entity
+     * Get prepared associations for given entity.
      *
      * @param NotificationEntityInterface $entity
      *
@@ -235,9 +233,8 @@ class EntityAssociator
         }
     }
 
-
     /**
-     * Get doctrine repository of given className or null
+     * Get doctrine repository of given className or null.
      *
      * @param $className string Full classname(with namespace) of the entity. e.g.
      *                   AppBundle\\Entity\\Product\\StandardProduct
@@ -252,7 +249,6 @@ class EntityAssociator
             return null;
         }
     }
-
 
     /**
      * @param array [NotificationEntityInterface] $entities
@@ -275,8 +271,8 @@ class EntityAssociator
         }
 
         $this->logger->error(
-            'Associated entity is null. This can be caused by some unhandled error or in special case ' .
-            'when the product has no default billing plan. The classes of the entities to associate are: ' .
+            'Associated entity is null. This can be caused by some unhandled error or in special case '.
+            'when the product has no default billing plan. The classes of the entities to associate are: '.
             implode(',', $entitiesClasses)
         );
     }

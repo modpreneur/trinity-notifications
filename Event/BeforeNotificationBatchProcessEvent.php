@@ -3,14 +3,12 @@
 namespace Trinity\NotificationBundle\Event;
 
 /**
- * Class BeforeNotificationBatchProcessEvent
- *
- * @package Trinity\NotificationBundle\Event
+ * Class BeforeNotificationBatchProcessEvent.
  */
 class BeforeNotificationBatchProcessEvent extends NotificationEvent
 {
     const NAME = 'trinity.notifications.beforeNotificationBatchProcess';
-    
+
     /** @var  string Integer representing user's id or string representing system(e.g. client_3, necktie) */
     protected $userIdentification;
 

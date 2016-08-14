@@ -13,7 +13,6 @@ use Trinity\NotificationBundle\Annotations\AssociationGetter;
 use Trinity\NotificationBundle\Annotations\AssociationSetter;
 use Trinity\NotificationBundle\Exception\SourceException;
 
-
 /**
  * Class AnnotationsUtils.
  */
@@ -30,7 +29,6 @@ class AnnotationsUtils
     /** @var  AnnotationReader */
     protected $reader;
 
-
     /**
      * @param Reader|null $reader
      */
@@ -43,7 +41,6 @@ class AnnotationsUtils
         }
     }
 
-
     /**
      * @return AnnotationReader
      */
@@ -51,7 +48,6 @@ class AnnotationsUtils
     {
         return $this->reader;
     }
-
 
     /**
      * @param object $entity
@@ -63,7 +59,6 @@ class AnnotationsUtils
         return str_replace(self::FIX_NAMESPACE, '', get_class($entity));
     }
 
-
     /**
      * @param object $entity
      * @param string $annotationClass
@@ -74,7 +69,6 @@ class AnnotationsUtils
     {
         return $this->getClassAnnotation($entity, $annotationClass);
     }
-
 
     /**
      * @param object $class
@@ -88,7 +82,6 @@ class AnnotationsUtils
 
         return $this->reader->getClassAnnotation($reflectionObject, $annotationClass);
     }
-
 
     /**
      * @param object $entity
@@ -112,11 +105,10 @@ class AnnotationsUtils
         return $ants;
     }
 
-
     /**
      * @param object $entity
      *
-     * @return NULL|object
+     * @return null|object
      *
      * @throws SourceException
      */
@@ -125,23 +117,20 @@ class AnnotationsUtils
         $classAnn = $this->getEntityAnnotation($this->getEntityClass($entity), self::ANNOTATION_CLASS);
 
         if (!$classAnn) {
-            throw new SourceException('Entity(' . get_class($entity) . ') has not annotations source.');
+            throw new SourceException('Entity('.get_class($entity).') has not annotations source.');
         }
 
         return $classAnn;
     }
 
-
     /**
      * @param object $entity
      *
-     * @return NULL|object
+     * @return null|object
      */
     public function getClassDependedSourceAnnotation($entity)
     {
-        $classAnn = $this->getEntityAnnotation($entity, self::ANNOTATION_DEPENDED_CLASS);
-
-        return $classAnn;
+        return $this->getEntityAnnotation($entity, self::ANNOTATION_DEPENDED_CLASS);
     }
 
     /**
@@ -163,7 +152,6 @@ class AnnotationsUtils
     {
         return $this->getClassMethodsWithAnnotation($entity, AssociationGetter::class);
     }
-
 
     /**
      * @param        $entity
@@ -194,5 +182,4 @@ class AnnotationsUtils
 
         return $return;
     }
-
 }

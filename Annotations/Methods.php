@@ -8,9 +8,8 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class Methods
+ * Class Methods.
  *
- * @package Trinity\NotificationBundle\Annotations
  *
  * @Annotation
  */
@@ -19,7 +18,6 @@ class Methods
     /** @var  array */
     protected $types;
 
-
     /**
      * @param array $metadata
      */
@@ -27,7 +25,6 @@ class Methods
     {
         $this->types = (isset($metadata['types']) && $metadata['types'] != '') ? ($metadata['types']) : [];
     }
-
 
     /**
      * @param string $typeName
@@ -38,7 +35,6 @@ class Methods
     {
         return in_array(strtolower($typeName), $this->getTypes());
     }
-
 
     /**
      * @return array

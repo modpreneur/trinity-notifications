@@ -5,14 +5,12 @@ namespace Trinity\NotificationBundle\Event;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 /**
- * Class BeforeDeleteEntityEvent
- *
- * @package Trinity\NotificationBundle\Event
+ * Class BeforeDeleteEntityEvent.
  */
 class BeforeDeleteEntityEvent extends NotificationEvent
 {
     const NAME = 'trinity.notifications.beforeDeleteEntity';
-    
+
     /** @var  NotificationEntityInterface */
     protected $entity;
 

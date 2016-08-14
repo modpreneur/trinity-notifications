@@ -3,20 +3,17 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 13.06.16
- * Time: 9:45
+ * Time: 9:45.
  */
-
 namespace Trinity\NotificationBundle\Event;
 
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 /**
- * Class SendNotificationEvent
+ * Class SendNotificationEvent.
  *
  * This event is dispatched when a notification should be sent.
  * Dispatching this event in EntityListener should break circular dependency on EntityManager.
- *
- * @package Trinity\NotificationBundle\Event
  */
 class SendNotificationEvent extends NotificationEvent
 {

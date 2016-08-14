@@ -6,15 +6,12 @@ use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 
 /**
- * Class BatchManager
- *
- * @package Trinity\NotificationBundle\Notification
+ * Class BatchManager.
  */
 class BatchManager extends MessageSender
 {
     /** @var NotificationBatch[] */
     protected $messages = [];
-
 
     /**
      * Add notifications to the batch. Create a new batch if it does not exist.
@@ -49,7 +46,6 @@ class BatchManager extends MessageSender
         return $returnBatch;
     }
 
-
     /**
      * @return NotificationBatch[]
      */
@@ -57,7 +53,6 @@ class BatchManager extends MessageSender
     {
         return $this->messages;
     }
-
 
     /**
      * @param NotificationBatch[] $messages

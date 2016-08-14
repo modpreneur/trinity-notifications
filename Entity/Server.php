@@ -8,15 +8,12 @@ namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\Component\Core\Interfaces\ClientInterface;
 
-
 /**
- * Class Server
- *
- * @package Trinity\NotificationBundle\Entity
+ * Class Server.
  */
 class Server implements ClientInterface
 {
-    /** @var  boolean */
+    /** @var  bool */
     protected $notified;
 
     /** @var  string */
@@ -28,7 +25,6 @@ class Server implements ClientInterface
     /** @var  int */
     protected $id;
 
-
     /**
      * @return bool
      */
@@ -37,15 +33,13 @@ class Server implements ClientInterface
         return $this->notified;
     }
 
-
     /**
-     * @param boolean $notified
+     * @param bool $notified
      */
     public function setNotified(bool $notified)
     {
         $this->notified = $notified;
     }
-
 
     /**
      * @return string
@@ -55,15 +49,15 @@ class Server implements ClientInterface
         return $this->secret;
     }
 
-
     /**
      * @param string $secret
+     *
+     * @return string
      */
     public function setSecret($secret) : string
     {
         $this->secret = $secret;
     }
-
 
     /** @return string */
     public function getName() : string
@@ -71,13 +65,11 @@ class Server implements ClientInterface
         return $this->name;
     }
 
-
     /** @return int */
     public function getId() : int
     {
         return $this->id;
     }
-
 
     /**
      * @param string $name
@@ -86,7 +78,6 @@ class Server implements ClientInterface
     {
         $this->name = $name;
     }
-
 
     /**
      * @param int $id

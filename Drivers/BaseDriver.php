@@ -14,9 +14,7 @@ use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
 
 /**
- * Class BaseDriver
- *
- * @package Trinity\NotificationBundle\Drivers
+ * Class BaseDriver.
  */
 abstract class BaseDriver implements NotificationDriverInterface
 {
@@ -39,7 +37,6 @@ abstract class BaseDriver implements NotificationDriverInterface
      * Second level indexes are entity ids.
      */
     protected $notifiedEntities = [];
-
 
     /** @var BatchManager */
     protected $batchManager;
@@ -64,7 +61,6 @@ abstract class BaseDriver implements NotificationDriverInterface
         $this->batchManager = $batchManager;
     }
 
-
     /**
      * @param EntityManagerInterface $entityManager
      */
@@ -72,7 +68,6 @@ abstract class BaseDriver implements NotificationDriverInterface
     {
         $this->entityManager = $entityManager;
     }
-
 
     /**
      * Add entity to notifiedEntities array.
@@ -85,7 +80,6 @@ abstract class BaseDriver implements NotificationDriverInterface
         // add id to the entity array so it will not be notified again
         $this->notifiedEntities[$clientId][get_class($entity)][] = $entity->getId();
     }
-
 
     /**
      * Check if the current entity was already processed.
@@ -100,7 +94,7 @@ abstract class BaseDriver implements NotificationDriverInterface
         $class = get_class($entity);
 
         return array_key_exists($clientId, $this->notifiedEntities) && //if the client array exists
-        array_key_exists($class, $this->notifiedEntities[$clientId]) && // and the class array exists
-        in_array($entity->getId(), $this->notifiedEntities[$clientId][$class], false); // and the entity id exists in the class array
+            array_key_exists($class, $this->notifiedEntities[$clientId]) && // and the class array exists
+            in_array($entity->getId(), $this->notifiedEntities[$clientId][$class], false); // and the entity id exists in the class array
     }
 }

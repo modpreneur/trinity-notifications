@@ -8,9 +8,8 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class Source
+ * Class Source.
  *
- * @package Trinity\NotificationBundle\Annotations
  *
  * @Annotation
  */
@@ -18,7 +17,6 @@ class Source
 {
     /** @var array */
     protected $columns;
-
 
     /**
      * @param array $metadata
@@ -31,7 +29,6 @@ class Source
         ) : [];
     }
 
-
     /**
      * @return array
      */
@@ -39,7 +36,6 @@ class Source
     {
         return $this->columns;
     }
-
 
     /**
      * @return bool

@@ -3,25 +3,21 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 21.04.16
- * Time: 15:54
+ * Time: 15:54.
  */
-
 namespace Trinity\NotificationBundle\Event;
 
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
- * Class NotificationRequestEvent
- *
- * @package Trinity\NotificationBundle\Event
+ * Class NotificationRequestEvent.
  */
 class NotificationRequestEvent extends NotificationEvent
 {
     const NAME = 'trinity.notifications.notificationRequestEvent';
-    
+
     /** @var  Message */
     protected $message;
-
 
     /**
      * NotificationRequestEvent constructor.
@@ -33,7 +29,6 @@ class NotificationRequestEvent extends NotificationEvent
         $this->message = $message;
     }
 
-
     /**
      * @return Message
      */
@@ -41,7 +36,6 @@ class NotificationRequestEvent extends NotificationEvent
     {
         return $this->message;
     }
-
 
     /**
      * @param Message $message

@@ -7,17 +7,13 @@ namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\Component\Core\Interfaces\ClientInterface;
 
-
 /**
- * Interface NotificationEntityInterface
- *
- * @package Trinity\NotificationBundle\Entity
+ * Interface NotificationEntityInterface.
  */
 interface NotificationEntityInterface
 {
     /** @return int */
     public function getId();
-
 
     /** @return ClientInterface[] */
     public function getClients();

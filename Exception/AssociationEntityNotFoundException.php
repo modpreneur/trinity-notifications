@@ -3,17 +3,14 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 21.04.16
- * Time: 15:58
+ * Time: 15:58.
  */
-
 namespace Trinity\NotificationBundle\Exception;
 
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
- * Class AssociationEntityNotFoundException
- *
- * @package Trinity\NotificationBundle\Exception
+ * Class AssociationEntityNotFoundException.
  */
 class AssociationEntityNotFoundException extends NotificationException
 {
@@ -26,7 +23,6 @@ class AssociationEntityNotFoundException extends NotificationException
     /** @var  string */
     protected $entityId;
 
-    
     /**
      * @return Message
      */
@@ -34,7 +30,6 @@ class AssociationEntityNotFoundException extends NotificationException
     {
         return $this->messageObject;
     }
-
 
     /**
      * @param Message $message
@@ -44,7 +39,6 @@ class AssociationEntityNotFoundException extends NotificationException
         $this->messageObject = $message;
     }
 
-
     /**
      * @return string
      */
@@ -52,7 +46,6 @@ class AssociationEntityNotFoundException extends NotificationException
     {
         return $this->entityName;
     }
-
 
     /**
      * @param string $entityName
@@ -62,7 +55,6 @@ class AssociationEntityNotFoundException extends NotificationException
         $this->entityName = $entityName;
     }
 
-
     /**
      * @return string
      */
@@ -70,7 +62,6 @@ class AssociationEntityNotFoundException extends NotificationException
     {
         return $this->entityId;
     }
-
 
     /**
      * @param string $entityId

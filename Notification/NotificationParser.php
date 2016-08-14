@@ -17,7 +17,7 @@ use Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException;
 use Trinity\NotificationBundle\Exception\NotificationException;
 
 /**
- * Responsible for parsing notification request and performing entity edits
+ * Responsible for parsing notification request and performing entity edits.
  *
  * Class NotificationParser
  */
@@ -49,15 +49,14 @@ class NotificationParser
 
     /**
      * @var array Indexed array of entities' aliases and real class names.
-     * format:
-     * [
-     *    "user" => "App\Entity\User,
-     *    "product" => "App\Entity\Product,
-     *    ....
-     * ]
+     *            format:
+     *            [
+     *            "user" => "App\Entity\User,
+     *            "product" => "App\Entity\Product,
+     *            ....
+     *            ]
      */
     protected $entities;
-
 
     /**
      * NotificationParser constructor.
@@ -92,12 +91,12 @@ class NotificationParser
         $this->entities = $entities;
     }
 
-
     /**
-     * @param array $notifications
+     * @param array     $notifications
      * @param \DateTime $notificationCreatedAt Timestamp from the message
      *
      * @return array
+     *
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
@@ -114,7 +113,7 @@ class NotificationParser
 
             if (!array_key_exists($entityName, $this->entities)) {
                 throw new NotificationException(
-                    "No classname found for entityName: '$entityName'." .
+                    "No classname found for entityName: '$entityName'.".
                     'Have you defined it in the configuration under trinity_notification:entities?'
                 );
             }
@@ -123,7 +122,7 @@ class NotificationParser
                 $notification->getData(),
                 $this->entities[$entityName],
                 $notification->getMethod(),
-                $notificationCreatedAt? : new \DateTime('now')
+                $notificationCreatedAt ?: new \DateTime('now')
             );
 
             if ($processedEntity !== null) {
@@ -136,16 +135,15 @@ class NotificationParser
         return $processedEntities;
     }
 
-
     /**
-     * @param           $data               array  Notification data as named array
-     * @param           $fullClassName      string Full classname(with namespace) of the entity.e.g.
-     *                                      AppBundle\\Entity\\Product\\StandardProduct
-     * @param           $HTTPMethod         string HTTP method of the request
-     *
+     * @param           $data                array  Notification data as named array
+     * @param           $fullClassName       string Full classname(with namespace) of the entity.e.g.
+     *                                       AppBundle\\Entity\\Product\\StandardProduct
+     * @param           $HTTPMethod          string HTTP method of the request
      * @param \DateTime $notificationCreated
      *
      * @return null|object
+     *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
@@ -195,9 +193,10 @@ class NotificationParser
             $this->checkTimeViolations($entityObject, $notificationCreated);
         }
 
+        //this whole if-else block is non-optimal but quite readable
         //delete entity, without form
         if ($entityObject !== null && $HTTPMethod === 'DELETE') {
-            $this->logger->info('METHOD: DELETE ' . $HTTPMethod);
+            $this->logger->info('METHOD: DELETE '.$HTTPMethod);
             /** @var BeforeDeleteEntityEvent $event */
             $event = $this->eventDispatcher->dispatch(
                 BeforeDeleteEntityEvent::NAME,
@@ -223,16 +222,15 @@ class NotificationParser
             //other strange combination of input conditions
         } else {
             throw new NotificationException(
-                "Unsupported combination of input conditions. Tried to apply method $HTTPMethod on " .
-                ($entityObject ? 'existing' : 'non existing') . ' entity. ' .
+                "Unsupported combination of input conditions. Tried to apply method $HTTPMethod on ".
+                ($entityObject ? 'existing' : 'non existing').' entity. '.
                 'This may be because creation of entities on server is prohibited.'
             );
         }
     }
 
-
     /**
-     * Get existing entity or null
+     * Get existing entity or null.
      *
      * @param $fullClassName string Full classname(with namespace) of the entity.
      *                       e.g. AppBundle\\Entity\\Product\\StandardProduct
@@ -246,9 +244,8 @@ class NotificationParser
         );
     }
 
-
     /**
-     * Check if the conditions violate the expectations
+     * Check if the conditions violate the expectations.
      *
      * @param        $entityObject
      * @param string $fullClassName
@@ -263,14 +260,14 @@ class NotificationParser
     ) {
         if ($entityObject === null && $method === 'DELETE') {
             throw new NotificationException(
-                "Trying to delete entity of class $fullClassName with id " . $this->notificationData['id']
-                . ' but the entity does not exist'
+                "Trying to delete entity of class $fullClassName with id ".$this->notificationData['id']
+                .' but the entity does not exist'
             );
         }
 
         if ($entityObject !== null && $method === 'POST') {
             throw new NotificationException(
-                "Trying to create entity of class $fullClassName with id " . $this->notificationData['id'] .
+                "Trying to create entity of class $fullClassName with id ".$this->notificationData['id'].
                 ' but entity with the id already exists'
             );
         }
@@ -278,16 +275,16 @@ class NotificationParser
         //allow deleting entities only on client
         if ($entityObject !== null && $method === 'DELETE' && !$this->isClient) {
             throw new NotificationException(
-                "Trying to delete entity of class $fullClassName with id " . $this->notificationData['id']
-                . ' but it is not allowed on the server.'
+                "Trying to delete entity of class $fullClassName with id ".$this->notificationData['id']
+                .' but it is not allowed on the server.'
             );
         }
 
         //allow creating entities only on client
         if ($entityObject === null && $method === 'POST' && !$this->isClient) {
             throw new NotificationException(
-                "Trying to create entity of class $fullClassName with id " . $this->notificationData['id']
-                . ' but it is not allowed on the server.'
+                "Trying to create entity of class $fullClassName with id ".$this->notificationData['id']
+                .' but it is not allowed on the server.'
             );
         }
 
@@ -295,16 +292,15 @@ class NotificationParser
         if ($entityObject === null && $method === 'PUT' && !$this->isClient) {
             throw new NotificationException(
                 "Trying to create(PUT has the same effect as POST on non-existing entity now)' . 
-                ' entity of class $fullClassName with id " . $this->notificationData['id']
-                . ' but it is not allowed on the server.'
+                ' entity of class $fullClassName with id ".$this->notificationData['id']
+                .' but it is not allowed on the server.'
             );
         }
     }
 
-
     /**
      * @param NotificationEntityInterface | null $entity
-     * @param \DateTime $notificationCreatedAt
+     * @param \DateTime                          $notificationCreatedAt
      *
      * @throws EntityWasUpdatedBeforeException
      */
@@ -312,7 +308,7 @@ class NotificationParser
     {
         if ($entity !== null && $entity->getUpdatedAt() > $notificationCreatedAt) {
             throw new EntityWasUpdatedBeforeException(
-                'The entity of class "' . get_class($entity) .
+                'The entity of class "'.get_class($entity).
                 '" has been updated after the notification message was created'
             );
         }

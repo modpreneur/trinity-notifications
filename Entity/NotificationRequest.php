@@ -3,15 +3,12 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 25.05.16
- * Time: 9:56
+ * Time: 9:56.
  */
-
 namespace Trinity\NotificationBundle\Entity;
 
 /**
- * Class NotificationRequest
- *
- * @package Trinity\NotificationBundle\Entity
+ * Class NotificationRequest.
  */
 class NotificationRequest
 {
@@ -23,7 +20,6 @@ class NotificationRequest
 
     /** @var  string */
     protected $associationEntityId;
-
 
     /**
      * NotificationRequest constructor.
@@ -37,7 +33,6 @@ class NotificationRequest
         $this->associationEntityId = $associationEntityId;
     }
 
-
     /**
      * @return string
      */
@@ -45,7 +40,6 @@ class NotificationRequest
     {
         return $this->entityName;
     }
-
 
     /**
      * @param string $entityName
@@ -55,7 +49,6 @@ class NotificationRequest
         $this->entityName = $entityName;
     }
 
-
     /**
      * @return string
      */
@@ -63,7 +56,6 @@ class NotificationRequest
     {
         return $this->associationEntityId;
     }
-
 
     /**
      * @param string $associationEntityId
@@ -73,7 +65,6 @@ class NotificationRequest
         $this->associationEntityId = $associationEntityId;
     }
 
-
     /**
      * @return array
      */
@@ -81,7 +72,6 @@ class NotificationRequest
     {
         return [self::ENTITY_ID => $this->associationEntityId, self::ENTITY_NAME => $this->entityName];
     }
-
 
     /**
      * @param array $data

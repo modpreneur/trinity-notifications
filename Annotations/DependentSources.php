@@ -7,9 +7,8 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class DependentSources
+ * Class DependentSources.
  *
- * @package Trinity\NotificationBundle\Annotations
  *
  * @Annotation
  */

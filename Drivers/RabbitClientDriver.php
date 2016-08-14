@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 18.03.16
- * Time: 14:58
+ * Time: 14:58.
  */
-
 namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -19,9 +18,7 @@ use Trinity\NotificationBundle\Notification\NotificationUtils;
 use Trinity\NotificationBundle\Services\NotificationStatusManager;
 
 /**
- * Class RabbitClientDriver
- *
- * @package Trinity\NotificationBundle\Drivers
+ * Class RabbitClientDriver.
  */
 class RabbitClientDriver extends BaseDriver
 {
@@ -54,7 +51,6 @@ class RabbitClientDriver extends BaseDriver
         $this->statusManager = $statusManager;
         $this->clientId = $clientId;
     }
-
 
     /**
      * @param NotificationEntityInterface $entity
@@ -95,7 +91,6 @@ class RabbitClientDriver extends BaseDriver
             EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS
         );
     }
-
 
     /**
      * Return name of driver-.

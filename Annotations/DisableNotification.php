@@ -8,9 +8,8 @@
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class DisableNotification
+ * Class DisableNotification.
  *
- * @package Trinity\NotificationBundle\Annotations
  *
  * @Annotation
  */

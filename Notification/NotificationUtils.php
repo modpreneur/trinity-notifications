@@ -11,7 +11,6 @@ use Trinity\NotificationBundle\Annotations\Methods;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\SourceException;
 
-
 /**
  * Class NotificationUtils.
  */
@@ -19,7 +18,6 @@ class NotificationUtils
 {
     /** @var  AnnotationsUtils */
     private $annotationsUtils;
-
 
     /**
      * NotificationUtils constructor.
@@ -30,7 +28,6 @@ class NotificationUtils
     {
         $this->annotationsUtils = $annotationsUtils;
     }
-
 
     /**
      * Check GET, POST, PUT, ...
@@ -54,11 +51,11 @@ class NotificationUtils
         return $classAnnotation->hasType($method);
     }
 
-
     /**
      * @param object $entity
      *
      * @return bool
+     *
      * @throws NotificationException
      */
     public function isNotificationEntity($entity) : bool
@@ -66,7 +63,9 @@ class NotificationUtils
         $class = $this->annotationsUtils->getEntityClass($entity);
 
         if (in_array('\Trinity\NotificationBundle\Entity\NotificationEntityInterface', class_implements($class))) {
-            throw new NotificationException("Notification entity($class) must be extended via NotificationEntityInterface.");
+            throw new NotificationException(
+                "Notification entity($class) must be extended via NotificationEntityInterface."
+            );
         }
 
         $reflectionObject = new \ReflectionClass($class);
@@ -75,13 +74,12 @@ class NotificationUtils
             AnnotationsUtils::ANNOTATION_CLASS
         );
 
-        return ($classSourceAnnotation !== null);
+        return $classSourceAnnotation !== null;
     }
-
 
     /**
      * @param object $entity
-     * @param null $method
+     * @param null   $method
      *
      * @return mixed|null|string
      */
@@ -121,7 +119,6 @@ class NotificationUtils
         return $postfix;
     }
 
-
     /**
      * @param object $entity
      * @param string $source
@@ -134,7 +131,6 @@ class NotificationUtils
     {
         return $this->annotationsUtils->getClassSourceAnnotation($entity)->hasColumn($source);
     }
-
 
     /**
      * @param object $entity
@@ -151,7 +147,6 @@ class NotificationUtils
 
         return $annotation->hasColumn($source);
     }
-
 
     /**
      * @param string $class
@@ -183,18 +178,15 @@ class NotificationUtils
         }
 
         if (!empty($actionAnnotations)) {
-            $result = reset($actionAnnotations);
+            return reset($actionAnnotations);
         } else {
-            $result = null;
+            return null;
         }
-
-        return $result;
     }
-
 
     /**
      * @param object|string $controller
-     * @param string $action
+     * @param string        $action
      *
      * @return bool
      */

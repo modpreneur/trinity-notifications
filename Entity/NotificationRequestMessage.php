@@ -3,17 +3,14 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 25.05.16
- * Time: 9:52
+ * Time: 9:52.
  */
-
 namespace Trinity\NotificationBundle\Entity;
 
 use Trinity\Bundle\MessagesBundle\Message\Message;
 
 /**
- * Class NotificationRequestMessage
- *
- * @package Trinity\NotificationBundle\Entity
+ * Class NotificationRequestMessage.
  */
 class NotificationRequestMessage extends Message
 {
@@ -27,7 +24,6 @@ class NotificationRequestMessage extends Message
     /** @var  NotificationRequest */
     protected $request;
 
-
     /**
      * NotificationRequestMessage constructor.
      */
@@ -38,13 +34,17 @@ class NotificationRequestMessage extends Message
         $this->type = self::MESSAGE_TYPE;
     }
 
-
     /**
      * Encode message to JSON.
      *
      * @param bool $getAsArray
      *
      * @return string
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
     public function pack(bool $getAsArray = false) : string
@@ -61,9 +61,8 @@ class NotificationRequestMessage extends Message
         return parent::pack($getAsArray);
     }
 
-
     /**
-     * Unpack message
+     * Unpack message.
      *
      * @param string $messageJson
      *
@@ -76,7 +75,6 @@ class NotificationRequestMessage extends Message
         return self::createFromMessage(parent::unpack($messageJson));
     }
 
-
     /**
      * @param Message $message
      *
@@ -84,7 +82,7 @@ class NotificationRequestMessage extends Message
      */
     public static function createFromMessage(Message $message) : self
     {
-        $requestMessage = new self;
+        $requestMessage = new self();
         $message->copyTo($requestMessage);
 
         $requestMessage->request = NotificationRequest::fromArray($requestMessage->rawData[self::REQUEST_KEY]);

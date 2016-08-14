@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 24.03.16
- * Time: 17:06
+ * Time: 17:06.
  */
-
 namespace Trinity\NotificationBundle\EventListener;
 
 use Monolog\Logger;
@@ -13,8 +12,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 
 /**
- * Class KernelTerminateListener
- * @package Trinity\NotificationBundle\EventListener
+ * Class KernelTerminateListener.
  */
 class KernelTerminateListener
 {
@@ -31,12 +29,11 @@ class KernelTerminateListener
      */
     protected $logger;
 
-
-
     /**
      * KernelTerminateListener constructor.
+     *
      * @param NotificationManager $notificationManager
-     * @param Logger $logger
+     * @param Logger              $logger
      */
     public function __construct(NotificationManager $notificationManager, Logger $logger)
     {
@@ -44,9 +41,15 @@ class KernelTerminateListener
         $this->logger = $logger;
     }
 
-
     /**
      * @param PostResponseEvent $event
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
     public function onKernelTerminate(PostResponseEvent $event)
     {

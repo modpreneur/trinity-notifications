@@ -3,15 +3,13 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 10.05.16
- * Time: 12:39
+ * Time: 12:39.
  */
-
 namespace Trinity\NotificationBundle\Annotations;
 
 /**
- * Class AssociationSetter
+ * Class AssociationSetter.
  *
- * @package Trinity\NotificationBundle\Annotations
  *
  * @Annotation
  * @Target({"METHOD"})
@@ -23,7 +21,6 @@ class AssociationSetter
 {
     /** @var string */
     protected $targetEntity;
-
 
     /**
      * AssociationSetter constructor.

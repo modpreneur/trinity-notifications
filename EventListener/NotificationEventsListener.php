@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 14.04.16
- * Time: 8:44
+ * Time: 8:44.
  */
-
 namespace Trinity\NotificationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -23,12 +22,10 @@ use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
 /**
- * Class NotificationEventsListener
+ * Class NotificationEventsListener.
  *
  * If the messaging protocol will be decoupled from notification bundle this class would be moved out of this bundle.
  * The messaging protocol does not need to know all the types of messages.
- *
- * @package Trinity\NotificationBundle\EventListener
  */
 class NotificationEventsListener implements EventSubscriberInterface
 {
@@ -43,7 +40,6 @@ class NotificationEventsListener implements EventSubscriberInterface
 
     /** @var  bool */
     protected $isClient;
-
 
     /**
      * NotificationEventsListener constructor.
@@ -65,7 +61,6 @@ class NotificationEventsListener implements EventSubscriberInterface
         $this->isClient = $isClient;
     }
 
-
     /**
      * @param ReadMessageEvent $event
      *
@@ -74,6 +69,8 @@ class NotificationEventsListener implements EventSubscriberInterface
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
+     * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      */
     public function onMessageRead(ReadMessageEvent $event)
     {
@@ -86,7 +83,6 @@ class NotificationEventsListener implements EventSubscriberInterface
         if ($message->getType() === NotificationBatch::MESSAGE_TYPE) {
             $this->handleNotificationMessage($message);
             $this->setEventAsProcessed($event);
-
         } elseif ($message->getType() === NotificationRequestMessage::MESSAGE_TYPE) {
             $this->handleNotificationRequest($message);
             $this->setEventAsProcessed($event);
@@ -95,7 +91,6 @@ class NotificationEventsListener implements EventSubscriberInterface
             $this->setEventAsProcessed($event);
         }
     }
-
 
     /**
      * @param SendNotificationEvent $event
@@ -110,20 +105,19 @@ class NotificationEventsListener implements EventSubscriberInterface
         );
     }
 
-
     /**
      * @param Message $message
      *
      * @return array
      *
+     * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Exception
-     *
      * @throws \Throwable Catches all catchable errors and exceptions and then throws them again
-     *
      */
     protected function handleNotificationMessage(Message $message)
     {
@@ -140,7 +134,7 @@ class NotificationEventsListener implements EventSubscriberInterface
             $this->dispatchSetMessageStatusEvent(
                 $message,
                 StatusMessage::STATUS_ERROR,
-                (string)$error
+                (string) $error
             );
 
             throw $error;
@@ -154,11 +148,10 @@ class NotificationEventsListener implements EventSubscriberInterface
     {
         $event = new NotificationRequestEvent($message);
         if ($this->eventDispatcher->hasListeners(NotificationRequestEvent::NAME)) {
-            /** @var NotificationRequestEvent $event */
+            /* @var NotificationRequestEvent $event */
             $this->eventDispatcher->dispatch(NotificationRequestEvent::NAME, $event);
         }
     }
-
 
     /**
      * @param Message $message
@@ -168,14 +161,13 @@ class NotificationEventsListener implements EventSubscriberInterface
         $statusMessage = StatusMessage::createFromMessage($message);
 
         if ($this->eventDispatcher->hasListeners(StatusMessageEvent::NAME)) {
-            /** @var StatusMessageEvent $event */
+            /* @var StatusMessageEvent $event */
             $this->eventDispatcher->dispatch(
                 StatusMessageEvent::NAME,
                 new StatusMessageEvent($statusMessage)
             );
         }
     }
-
 
     /**
      * @param Message $message
@@ -185,7 +177,7 @@ class NotificationEventsListener implements EventSubscriberInterface
     protected function dispatchSetMessageStatusEvent(Message $message, string $status, string $statusMessage)
     {
         if ($this->eventDispatcher->hasListeners(SetMessageStatusEvent::NAME)) {
-            /** @var ReadMessageEvent $event */
+            /* @var ReadMessageEvent $event */
             $this->eventDispatcher->dispatch(
                 SetMessageStatusEvent::NAME,
                 new SetMessageStatusEvent($message, $status, $statusMessage)
@@ -193,9 +185,8 @@ class NotificationEventsListener implements EventSubscriberInterface
         }
     }
 
-
     /**
-     * Set event as processed and stop propagation of the event
+     * Set event as processed and stop propagation of the event.
      *
      * @param ReadMessageEvent $event
      */
@@ -228,8 +219,8 @@ class NotificationEventsListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ReadMessageEvent::NAME      => ['onMessageRead', 100],
-            SendNotificationEvent::NAME => ['onSendNotificationEvent']
+            ReadMessageEvent::NAME => ['onMessageRead', 100],
+            SendNotificationEvent::NAME => ['onSendNotificationEvent'],
         ];
     }
 }

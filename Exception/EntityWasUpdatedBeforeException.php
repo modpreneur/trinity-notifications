@@ -3,13 +3,11 @@
 namespace Trinity\NotificationBundle\Exception;
 
 /**
- * Class EntityWasUpdatedBeforeException
+ * Class EntityWasUpdatedBeforeException.
  *
  * The exception in thrown when the entity's property updatedAt is bigger than message createdAt.
  * This covers the situation when the entity on the receiving system has been edited but the sending
  * system has not registered the change
- *
- * @package Trinity\NotificationBundle\Exception
  */
 class EntityWasUpdatedBeforeException extends \Exception
 {

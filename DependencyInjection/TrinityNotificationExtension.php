@@ -11,7 +11,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -36,7 +35,7 @@ class TrinityNotificationExtension extends Extension
 
         $this->setShared($container, $config);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         //load generic services
         $loader->load('services.yml');
 
@@ -47,7 +46,6 @@ class TrinityNotificationExtension extends Extension
             $loader->load('server/services.yml');
         }
     }
-
 
     /**
      * @param ContainerInterface $container
@@ -90,7 +88,6 @@ class TrinityNotificationExtension extends Extension
             $this->getValue($config, 'forms')
         );
     }
-
 
     /**
      * @param $array

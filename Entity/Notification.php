@@ -3,15 +3,12 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 24.03.16
- * Time: 15:38
+ * Time: 15:38.
  */
-
 namespace Trinity\NotificationBundle\Entity;
 
 /**
- * Class Notification
- *
- * @package Trinity\NotificationBundle\Entity
+ * Class Notification.
  */
 class Notification
 {
@@ -26,14 +23,11 @@ class Notification
     /** @var string */
     protected $messageId;
 
-
     /** @var array Array of notification data(e.g. name, description) */
     protected $data;
 
-
     /** @var string HTTP method of the message. */
     protected $method;
-
 
     /**
      * @return string
@@ -42,7 +36,6 @@ class Notification
     {
         return $this->method;
     }
-
 
     /**
      * @param string $method
@@ -56,7 +49,6 @@ class Notification
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -64,7 +56,6 @@ class Notification
     {
         return $this->messageId;
     }
-
 
     /**
      * @param string $messageId
@@ -78,7 +69,6 @@ class Notification
         return $this;
     }
 
-
     /**
      * @return array
      */
@@ -86,7 +76,6 @@ class Notification
     {
         return $this->data;
     }
-
 
     /**
      * @param array $data
@@ -100,7 +89,6 @@ class Notification
         return $this;
     }
 
-
     /**
      * @return array
      */
@@ -109,13 +97,12 @@ class Notification
         return [
             self::MESSAGE_ID => $this->messageId,
             self::METHOD => $this->method,
-            self::DATA => $this->data
+            self::DATA => $this->data,
         ];
     }
 
-
     /**
-     * Create Notification from array
+     * Create Notification from array.
      *
      * @param array $notificationArray
      *

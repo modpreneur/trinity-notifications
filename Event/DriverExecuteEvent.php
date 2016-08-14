@@ -3,31 +3,29 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 09.04.16
- * Time: 11:26
+ * Time: 11:26.
  */
-
 namespace Trinity\NotificationBundle\Event;
 
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 /**
- * Class DriverExecuteEvent
+ * Class DriverExecuteEvent.
  */
 abstract class DriverExecuteEvent extends NotificationEvent
 {
     /** @var NotificationEntityInterface */
     protected $entity;
 
-
     /**
      * DriverExecuteEvent constructor.
+     *
      * @param NotificationEntityInterface $entity
      */
     public function __construct(NotificationEntityInterface $entity)
     {
         $this->entity = $entity;
     }
-
 
     /**
      * @return NotificationEntityInterface
@@ -36,7 +34,6 @@ abstract class DriverExecuteEvent extends NotificationEvent
     {
         return $this->entity;
     }
-
 
     /**
      * @param NotificationEntityInterface $entity

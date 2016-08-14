@@ -9,13 +9,10 @@ use Trinity\NotificationBundle\Entity\EntityStatusLog;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 /**
- * Class NotificationStatusManager
- *
- * @package Trinity\NotificationBundle\Services
+ * Class NotificationStatusManager.
  */
 class NotificationStatusManager
 {
-
     /** @var  ElasticReadLogService */
     protected $elasticReader;
 
@@ -34,10 +31,9 @@ class NotificationStatusManager
         $this->elasticWriter = $elasticWriter;
     }
 
-
     /**
      * @param NotificationEntityInterface $entity
-     * @param ClientInterface|int         $client Instance of ClientInterface or client id
+     * @param ClientInterface|int         $client  Instance of ClientInterface or client id
      * @param string                      $orderBy
      *
      * @return null|EntityStatusLog
@@ -72,7 +68,6 @@ class NotificationStatusManager
         return null;
     }
 
-
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface|int         $client
@@ -105,9 +100,8 @@ class NotificationStatusManager
         }
     }
 
-
     /**
-     * Get entity class
+     * Get entity class.
      *
      * @param NotificationEntityInterface $entity
      *
