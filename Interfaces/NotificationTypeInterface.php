@@ -12,15 +12,5 @@ namespace Trinity\NotificationBundle\Interfaces;
  */
 interface NotificationTypeInterface
 {
-    /**
-     * Will be called after the.
-     *
-     * @return mixed
-     */
-    public function onSuccess();
 
-    /**
-     * @return mixed
-     */
-    public function onFailure();
 }
