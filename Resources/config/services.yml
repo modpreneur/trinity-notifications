@@ -144,3 +144,15 @@ services:
         arguments:
             - "@trinity.logger.elastic_read_log_service"
             - "@trinity.logger.elastic_log_service"
+
+    trinity.notification.entity_alias_translator:
+        class: Trinity\NotificationBundle\Services\EntityAliasTranslator
+        arguments:
+            - "%trinity.notification.entities%"
+
+    trinity.notification.synchronization_stopper:
+        class: Trinity\NotificationBundle\Services\SynchronizationStopper
+        arguments:
+            - "@trinity.messages.message_sender"
+            - "@trinity.notification.entity_alias_translator"
+
