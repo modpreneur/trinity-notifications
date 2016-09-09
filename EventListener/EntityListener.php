@@ -25,8 +25,6 @@ use Trinity\NotificationBundle\Notification\NotificationUtils;
 /**
  * Class EntityListener.
  *
- * Function name - config.
- *
  * @author Tomáš Jančar
  */
 class EntityListener
@@ -247,7 +245,7 @@ class EntityListener
             if (count($columnsToNotify) > 0 || strtolower($method) === 'delete') {
                 $this->eventDispatcher->dispatch(
                     SendNotificationEvent::NAME,
-                    new SendNotificationEvent($entity, $changeSet, $method, $options)
+                    new SendNotificationEvent($entity, $changeSet, $method, $options, false)
                 );
             }
         }

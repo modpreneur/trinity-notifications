@@ -69,8 +69,7 @@ class NotificationReader
 
         try {
             $entities = $this->parser->parseNotifications(
-                $notificationBatch->getNotifications()->toArray(),
-                (new \DateTime('now'))->setTimestamp($notificationBatch->getCreatedAt())
+                $notificationBatch->getNotifications()->toArray()
             );
 
             if (count($this->parser->getFailedNotifications()) > 0) {

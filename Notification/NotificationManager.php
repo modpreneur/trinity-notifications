@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
+use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
 use Trinity\NotificationBundle\Event\AfterDriverExecuteEvent;
@@ -65,13 +66,15 @@ class NotificationManager
      *
      * @param NotificationEntityInterface $entity
      * @param array                       $changeSet
-     * @param param string                $HTTPMethod
-     * @param param bool                  $toClients
-     * @param param array                 $options
+     * @param bool                        $force
+     * @param string                      $HTTPMethod
+     * @param bool                        $toClients
+     * @param array                       $options
      */
     public function queueEntity(
         NotificationEntityInterface $entity,
         array $changeSet,
+        bool $force,
         string $HTTPMethod = 'GET',
         bool $toClients = true,
         array $options = []
@@ -82,6 +85,7 @@ class NotificationManager
             'HTTPMethod' => $HTTPMethod,
             'toClients' => $toClients,
             'options' => $options,
+            'force' => $force,
         ];
     }
 
@@ -101,6 +105,7 @@ class NotificationManager
             if ($queuedNotification['toClients']) {
                 $this->sendToClients(
                     $queuedNotification['entity'],
+                    $queuedNotification['force'],
                     $queuedNotification['changeSet'],
                     $queuedNotification['HTTPMethod'],
                     $queuedNotification['options']
@@ -108,6 +113,7 @@ class NotificationManager
             } else {
                 $this->sendToServer(
                     $queuedNotification['entity'],
+                    $queuedNotification['force'],
                     $queuedNotification['changeSet'],
                     $queuedNotification['HTTPMethod'],
                     $queuedNotification['options']
@@ -122,18 +128,19 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
+     * @param bool                        $force
      *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
      */
-    public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
+    public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client, bool $force)
     {
         foreach ($this->drivers as $driver) {
-            $this->executeEntityInDriver($entity, $driver, $client, [], 'PUT');
+            $this->executeEntityInDriver($entity, $driver, $client, $force, [], 'PUT');
         }
 
         $this->batchManager->sendAll();
@@ -143,19 +150,13 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface[] $entities
      * @param ClientInterface               $client
-     *
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @param bool                          $force
      */
-    public function syncEntities(array $entities, ClientInterface $client)
+    public function syncEntities(array $entities, ClientInterface $client, bool $force)
     {
         foreach ($this->drivers as $driver) {
             foreach ($entities as $entity) {
-                $this->executeEntityInDriver($entity, $driver, $client, [], 'PUT');
+                $this->executeEntityInDriver($entity, $driver, $client, $force, [], 'PUT');
             }
         }
 
@@ -176,14 +177,16 @@ class NotificationManager
      *  Send notification to client.
      *
      * @param NotificationEntityInterface $entity
+     * @param bool                        $force
      * @param array                       $changeSet
      * @param string                      $HTTPMethod
      * @param array                       $options
      */
     protected function sendToClients(
         NotificationEntityInterface $entity,
-        array $changeSet = [],
-        $HTTPMethod = 'GET',
+        bool $force,
+        array $changeSet,
+        $HTTPMethod = 'PUT',
         array $options = []
     ) {
         /** @var ClientInterface[] $clients */
@@ -192,7 +195,7 @@ class NotificationManager
         foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
-                    $this->executeEntityInDriver($entity, $driver, $client, $changeSet, $HTTPMethod, $options);
+                    $this->executeEntityInDriver($entity, $driver, $client, $force, $changeSet, $HTTPMethod, $options);
                 }
             }
         }
@@ -202,13 +205,15 @@ class NotificationManager
      * Send notification to server.
      *
      * @param NotificationEntityInterface $entity
+     * @param bool                        $force
      * @param array                       $changeSet
      * @param string                      $HTTPMethod
      * @param array                       $options
      */
     protected function sendToServer(
         NotificationEntityInterface $entity,
-        array $changeSet = [],
+        bool $force,
+        array $changeSet,
         $HTTPMethod = 'GET',
         array $options = []
     ) {
@@ -216,7 +221,7 @@ class NotificationManager
             $server = new Server();
             $server->setId(0);
             $server->setName('client');
-            $this->executeEntityInDriver($entity, $driver, $server, $changeSet, $HTTPMethod, $options);
+            $this->executeEntityInDriver($entity, $driver, $server, $force, $changeSet, $HTTPMethod, $options);
         }
     }
 
@@ -245,16 +250,18 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface $entity
      * @param NotificationDriverInterface $driver
-     * @param ClientInterface $client
-     * @param array $changeSet
-     * @param string $HTTPMethod [POST, PUT, GET, DELETE, ...]
-     * @param array $options
+     * @param ClientInterface             $client
+     * @param bool                        $force
+     * @param array                       $changeSet
+     * @param string                      $HTTPMethod [POST, PUT, GET, DELETE, ...]
+     * @param array                       $options
      */
     private function executeEntityInDriver(
         NotificationEntityInterface $entity,
         NotificationDriverInterface $driver,
         ClientInterface $client,
-        array $changeSet = [],
+        bool $force,
+        array $changeSet,
         $HTTPMethod = 'POST',
         array $options = []
     ) {
@@ -273,6 +280,7 @@ class NotificationManager
             ->execute(
                 $entity,
                 $client,
+                $force,
                 $changeSet,
                 ['HTTPMethod' => $HTTPMethod, 'options' => $options]
             );

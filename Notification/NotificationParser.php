@@ -102,7 +102,6 @@ class NotificationParser
 
     /**
      * @param Notification[] $notifications
-     * @param \DateTime      $notificationCreatedAt Timestamp from the message
      *
      * @return array
      *
@@ -112,7 +111,7 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotifications(array $notifications, \DateTime $notificationCreatedAt = null) : array
+    public function parseNotifications(array $notifications) : array
     {
         $processedEntities = [];
 
@@ -130,13 +129,7 @@ class NotificationParser
             $processedEntity = null;
 
             try {
-                $processedEntity = $this->parseNotification(
-                    $notification->getData(),
-                    $this->entities[$entityName],
-                    $notification->getMethod(),
-                    $notificationCreatedAt ?: new \DateTime('now'),
-                    $notification->getChangeSet()
-                );
+                $processedEntity = $this->parseNotification($notification, $this->entities[$entityName]);
             } catch (UnexpectedEntityStateException $exception) {
                 $this->failedNotifications[] = $notification;
             }
@@ -152,12 +145,8 @@ class NotificationParser
     }
 
     /**
-     * @param           $data                array  Notification data as named array
-     * @param           $fullClassName       string Full classname(with namespace) of the entity. e.g.
-     *                                       AppBundle\\Entity\\Product\\StandardProduct
-     * @param           $HTTPMethod          string HTTP method of the request
-     * @param \DateTime $notificationCreated
-     * @param array     $changeSet
+     * @param   $fullClassName string Full classname(with namespace) of the entity. e.g.
+     *                         AppBundle\\Entity\\Product\\StandardProduct
      *
      * @return null|object
      *
@@ -168,29 +157,22 @@ class NotificationParser
      * @throws NotificationException
      */
     public function parseNotification(
-        array $data,
-        string $fullClassName,
-        string $HTTPMethod,
-        \DateTime $notificationCreated,
-        array $changeSet = []
+        Notification $notification,
+        string $fullClassName
     ) {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
         if ($this->eventDispatcher->hasListeners(BeforeParseNotificationEvent::NAME)) {
-            $event = new BeforeParseNotificationEvent($data, $changeSet, $fullClassName, $HTTPMethod);
-            /** @var BeforeParseNotificationEvent $event */
-            $event = $this->eventDispatcher->dispatch(
+            $event = new BeforeParseNotificationEvent($notification, $fullClassName);
+            /* @var BeforeParseNotificationEvent $event */
+            $this->eventDispatcher->dispatch(
                 BeforeParseNotificationEvent::NAME,
                 $event
             );
-            $data = $event->getData();
-            $fullClassName = $event->getClassname();
-            $HTTPMethod = $event->getHttpMethod();
-            $changeSet = $event->getChangeSet();
         }
 
-        $HTTPMethod = strtoupper($HTTPMethod);
-        $this->notificationData = $data;
+        $HTTPMethod = strtoupper($notification->getMethod());
+        $this->notificationData = $notification->getData();
 
         //get existing entity from database or null
         $entityObject = $this->getEntityObject($fullClassName);
@@ -207,9 +189,10 @@ class NotificationParser
         //check if there are specific conditions which are strictly prohibited
         $this->checkLogicalViolations($entityObject, $fullClassName, $HTTPMethod);
 
-        if ($notificationCreated !== null) {
-            //check if the entity's updatedAt < msg#timestamp
-            $this->checkTimeViolations($entityObject, $notificationCreated);
+        if ($notification->getCreatedAt() !== null) {
+            if (!$notification->isForced()) {
+                $this->checkTimeViolations($entityObject, new \DateTime($notification->getCreatedAt()));
+            }
         }
 
         //this whole if-else block is non-optimal but quite readable
@@ -229,15 +212,20 @@ class NotificationParser
         } elseif ($entityObject === null && $HTTPMethod === 'POST') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
-                $data
+                $notification->getData()
             );
         } elseif ($entityObject === null && $HTTPMethod === 'PUT') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
-                $data
+                $notification->getData()
             );
         } elseif ($entityObject !== null && $HTTPMethod === 'PUT') {
-            return $this->conversionHandler->performEntityUpdate($entityObject, $data, $changeSet);
+            return $this->conversionHandler->performEntityUpdate(
+                $entityObject,
+                $notification->getData(),
+                $notification->getChangeSet(),
+                $notification->isForced()
+            );
             //other strange combination of input conditions
         } else {
             throw new NotificationException(

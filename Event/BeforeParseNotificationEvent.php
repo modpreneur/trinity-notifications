@@ -7,6 +7,8 @@
  */
 namespace Trinity\NotificationBundle\Event;
 
+use Trinity\NotificationBundle\Entity\Notification;
+
 /**
  * Class BeforeParseNotificationEvent.
  */
@@ -14,70 +16,44 @@ class BeforeParseNotificationEvent extends NotificationEvent
 {
     const NAME = 'trinity.notifications.beforeParseNotification';
 
-    /** @var array */
-    protected $data;
-
-    /** @var array */
-    protected $changeSet;
+    /** @var Notification */
+    protected $notification;
 
     /** @var string */
     protected $classname;
 
-    /** @var string */
-    protected $httpMethod;
-
     /**
      * BeforeParseNotificationEvent constructor.
      *
-     * @param array  $data
-     * @param array  $changeSet
-     * @param string $classname
-     * @param string $httpMethod
+     * @param Notification $notification
+     * @param string       $classname
      */
-    public function __construct(array $data, array $changeSet, string $classname, string $httpMethod)
+    public function __construct(Notification $notification, string $classname)
     {
-        $this->data = $data;
-        $this->changeSet = $changeSet;
+        $this->notification = $notification;
         $this->classname = $classname;
-        $this->httpMethod = $httpMethod;
     }
 
     /**
-     * @return array
+     * @return Notification
      */
-    public function getData() : array
+    public function getNotification(): Notification
     {
-        return $this->data;
+        return $this->notification;
     }
 
     /**
-     * @param array $data
+     * @param Notification $notification
      */
-    public function setData(array $data)
+    public function setNotification(Notification $notification)
     {
-        $this->data = $data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getChangeSet(): array
-    {
-        return $this->changeSet;
-    }
-
-    /**
-     * @param array $changeSet
-     */
-    public function setChangeSet(array $changeSet)
-    {
-        $this->changeSet = $changeSet;
+        $this->notification = $notification;
     }
 
     /**
      * @return string
      */
-    public function getClassname() : string
+    public function getClassname(): string
     {
         return $this->classname;
     }
@@ -88,21 +64,5 @@ class BeforeParseNotificationEvent extends NotificationEvent
     public function setClassname(string $classname)
     {
         $this->classname = $classname;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHttpMethod() : string
-    {
-        return $this->httpMethod;
-    }
-
-    /**
-     * @param string $httpMethod
-     */
-    public function setHttpMethod(string $httpMethod)
-    {
-        $this->httpMethod = $httpMethod;
     }
 }

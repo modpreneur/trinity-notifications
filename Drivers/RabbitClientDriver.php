@@ -70,6 +70,7 @@ class RabbitClientDriver extends BaseDriver
     public function execute(
         NotificationEntityInterface $entity,
         ClientInterface $client = null,
+        bool $force,
         array $changeSet = [],
         array $params = []
     ) {
@@ -104,6 +105,7 @@ class RabbitClientDriver extends BaseDriver
         $notification->setMethod($params['HTTPMethod']);
         $notification->setMessageId($batch->getUid());
         $notification->setChangeSet($changeSet);
+        $notification->setIsForced($force);
 
         $batch->addNotification($notification);
 

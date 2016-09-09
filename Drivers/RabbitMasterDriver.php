@@ -60,12 +60,14 @@ class RabbitMasterDriver extends BaseDriver
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $destinationClient
+     * @param bool                        $force
      * @param array                       $changeSet
      * @param array                       $params
      */
     public function execute(
         NotificationEntityInterface $entity,
         ClientInterface $destinationClient = null,
+        bool $force,
         array $changeSet = [],
         array $params = []
     ) {
@@ -80,11 +82,11 @@ class RabbitMasterDriver extends BaseDriver
 
         //execute for given client
         if ($destinationClient !== null) {
-            $this->executeForClient($entity, $entityArray, $changeSet, $destinationClient, $params);
+            $this->executeForClient($entity, $entityArray, $changeSet, $destinationClient, $force, $params);
         } else {
             //execute for all clients
             foreach ($entity->getClients() as $client) {
-                $this->executeForClient($entity, $entityArray, $changeSet, $client, $params);
+                $this->executeForClient($entity, $entityArray, $changeSet, $client, $force, $params);
             }
         }
     }
@@ -94,6 +96,7 @@ class RabbitMasterDriver extends BaseDriver
      * @param array                       $entityArray
      * @param array                       $changeSet
      * @param ClientInterface             $client
+     * @param bool                        $force
      * @param array                       $params
      */
     protected function executeForClient(
@@ -101,6 +104,7 @@ class RabbitMasterDriver extends BaseDriver
         array $entityArray,
         array $changeSet,
         ClientInterface $client,
+        bool $force,
         array $params = []
     ) {
         //check if the client has enabled notifications
@@ -128,6 +132,7 @@ class RabbitMasterDriver extends BaseDriver
             $notification->setMethod($params['HTTPMethod']);
             $notification->setMessageId($batch->getUid());
             $notification->setChangeSet($changeSet);
+            $notification->setIsForced($force);
 
             $batch->addNotification($notification);
 

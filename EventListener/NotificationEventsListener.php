@@ -97,6 +97,7 @@ class NotificationEventsListener implements EventSubscriberInterface
         $this->notificationManager->queueEntity(
             $event->getEntity(),
             $event->getChangeSet(),
+            $event->getForced(),
             $event->getMethod(),
             !$this->isClient,
             $event->getOptions()

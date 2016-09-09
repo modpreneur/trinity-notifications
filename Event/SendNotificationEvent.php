@@ -31,6 +31,8 @@ class SendNotificationEvent extends NotificationEvent
     /** @var  array */
     protected $options;
 
+    protected $forced;
+
     /**
      * SendNotificationEvent constructor.
      *
@@ -38,17 +40,20 @@ class SendNotificationEvent extends NotificationEvent
      * @param array                       $changeSet
      * @param string                      $method
      * @param array                       $options
+     * @param bool                        $forced
      */
     public function __construct(
         NotificationEntityInterface $entity,
         array $changeSet,
         string $method,
-        array $options
+        array $options,
+        bool $forced
     ) {
         $this->entity = $entity;
         $this->changeSet = $changeSet;
         $this->method = $method;
         $this->options = $options;
+        $this->forced = $forced;
     }
 
     /**
@@ -113,5 +118,21 @@ class SendNotificationEvent extends NotificationEvent
     public function setOptions(array $options)
     {
         $this->options = $options;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getForced(): bool
+    {
+        return $this->forced;
+    }
+
+    /**
+     * @param bool $forced
+     */
+    public function setForced(bool $forced)
+    {
+        $this->forced = $forced;
     }
 }

@@ -16,6 +16,7 @@ interface NotificationDriverInterface
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
+     * @param bool                        $force     If the changeset should not been compared with the database.
      * @param array                       $changeSet
      * @param array                       $params
      *
@@ -24,6 +25,7 @@ interface NotificationDriverInterface
     public function execute(
         NotificationEntityInterface $entity,
         ClientInterface $client,
+        bool $force,
         array $changeSet = [],
         array $params = []
     );

@@ -20,6 +20,8 @@ class Notification
     const DATA = 'data';
     const CHANGE_SET = 'changeSet';
     const MESSAGE_ID = 'messageId';
+    const IS_FORCED = 'isForced';
+    const CREATED_AT = 'createdAt';
 
     /** @var string */
     protected $messageId;
@@ -32,6 +34,20 @@ class Notification
 
     /** @var string HTTP method of the message. */
     protected $method;
+
+    /** @var  bool If the notification is forced and should not be checked for any changeset violation */
+    protected $isForced;
+
+    /** @var  int */
+    protected $createdAt;
+
+    /**
+     * Notification constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = time();
+    }
 
     /**
      * @return string
@@ -114,6 +130,38 @@ class Notification
     }
 
     /**
+     * @return bool
+     */
+    public function isForced(): bool
+    {
+        return $this->isForced;
+    }
+
+    /**
+     * @param bool $isForced
+     */
+    public function setIsForced(bool $isForced)
+    {
+        $this->isForced = $isForced;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreatedAt(): int
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param int $createdAt
+     */
+    public function setCreatedAt(int $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
      * @return array
      */
     public function toArray() : array
@@ -123,6 +171,8 @@ class Notification
             self::METHOD => $this->method,
             self::DATA => $this->data,
             self::CHANGE_SET => $this->changeSet,
+            self::IS_FORCED => $this->isForced,
+            self::CREATED_AT => $this->createdAt,
         ];
     }
 
@@ -141,6 +191,8 @@ class Notification
         $notificationObject->data = $notificationArray[self::DATA];
         $notificationObject->method = $notificationArray[self::METHOD];
         $notificationObject->changeSet = $notificationArray[self::CHANGE_SET];
+        $notificationObject->isForced = $notificationArray[self::IS_FORCED];
+        $notificationObject->createdAt = $notificationArray[self::CREATED_AT];
 
         return $notificationObject;
     }
