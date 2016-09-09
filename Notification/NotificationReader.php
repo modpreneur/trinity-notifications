@@ -73,6 +73,10 @@ class NotificationReader
                 (new \DateTime('now'))->setTimestamp($notificationBatch->getCreatedAt())
             );
 
+            if (count($this->parser->getFailedNotifications()) > 0) {
+                //todo: send status message with info about failed and successful notifications
+            }
+
             $this->dispatchEndEvent($notificationBatch);
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($notificationBatch);

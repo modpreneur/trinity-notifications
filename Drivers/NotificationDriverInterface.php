@@ -16,9 +16,17 @@ interface NotificationDriverInterface
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
+     * @param array                       $changeSet
      * @param array                       $params
+     *
+     * @return
      */
-    public function execute(NotificationEntityInterface $entity, ClientInterface $client, array $params = []);
+    public function execute(
+        NotificationEntityInterface $entity,
+        ClientInterface $client,
+        array $changeSet = [],
+        array $params = []
+    );
 
     /**
      * Return name of driver.

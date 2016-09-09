@@ -67,6 +67,10 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                 ->end()
 
+                ->booleanNode('disable_time_violations')
+                    ->isRequired()
+                ->end()
+
                 ->scalarNode('entity_id_field')
                     ->cannotBeEmpty()
                 ->end()

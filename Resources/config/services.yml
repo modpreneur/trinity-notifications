@@ -21,6 +21,7 @@ services:
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
             - "%trinity.notification.entities%"
+            - "%trinity.notification.disable_time_violations%"
 
     trinity.notification.annotations.utils:
         class: Trinity\NotificationBundle\Notification\AnnotationsUtils
@@ -46,6 +47,7 @@ services:
             - "@event_dispatcher"
             - "@trinity.notification.utils"
             - "@trinity.notification.annotations.utils"
+            - "@trinity.notification.entity_converter"
             - "%trinity.notification.is_client%"
         tags:
             - { name: doctrine.event_listener, event: postRemove,  priority: 255 }
@@ -93,6 +95,7 @@ services:
         arguments:
             - "@event_dispatcher"
             - "@form.factory"
+            - "@trinity.notification.entity_converter"
             - "%trinity.notification.forms%"
             - "%trinity.notification.entities%"
 

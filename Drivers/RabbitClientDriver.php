@@ -12,6 +12,7 @@ use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Entity\EntityStatusLog;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
@@ -28,6 +29,9 @@ class RabbitClientDriver extends BaseDriver
     /** @var  NotificationStatusManager */
     protected $statusManager;
 
+    /** @var  AnnotationsUtils */
+    protected $annotationsUtils;
+
     /**
      * NotificationManager constructor.
      *
@@ -36,6 +40,7 @@ class RabbitClientDriver extends BaseDriver
      * @param NotificationUtils         $notificationUtils
      * @param BatchManager              $batchManager
      * @param NotificationStatusManager $statusManager
+     * @param AnnotationsUtils          $annotationsUtils
      * @param string                    $clientId
      */
     public function __construct(
@@ -44,28 +49,45 @@ class RabbitClientDriver extends BaseDriver
         NotificationUtils $notificationUtils,
         BatchManager $batchManager,
         NotificationStatusManager $statusManager,
+        AnnotationsUtils $annotationsUtils,
         string $clientId
     ) {
         parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
 
         $this->statusManager = $statusManager;
+
         $this->clientId = $clientId;
     }
 
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
+     * @param array                       $changeSet
      * @param array                       $params
      *
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    public function execute(NotificationEntityInterface $entity, ClientInterface $client = null, array $params = [])
-    {
+    public function execute(
+        NotificationEntityInterface $entity,
+        ClientInterface $client = null,
+        array $changeSet = [],
+        array $params = []
+    ) {
         if ($this->isEntityAlreadyProcessed($entity, 'server')) {
             return;
         }
 
         $this->addEntityToNotifiedEntities($entity, 'server');
+
+        $notifiedProperties = array_flip(
+            $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns()
+        );
+
+        //remove properties, which should not be sent
+        $changeSet = $this->removeNotNotifiedProperties($changeSet, $notifiedProperties);
+
+        //change indexes 0,1 in changeset to keys 'old' and 'new'
+        $changeSet = $this->changeIndexesInChangeSet($changeSet);
 
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
@@ -81,6 +103,8 @@ class RabbitClientDriver extends BaseDriver
         $notification->setData($entityArray);
         $notification->setMethod($params['HTTPMethod']);
         $notification->setMessageId($batch->getUid());
+        $notification->setChangeSet($changeSet);
+
         $batch->addNotification($notification);
 
         $this->statusManager->setEntityStatus(

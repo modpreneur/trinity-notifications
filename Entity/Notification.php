@@ -18,6 +18,7 @@ class Notification
 
     const METHOD = 'method';
     const DATA = 'data';
+    const CHANGE_SET = 'changeSet';
     const MESSAGE_ID = 'messageId';
 
     /** @var string */
@@ -25,6 +26,9 @@ class Notification
 
     /** @var array Array of notification data(e.g. name, description) */
     protected $data;
+
+    /** @var array */
+    protected $changeSet;
 
     /** @var string HTTP method of the message. */
     protected $method;
@@ -92,12 +96,33 @@ class Notification
     /**
      * @return array
      */
+    public function getChangeSet(): array
+    {
+        return $this->changeSet;
+    }
+
+    /**
+     * @param array $changeSet
+     *
+     * @return Notification
+     */
+    public function setChangeSet(array $changeSet)
+    {
+        $this->changeSet = $changeSet;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
     public function toArray() : array
     {
         return [
             self::MESSAGE_ID => $this->messageId,
             self::METHOD => $this->method,
             self::DATA => $this->data,
+            self::CHANGE_SET => $this->changeSet,
         ];
     }
 
@@ -115,6 +140,7 @@ class Notification
         $notificationObject->messageId = $notificationArray[self::MESSAGE_ID];
         $notificationObject->data = $notificationArray[self::DATA];
         $notificationObject->method = $notificationArray[self::METHOD];
+        $notificationObject->changeSet = $notificationArray[self::CHANGE_SET];
 
         return $notificationObject;
     }

@@ -22,6 +22,9 @@ class SendNotificationEvent extends NotificationEvent
     /** @var  NotificationEntityInterface */
     protected $entity;
 
+    /** @var  array */
+    protected $changeSet;
+
     /** @var  string */
     protected $method;
 
@@ -32,12 +35,18 @@ class SendNotificationEvent extends NotificationEvent
      * SendNotificationEvent constructor.
      *
      * @param NotificationEntityInterface $entity
+     * @param array                       $changeSet
      * @param string                      $method
      * @param array                       $options
      */
-    public function __construct(NotificationEntityInterface $entity, string $method, array $options)
-    {
+    public function __construct(
+        NotificationEntityInterface $entity,
+        array $changeSet,
+        string $method,
+        array $options
+    ) {
         $this->entity = $entity;
+        $this->changeSet = $changeSet;
         $this->method = $method;
         $this->options = $options;
     }
@@ -59,6 +68,22 @@ class SendNotificationEvent extends NotificationEvent
     }
 
     /**
+     * @return array
+     */
+    public function getChangeSet(): array
+    {
+        return $this->changeSet;
+    }
+
+    /**
+     * @param array $changeSet
+     */
+    public function setChangeSet(array $changeSet)
+    {
+        $this->changeSet = $changeSet;
+    }
+
+    /**
      * @return string
      */
     public function getMethod()
@@ -69,7 +94,7 @@ class SendNotificationEvent extends NotificationEvent
     /**
      * @param string $method
      */
-    public function setMethod($method)
+    public function setMethod(string $method)
     {
         $this->method = $method;
     }
@@ -85,7 +110,7 @@ class SendNotificationEvent extends NotificationEvent
     /**
      * @param array $options
      */
-    public function setOptions($options)
+    public function setOptions(array $options)
     {
         $this->options = $options;
     }

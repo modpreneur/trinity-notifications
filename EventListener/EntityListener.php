@@ -19,6 +19,7 @@ use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedExcept
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Interfaces\NotificationEntityRepositoryInterface;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
+use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
 
 /**
@@ -61,6 +62,9 @@ class EntityListener
     /** @var  AnnotationsUtils */
     protected $annotationsUtils;
 
+    /** @var  EntityConverter */
+    protected $entityConverter;
+
     /** @var  array */
     protected $entityDeletions = [];
 
@@ -68,6 +72,7 @@ class EntityListener
      * @param EventDispatcherInterface $eventDispatcher
      * @param NotificationUtils        $annotationProcessor
      * @param AnnotationsUtils         $annotationsUtils
+     * @param EntityConverter          $entityConverter
      * @param bool                     $isClient
      *
      * @internal param NotificationManager $notificationManager
@@ -76,12 +81,14 @@ class EntityListener
         EventDispatcherInterface $eventDispatcher,
         NotificationUtils $annotationProcessor,
         AnnotationsUtils $annotationsUtils,
+        EntityConverter $entityConverter,
         bool $isClient
     ) {
         $this->processor = $annotationProcessor;
-        $this->isClient = $isClient;
         $this->eventDispatcher = $eventDispatcher;
         $this->annotationsUtils = $annotationsUtils;
+        $this->entityConverter = $entityConverter;
+        $this->isClient = $isClient;
     }
 
     /**
@@ -222,14 +229,14 @@ class EntityListener
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    private function sendNotification(EntityManager $entityManager, $entity, string $method, array $options = [])
+    protected function sendNotification(EntityManager $entityManager, $entity, string $method, array $options = [])
     {
         if (!$this->processor->isNotificationEntity($entity)) {
             return;
         }
 
         if ($this->processor->hasHTTPMethod($entity, strtolower($method))) {
-            $changeSet = $entityManager->getUnitOfWork()->getEntityChangeSet($entity);
+            $changeSet = $this->processChangeset($entityManager->getUnitOfWork()->getEntityChangeSet($entity));
 
             /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
             $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
@@ -240,10 +247,28 @@ class EntityListener
             if (count($columnsToNotify) > 0 || strtolower($method) === 'delete') {
                 $this->eventDispatcher->dispatch(
                     SendNotificationEvent::NAME,
-                    new SendNotificationEvent($entity, $method, $options)
+                    new SendNotificationEvent($entity, $changeSet, $method, $options)
                 );
             }
         }
+    }
+
+    /**
+     * Convert objects in changeset to scalars.
+     *
+     * @param array $changeSet
+     *
+     * @return array
+     */
+    protected function processChangeset(array $changeSet)
+    {
+        foreach ($changeSet as $propertyName => $propertyChangeset) {
+            //0 = old value; 1 = new value
+            $changeSet[$propertyName][0] = $this->entityConverter->convertToString($propertyChangeset[0]);
+            $changeSet[$propertyName][1] = $this->entityConverter->convertToString($propertyChangeset[1]);
+        }
+
+        return $changeSet;
     }
 
     /**
@@ -251,7 +276,7 @@ class EntityListener
      *
      * @return bool
      */
-    private function isNotificationEnabledForController(bool $default = true) : bool
+    protected function isNotificationEnabledForController(bool $default = true) : bool
     {
         //for testing...
         if ($this->defaultValueForEnabledController !== null) {
@@ -273,5 +298,23 @@ class EntityListener
         }
 
         return $default;
+    }
+
+    /**
+     * Get original data from entity's changeset.
+     *
+     * @param array $changeset
+     *
+     * @return array In format ['property1' => 'old value 1', 'property2' => 'old value 2']
+     */
+    protected function getOriginalData(array $changeset)
+    {
+        $originalData = [];
+
+        foreach ($changeset as $propertyName => $propertyChangeset) {
+            $originalData[$propertyName] = $propertyChangeset[0]; //0 = old value, 1 = new value
+        }
+
+        return $originalData;
     }
 }

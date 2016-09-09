@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\InvalidDataException;
+use Trinity\NotificationBundle\Exception\UnexpectedEntityStateException;
 
 /**
  * Class EntityConversionHandler.
@@ -23,6 +24,9 @@ class EntityConversionHandler
 
     /** @var  FormFactoryInterface */
     protected $formFactory;
+
+    /** @var  EntityConverter */
+    protected $entityConverter;
 
     /** @var  array */
     protected $forms;
@@ -43,17 +47,20 @@ class EntityConversionHandler
      *
      * @param EventDispatcherInterface $eventDispatcher
      * @param FormFactoryInterface     $formFactory
+     * @param EntityConverter          $entityConverter
      * @param array                    $forms
      * @param array                    $entities
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
+        EntityConverter $entityConverter,
         array $forms,
         array $entities
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
+        $this->entityConverter = $entityConverter;
         $this->forms = $forms;
         $this->entities = $entities;
     }
@@ -61,15 +68,26 @@ class EntityConversionHandler
     /**
      * @param NotificationEntityInterface $entity
      * @param array                       $data
+     * @param array                       $changeSet
+     * @param bool                        $forceUpdate
      *
      * @return NotificationEntityInterface
      *
+     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
-     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
-    public function performEntityUpdate(NotificationEntityInterface $entity, array $data) : NotificationEntityInterface
-    {
+    public function performEntityUpdate(
+        NotificationEntityInterface $entity,
+        array $data,
+        array $changeSet,
+        bool $forceUpdate = false
+    ) : NotificationEntityInterface {
+
+        if (!$forceUpdate) {
+            $this->validateCurrentEntityState($entity, $changeSet);
+        }
+
         $this->useForm($entity, $data);
 
         return $entity;
@@ -138,6 +156,38 @@ class EntityConversionHandler
         }
 
         return $entity;
+    }
+
+    /**
+     * Validate if the current entity state corresponds with the given changeset from the notification.
+     *
+     * @param NotificationEntityInterface $entity
+     * @param array                       $changeSet
+     *
+     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
+     */
+    protected function validateCurrentEntityState(NotificationEntityInterface $entity, array $changeSet)
+    {
+        //the changeset is in the format: ['propertyName' => ['old' => 'old-value', 'new' => 'new-value']
+        //iterate over the changeset and check if the entity's properties do match with the old changeset values
+        //in the standard flow the entity has not been changed yet
+
+        $violations = [];
+        foreach ($changeSet as $propertyName => $values) {
+            $entityPropertyValue = $this->entityConverter->getPropertyValue($entity, $propertyName);
+            $changeSetOldValue = $values['old'];
+
+            if ($entityPropertyValue !== $changeSetOldValue) {
+                $violations[$propertyName] = ['expected' => $values['old'], 'actual' => $entityPropertyValue];
+            }
+        }
+
+        if (count($violations) > 0) {
+            $exception = new UnexpectedEntityStateException();
+            $exception->setViolations($violations);
+
+            throw $exception;
+        }
     }
 
     /**

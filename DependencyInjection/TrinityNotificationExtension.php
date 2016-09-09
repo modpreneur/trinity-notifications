@@ -87,6 +87,11 @@ class TrinityNotificationExtension extends Extension
             'trinity.notification.forms',
             $this->getValue($config, 'forms')
         );
+
+        $container->setParameter(
+            'trinity.notification.disable_time_violations',
+            $this->getValue($config, 'disable_time_violations')
+        );
     }
 
     /**

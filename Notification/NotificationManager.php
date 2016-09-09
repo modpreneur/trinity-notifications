@@ -21,7 +21,7 @@ use Trinity\NotificationBundle\Event\BeforeDriverExecuteEvent;
 class NotificationManager
 {
     /** @var  NotificationDriverInterface[] */
-    private $drivers;
+    protected $drivers;
 
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
@@ -64,23 +64,25 @@ class NotificationManager
      * Internally stores the pointer to the entity to an array.
      *
      * @param NotificationEntityInterface $entity
-     * @param string                      $HTTPMethod
-     * @param bool                        $toClients
-     * @param array                       $options
+     * @param array                       $changeSet
+     * @param param string                $HTTPMethod
+     * @param param bool                  $toClients
+     * @param param array                 $options
      */
     public function queueEntity(
         NotificationEntityInterface $entity,
+        array $changeSet,
         string $HTTPMethod = 'GET',
         bool $toClients = true,
         array $options = []
     ) {
-        $array = [];
-        $array['entity'] = $entity;
-        $array['HTTPMethod'] = $HTTPMethod;
-        $array['toClients'] = $toClients;
-        $array['options'] = $options;
-
-        $this->queuedNotifications[] = $array;
+        $this->queuedNotifications[] = [
+            'entity' => $entity,
+            'changeSet' => $changeSet,
+            'HTTPMethod' => $HTTPMethod,
+            'toClients' => $toClients,
+            'options' => $options,
+        ];
     }
 
     /**
@@ -99,12 +101,14 @@ class NotificationManager
             if ($queuedNotification['toClients']) {
                 $this->sendToClients(
                     $queuedNotification['entity'],
+                    $queuedNotification['changeSet'],
                     $queuedNotification['HTTPMethod'],
                     $queuedNotification['options']
                 );
             } else {
                 $this->sendToServer(
                     $queuedNotification['entity'],
+                    $queuedNotification['changeSet'],
                     $queuedNotification['HTTPMethod'],
                     $queuedNotification['options']
                 );
@@ -129,7 +133,7 @@ class NotificationManager
     public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client)
     {
         foreach ($this->drivers as $driver) {
-            $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+            $this->executeEntityInDriver($entity, $driver, $client, [], 'PUT');
         }
 
         $this->batchManager->sendAll();
@@ -151,7 +155,7 @@ class NotificationManager
     {
         foreach ($this->drivers as $driver) {
             foreach ($entities as $entity) {
-                $this->executeEntityInDriver($entity, $driver, $client, 'PUT');
+                $this->executeEntityInDriver($entity, $driver, $client, [], 'PUT');
             }
         }
 
@@ -160,7 +164,7 @@ class NotificationManager
     }
 
     /**
-     * Clear the queue notifications and BatchManager to prevent sending the notifications twice.
+     * Clear the queued notifications and BatchManager to prevent sending the notifications twice.
      */
     public function clear()
     {
@@ -172,18 +176,23 @@ class NotificationManager
      *  Send notification to client.
      *
      * @param NotificationEntityInterface $entity
+     * @param array                       $changeSet
      * @param string                      $HTTPMethod
      * @param array                       $options
      */
-    protected function sendToClients(NotificationEntityInterface $entity, $HTTPMethod = 'GET', array $options = [])
-    {
+    protected function sendToClients(
+        NotificationEntityInterface $entity,
+        array $changeSet = [],
+        $HTTPMethod = 'GET',
+        array $options = []
+    ) {
         /** @var ClientInterface[] $clients */
         $clients = $this->clientsToArray($entity->getClients());
 
         foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
-                    $this->executeEntityInDriver($entity, $driver, $client, $HTTPMethod, $options);
+                    $this->executeEntityInDriver($entity, $driver, $client, $changeSet, $HTTPMethod, $options);
                 }
             }
         }
@@ -193,11 +202,13 @@ class NotificationManager
      * Send notification to server.
      *
      * @param NotificationEntityInterface $entity
+     * @param array                       $changeSet
      * @param string                      $HTTPMethod
      * @param array                       $options
      */
     protected function sendToServer(
         NotificationEntityInterface $entity,
+        array $changeSet = [],
         $HTTPMethod = 'GET',
         array $options = []
     ) {
@@ -205,7 +216,7 @@ class NotificationManager
             $server = new Server();
             $server->setId(0);
             $server->setName('client');
-            $this->executeEntityInDriver($entity, $driver, $server, $HTTPMethod, $options);
+            $this->executeEntityInDriver($entity, $driver, $server, $changeSet, $HTTPMethod, $options);
         }
     }
 
@@ -234,14 +245,16 @@ class NotificationManager
     /**
      * @param NotificationEntityInterface $entity
      * @param NotificationDriverInterface $driver
-     * @param ClientInterface             $client
-     * @param string                      $HTTPMethod [POST, PUT, GET, DELETE, ...]
-     * @param array                       $options
+     * @param ClientInterface $client
+     * @param array $changeSet
+     * @param string $HTTPMethod [POST, PUT, GET, DELETE, ...]
+     * @param array $options
      */
     private function executeEntityInDriver(
         NotificationEntityInterface $entity,
         NotificationDriverInterface $driver,
         ClientInterface $client,
+        array $changeSet = [],
         $HTTPMethod = 'POST',
         array $options = []
     ) {
@@ -260,6 +273,7 @@ class NotificationManager
             ->execute(
                 $entity,
                 $client,
+                $changeSet,
                 ['HTTPMethod' => $HTTPMethod, 'options' => $options]
             );
 

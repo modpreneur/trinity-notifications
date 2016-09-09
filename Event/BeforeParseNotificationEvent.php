@@ -17,6 +17,9 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /** @var array */
     protected $data;
 
+    /** @var array */
+    protected $changeSet;
+
     /** @var string */
     protected $classname;
 
@@ -27,12 +30,14 @@ class BeforeParseNotificationEvent extends NotificationEvent
      * BeforeParseNotificationEvent constructor.
      *
      * @param array  $data
+     * @param array  $changeSet
      * @param string $classname
      * @param string $httpMethod
      */
-    public function __construct(array $data, string $classname, string $httpMethod)
+    public function __construct(array $data, array $changeSet, string $classname, string $httpMethod)
     {
         $this->data = $data;
+        $this->changeSet = $changeSet;
         $this->classname = $classname;
         $this->httpMethod = $httpMethod;
     }
@@ -51,6 +56,22 @@ class BeforeParseNotificationEvent extends NotificationEvent
     public function setData(array $data)
     {
         $this->data = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChangeSet(): array
+    {
+        return $this->changeSet;
+    }
+
+    /**
+     * @param array $changeSet
+     */
+    public function setChangeSet(array $changeSet)
+    {
+        $this->changeSet = $changeSet;
     }
 
     /**

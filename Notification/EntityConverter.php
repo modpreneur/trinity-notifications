@@ -10,8 +10,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\NotificationException;
-use Trinity\NotificationBundle\Exception\SourceException;
 
 /**
  * Class EntityConverter.
@@ -82,13 +82,16 @@ class EntityConverter
      * ]
      *
      * @param $entity
+     * @param array $properties Properties to be included in the result
      *
      * @return array
-     *
-     * @throws SourceException
      */
-    public function toArray($entity) : array
+    public function toArray(NotificationEntityInterface $entity, array $properties = []) : array
     {
+        if (count($properties) === 0) {
+            $properties = $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns();
+        }
+
         $entityArray = [];
 
         /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
@@ -100,40 +103,74 @@ class EntityConverter
                 continue;
             }
 
-            $ucFirst = ucfirst($property);
-            $methodNames = [
-                'get' => 'get'.$ucFirst,
-                'is' => 'is'.$ucFirst,
-                'has' => 'has'.$ucFirst,
-            ];
-
-            $array = [];
-            // Try all known methods - "getter", "isser" and "hasser"
-            foreach ($methodNames as $methodName) {
-                try {
-                    if (property_exists($entity, $property)) {
-                        $array = $this->processProperty($entity, $property, $methodName);
-                    } elseif (method_exists($entity, $methodName) || method_exists($entity, $property)) {
-                        $array = $this->processMethod($entity, $property, $methodName);
-                    } else {
-                        throw new NotificationException("No method or property $property.");
-                    }
-
-                    // if no exception thrown, the method getting was successful and there is no need to iterate again(most cases)
-                    break;
-                } catch (\Exception $e) {
-                    //if there is an exception, continue with the methods(there is no "getter", so try "isser" and so)
-                    continue;
-                }
+            if (!in_array($property, $properties, true)) {
+                continue;
             }
 
-            $entityArray = array_merge(
-                $entityArray,
-                $array
-            );
+            $entityArray = array_merge($entityArray, $this->getPropertyValue($entity, $property));
         }
 
         return $entityArray;
+    }
+
+    public function getPropertyValue(NotificationEntityInterface $entity, string $property)
+    {
+        $ucFirst = ucfirst($property);
+        $methodNames = [
+            'get' => 'get'.$ucFirst,
+            'is' => 'is'.$ucFirst,
+            'has' => 'has'.$ucFirst,
+        ];
+
+        // Try all known methods - "getter", "isser" and "hasser"
+        foreach ($methodNames as $methodName) {
+            try {
+                if (property_exists($entity, $property)) {
+                    return $this->processProperty($entity, $property, $methodName);
+                } elseif (method_exists($entity, $methodName) || method_exists($entity, $property)) {
+                    return $this->processMethod($entity, $property, $methodName);
+                } else {
+                    throw new NotificationException("No method or property $property.");
+                }
+
+                // if no exception thrown, the method getting was successful and there is no need to iterate again(most cases)
+                break;
+            } catch (\Exception $e) {
+                //if there is an exception, continue with the methods(there is no "getter", so try "isser" and so)
+                continue;
+            }
+        }
+
+        throw new NotificationException(
+            "Could not get value from the property '$property' of a object of class ".get_class($entity)
+        );
+    }
+
+    /**
+     * Convert given value to scalar.
+     *
+     * @param \DateTime|object|string|int $value
+     *
+     * @return null|string
+     */
+    public function convertToString($value)
+    {
+        if ($value instanceof \DateTime) {
+            /* @noinspection PhpUndefinedMethodInspection */
+            $value = $value->format(self::DATETIME_FORMAT);
+        }
+
+        if (is_object($value)) {
+            $getterMethod = 'get'.ucfirst($this->entityIdFieldName);
+            if (method_exists($value, $getterMethod)) {
+                $value = $value->{$getterMethod}();
+            } else {
+                /** @noinspection CallableParameterUseCaseInTypeContextInspection */
+                $value = null;
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -181,19 +218,9 @@ class EntityConverter
      */
     private function processGetMethod($entity, $name, $longName) : array
     {
-        $resultArray[$name] = call_user_func_array([$entity, $longName], []);
-        if ($resultArray[$name] instanceof \DateTime) {
-            /* @noinspection PhpUndefinedMethodInspection */
-            $resultArray[$name] = $resultArray[$name]->format(self::DATETIME_FORMAT);
-        }
+        $result = call_user_func_array([$entity, $longName], []);
 
-        if (is_object($resultArray[$name])) {
-            if (method_exists($resultArray[$name], 'getId')) {
-                $resultArray[$name] = $resultArray[$name]->{'get'.ucfirst($this->entityIdFieldName)}();
-            } else {
-                $resultArray[$name] = null;
-            }
-        }
+        $resultArray[$name] = $this->convertToString($result);
 
         return $resultArray;
     }

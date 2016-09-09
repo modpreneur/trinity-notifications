@@ -23,9 +23,6 @@ use Trinity\NotificationBundle\Notification\NotificationReader;
 
 /**
  * Class NotificationEventsListener.
- *
- * If the messaging protocol will be decoupled from notification bundle this class would be moved out of this bundle.
- * The messaging protocol does not need to know all the types of messages.
  */
 class NotificationEventsListener implements EventSubscriberInterface
 {
@@ -99,6 +96,7 @@ class NotificationEventsListener implements EventSubscriberInterface
     {
         $this->notificationManager->queueEntity(
             $event->getEntity(),
+            $event->getChangeSet(),
             $event->getMethod(),
             !$this->isClient,
             $event->getOptions()
@@ -117,7 +115,7 @@ class NotificationEventsListener implements EventSubscriberInterface
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Exception
-     * @throws \Throwable Catches all catchable errors and exceptions and then throws them again
+     * @throws \Throwable                                                               Catches all catchable errors and exceptions and then throws them again
      */
     protected function handleNotificationMessage(Message $message)
     {
@@ -220,7 +218,7 @@ class NotificationEventsListener implements EventSubscriberInterface
     {
         return [
             ReadMessageEvent::NAME => ['onMessageRead', 100],
-            SendNotificationEvent::NAME => ['onSendNotificationEvent'],
+            SendNotificationEvent::NAME => ['onSendNotificationEvent', 100],
         ];
     }
 }
