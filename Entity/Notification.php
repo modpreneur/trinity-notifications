@@ -22,6 +22,7 @@ class Notification
     const MESSAGE_ID = 'messageId';
     const IS_FORCED = 'isForced';
     const CREATED_AT = 'createdAt';
+    const CLIENT_ID = 'clientId';
 
     /** @var string */
     protected $messageId;
@@ -41,12 +42,19 @@ class Notification
     /** @var  int */
     protected $createdAt;
 
+    /** @var  string */
+    protected $clientId;
+
+    /** @var  string */
+    protected $uid;
+
     /**
      * Notification constructor.
      */
     public function __construct()
     {
         $this->createdAt = time();
+        $this->uid = uniqid('', true);
     }
 
     /**
@@ -130,7 +138,7 @@ class Notification
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isForced(): bool
     {
@@ -138,7 +146,7 @@ class Notification
     }
 
     /**
-     * @param bool $isForced
+     * @param boolean $isForced
      */
     public function setIsForced(bool $isForced)
     {
@@ -162,6 +170,22 @@ class Notification
     }
 
     /**
+     * @return string
+     */
+    public function getClientId(): string
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param string $clientId
+     */
+    public function setClientId(string $clientId)
+    {
+        $this->clientId = $clientId;
+    }
+
+    /**
      * @return array
      */
     public function toArray() : array
@@ -173,6 +197,7 @@ class Notification
             self::CHANGE_SET => $this->changeSet,
             self::IS_FORCED => $this->isForced,
             self::CREATED_AT => $this->createdAt,
+            self::CLIENT_ID => $this->clientId
         ];
     }
 
@@ -193,6 +218,7 @@ class Notification
         $notificationObject->changeSet = $notificationArray[self::CHANGE_SET];
         $notificationObject->isForced = $notificationArray[self::IS_FORCED];
         $notificationObject->createdAt = $notificationArray[self::CREATED_AT];
+        $notificationObject->clientId = $notificationArray[self::CLIENT_ID];
 
         return $notificationObject;
     }

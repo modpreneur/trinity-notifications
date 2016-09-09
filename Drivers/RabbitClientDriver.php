@@ -106,6 +106,7 @@ class RabbitClientDriver extends BaseDriver
         $notification->setMessageId($batch->getUid());
         $notification->setChangeSet($changeSet);
         $notification->setIsForced($force);
+        $notification->setClientId($this->clientId);
 
         $batch->addNotification($notification);
 
