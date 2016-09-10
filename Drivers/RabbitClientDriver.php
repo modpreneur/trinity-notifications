@@ -29,9 +29,6 @@ class RabbitClientDriver extends BaseDriver
     /** @var  NotificationStatusManager */
     protected $statusManager;
 
-    /** @var  AnnotationsUtils */
-    protected $annotationsUtils;
-
     /**
      * NotificationManager constructor.
      *
@@ -52,7 +49,7 @@ class RabbitClientDriver extends BaseDriver
         AnnotationsUtils $annotationsUtils,
         string $clientId
     ) {
-        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
+        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager, $annotationsUtils);
 
         $this->statusManager = $statusManager;
 
@@ -80,21 +77,10 @@ class RabbitClientDriver extends BaseDriver
 
         $this->addEntityToNotifiedEntities($entity, 'server');
 
-        $notifiedProperties = array_flip(
-            $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns()
-        );
-
-        //remove properties, which should not be sent
-        $changeSet = $this->removeNotNotifiedProperties($changeSet, $notifiedProperties);
-
-        //change indexes 0,1 in changeset to keys 'old' and 'new'
-        $changeSet = $this->changeIndexesInChangeSet($changeSet);
+        $changeSet = $this->prepareChangeset($entity, $changeSet);
 
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
-
-        //get entity "name", e.g. "product", "user"
-        $entityArray['entityName'] = $this->notificationUtils->getUrlPostfix($entity);
 
         $batch = $this->batchManager->createBatch($this->clientId);
         //$batch is only pointer to the batch created and stored in BatchManager
@@ -107,6 +93,8 @@ class RabbitClientDriver extends BaseDriver
         $notification->setChangeSet($changeSet);
         $notification->setIsForced($force);
         $notification->setClientId($this->clientId);
+        //get entity "name", e.g. "product", "user"
+        $notification->setEntityName($this->notificationUtils->getUrlPostfix($entity));
 
         $batch->addNotification($notification);
 

@@ -9,6 +9,7 @@ namespace Trinity\NotificationBundle\Drivers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
@@ -30,6 +31,9 @@ abstract class BaseDriver implements NotificationDriverInterface
     /** @var  EntityManagerInterface */
     protected $entityManager;
 
+    /** @var  AnnotationsUtils */
+    protected $annotationsUtils;
+
     /**
      * @var array Array which contains already processed entities(should fix deleting errors).
      *
@@ -48,17 +52,20 @@ abstract class BaseDriver implements NotificationDriverInterface
      * @param EntityConverter          $entityConverter
      * @param NotificationUtils        $notificationUtils
      * @param BatchManager             $batchManager
+     * @param AnnotationsUtils         $annotationsUtils
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
-        BatchManager $batchManager
+        BatchManager $batchManager,
+        AnnotationsUtils $annotationsUtils
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
         $this->batchManager = $batchManager;
+        $this->annotationsUtils = $annotationsUtils;
     }
 
     /**
@@ -127,5 +134,25 @@ abstract class BaseDriver implements NotificationDriverInterface
     protected function removeNotNotifiedProperties(array $entityArray, $notifiedProperties)
     {
         return array_intersect_key($entityArray, $notifiedProperties);
+    }
+
+    /**
+     * @param NotificationEntityInterface $entity
+     * @param array                       $changeSet
+     *
+     * @return array
+     */
+    protected function prepareChangeset(NotificationEntityInterface $entity, array $changeSet)
+    {
+        //get all properties, which are in the @Source annotation
+        $notifiedProperties = array_flip(
+            $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns()
+        );
+
+        //remove properties, which should not be sent
+        $changeSet = $this->removeNotNotifiedProperties($changeSet, $notifiedProperties);
+
+        //change indexes 0,1 in changeset to keys 'old' and 'new'
+        return $this->changeIndexesInChangeSet($changeSet);
     }
 }

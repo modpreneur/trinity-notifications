@@ -172,9 +172,6 @@ class NotificationRequestHandler
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
 
-        //get entity "name", e.g. "product", "user"
-        $entityArray['entityName'] = $this->notificationUtils->getUrlPostfix($entity);
-
         $responseMessage = new NotificationBatch();
         $responseMessage->setClientId($message->getClientId());
         $responseMessage->setParentMessageUid($message->getUid());
@@ -184,6 +181,9 @@ class NotificationRequestHandler
         $notification->setData($entityArray);
         $notification->setMethod('POST');
         $notification->setMessageId($responseMessage->getUid());
+        $notification->setIsForced(false);
+        //get entity "name", e.g. "product", "user"
+        $notification->setEntityName($this->notificationUtils->getUrlPostfix($entity));
 
         $responseMessage->addNotification($notification);
         $responseMessage->addNotifications($message->getPreviousNotifications());

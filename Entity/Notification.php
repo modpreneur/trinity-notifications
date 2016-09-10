@@ -23,6 +23,7 @@ class Notification
     const IS_FORCED = 'isForced';
     const CREATED_AT = 'createdAt';
     const CLIENT_ID = 'clientId';
+    const ENTITY_NAME = 'entityName';
 
     /** @var string */
     protected $messageId;
@@ -30,8 +31,11 @@ class Notification
     /** @var array Array of notification data(e.g. name, description) */
     protected $data;
 
+    /** @var  string Entity alias, e.g. product, user */
+    protected $entityName;
+
     /** @var array */
-    protected $changeSet;
+    protected $changeSet = [];
 
     /** @var string HTTP method of the message. */
     protected $method;
@@ -186,6 +190,22 @@ class Notification
     }
 
     /**
+     * @return string
+     */
+    public function getEntityName(): string
+    {
+        return $this->entityName;
+    }
+
+    /**
+     * @param string $entityName
+     */
+    public function setEntityName(string $entityName)
+    {
+        $this->entityName = $entityName;
+    }
+
+    /**
      * @return array
      */
     public function toArray() : array
@@ -197,7 +217,8 @@ class Notification
             self::CHANGE_SET => $this->changeSet,
             self::IS_FORCED => $this->isForced,
             self::CREATED_AT => $this->createdAt,
-            self::CLIENT_ID => $this->clientId
+            self::CLIENT_ID => $this->clientId,
+            self::ENTITY_NAME => $this->entityName,
         ];
     }
 
@@ -219,6 +240,7 @@ class Notification
         $notificationObject->isForced = $notificationArray[self::IS_FORCED];
         $notificationObject->createdAt = $notificationArray[self::CREATED_AT];
         $notificationObject->clientId = $notificationArray[self::CLIENT_ID];
+        $notificationObject->entityName = $notificationArray[self::ENTITY_NAME];
 
         return $notificationObject;
     }

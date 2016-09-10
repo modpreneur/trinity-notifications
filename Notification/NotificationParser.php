@@ -117,7 +117,7 @@ class NotificationParser
 
         /** @var Notification $notification */
         foreach ($notifications as $notification) {
-            $entityName = $notification->getData()['entityName'];
+            $entityName = $notification->getEntityName();
 
             if (!array_key_exists($entityName, $this->entities)) {
                 throw new NotificationException(

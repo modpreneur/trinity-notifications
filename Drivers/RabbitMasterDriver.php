@@ -50,10 +50,9 @@ class RabbitMasterDriver extends BaseDriver
         NotificationStatusManager $statusManager,
         AnnotationsUtils $annotationsUtils
     ) {
-        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager);
+        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager, $annotationsUtils);
 
         $this->statusManager = $statusManager;
-        $this->annotationsUtils = $annotationsUtils;
         $this->messages = [];
     }
 
@@ -109,18 +108,7 @@ class RabbitMasterDriver extends BaseDriver
     ) {
         //check if the client has enabled notifications
         if ($client->isNotified()) {
-            $notifiedProperties = array_flip(
-                $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns()
-            );
-
-            //remove properties, which should not be sent
-            $changeSet = $this->removeNotNotifiedProperties($changeSet, $notifiedProperties);
-
-            //change indexes 0,1 in changeset to keys 'old' and 'new'
-            $changeSet = $this->changeIndexesInChangeSet($changeSet);
-
-            //get entity "name", e.g. "product", "user"
-            $entityArray['entityName'] = $this->notificationUtils->getUrlPostfix($entity);
+            $changeSet = $this->prepareChangeset($entity, $changeSet);
 
             $batch = $this->batchManager->createBatch($client->getId());
             //$batch is only pointer to the batch created and stored in BatchManager
@@ -134,6 +122,8 @@ class RabbitMasterDriver extends BaseDriver
             $notification->setChangeSet($changeSet);
             $notification->setIsForced($force);
             $notification->setClientId($client->getId());
+            //get entity "name", e.g. "product", "user"
+            $notification->setEntityName($this->notificationUtils->getUrlPostfix($entity));
 
             $batch->addNotification($notification);
 
