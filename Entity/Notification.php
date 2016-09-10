@@ -24,6 +24,7 @@ class Notification
     const CREATED_AT = 'createdAt';
     const CLIENT_ID = 'clientId';
     const ENTITY_NAME = 'entityName';
+    const UID = 'uid';
 
     /** @var string */
     protected $messageId;
@@ -206,6 +207,22 @@ class Notification
     }
 
     /**
+     * @return string
+     */
+    public function getUid(): string
+    {
+        return $this->uid;
+    }
+
+    /**
+     * @param string $uid
+     */
+    public function setUid(string $uid)
+    {
+        $this->uid = $uid;
+    }
+
+    /**
      * @return array
      */
     public function toArray() : array
@@ -219,6 +236,7 @@ class Notification
             self::CREATED_AT => $this->createdAt,
             self::CLIENT_ID => $this->clientId,
             self::ENTITY_NAME => $this->entityName,
+            self::UID => $this->uid,
         ];
     }
 
@@ -241,6 +259,7 @@ class Notification
         $notificationObject->createdAt = $notificationArray[self::CREATED_AT];
         $notificationObject->clientId = $notificationArray[self::CLIENT_ID];
         $notificationObject->entityName = $notificationArray[self::ENTITY_NAME];
+        $notificationObject->uid = $notificationArray[self::UID];
 
         return $notificationObject;
     }
