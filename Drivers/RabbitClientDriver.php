@@ -29,6 +29,9 @@ class RabbitClientDriver extends BaseDriver
     /** @var  NotificationStatusManager */
     protected $statusManager;
 
+    /** @var string */
+    private $entityIdField;
+
     /**
      * NotificationManager constructor.
      *
@@ -39,6 +42,7 @@ class RabbitClientDriver extends BaseDriver
      * @param NotificationStatusManager $statusManager
      * @param AnnotationsUtils          $annotationsUtils
      * @param string                    $clientId
+     * @param string                    $entityIdField
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -47,18 +51,26 @@ class RabbitClientDriver extends BaseDriver
         BatchManager $batchManager,
         NotificationStatusManager $statusManager,
         AnnotationsUtils $annotationsUtils,
-        string $clientId
+        string $clientId,
+        string $entityIdField
     ) {
-        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager, $annotationsUtils);
+        parent::__construct(
+            $eventDispatcher,
+            $entityConverter,
+            $notificationUtils,
+            $batchManager,
+            $annotationsUtils
+        );
 
         $this->statusManager = $statusManager;
-
         $this->clientId = $clientId;
+        $this->entityIdField = $entityIdField;
     }
 
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
+     * @param bool                        $force
      * @param array                       $changeSet
      * @param array                       $params
      *
@@ -97,6 +109,7 @@ class RabbitClientDriver extends BaseDriver
         $notification->setEntityName($this->notificationUtils->getUrlPostfix($entity));
 
         $batch->addNotification($notification);
+        $this->logNotification($notification);
 
         $this->statusManager->setEntityStatus(
             $entity,
@@ -115,5 +128,24 @@ class RabbitClientDriver extends BaseDriver
     public function getName() : string
     {
         return 'rabbit_server_driver';
+    }
+
+    /**
+     * @param NotificationEntityInterface $entity
+     * @param array                       $changeSet
+     *
+     * @return array
+     *
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
+     */
+    protected function prepareChangeset(NotificationEntityInterface $entity, array $changeSet)
+    {
+        if (array_key_exists($this->entityIdField, $changeSet)) {
+            $value = $changeSet[$this->entityIdField];
+            unset($changeSet[$this->entityIdField]);
+            $changeSet['id'] = $value;
+        }
+
+        return parent::prepareChangeset($entity, $changeSet);
     }
 }

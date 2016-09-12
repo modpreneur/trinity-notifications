@@ -11,6 +11,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -33,11 +34,11 @@ class TrinityNotificationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $this->setShared($container, $config);
-
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         //load generic services
         $loader->load('services.yml');
+
+        $this->setShared($container, $config);
 
         //load services for client or server
         if ($container->getParameter('trinity.notification.is_client')) {
@@ -45,13 +46,15 @@ class TrinityNotificationExtension extends Extension
         } else {
             $loader->load('server/services.yml');
         }
+
+        $this->setMethodCalls($container, $config);
     }
 
     /**
-     * @param ContainerInterface $container
+     * @param ContainerBuilder $container
      * @param array              $config
      */
-    private function setShared(ContainerInterface $container, array $config)
+    private function setShared(ContainerBuilder $container, array $config)
     {
         $container->setParameter(
             'trinity.notification.is_client',
@@ -92,6 +95,35 @@ class TrinityNotificationExtension extends Extension
             'trinity.notification.disable_time_violations',
             $this->getValue($config, 'disable_time_violations')
         );
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param array $config
+     */
+    private function setMethodCalls(ContainerBuilder $container, array $config)
+    {
+        $container->getDefinition('trinity.notification.notification_events_listener')
+            ->addMethodCall(
+                'setNotificationLogger',
+                [new Reference($config['notification_logger'])]
+            );
+
+        if ($container->has('trinity.notification.driver.rabbit.client')) {
+            $container->getDefinition('trinity.notification.driver.rabbit.client')
+                ->addMethodCall(
+                    'setNotificationLogger',
+                    [new Reference($config['notification_logger'])]
+                );
+        }
+
+        if ($container->has('trinity.notification.driver.rabbit.server')) {
+            $container->getDefinition('trinity.notification.driver.rabbit.server')
+                ->addMethodCall(
+                    'setNotificationLogger',
+                    [new Reference($config['notification_logger'])]
+                );
+        }
     }
 
     /**

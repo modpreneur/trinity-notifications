@@ -5,7 +5,6 @@ namespace Trinity\NotificationBundle\AppTests\Entity;
 use Trinity\Component\Core\Interfaces\ClientInterface as CI;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
-
 /**
  * Class TestEntity.
  *
@@ -14,7 +13,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  * @Notification\Source(columns="id, name, desc, date")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityInterfaceWithoutClient implements NotificationEntityInterface
+class EntityWithoutClient implements NotificationEntityInterface
 {
     /** @var  int */
     private $id;
@@ -25,13 +24,11 @@ class EntityInterfaceWithoutClient implements NotificationEntityInterface
     /** @var  string */
     private $description;
 
-
     /** @return int */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -41,7 +38,6 @@ class EntityInterfaceWithoutClient implements NotificationEntityInterface
         return "Someone's name";
     }
 
-
     /**
      * @return string
      */
@@ -50,18 +46,15 @@ class EntityInterfaceWithoutClient implements NotificationEntityInterface
         return 'Lorem impsu';
     }
 
-
     /** @return CI[] */
     public function getClients()
     {
         return [];
     }
 
-
     /**
-     * @param CI $client
+     * @param CI     $client
      * @param string $status
-     * @return void
      */
     public function setSyncStatus(CI $client, $status)
     {

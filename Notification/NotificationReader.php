@@ -7,9 +7,14 @@
  */
 namespace Trinity\NotificationBundle\Notification;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
+use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
+use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Entity\NotificationStatus;
+use Trinity\NotificationBundle\Entity\NotificationStatusMessage;
 use Trinity\NotificationBundle\Event\AfterNotificationBatchProcessEvent;
 use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
 use Trinity\NotificationBundle\Event\BeforeNotificationBatchProcessEvent;
@@ -27,18 +32,24 @@ class NotificationReader
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var  MessageSender */
+    protected $messageSender;
+
     /**
      * NotificationReader constructor.
      *
      * @param NotificationParser       $parser
      * @param EventDispatcherInterface $eventDispatcher
+     * @param MessageSender            $messageSender
      */
     public function __construct(
         NotificationParser $parser,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        MessageSender $messageSender
     ) {
         $this->parser = $parser;
         $this->eventDispatcher = $eventDispatcher;
+        $this->messageSender = $messageSender;
     }
 
     /**
@@ -72,9 +83,7 @@ class NotificationReader
                 $notificationBatch->getNotifications()->toArray()
             );
 
-            if (count($this->parser->getFailedNotifications()) > 0) {
-                //todo: send status message with info about failed and successful notifications
-            }
+            $this->sendStatusMessage($notificationBatch);
 
             $this->dispatchEndEvent($notificationBatch);
         } catch (AssociationEntityNotFoundException $e) {
@@ -100,6 +109,61 @@ class NotificationReader
         }
 
         return $entities;
+    }
+
+    /**
+     * @param NotificationBatch $batch
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     */
+    protected function sendStatusMessage(NotificationBatch $batch)
+    {
+        $notifications = $batch->getNotifications();
+
+        $statusMessage = new NotificationStatusMessage();
+        $statusMessage->setParentMessageUid($batch->getUid());
+        $statusMessage->setClientId($batch->getClientId());
+        $statusMessage->setDestination($batch->getSender());
+
+        /** @var Notification $notification */
+        foreach ($notifications as $notification) {
+            if (($exception = $this->getExceptionForNotification($notification)) !== null) {
+                $notificationStatus = new NotificationStatus();
+                $notificationStatus->setStatus(NotificationStatus::STATUS_ERROR);
+                $notificationStatus->setMessage($exception->getMessage());
+                $notificationStatus->setNotificationId($notification->getUid());
+                $notificationStatus->setExtra(['violations' => $exception->getViolations()]);
+                $statusMessage->addNotificationStatus($notificationStatus);
+            } else {
+                $notificationStatus = new NotificationStatus();
+                $notificationStatus->setStatus(NotificationStatus::STATUS_OK);
+                $notificationStatus->setMessage('ok');
+                $notificationStatus->setNotificationId($notification->getUid());
+                $statusMessage->addNotificationStatus($notificationStatus);
+            }
+        }
+
+        $this->messageSender->sendMessage($statusMessage);
+    }
+
+    /**
+     * @param Notification $notification
+     *
+     * @return null|\Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
+     */
+    public function getExceptionForNotification(Notification $notification)
+    {
+        foreach ($this->parser->getNotificationExceptions() as $exception) {
+            if ($exception->getNotification() === $notification) {
+                return $exception;
+            }
+        }
+
+        return null;
     }
 
     /**

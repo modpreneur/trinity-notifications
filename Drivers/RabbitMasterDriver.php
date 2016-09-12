@@ -29,9 +29,6 @@ class RabbitMasterDriver extends BaseDriver
     /** @var  NotificationStatusManager */
     protected $statusManager;
 
-    /** @var  AnnotationsUtils */
-    protected $annotationsUtils;
-
     /**
      * NotificationManager constructor.
      *
@@ -50,7 +47,13 @@ class RabbitMasterDriver extends BaseDriver
         NotificationStatusManager $statusManager,
         AnnotationsUtils $annotationsUtils
     ) {
-        parent::__construct($eventDispatcher, $entityConverter, $notificationUtils, $batchManager, $annotationsUtils);
+        parent::__construct(
+            $eventDispatcher,
+            $entityConverter,
+            $notificationUtils,
+            $batchManager,
+            $annotationsUtils
+        );
 
         $this->statusManager = $statusManager;
         $this->messages = [];
@@ -62,6 +65,8 @@ class RabbitMasterDriver extends BaseDriver
      * @param bool                        $force
      * @param array                       $changeSet
      * @param array                       $params
+     *
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
     public function execute(
         NotificationEntityInterface $entity,
@@ -78,6 +83,8 @@ class RabbitMasterDriver extends BaseDriver
 
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
+
+        $changeSet = $this->prepareChangeset($entity, $changeSet);
 
         //execute for given client
         if ($destinationClient !== null) {
@@ -108,8 +115,6 @@ class RabbitMasterDriver extends BaseDriver
     ) {
         //check if the client has enabled notifications
         if ($client->isNotified()) {
-            $changeSet = $this->prepareChangeset($entity, $changeSet);
-
             $batch = $this->batchManager->createBatch($client->getId());
             //$batch is only pointer to the batch created and stored in BatchManager
             $batch->setSecretKey($client->getSecret());
@@ -126,6 +131,7 @@ class RabbitMasterDriver extends BaseDriver
             $notification->setEntityName($this->notificationUtils->getUrlPostfix($entity));
 
             $batch->addNotification($notification);
+            $this->logNotification($notification);
 
             $this->statusManager->setEntityStatus(
                 $entity,

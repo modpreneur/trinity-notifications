@@ -42,6 +42,9 @@ class EntityConversionHandler
      */
     protected $entities;
 
+    /** @var  string */
+    protected $entityIdField;
+
     /**
      * EntityConversionHandler constructor.
      *
@@ -50,19 +53,22 @@ class EntityConversionHandler
      * @param EntityConverter          $entityConverter
      * @param array                    $forms
      * @param array                    $entities
+     * @param string                   $entityIdField
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
         EntityConverter $entityConverter,
         array $forms,
-        array $entities
+        array $entities,
+        string $entityIdField
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->entityConverter = $entityConverter;
         $this->forms = $forms;
         $this->entities = $entities;
+        $this->entityIdField = $entityIdField;
     }
 
     /**
@@ -83,9 +89,8 @@ class EntityConversionHandler
         array $changeSet,
         bool $forceUpdate = false
     ) : NotificationEntityInterface {
-
         if (!$forceUpdate) {
-            $this->validateCurrentEntityState($entity, $changeSet);
+            $this->validateCurrentEntityState($entity, $changeSet, $data);
         }
 
         $this->useForm($entity, $data);
@@ -159,32 +164,63 @@ class EntityConversionHandler
     }
 
     /**
+     * When the changeset is empty there is need to create a fake one. It will contain no changes.
+     * This is required because of validation against the database.
+     * Without the changeset there would not be possibility to compare it to the database data.
+     *
+     * @param array $entityArray
+     *
+     * @return array
+     */
+    public function createFakeChangeset(array $entityArray)
+    {
+        $changeset = [];
+
+        foreach ($entityArray as $property => $value) {
+            $changeset[$property] = ['old' => $value, 'new' => $value];
+        }
+
+        return $changeset;
+    }
+
+    /**
      * Validate if the current entity state corresponds with the given changeset from the notification.
      *
      * @param NotificationEntityInterface $entity
      * @param array                       $changeSet
+     * @param array                       $data
      *
-     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
+     * @throws UnexpectedEntityStateException
      */
-    protected function validateCurrentEntityState(NotificationEntityInterface $entity, array $changeSet)
+    protected function validateCurrentEntityState(NotificationEntityInterface $entity, array $changeSet, array $data)
     {
+        if (count($changeSet) === 0) {
+            $changeSet = $this->createFakeChangeset($data);
+        }
+
         //the changeset is in the format: ['propertyName' => ['old' => 'old-value', 'new' => 'new-value']
         //iterate over the changeset and check if the entity's properties do match with the old changeset values
         //in the standard flow the entity has not been changed yet
 
         $violations = [];
         foreach ($changeSet as $propertyName => $values) {
-            $entityPropertyValue = $this->entityConverter->getPropertyValue($entity, $propertyName);
+            $entityPropertyValue = $this->entityConverter
+                ->getPropertyValue($entity, $propertyName === 'id' ? $this->entityIdField : $propertyName)[$propertyName];
             $changeSetOldValue = $values['old'];
 
-            if ($entityPropertyValue !== $changeSetOldValue) {
+            //the type unsafe comparision is used intentionally
+            if ($entityPropertyValue != $changeSetOldValue) {
                 $violations[$propertyName] = ['expected' => $values['old'], 'actual' => $entityPropertyValue];
             }
         }
 
         if (count($violations) > 0) {
-            $exception = new UnexpectedEntityStateException();
+            $exception = new UnexpectedEntityStateException(
+                'Entity of class '.get_class($entity).' with common id '.$entity->{'get'.ucfirst($this->entityIdField)}()
+                .' has unexpected state.'
+            );
             $exception->setViolations($violations);
+            $exception->setEntity($entity);
 
             throw $exception;
         }

@@ -10,7 +10,6 @@ use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceMethodDate;
 use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceWithoutSource;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
-
 /**
  * Class NotificationUtilsTest.
  */
@@ -27,7 +26,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->isNotificationEntity(new \stdClass()));
     }
 
-
     /**
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      *
@@ -43,7 +41,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertNotEmpty($utils->getClassSourceAnnotation(new \stdClass()));
     }
 
-
     /**
      * @test
      */
@@ -57,7 +54,6 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertFalse($utils->hasSource(new Product(), 'blah'));
     }
-
 
     /**
      * @test
@@ -74,7 +70,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertFalse($utils->hasDependedSource(new EEntityInterface(), 'blah'));
     }
 
-
     /**
      * @test
      */
@@ -89,7 +84,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertTrue($utils->hasHTTPMethod(new \stdClass(), 'Blah'));
     }
 
-
     /**
      * @test
      */
@@ -102,7 +96,6 @@ class NotificationUtilsTest extends BaseTest
             ($utils->getClassAnnotations(new Product(), AnnotationsUtils::ANNOTATION_CLASS)[0] instanceof $class)
         );
     }
-
 
     /**
      * @test
@@ -120,7 +113,6 @@ class NotificationUtilsTest extends BaseTest
         $this->assertEquals('post-e-entity', $utils->getUrlPostfix(new EEntityInterface(), 'post'));
     }
 
-
     /**
      * @throws \Trinity\NotificationBundle\Exception\MethodException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
@@ -134,7 +126,6 @@ class NotificationUtilsTest extends BaseTest
         // Error
         $utils->toArray(new EntityInterfaceWithoutSource());
     }
-
 
     /**
      * Notification\Source(columns="*").
@@ -157,7 +148,6 @@ class NotificationUtilsTest extends BaseTest
         $allSourceArrayResult = $utils->toArray($allSourceEntity);
         $this->assertEquals($allSourceArrayExpected, $allSourceArrayResult);
     }
-
 
     /**
      * @throws \Exception
@@ -191,7 +181,7 @@ class NotificationUtilsTest extends BaseTest
 
         $sourceArrayA = [
             'name' => $p->getName(),
-            'description' => $p->getDescription()
+            'description' => $p->getDescription(),
         ];
 
         $arrayA = $utils->toArray($p);
@@ -217,7 +207,6 @@ class NotificationUtilsTest extends BaseTest
         $utils->toArray($errorEntity);
     }
 
-
     /**
      * @test
      */
@@ -233,5 +222,4 @@ class NotificationUtilsTest extends BaseTest
 
         $this->assertEquals(['date' => '2010-11-12 00:00:00'], $array);
     }
-
 }

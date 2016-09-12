@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceDisableClient;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
-
 /**
  * Class EventListenerTest.
  */
@@ -62,7 +61,6 @@ class EventListenerTest extends BaseTest
         $this->assertArrayHasKey('error', $ev->postUpdate($args)[0]);
     }
 
-
     /**
      * @test
      */
@@ -79,7 +77,6 @@ class EventListenerTest extends BaseTest
         $ev->preRemove($args);
     }
 
-
     /**
      * @test
      */
@@ -93,7 +90,7 @@ class EventListenerTest extends BaseTest
             $object, $em
         );
 
-        $object->setName('Name_' .rand(1, 9999));
+        $object->setName('Name_'.rand(1, 9999));
         $result = $ev->postPersist($args);
 
         $this->assertEquals(
@@ -105,7 +102,6 @@ class EventListenerTest extends BaseTest
             reset($result)
         );
     }
-
 
     /**
      * @test
@@ -129,7 +125,6 @@ class EventListenerTest extends BaseTest
             $array
         );
     }
-
 
     /**
      * @test

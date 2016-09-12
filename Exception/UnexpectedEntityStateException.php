@@ -2,6 +2,7 @@
 
 namespace Trinity\NotificationBundle\Exception;
 
+use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
 /**
@@ -21,6 +22,9 @@ class UnexpectedEntityStateException extends NotificationException
      *            ]
      */
     protected $violations = [];
+
+    /** @var  Notification Notification which was containig the data */
+    protected $notification;
 
     /**
      * @return array
@@ -57,6 +61,22 @@ class UnexpectedEntityStateException extends NotificationException
     public function setEntity(NotificationEntityInterface $entity)
     {
         $this->entity = $entity;
+    }
+
+    /**
+     * @return Notification
+     */
+    public function getNotification(): Notification
+    {
+        return $this->notification;
+    }
+
+    /**
+     * @param Notification $notification
+     */
+    public function setNotification(Notification $notification)
+    {
+        $this->notification = $notification;
     }
 
     /**

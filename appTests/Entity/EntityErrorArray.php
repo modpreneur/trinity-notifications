@@ -7,7 +7,6 @@ use Trinity\Component\Core\Interfaces\ClientInterface as CI;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
-
 /**
  * Class TestEntity.
  *
@@ -16,7 +15,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  * @Notification\Source(columns="error")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityInterfaceErrorArray implements NotificationEntityInterface
+class EntityErrorArray implements NotificationEntityInterface
 {
     /** @return CI[] */
     public function getClients()
@@ -24,11 +23,9 @@ class EntityInterfaceErrorArray implements NotificationEntityInterface
         // TODO: Implement getClients() method.
     }
 
-
     /**
-     * @param CI $client
+     * @param CI     $client
      * @param string $status
-     * @return void
      */
     public function setSyncStatus(CI $client, $status)
     {

@@ -10,7 +10,6 @@ use Closure;
 use Doctrine\Common\Collections\Collection;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 
-
 /**
  * Class TestCollection.
  */
@@ -28,7 +27,6 @@ class TestCollection implements Collection
         // TODO: Implement add() method.
     }
 
-
     /**
      * Clears the collection, removing all elements.
      */
@@ -36,7 +34,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement clear() method.
     }
-
 
     /**
      * Checks whether an element is contained in the collection.
@@ -51,7 +48,6 @@ class TestCollection implements Collection
         // TODO: Implement contains() method.
     }
 
-
     /**
      * Checks whether the collection is empty (contains no elements).
      *
@@ -61,7 +57,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement isEmpty() method.
     }
-
 
     /**
      * Removes the element at the specified index from the collection.
@@ -75,7 +70,6 @@ class TestCollection implements Collection
         // TODO: Implement remove() method.
     }
 
-
     /**
      * Removes the specified element from the collection, if it is found.
      *
@@ -87,7 +81,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement removeElement() method.
     }
-
 
     /**
      * Checks whether the collection contains an element with the specified key/index.
@@ -102,7 +95,6 @@ class TestCollection implements Collection
         // TODO: Implement containsKey() method.
     }
 
-
     /**
      * Gets the element at the specified key/index.
      *
@@ -115,7 +107,6 @@ class TestCollection implements Collection
         // TODO: Implement get() method.
     }
 
-
     /**
      * Gets all keys/indices of the collection.
      *
@@ -126,7 +117,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement getKeys() method.
     }
-
 
     /**
      * Gets all values of the collection.
@@ -139,18 +129,16 @@ class TestCollection implements Collection
         // TODO: Implement getValues() method.
     }
 
-
     /**
      * Sets an element in the collection at the specified key/index.
      *
-     * @param string|int $key The key/index of the element to set.
-     * @param mixed $value The element to set.
+     * @param string|int $key   The key/index of the element to set.
+     * @param mixed      $value The element to set.
      */
     public function set($key, $value)
     {
         // TODO: Implement set() method.
     }
-
 
     /**
      * Gets a native PHP array representation of the collection.
@@ -162,7 +150,6 @@ class TestCollection implements Collection
         return [new Client()];
     }
 
-
     /**
      * Sets the internal iterator to the first element in the collection and returns this element.
      *
@@ -172,7 +159,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement first() method.
     }
-
 
     /**
      * Sets the internal iterator to the last element in the collection and returns this element.
@@ -184,7 +170,6 @@ class TestCollection implements Collection
         // TODO: Implement last() method.
     }
 
-
     /**
      * Gets the key/index of the element at the current iterator position.
      *
@@ -194,7 +179,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement key() method.
     }
-
 
     /**
      * Gets the element of the collection at the current iterator position.
@@ -206,7 +190,6 @@ class TestCollection implements Collection
         // TODO: Implement current() method.
     }
 
-
     /**
      * Moves the internal iterator position to the next element and returns this element.
      *
@@ -216,7 +199,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement next() method.
     }
-
 
     /**
      * Tests for the existence of an element that satisfies the given predicate.
@@ -229,7 +211,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement exists() method.
     }
-
 
     /**
      * Returns all the elements of this collection that satisfy the predicate p.
@@ -244,7 +225,6 @@ class TestCollection implements Collection
         // TODO: Implement filter() method.
     }
 
-
     /**
      * Tests whether the given predicate p holds for all elements of this collection.
      *
@@ -256,7 +236,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement forAll() method.
     }
-
 
     /**
      * Applies the given function to each element in the collection and returns
@@ -270,7 +249,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement map() method.
     }
-
 
     /**
      * Partitions this collection in two collections according to a predicate.
@@ -287,7 +265,6 @@ class TestCollection implements Collection
         // TODO: Implement partition() method.
     }
 
-
     /**
      * Gets the index/key of a given element. The comparison of two elements is strict,
      * that means not only the value but also the type must match.
@@ -302,7 +279,6 @@ class TestCollection implements Collection
         // TODO: Implement indexOf() method.
     }
 
-
     /**
      * Extracts a slice of $length elements starting at position $offset from the Collection.
      *
@@ -310,7 +286,7 @@ class TestCollection implements Collection
      * Keys have to be preserved by this method. Calling this method will only return the
      * selected slice and NOT change the elements contained in the collection slice is called on.
      *
-     * @param int $offset The offset to start from.
+     * @param int      $offset The offset to start from.
      * @param int|null $length The maximum number of elements to return, or null for no limit.
      *
      * @return array
@@ -319,7 +295,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement slice() method.
     }
-
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
@@ -334,7 +309,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement getIterator() method.
     }
-
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
@@ -356,7 +330,6 @@ class TestCollection implements Collection
         // TODO: Implement offsetExists() method.
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Offset to retrieve.
@@ -374,7 +347,6 @@ class TestCollection implements Collection
         // TODO: Implement offsetGet() method.
     }
 
-
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Offset to set.
@@ -384,7 +356,7 @@ class TestCollection implements Collection
      * @param mixed $offset <p>
      *                      The offset to assign the value to.
      *                      </p>
-     * @param mixed $value <p>
+     * @param mixed $value  <p>
      *                      The value to set.
      *                      </p>
      */
@@ -392,7 +364,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement offsetSet() method.
     }
-
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
@@ -408,7 +379,6 @@ class TestCollection implements Collection
     {
         // TODO: Implement offsetUnset() method.
     }
-
 
     /**
      * (PHP 5 &gt;= 5.1.0)<br/>

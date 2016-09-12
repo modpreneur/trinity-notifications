@@ -16,8 +16,10 @@ use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
+use Trinity\NotificationBundle\Entity\NotificationStatusMessage;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
+use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
@@ -34,6 +36,9 @@ class NotificationEventsListener implements EventSubscriberInterface
 
     /** @var  NotificationManager */
     protected $notificationManager;
+
+    /** @var  NotificationLoggerInterface */
+    protected $notificationLogger;
 
     /** @var  bool */
     protected $isClient;
@@ -56,6 +61,14 @@ class NotificationEventsListener implements EventSubscriberInterface
         $this->eventDispatcher = $eventDispatcher;
         $this->notificationManager = $notificationManager;
         $this->isClient = $isClient;
+    }
+
+    /**
+     * @param NotificationLoggerInterface $notificationLogger
+     */
+    public function setNotificationLogger(NotificationLoggerInterface $notificationLogger)
+    {
+        $this->notificationLogger = $notificationLogger;
     }
 
     /**
@@ -86,6 +99,9 @@ class NotificationEventsListener implements EventSubscriberInterface
         } elseif ($message->getType() === StatusMessage::MESSAGE_TYPE) {
             $this->handleStatusMessage($message);
             $this->setEventAsProcessed($event);
+        } elseif ($message->getType() === NotificationStatusMessage::MESSAGE_TYPE) {
+            $this->handleNotificationStatusMessage($message);
+            $this->setEventAsProcessed($event);
         }
     }
 
@@ -104,6 +120,15 @@ class NotificationEventsListener implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @param Message $message
+     */
+    protected function handleNotificationStatusMessage(Message $message)
+    {
+        $message = NotificationStatusMessage::createFromMessage($message);
+        $statuses = $message->getAllStatuses()->toArray();
+        $this->notificationLogger->setNotificationStatuses($statuses);
+    }
     /**
      * @param Message $message
      *

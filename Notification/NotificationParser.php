@@ -48,8 +48,8 @@ class NotificationParser
     /** @var  bool */
     protected $isClient;
 
-    /** @var Notification[] */
-    protected $failedNotifications = [];
+    /** @var UnexpectedEntityStateException[] */
+    protected $notificationExceptions = [];
 
     /**
      * @var array Indexed array of entities' aliases and real class names.
@@ -76,6 +76,7 @@ class NotificationParser
      * @param string                   $entityIdFieldName
      * @param bool                     $isClient
      * @param array                    $entities
+     * @param bool                     $disableTimeViolations
      */
     public function __construct(
         LoggerInterface $logger,
@@ -131,7 +132,8 @@ class NotificationParser
             try {
                 $processedEntity = $this->parseNotification($notification, $this->entities[$entityName]);
             } catch (UnexpectedEntityStateException $exception) {
-                $this->failedNotifications[] = $notification;
+                $exception->setNotification($notification);
+                $this->notificationExceptions[] = $exception;
             }
 
             if ($processedEntity !== null) {
@@ -145,15 +147,16 @@ class NotificationParser
     }
 
     /**
-     * @param   $fullClassName string Full classname(with namespace) of the entity. e.g.
-     *                         AppBundle\\Entity\\Product\\StandardProduct
+     * @param Notification $notification
+     * @param              $fullClassName string Full classname(with namespace) of the entity. e.g.
+     *                                    AppBundle\\Entity\\Product\\StandardProduct
      *
      * @return null|object
      *
-     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
-     * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
+     * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
     public function parseNotification(
@@ -191,7 +194,10 @@ class NotificationParser
 
         if ($notification->getCreatedAt() !== null) {
             if (!$notification->isForced()) {
-                $this->checkTimeViolations($entityObject, new \DateTime($notification->getCreatedAt()));
+                $this->checkTimeViolations(
+                    $entityObject,
+                    (new \DateTime())->setTimestamp($notification->getCreatedAt())
+                );
             }
         }
 
@@ -237,11 +243,11 @@ class NotificationParser
     }
 
     /**
-     * @return \Trinity\NotificationBundle\Entity\Notification[]
+     * @return \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException[]
      */
-    public function getFailedNotifications(): array
+    public function getNotificationExceptions(): array
     {
-        return $this->failedNotifications;
+        return $this->notificationExceptions;
     }
 
     /**

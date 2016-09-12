@@ -3,18 +3,15 @@
  * Created by PhpStorm.
  * User: Jakub Fajkus
  * Date: 12.12.15
- * Time: 15:51
+ * Time: 15:51.
  */
-
 namespace Trinity\NotificationBundle\AppTests\Sandbox\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\FrameworkBundle\Entity\BaseProduct;
 use Trinity\NotificationBundle\Annotations as Notification;
 
-
 /**
- *
  * @ORM\Entity()
  *
  * @Notification\Source(columns="id, name, description")
@@ -30,7 +27,6 @@ class ClientProduct extends BaseProduct
      */
     protected $serverId;
 
-
     /**
      * @return mixed
      */
@@ -39,9 +35,9 @@ class ClientProduct extends BaseProduct
         return $this->serverId;
     }
 
-
     /**
      * @param mixed $serverId
+     *
      * @return $this
      */
     public function setServerId($serverId)
@@ -50,6 +46,4 @@ class ClientProduct extends BaseProduct
 
         return $this;
     }
-
-
 }

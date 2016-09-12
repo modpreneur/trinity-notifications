@@ -82,7 +82,7 @@ class NotificationStatusManager
         string $messageUid,
         string $status
     ) {
-        //todo @GabrielBordovsky delete old status!
+        //todo @GabrielBordovsky delete old status
 
         $log = new EntityStatusLog();
         $log->setEntityId($entity->getId());

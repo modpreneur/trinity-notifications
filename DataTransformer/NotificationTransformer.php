@@ -79,7 +79,7 @@ class NotificationTransformer implements DataTransformerInterface
     public function reverseTransform($value)
     {
         if ($value === null || empty($value)) {
-            return null;
+            return;
         }
 
         $entity = $this

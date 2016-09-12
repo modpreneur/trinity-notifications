@@ -91,6 +91,25 @@ class Configuration implements ConfigurationInterface
                     })
                     ->end()
                 ->end()
+
+            //reference to a service - starting with '@'
+                ->scalarNode('notification_logger')
+                    ->cannotBeEmpty()
+                    ->isRequired()
+                    ->beforeNormalization()
+            //if the string starts with @, e.g. @service.name
+                    ->ifTrue(
+                        function ($v) {
+                            return is_string($v) && 0 === strpos($v, '@');
+                        }
+                    )
+            //return it's name without '@', e.g. service.name
+                    ->then(function ($v) {
+                        return substr($v, 1);
+                    })
+                    ->end()
+                ->end()
+            ->end()
             ;
 
         return $treeBuilder;

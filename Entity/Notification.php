@@ -143,7 +143,7 @@ class Notification
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isForced(): bool
     {
@@ -151,7 +151,7 @@ class Notification
     }
 
     /**
-     * @param boolean $isForced
+     * @param bool $isForced
      */
     public function setIsForced(bool $isForced)
     {

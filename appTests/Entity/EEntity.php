@@ -9,7 +9,6 @@ use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
-
 /**
  * Class TestEntity.
  *
@@ -23,7 +22,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  * @Notification\Url(methods={"delete"}, postfix="delete-e-entity")
  * @Notification\Url(methods={"post"}, postfix="post-e-entity")
  */
-class EEntityInterface implements NotificationEntityInterface
+class EEntity implements NotificationEntityInterface
 {
     /**
      * @var int
@@ -45,7 +44,6 @@ class EEntityInterface implements NotificationEntityInterface
      */
     private $date;
 
-
     /**
      * EEntityInterface constructor.
      */
@@ -53,7 +51,6 @@ class EEntityInterface implements NotificationEntityInterface
     {
         $this->date = new \DateTime('2010-11-12');
     }
-
 
     /**
      * @return mixed
@@ -63,7 +60,6 @@ class EEntityInterface implements NotificationEntityInterface
         return $this->id;
     }
 
-
     /**
      * @param mixed $id
      */
@@ -71,7 +67,6 @@ class EEntityInterface implements NotificationEntityInterface
     {
         $this->id = $id;
     }
-
 
     /**
      * @return mixed
@@ -81,7 +76,6 @@ class EEntityInterface implements NotificationEntityInterface
         return $this->name;
     }
 
-
     /**
      * @param mixed $name
      */
@@ -89,7 +83,6 @@ class EEntityInterface implements NotificationEntityInterface
     {
         $this->name = $name;
     }
-
 
     /**
      * @return string
@@ -99,7 +92,6 @@ class EEntityInterface implements NotificationEntityInterface
         return $this->desc;
     }
 
-
     /**
      * @param mixed $desc
      */
@@ -107,7 +99,6 @@ class EEntityInterface implements NotificationEntityInterface
     {
         $this->desc = $desc;
     }
-
 
     /**
      * @return mixed
@@ -117,7 +108,6 @@ class EEntityInterface implements NotificationEntityInterface
         return $this->date;
     }
 
-
     /**
      * @param mixed $date
      */
@@ -126,7 +116,6 @@ class EEntityInterface implements NotificationEntityInterface
         $this->date = $date;
     }
 
-
     /**
      * @return string
      */
@@ -134,7 +123,6 @@ class EEntityInterface implements NotificationEntityInterface
     {
         return '10$';
     }
-
 
     /**
      * @SerializedName("test-method")
@@ -146,18 +134,15 @@ class EEntityInterface implements NotificationEntityInterface
         return 'test';
     }
 
-
     /** @return CI[] */
     public function getClients()
     {
         return [new Client()];
     }
 
-
     /**
-     * @param CI $client
+     * @param CI     $client
      * @param string $status
-     * @return void
      */
     public function setSyncStatus(CI $client, $status)
     {

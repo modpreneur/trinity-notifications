@@ -6,10 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 $port = null;
 
-if(isset($argv[1])){
-    if($argv[1] == 'trinity:notification:client:run'){
+if (isset($argv[1])) {
+    if ($argv[1] == 'trinity:notification:client:run') {
         $port = 8001;
-    }elseif($argv[1] == 'trinity:notification:server:run'){
+    } elseif ($argv[1] == 'trinity:notification:server:run') {
         $port = 9000;
     }
 }

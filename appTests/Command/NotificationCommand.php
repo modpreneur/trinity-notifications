@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trinity\NotificationBundle\AppTests\Command;
 
 use Doctrine\ORM\EntityManager;
@@ -13,7 +12,6 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
-
 
 class NotificationCommand extends ContainerAwareCommand
 {
@@ -34,7 +32,6 @@ class NotificationCommand extends ContainerAwareCommand
             );
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var EntityManager $em */
@@ -42,11 +39,11 @@ class NotificationCommand extends ContainerAwareCommand
         $id = $input->getOption('id');
 
         //create database
-        $command = $this->getApplication()->find("doctrine:schema:update");
+        $command = $this->getApplication()->find('doctrine:schema:update');
 
         $arguments = [
-            "command" => "doctrine:schema:update",
-            "--force" => true,
+            'command' => 'doctrine:schema:update',
+            '--force' => true,
             '-q',
         ];
 
@@ -62,7 +59,6 @@ class NotificationCommand extends ContainerAwareCommand
 
         $p->setClient($c);
         $api = $this->getContainer()->get('trinity.notification.driver.api');
-
 
         $table = new Table($output);
         $resutl = $api->execute($p, $c);
@@ -81,6 +77,5 @@ class NotificationCommand extends ContainerAwareCommand
             );
 
         $table->render();
-
     }
 }

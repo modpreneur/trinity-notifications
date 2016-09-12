@@ -74,6 +74,7 @@ services:
             - "@trinity.notification.reader"
             - "@event_dispatcher"
             - "@trinity.notification.manager"
+#            - "@trinity.notification.notification_logger"
             - "%trinity.notification.is_client%"
         tags:
             - { name: kernel.event_subscriber}
@@ -98,6 +99,7 @@ services:
             - "@trinity.notification.entity_converter"
             - "%trinity.notification.forms%"
             - "%trinity.notification.entities%"
+            - "%trinity.notification.entity_id_field%"
 
     trinity.notification.entity_associator:
         class: Trinity\NotificationBundle\Notification\EntityAssociator
@@ -114,6 +116,7 @@ services:
         arguments:
             - "@trinity.notification.services.notification_parser"
             - "@event_dispatcher"
+            - "@trinity.messages.message_sender"
 
     trinity.notification.notification_request_listener:
         class: Trinity\NotificationBundle\EventListener\NotificationRequestListener

@@ -85,6 +85,8 @@ class EntityConverter
      * @param array $properties Properties to be included in the result
      *
      * @return array
+     *
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
     public function toArray(NotificationEntityInterface $entity, array $properties = []) : array
     {
@@ -113,6 +115,14 @@ class EntityConverter
         return $entityArray;
     }
 
+    /**
+     * @param NotificationEntityInterface $entity
+     * @param string $property
+     *
+     * @return array
+     *
+     * @throws NotificationException
+     */
     public function getPropertyValue(NotificationEntityInterface $entity, string $property)
     {
         $ucFirst = ucfirst($property);
@@ -165,7 +175,7 @@ class EntityConverter
             if (method_exists($value, $getterMethod)) {
                 $value = $value->{$getterMethod}();
             } else {
-                /** @noinspection CallableParameterUseCaseInTypeContextInspection */
+                /* @noinspection CallableParameterUseCaseInTypeContextInspection */
                 $value = null;
             }
         }

@@ -9,7 +9,6 @@ namespace Trinity\NotificationBundle\AppTests;
 use Trinity\NotificationBundle\Drivers\ApiDriver\ApiDriver;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
-
 /**
  * Class ApiDriverTest.
  */
@@ -36,7 +35,6 @@ class ApiDriverTest extends BaseTest
         $this->assertContains('"timestamp":', $result);
     }
 
-
     /**
      * @return ApiDriver
      */
@@ -50,7 +48,6 @@ class ApiDriverTest extends BaseTest
 
         return $driver;
     }
-
 
     /**
      * @test
@@ -70,7 +67,6 @@ class ApiDriverTest extends BaseTest
         $this->assertEquals($expected, $result);
     }
 
-
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
      */
@@ -85,7 +81,6 @@ class ApiDriverTest extends BaseTest
         $method = $this->getMethod($driver, 'createRequest');
         $result = $method->invokeArgs($driver, [$data, 'http://example.com/product', 'POST', true]);
     }
-
 
     /**
      * @expectedException \GuzzleHttp\Exception\ClientException
@@ -102,7 +97,6 @@ class ApiDriverTest extends BaseTest
         $result = $method->invokeArgs($driver, [$data, 'http://example.com/product', 'POST', false]);
     }
 
-
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\MethodException
      */
@@ -112,7 +106,6 @@ class ApiDriverTest extends BaseTest
         $method = $this->getMethod($driver, 'prepareURL');
         $method->invokeArgs($driver, ['http://example.com', new \stdClass(), 'POST']);
     }
-
 
     /**
      * @expectedException \Trinity\NotificationBundle\Exception\ClientException

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trinity\NotificationBundle\AppTests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -9,16 +8,12 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 /**
- * Class ClientRunCommand
- *
- * @package Trinity\NotificationBundle\AppTests\Command
+ * Class ClientRunCommand.
  */
 class ClientRunCommand extends ContainerAwareCommand
 {
     private $kernel;
-
 
     /**
      * @param mixed $kernel
@@ -28,19 +23,17 @@ class ClientRunCommand extends ContainerAwareCommand
         $this->kernel = $kernel;
     }
 
-
     protected function configure()
     {
         $this
             ->setName('trinity:notification:client:run')
-            ->setDescription('Trinity client run command.');;
+            ->setDescription('Trinity client run command.');
     }
 
-
-    function isRunning($pid)
+    public function isRunning($pid)
     {
         try {
-            $result = shell_exec(sprintf("ps %d", $pid));
+            $result = shell_exec(sprintf('ps %d', $pid));
             if (count(preg_split("/\n/", $result)) > 2) {
                 return true;
             }
@@ -50,14 +43,13 @@ class ClientRunCommand extends ContainerAwareCommand
         return false;
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $kernel = $this->kernel;
         $input = new ArrayInput(
             array(
                 'command' => 'server:run',
-                '--port'  => '8001',
+                '--port' => '8001',
             )
         );
 

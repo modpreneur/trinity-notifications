@@ -12,5 +12,4 @@ namespace Trinity\NotificationBundle\Interfaces;
  */
 interface NotificationTypeInterface
 {
-
 }

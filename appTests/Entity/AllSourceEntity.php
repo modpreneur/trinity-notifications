@@ -7,7 +7,6 @@ use Trinity\Component\Core\Interfaces\ClientInterface as CI;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
-
 /**
  * Class TestEntity.
  *
@@ -16,7 +15,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  * @Notification\Source(columns="*")
  * @Notification\Methods(types={"put", "post"})
  */
-class AllSourceEntityInterface implements NotificationEntityInterface
+class AllSourceEntity implements NotificationEntityInterface
 {
     /** @var int */
     private $id = 1;
@@ -30,7 +29,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
     /** @var string */
     private $price = '10$';
 
-
     /**
      * @return int
      */
@@ -38,7 +36,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
     {
         return $this->id;
     }
-
 
     /**
      * @param int $id
@@ -48,7 +45,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
         $this->id = $id;
     }
 
-
     /**
      * @return string
      */
@@ -56,7 +52,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
     {
         return $this->name;
     }
-
 
     /**
      * @param string $name
@@ -66,7 +61,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
         $this->name = $name;
     }
 
-
     /**
      * @return string
      */
@@ -74,7 +68,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
     {
         return $this->description;
     }
-
 
     /**
      * @param string $description
@@ -84,7 +77,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
         $this->description = $description;
     }
 
-
     /**
      * @return string
      */
@@ -92,7 +84,6 @@ class AllSourceEntityInterface implements NotificationEntityInterface
     {
         return $this->price;
     }
-
 
     /**
      * @param string $price
@@ -102,18 +93,15 @@ class AllSourceEntityInterface implements NotificationEntityInterface
         $this->price = $price;
     }
 
-
     /** @return CI[] */
     public function getClients()
     {
         return [];
     }
 
-
     /**
-     * @param CI $client
+     * @param CI     $client
      * @param string $status
-     * @return void
      */
     public function setSyncStatus(CI $client, $status)
     {

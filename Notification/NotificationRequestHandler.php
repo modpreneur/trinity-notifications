@@ -144,14 +144,6 @@ class NotificationRequestHandler
     }
 
     /**
-     * @param SecretKeyProviderInterface $clientSecretProvider
-     */
-    public function setSecretKeyProvider(SecretKeyProviderInterface $clientSecretProvider)
-    {
-        $this->clientSecretProvider = $clientSecretProvider;
-    }
-
-    /**
      * Send response for the notification request message.
      *
      * @param NotificationRequestMessage  $message
@@ -181,6 +173,7 @@ class NotificationRequestHandler
         $notification->setData($entityArray);
         $notification->setMethod('POST');
         $notification->setMessageId($responseMessage->getUid());
+        //todo: should not be always false, but the error system should be refactored anyway
         $notification->setIsForced(false);
         //get entity "name", e.g. "product", "user"
         $notification->setEntityName($this->notificationUtils->getUrlPostfix($entity));

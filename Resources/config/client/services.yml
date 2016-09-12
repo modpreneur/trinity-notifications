@@ -9,5 +9,6 @@ services:
             - "@trinity.notification.notification_status_manager"
             - "@trinity.notification.annotations.utils"
             - "%trinity.notification.client.id%"
+            - "%%trinity.notification.entity_id_field%%"
         tags:
             - { name: trinity.notification.driver }

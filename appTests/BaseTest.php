@@ -8,14 +8,12 @@ namespace Trinity\NotificationBundle\AppTests;
 
 use Trinity\FrameworkBundle\Utils\BaseWebTest;
 
-
 /**
  * Class BaseTest.
  */
 abstract class BaseTest extends BaseWebTest
 {
     protected $port;
-
 
     /**
      * Creates an AppKernel.
@@ -34,5 +32,4 @@ abstract class BaseTest extends BaseWebTest
             $this->port
         );
     }
-
 }

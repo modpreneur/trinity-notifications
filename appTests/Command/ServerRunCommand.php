@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trinity\NotificationBundle\AppTests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -9,11 +8,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 /**
- * Class ServerRunCommand
- *
- * @package Trinity\NotificationBundle\AppTests\Command
+ * Class ServerRunCommand.
  */
 class ServerRunCommand extends ContainerAwareCommand
 {
@@ -21,7 +17,6 @@ class ServerRunCommand extends ContainerAwareCommand
     {
         $this->setName('trinity:notification:server:run')->setDescription('Trinity server run command.');
     }
-
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {

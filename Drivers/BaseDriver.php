@@ -6,9 +6,10 @@
 
 namespace Trinity\NotificationBundle\Drivers;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
@@ -28,9 +29,6 @@ abstract class BaseDriver implements NotificationDriverInterface
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
-    /** @var  EntityManagerInterface */
-    protected $entityManager;
-
     /** @var  AnnotationsUtils */
     protected $annotationsUtils;
 
@@ -44,6 +42,9 @@ abstract class BaseDriver implements NotificationDriverInterface
 
     /** @var BatchManager */
     protected $batchManager;
+
+    /** @var NotificationLoggerInterface */
+    protected $notificationLogger;
 
     /**
      * NotificationManager constructor.
@@ -69,11 +70,11 @@ abstract class BaseDriver implements NotificationDriverInterface
     }
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param NotificationLoggerInterface $notificationLogger
      */
-    public function setEntityManager(EntityManagerInterface $entityManager)
+    public function setNotificationLogger(NotificationLoggerInterface $notificationLogger)
     {
-        $this->entityManager = $entityManager;
+        $this->notificationLogger = $notificationLogger;
     }
 
     /**
@@ -102,7 +103,8 @@ abstract class BaseDriver implements NotificationDriverInterface
 
         return array_key_exists($clientId, $this->notifiedEntities) && //if the client array exists
             array_key_exists($class, $this->notifiedEntities[$clientId]) && // and the class array exists
-            in_array($entity->getId(), $this->notifiedEntities[$clientId][$class], false); // and the entity id exists in the class array
+            // and the entity id exists in the class array
+            in_array($entity->getId(), $this->notifiedEntities[$clientId][$class], false);
     }
 
     /**
@@ -141,6 +143,8 @@ abstract class BaseDriver implements NotificationDriverInterface
      * @param array                       $changeSet
      *
      * @return array
+     *
+     * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
     protected function prepareChangeset(NotificationEntityInterface $entity, array $changeSet)
     {
@@ -154,5 +158,13 @@ abstract class BaseDriver implements NotificationDriverInterface
 
         //change indexes 0,1 in changeset to keys 'old' and 'new'
         return $this->changeIndexesInChangeSet($changeSet);
+    }
+
+    /**
+     * @param Notification $notification
+     */
+    protected function logNotification(Notification $notification)
+    {
+        $this->notificationLogger->logOutcomingNotification($notification);
     }
 }

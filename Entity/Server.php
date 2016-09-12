@@ -51,8 +51,6 @@ class Server implements ClientInterface
 
     /**
      * @param string $secret
-     *
-     * @return string
      */
     public function setSecret($secret) : string
     {

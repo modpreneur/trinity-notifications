@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Trinity\NotificationBundle\AppTests\Sandbox\Entity;
-
 
 use Doctrine\ORM\Mapping as ORM;
 use Trinity\Component\Core\Interfaces\ClientInterface;
@@ -10,9 +8,7 @@ use Trinity\FrameworkBundle\Entity\BaseProduct;
 use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
-
 /**
- *
  * @ORM\Entity()
  *
  * @Notification\Source(columns="id, name, description")
@@ -24,9 +20,7 @@ class Product extends BaseProduct implements NotificationEntityInterface
     /** @var  Client */
     private $client;
 
-
     private $status = [];
-
 
     /**
      * @param int $id
@@ -35,7 +29,6 @@ class Product extends BaseProduct implements NotificationEntityInterface
     {
         $this->id = $id;
     }
-
 
     /**
      * Product constructor.
@@ -49,7 +42,6 @@ class Product extends BaseProduct implements NotificationEntityInterface
         $this->description = $faker->text();
     }
 
-
     /** @return Client[] */
     public function getClients()
     {
@@ -57,7 +49,6 @@ class Product extends BaseProduct implements NotificationEntityInterface
 
         return [$c];
     }
-
 
     /**
      * @param Client $client
@@ -67,11 +58,9 @@ class Product extends BaseProduct implements NotificationEntityInterface
         $this->client = $client;
     }
 
-
     /**
      * @param ClientInterface $client
-     * @param string $status
-     * @return void
+     * @param string          $status
      */
     public function setSyncStatus(ClientInterface $client, $status)
     {

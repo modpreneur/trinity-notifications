@@ -27,6 +27,4 @@ class EntityAliasNotFoundException extends NotificationException
     {
         $this->class = $class;
     }
-
-
 }

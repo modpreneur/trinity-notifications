@@ -1,34 +1,30 @@
 <?php
+
 namespace Trinity\NotificationBundle;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
-
-
 
 /**
  * Class AppKernel.
  */
 class AppKernel extends Kernel
 {
-
-    /** @var  integer */
+    /** @var  int */
     private $port;
-
 
     /**
      * Constructor.
      *
      * @param string $environment The environment
-     * @param bool $debug Whether to enable debugging or not
-     * @param integer $port
+     * @param bool   $debug       Whether to enable debugging or not
+     * @param int    $port
      */
     public function __construct($environment, $debug, $port = null)
     {
         $this->port = $port;
         parent::__construct($environment, $debug);
     }
-
 
     /**
      * @return array
@@ -46,7 +42,6 @@ class AppKernel extends Kernel
         ];
     }
 
-
     /**
      * @param LoaderInterface $loader
      */
@@ -62,7 +57,6 @@ class AppKernel extends Kernel
         }
     }
 
-
     /**
      * @return string
      */
@@ -70,7 +64,6 @@ class AppKernel extends Kernel
     {
         return __DIR__.'/./cache';
     }
-
 
     /**
      * @return string

@@ -8,7 +8,6 @@ use Trinity\NotificationBundle\Annotations as Notification;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 
-
 /**
  * Class TestEntity.
  *
@@ -17,7 +16,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
  * @Notification\Source(columns="id, name, description")
  * @Notification\Methods(types={"put", "post", "delete"})
  */
-class EntityInterfaceDisableClient implements NotificationEntityInterface
+class EntityDisableClient implements NotificationEntityInterface
 {
     /** @var  int */
     private $id = 1;
@@ -28,13 +27,11 @@ class EntityInterfaceDisableClient implements NotificationEntityInterface
     /** @var  string */
     private $description;
 
-
     /** @return int */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -44,7 +41,6 @@ class EntityInterfaceDisableClient implements NotificationEntityInterface
         return 'Disable TestClient';
     }
 
-
     /**
      * @return string
      */
@@ -52,7 +48,6 @@ class EntityInterfaceDisableClient implements NotificationEntityInterface
     {
         return 'Disable client description.';
     }
-
 
     /** @return CI[] */
     public function getClients()
@@ -62,11 +57,9 @@ class EntityInterfaceDisableClient implements NotificationEntityInterface
         return [$c];
     }
 
-
     /**
-     * @param CI $client
+     * @param CI     $client
      * @param string $status
-     * @return void
      */
     public function setSyncStatus(CI $client, $status)
     {

@@ -20,7 +20,8 @@ class SynchronizationStopper
 
     /**
      * SynchronizationStopper constructor.
-     * @param MessageSender $messageSender
+     *
+     * @param MessageSender         $messageSender
      * @param EntityAliasTranslator $entityAliasTranslator
      */
     public function __construct(MessageSender $messageSender, EntityAliasTranslator $entityAliasTranslator)
@@ -28,7 +29,6 @@ class SynchronizationStopper
         $this->messageSender = $messageSender;
         $this->entityAliasTranslator = $entityAliasTranslator;
     }
-
 
     /**
      * Send SynchronizationStoppedMessage to the given client.

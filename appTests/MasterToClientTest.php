@@ -6,14 +6,12 @@
 
 namespace Trinity\NotificationBundle\AppTests;
 
-
 /**
  * Class ServerToClientTest.
  */
-class ServerToClientTest extends BaseTest
+class MasterToClientTest extends BaseTest
 {
     protected $port = 8001;
-
 
     /**
      * @test
@@ -22,6 +20,4 @@ class ServerToClientTest extends BaseTest
     {
         $client = shell_exec('php console.php trinity:notification:client:run > /dev/null 2>/dev/null &');
     }
-
 }
-

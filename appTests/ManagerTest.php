@@ -8,7 +8,6 @@ use Trinity\NotificationBundle\AppTests\Entity\EntityInterfaceWithoutClient;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Client;
 use Trinity\NotificationBundle\AppTests\Sandbox\Entity\Product;
 
-
 /**
  * Class ManagerTest.
  */
@@ -26,7 +25,6 @@ class ManagerTest extends BaseTest
         $result = $manager->send($entity);
         $this->assertEmpty($result);
     }
-
 
     /**
      * @test
@@ -59,10 +57,8 @@ class ManagerTest extends BaseTest
 
             // Array
             $this->assertEquals([$client], $method->invokeArgs($manager, [[$client]]));
-
         }
     }
-
 
     /**
      * @test
@@ -76,11 +72,11 @@ class ManagerTest extends BaseTest
         $this->assertArrayHasKey('error', $result[0]);
     }
 
-
     /**
      * @test
      */
-    public function testSyncEntity(){
+    public function testSyncEntity()
+    {
         $manager = $this->getContainer()->get('trinity.notification.manager');
         $entity = new Product();
         $client = $entity->getClients()[0];
@@ -88,10 +84,9 @@ class ManagerTest extends BaseTest
         $r = $manager->syncEntity($entity, $client);
 
         $this->assertEquals([
-            'code'       => 200,
+            'code' => 200,
             'statusCode' => 200,
-            'message'    => 'OK'
+            'message' => 'OK',
         ], $r[0]);
     }
-
 }
