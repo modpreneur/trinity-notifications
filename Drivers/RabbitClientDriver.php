@@ -9,14 +9,12 @@ namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
-use Trinity\NotificationBundle\Entity\EntityStatusLog;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
-use Trinity\NotificationBundle\Services\NotificationStatusManager;
 
 /**
  * Class RabbitClientDriver.
@@ -26,30 +24,25 @@ class RabbitClientDriver extends BaseDriver
     /** @var string */
     protected $clientId;
 
-    /** @var  NotificationStatusManager */
-    protected $statusManager;
-
     /** @var string */
     private $entityIdField;
 
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface  $eventDispatcher
-     * @param EntityConverter           $entityConverter
-     * @param NotificationUtils         $notificationUtils
-     * @param BatchManager              $batchManager
-     * @param NotificationStatusManager $statusManager
-     * @param AnnotationsUtils          $annotationsUtils
-     * @param string                    $clientId
-     * @param string                    $entityIdField
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityConverter          $entityConverter
+     * @param NotificationUtils        $notificationUtils
+     * @param BatchManager             $batchManager
+     * @param AnnotationsUtils         $annotationsUtils
+     * @param string                   $clientId
+     * @param string                   $entityIdField
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         BatchManager $batchManager,
-        NotificationStatusManager $statusManager,
         AnnotationsUtils $annotationsUtils,
         string $clientId,
         string $entityIdField
@@ -62,7 +55,6 @@ class RabbitClientDriver extends BaseDriver
             $annotationsUtils
         );
 
-        $this->statusManager = $statusManager;
         $this->clientId = $clientId;
         $this->entityIdField = $entityIdField;
     }
@@ -99,6 +91,7 @@ class RabbitClientDriver extends BaseDriver
         $batch->setDestination('server');
 
         $notification = new Notification();
+        $notification->setEntityId((int) $entityArray['id']);
         $notification->setData($entityArray);
         $notification->setMethod($params['HTTPMethod']);
         $notification->setMessageId($batch->getUid());
@@ -110,14 +103,6 @@ class RabbitClientDriver extends BaseDriver
 
         $batch->addNotification($notification);
         $this->logNotification($notification);
-
-        $this->statusManager->setEntityStatus(
-            $entity,
-            $client,
-            time(),
-            $batch->getUid(),
-            EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS
-        );
     }
 
     /**

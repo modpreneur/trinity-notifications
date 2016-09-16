@@ -124,6 +124,18 @@ class TrinityNotificationExtension extends Extension
                     [new Reference($config['notification_logger'])]
                 );
         }
+
+        $container->getDefinition('trinity.notification.batch_manager')
+            ->addMethodCall(
+                'setNotificationLogger',
+                [new Reference($config['notification_logger'])]
+            );
+
+        $container->getDefinition('trinity.notification.reader')
+            ->addMethodCall(
+                'setNotificationLogger',
+                [new Reference($config['notification_logger'])]
+            );
     }
 
     /**

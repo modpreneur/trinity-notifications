@@ -24,31 +24,35 @@ class Notification
     const CREATED_AT = 'createdAt';
     const CLIENT_ID = 'clientId';
     const ENTITY_NAME = 'entityName';
+    const ENTITY_ID = 'entityId';
     const UID = 'uid';
 
     /** @var string */
-    protected $messageId;
+    protected $messageId = '';
 
     /** @var array Array of notification data(e.g. name, description) */
-    protected $data;
+    protected $data = [];
 
     /** @var  string Entity alias, e.g. product, user */
-    protected $entityName;
+    protected $entityName = '';
+
+    /** @var int  */
+    protected $entityId = 0;
 
     /** @var array */
     protected $changeSet = [];
 
     /** @var string HTTP method of the message. */
-    protected $method;
+    protected $method = '';
 
     /** @var  bool If the notification is forced and should not be checked for any changeset violation */
-    protected $isForced;
+    protected $isForced = false;
 
     /** @var  int */
     protected $createdAt;
 
     /** @var  string */
-    protected $clientId;
+    protected $clientId = '';
 
     /** @var  string */
     protected $uid;
@@ -111,12 +115,15 @@ class Notification
     }
 
     /**
-     * @param array $data
+     * @param array|string $data
      *
      * @return Notification
      */
-    public function setData(array $data)
+    public function setData($data)
     {
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
         $this->data = $data;
 
         return $this;
@@ -131,12 +138,16 @@ class Notification
     }
 
     /**
-     * @param array $changeSet
+     * @param array|string $changeSet
      *
      * @return Notification
      */
-    public function setChangeSet(array $changeSet)
+    public function setChangeSet($changeSet)
     {
+        if (is_string($changeSet)) {
+            $changeSet = json_decode($changeSet, true);
+        }
+
         $this->changeSet = $changeSet;
 
         return $this;
@@ -223,6 +234,22 @@ class Notification
     }
 
     /**
+     * @return int
+     */
+    public function getEntityId(): int
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @param int $entityId
+     */
+    public function setEntityId(int $entityId)
+    {
+        $this->entityId = $entityId;
+    }
+
+    /**
      * @return array
      */
     public function toArray() : array
@@ -237,6 +264,7 @@ class Notification
             self::CLIENT_ID => $this->clientId,
             self::ENTITY_NAME => $this->entityName,
             self::UID => $this->uid,
+            self::ENTITY_ID => $this->entityId
         ];
     }
 
@@ -260,6 +288,7 @@ class Notification
         $notificationObject->clientId = $notificationArray[self::CLIENT_ID];
         $notificationObject->entityName = $notificationArray[self::ENTITY_NAME];
         $notificationObject->uid = $notificationArray[self::UID];
+        $notificationObject->entityId = $notificationArray[self::ENTITY_ID];
 
         return $notificationObject;
     }

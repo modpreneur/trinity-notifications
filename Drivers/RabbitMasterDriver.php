@@ -9,7 +9,6 @@ namespace Trinity\NotificationBundle\Drivers;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
-use Trinity\NotificationBundle\Entity\EntityStatusLog;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
@@ -26,9 +25,6 @@ class RabbitMasterDriver extends BaseDriver
     /** @var array */
     protected $messages;
 
-    /** @var  NotificationStatusManager */
-    protected $statusManager;
-
     /**
      * NotificationManager constructor.
      *
@@ -36,7 +32,6 @@ class RabbitMasterDriver extends BaseDriver
      * @param EntityConverter           $entityConverter
      * @param NotificationUtils         $notificationUtils
      * @param BatchManager              $batchManager
-     * @param NotificationStatusManager $statusManager
      * @param AnnotationsUtils          $annotationsUtils
      */
     public function __construct(
@@ -44,7 +39,6 @@ class RabbitMasterDriver extends BaseDriver
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         BatchManager $batchManager,
-        NotificationStatusManager $statusManager,
         AnnotationsUtils $annotationsUtils
     ) {
         parent::__construct(
@@ -55,7 +49,6 @@ class RabbitMasterDriver extends BaseDriver
             $annotationsUtils
         );
 
-        $this->statusManager = $statusManager;
         $this->messages = [];
     }
 
@@ -121,6 +114,7 @@ class RabbitMasterDriver extends BaseDriver
             $batch->setDestination('client_'.$client->getId());
 
             $notification = new Notification();
+            $notification->setEntityId((int)$entityArray['id']);
             $notification->setData($entityArray);
             $notification->setMethod($params['HTTPMethod']);
             $notification->setMessageId($batch->getUid());
@@ -132,14 +126,6 @@ class RabbitMasterDriver extends BaseDriver
 
             $batch->addNotification($notification);
             $this->logNotification($notification);
-
-            $this->statusManager->setEntityStatus(
-                $entity,
-                $client,
-                time(),
-                $batch->getUid(),
-                EntityStatusLog::SYNCHRONIZATION_IN_PROGRESS
-            );
         }
     }
 

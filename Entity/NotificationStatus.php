@@ -14,18 +14,20 @@ class NotificationStatus
 
     const STATUS_OK = 'ok';
     const STATUS_ERROR = 'error';
+    const STATUS_SENT = 'sent';
+    const STATUSES = [self::STATUS_OK, self::STATUS_ERROR, self::STATUS_SENT];
 
     /** @var  string */
-    protected $notificationId;
+    protected $notificationId = '';
 
     /** @var  string */
-    protected $status;
+    protected $status = '';
 
     /** @var  string */
-    protected $message;
+    protected $message = '';
 
     /** @var  array */
-    protected $extra;
+    protected $extra = [];
 
     /**
      * @return string
@@ -53,9 +55,17 @@ class NotificationStatus
 
     /**
      * @param string $status
+     *
+     * @throws \InvalidArgumentException
      */
     public function setStatus(string $status)
     {
+        if (!in_array($status, self::STATUSES, true)) {
+            throw new \InvalidArgumentException(
+                'Notification status has to be one of: '.implode(', ', self::STATUSES)
+            );
+        }
+
         $this->status = $status;
     }
 

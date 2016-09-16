@@ -145,12 +145,6 @@ services:
             - persistent: 2
             - path: "/"
 
-    trinity.notification.notification_status_manager:
-        class: Trinity\NotificationBundle\Services\NotificationStatusManager
-        arguments:
-            - "@trinity.logger.elastic_read_log_service"
-            - "@trinity.logger.elastic_log_service"
-
     trinity.notification.entity_alias_translator:
         class: Trinity\NotificationBundle\Services\EntityAliasTranslator
         arguments:

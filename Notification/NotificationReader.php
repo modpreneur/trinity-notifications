@@ -7,7 +7,6 @@
  */
 namespace Trinity\NotificationBundle\Notification;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
@@ -20,6 +19,7 @@ use Trinity\NotificationBundle\Event\AssociationEntityNotFoundEvent;
 use Trinity\NotificationBundle\Event\BeforeNotificationBatchProcessEvent;
 use Trinity\NotificationBundle\Event\ChangesDoneEvent;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
+use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
 
 /**
  * Class NotificationReader.
@@ -34,6 +34,9 @@ class NotificationReader
 
     /** @var  MessageSender */
     protected $messageSender;
+
+    /** @var  NotificationLoggerInterface */
+    protected $notificationLogger;
 
     /**
      * NotificationReader constructor.
@@ -60,6 +63,7 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
+     * @throws \InvalidArgumentException
      *
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
@@ -72,22 +76,28 @@ class NotificationReader
     public function read(Message $message) : array
     {
         $notificationBatch = NotificationBatch::createFromMessage($message);
+        $notifications = $notificationBatch->getNotifications()->toArray();
 
         $this->eventDispatcher->dispatch(
             BeforeNotificationBatchProcessEvent::NAME,
             new BeforeNotificationBatchProcessEvent($notificationBatch->getUser(), $notificationBatch->getClientId())
         );
 
+        $this->logNotifications($notifications);
+
         try {
             $entities = $this->parser->parseNotifications(
-                $notificationBatch->getNotifications()->toArray()
+                $notifications
             );
 
+            $this->logNotificationsSuccess($notificationBatch);
             $this->sendStatusMessage($notificationBatch);
 
             $this->dispatchEndEvent($notificationBatch);
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($notificationBatch);
+
+            $this->logNotificationsError($notificationBatch, $e);
 
             if ($this->eventDispatcher->hasListeners(AssociationEntityNotFoundEvent::NAME)) {
                 $event = new AssociationEntityNotFoundEvent($e);
@@ -100,6 +110,8 @@ class NotificationReader
         } catch (\Exception $e) {
             $this->dispatchEndEvent($notificationBatch, $e);
 
+            $this->logNotificationsError($notificationBatch, $e);
+
             throw $e;
         }
 
@@ -111,6 +123,62 @@ class NotificationReader
         return $entities;
     }
 
+
+    /**
+     * @param NotificationBatch $batch
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function logNotificationsSuccess(NotificationBatch $batch)
+    {
+        $this->logNotificationsStatus($batch, NotificationStatus::STATUS_OK, 'ok');
+    }
+
+    /**
+     * @param NotificationBatch $batch
+     * @param \Exception $exception
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function logNotificationsError(NotificationBatch $batch, \Exception $exception)
+    {
+        //todo: log as errored only actually errored notifications?
+        $this->logNotificationsStatus($batch, NotificationStatus::STATUS_ERROR, $exception->getMessage());
+    }
+
+    /**
+     * @param NotificationBatch $batch
+     * @param string $status
+     * @param string $message
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function logNotificationsStatus(NotificationBatch $batch, string $status, string $message)
+    {
+        $statuses = [];
+
+        /** @var Notification $notification */
+        foreach ($batch->getNotifications() as $notification) {
+            $notificationStatus = new NotificationStatus();
+            $notificationStatus->setStatus($status);
+            $notificationStatus->setMessage($message);
+            $notificationStatus->setNotificationId($notification->getUid());
+            $statuses[] = $notificationStatus;
+        }
+
+        $this->notificationLogger->setNotificationStatuses($statuses);
+    }
+
+    /**
+     * @param array $notifications
+     */
+    protected function logNotifications(array $notifications)
+    {
+        foreach ($notifications as $notification) {
+            $this->notificationLogger->logIncomingNotification($notification);
+        }
+    }
+
     /**
      * @param NotificationBatch $batch
      *
@@ -119,6 +187,7 @@ class NotificationReader
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \InvalidArgumentException
      */
     protected function sendStatusMessage(NotificationBatch $batch)
     {
@@ -164,6 +233,14 @@ class NotificationReader
         }
 
         return null;
+    }
+
+    /**
+     * @param NotificationLoggerInterface $notificationLogger
+     */
+    public function setNotificationLogger(NotificationLoggerInterface $notificationLogger)
+    {
+        $this->notificationLogger = $notificationLogger;
     }
 
     /**

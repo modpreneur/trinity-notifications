@@ -103,7 +103,7 @@ class NotificationStatusMessage extends Message
     {
         $statusMessage = new self();
         $message->copyTo($statusMessage);
-        $decoded = json_decode($statusMessage->jsonData);
+        $decoded = json_decode($statusMessage->jsonData, true);
 
         $statuses = [];
         //conversion succeeded
