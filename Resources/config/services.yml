@@ -1,4 +1,10 @@
 services:
+    trinity.notification.facade:
+        class: Trinity\NotificationBundle\Facades\NotificationFacade
+        arguments:
+            - "@trinity.notification.synchronization_stopper"
+            - "@trinity.notification.manager"
+            - "@trinity.notification.entity_alias_translator"
 
     trinity.notification.entity_converter:
         class: Trinity\NotificationBundle\Notification\EntityConverter

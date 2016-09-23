@@ -1,0 +1,129 @@
+<?php
+
+namespace Trinity\NotificationBundle\Facades;
+
+use Trinity\Component\Core\Interfaces\ClientInterface;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Exception\EntityAliasNotFoundException;
+use Trinity\NotificationBundle\Notification\NotificationManager;
+use Trinity\NotificationBundle\Services\EntityAliasTranslator;
+use Trinity\NotificationBundle\Services\SynchronizationStopper;
+
+/**
+ * Class NotificationFacade.
+ */
+class NotificationFacade
+{
+    /** @var SynchronizationStopper */
+    protected $synchronizationStopper;
+
+    /** @var  NotificationManager */
+    protected $notificationManager;
+
+    /** @var  EntityAliasTranslator */
+    protected $aliasTranslator;
+
+    /**
+     * NotificationFacade constructor.
+     *
+     * @param SynchronizationStopper $synchronizationStopper
+     * @param NotificationManager    $notificationManager
+     * @param EntityAliasTranslator  $aliasTranslator
+     */
+    public function __construct(
+        SynchronizationStopper $synchronizationStopper,
+        NotificationManager $notificationManager,
+        EntityAliasTranslator $aliasTranslator
+    ) {
+        $this->synchronizationStopper = $synchronizationStopper;
+        $this->notificationManager = $notificationManager;
+        $this->aliasTranslator = $aliasTranslator;
+    }
+
+    /**
+     * Stop synchronization of the entity with the client.
+     *
+     * @param NotificationEntityInterface $entity
+     * @param ClientInterface             $client
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     */
+    public function stopSynchronization(NotificationEntityInterface $entity, ClientInterface $client)
+    {
+        $this->synchronizationStopper->sendStopSynchronizationMessage($entity, $client);
+    }
+
+    /**
+     * Synchronize the entity with the client.
+     *
+     * @param NotificationEntityInterface $entity
+     * @param ClientInterface             $client
+     * @param bool                        $force  Should be the data of the sender overridden in case of unexpected state?
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     */
+    public function synchronizeEntity(NotificationEntityInterface $entity, ClientInterface $client, bool $force)
+    {
+        $this->notificationManager->syncEntity($entity, $client, $force);
+    }
+
+    /**
+     * Synchronize the entities with the client.
+     *
+     * @param $entities
+     * @param $client
+     * @param $forced
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     */
+    public function synchronizeEntities(array $entities, ClientInterface $client, bool $forced)
+    {
+        $this->notificationManager->syncEntities($entities, $client, $forced);
+    }
+
+    /**
+     * Get alias from full class name.
+     * Example: 'App\Entity\Product' => 'product'.
+     *
+     * @param string $class
+     *
+     * @return string
+     *
+     * @throws EntityAliasNotFoundException
+     */
+    public function getAliasFromClass(string $class)
+    {
+        return $this->aliasTranslator->getAliasFromClass($class);
+    }
+
+    /**
+     * Get full class name from entity alias.
+     * Example: 'product' => 'App\Entity\Product'.
+     *
+     * @param string $alias
+     *
+     * @return string
+     *
+     * @throws EntityAliasNotFoundException
+     */
+    public function getClassFromAlias(string $alias)
+    {
+        return $this->aliasTranslator->getAliasFromClass($alias);
+    }
+}
