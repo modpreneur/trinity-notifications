@@ -292,4 +292,28 @@ class Notification
 
         return $notificationObject;
     }
+
+    /**
+     * Parse json which contains array of notifications to array of Notification objects
+     *
+     * @param string $json
+     *
+     * @return array
+     */
+    public static function fromJson(string $json)
+    {
+        /** @var array $notificationsArrays */
+        $notificationsArrays = json_decode($json, true);
+
+        $notifications = [];
+        //conversion succeeded
+        if (is_array($notificationsArrays)) {
+            /** @var array $notificationsArrays */
+            foreach ($notificationsArrays as $item) {
+                $notifications[] = Notification::fromArray($item);
+            }
+        }
+
+        return $notifications;
+    }
 }
