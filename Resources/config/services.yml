@@ -5,6 +5,7 @@ services:
             - "@trinity.notification.synchronization_stopper"
             - "@trinity.notification.manager"
             - "@trinity.notification.entity_alias_translator"
+            - "@event_dispatcher"
 
     trinity.notification.entity_converter:
         class: Trinity\NotificationBundle\Notification\EntityConverter
@@ -44,7 +45,6 @@ services:
         arguments:
             - "@event_dispatcher"
             - "@trinity.notification.batch_manager"
-
 
 # this event listener can not be refactored to subscriber because one class can not be symfony and doctrine subscriber
     trinity.notification.entity_listener:

@@ -297,22 +297,4 @@ class EntityListener
 
         return $default;
     }
-
-    /**
-     * Get original data from entity's changeset.
-     *
-     * @param array $changeset
-     *
-     * @return array In format ['property1' => 'old value 1', 'property2' => 'old value 2']
-     */
-    protected function getOriginalData(array $changeset)
-    {
-        $originalData = [];
-
-        foreach ($changeset as $propertyName => $propertyChangeset) {
-            $originalData[$propertyName] = $propertyChangeset[0]; //0 = old value, 1 = new value
-        }
-
-        return $originalData;
-    }
 }

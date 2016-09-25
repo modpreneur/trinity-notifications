@@ -2,8 +2,10 @@
 
 namespace Trinity\NotificationBundle\Facades;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Entity\StopSynchronizationForClientEvent;
 use Trinity\NotificationBundle\Exception\EntityAliasNotFoundException;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Services\EntityAliasTranslator;
@@ -23,21 +25,27 @@ class NotificationFacade
     /** @var  EntityAliasTranslator */
     protected $aliasTranslator;
 
+    /** @var  EventDispatcherInterface */
+    protected $eventDispatcher;
+
     /**
      * NotificationFacade constructor.
      *
-     * @param SynchronizationStopper $synchronizationStopper
-     * @param NotificationManager    $notificationManager
-     * @param EntityAliasTranslator  $aliasTranslator
+     * @param SynchronizationStopper   $synchronizationStopper
+     * @param NotificationManager      $notificationManager
+     * @param EntityAliasTranslator    $aliasTranslator
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         SynchronizationStopper $synchronizationStopper,
         NotificationManager $notificationManager,
-        EntityAliasTranslator $aliasTranslator
+        EntityAliasTranslator $aliasTranslator,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->synchronizationStopper = $synchronizationStopper;
         $this->notificationManager = $notificationManager;
         $this->aliasTranslator = $aliasTranslator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -125,5 +133,46 @@ class NotificationFacade
     public function getClassFromAlias(string $alias)
     {
         return $this->aliasTranslator->getAliasFromClass($alias);
+    }
+
+    /**
+     * Send all queued notificaitons.
+     *
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     */
+    public function sendAllQueuedNotifications()
+    {
+        $this->notificationManager->sendBatch();
+    }
+
+    /**
+     * Disable doctrine entity listener for the client. The notification for this client will not be created.
+     *
+     * IMPORTANT: This method call has an effect just for the process in which is used. It does not persist anywhere.
+     *
+     * @param ClientInterface $client
+     */
+    public function disableEntityListeningForClient(ClientInterface $client)
+    {
+        $event = new StopSynchronizationForClientEvent($client);
+        $this->eventDispatcher->dispatch(StopSynchronizationForClientEvent::NAME, $event);
+    }
+
+    /**
+     * Allow doctrine entity listener notifications for all client.
+     *
+     * This method is the opposite of the method disableEntityListeningForClient.
+     *
+     * IMPORTANT: This method call has an effect just for the process in which is used. It does not persist anywhere.
+     */
+    public function allowEntityListeningForAllClients()
+    {
+        $event = new StopSynchronizationForClientEvent(null);
+        $this->eventDispatcher->dispatch(StopSynchronizationForClientEvent::NAME, $event);
     }
 }

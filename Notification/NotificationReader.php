@@ -12,6 +12,7 @@ use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
+use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
 use Trinity\NotificationBundle\Entity\NotificationStatusMessage;
 use Trinity\NotificationBundle\Event\AfterNotificationBatchProcessEvent;
@@ -93,36 +94,49 @@ class NotificationReader
             $this->logNotificationsSuccess($notificationBatch);
             $this->sendStatusMessage($notificationBatch);
 
+            $this->dispatchChangesDoneEvent($entities, $notificationBatch);
             $this->dispatchEndEvent($notificationBatch);
         } catch (AssociationEntityNotFoundException $e) {
             $e->setMessageObject($notificationBatch);
-
             $this->logNotificationsError($notificationBatch, $e);
 
-            if ($this->eventDispatcher->hasListeners(AssociationEntityNotFoundEvent::NAME)) {
-                $event = new AssociationEntityNotFoundEvent($e);
-                $this->eventDispatcher->dispatch(AssociationEntityNotFoundEvent::NAME, $event);
-            }
-
+            $this->dispatchAssocEntityNotFound($e);
             $this->dispatchEndEvent($notificationBatch, $e);
 
             throw $e;
         } catch (\Exception $e) {
             $this->dispatchEndEvent($notificationBatch, $e);
-
             $this->logNotificationsError($notificationBatch, $e);
 
             throw $e;
         }
 
+        return $entities;
+    }
+
+
+    /**
+     * @param NotificationEntityInterface[] $entities
+     * @param NotificationBatch $notificationBatch
+     */
+    protected function dispatchChangesDoneEvent(array $entities, NotificationBatch $notificationBatch)
+    {
         if ($this->eventDispatcher->hasListeners(ChangesDoneEvent::NAME)) {
             $event = new ChangesDoneEvent($entities, $notificationBatch);
             $this->eventDispatcher->dispatch(ChangesDoneEvent::NAME, $event);
         }
-
-        return $entities;
     }
 
+    /**
+     * @param AssociationEntityNotFoundException $exception
+     */
+    protected function dispatchAssocEntityNotFound(AssociationEntityNotFoundException $exception)
+    {
+        if ($this->eventDispatcher->hasListeners(AssociationEntityNotFoundEvent::NAME)) {
+            $event = new AssociationEntityNotFoundEvent($exception);
+            $this->eventDispatcher->dispatch(AssociationEntityNotFoundEvent::NAME, $event);
+        }
+    }
 
     /**
      * @param NotificationBatch $batch

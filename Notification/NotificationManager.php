@@ -35,6 +35,9 @@ class NotificationManager
     /** @var  array */
     protected $queuedNotifications;
 
+    /** @var  ClientInterface|null */
+    protected $stoppedForClient;
+
     /**
      * NotificationManager constructor.
      *
@@ -180,6 +183,14 @@ class NotificationManager
     }
 
     /**
+     * @param ClientInterface|null $client
+     */
+    public function disableNotification(ClientInterface $client = null)
+    {
+        $this->stoppedForClient = $client;
+    }
+
+    /**
      *  Send notification to client.
      *
      * @param NotificationEntityInterface $entity
@@ -201,6 +212,9 @@ class NotificationManager
         foreach ($this->drivers as $driver) {
             if ($clients) {
                 foreach ($clients as $client) {
+                    if ($client === $this->stoppedForClient) {
+                        continue;
+                    }
                     $this->executeEntityInDriver($entity, $driver, $client, $force, $changeSet, $HTTPMethod, $options);
                 }
             }

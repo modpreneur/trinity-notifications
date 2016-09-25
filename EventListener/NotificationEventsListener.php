@@ -17,6 +17,7 @@ use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Entity\NotificationStatusMessage;
+use Trinity\NotificationBundle\Entity\StopSynchronizationForClientEvent;
 use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
@@ -120,6 +121,11 @@ class NotificationEventsListener implements EventSubscriberInterface
         );
     }
 
+    public function onStopSynchronizationForClientEvent(StopSynchronizationForClientEvent $event)
+    {
+        $this->notificationManager->disableNotification($event->getClient());
+    }
+
     /**
      * @param Message $message
      */
@@ -129,6 +135,7 @@ class NotificationEventsListener implements EventSubscriberInterface
         $statuses = $message->getAllStatuses()->toArray();
         $this->notificationLogger->setNotificationStatuses($statuses);
     }
+
     /**
      * @param Message $message
      *
@@ -245,6 +252,7 @@ class NotificationEventsListener implements EventSubscriberInterface
         return [
             ReadMessageEvent::NAME => ['onMessageRead', 100],
             SendNotificationEvent::NAME => ['onSendNotificationEvent', 100],
+            StopSynchronizationForClientEvent::NAME => ['onStopSynchronizationForClientEvent', 100],
         ];
     }
 }
