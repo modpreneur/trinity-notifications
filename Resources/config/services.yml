@@ -22,12 +22,11 @@ services:
         arguments:
             - "@logger"
             - "@trinity.notification.entity_conversion_handler"
-            - "@event_dispatcher"
+            - "@trinity.notificaiton.event_dispatcher"
             - "@doctrine.orm.entity_manager"
             - "@trinity.notification.entity_associator"
+            - "@trinity.notification.entity_alias_translator"
             - "%trinity.notification.entity_id_field%"
-            - "%trinity.notification.is_client%"
-            - "%trinity.notification.entities%"
             - "%trinity.notification.disable_time_violations%"
 
     trinity.notification.annotations.utils:
@@ -43,8 +42,19 @@ services:
     trinity.notification.manager:
         class: Trinity\NotificationBundle\Notification\NotificationManager
         arguments:
-            - "@event_dispatcher"
+            - "@trinity.notificaiton.event_dispatcher"
             - "@trinity.notification.batch_manager"
+
+    trinity.notification.constraints:
+        class: Trinity\NotificationBundle\Notification\NotificationConstraints
+        arguments:
+            - "%trinity.notification.is_client%"
+            - "%trinity.notification.disable_time_violations%"
+
+    trinity.notificaiton.event_dispatcher:
+        class: Trinity\NotificationBundle\Notification\NotificationEventDispatcher
+        arguments:
+            - "@event_dispatcher"
 
 # this event listener can not be refactored to subscriber because one class can not be symfony and doctrine subscriber
     trinity.notification.entity_listener:
@@ -103,8 +113,8 @@ services:
             - "@event_dispatcher"
             - "@form.factory"
             - "@trinity.notification.entity_converter"
+            - "@trinity.notification.entity_alias_translator"
             - "%trinity.notification.forms%"
-            - "%trinity.notification.entities%"
             - "%trinity.notification.entity_id_field%"
 
     trinity.notification.entity_associator:
@@ -113,15 +123,15 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@trinity.notification.annotations.utils"
             - "@logger"
+            - "@trinity.notification.entity_alias_translator"
             - "%trinity.notification.is_client%"
             - "%trinity.notification.entity_id_field%"
-            - "%trinity.notification.entities%"
 
     trinity.notification.reader:
         class: Trinity\NotificationBundle\Notification\NotificationReader
         arguments:
             - "@trinity.notification.services.notification_parser"
-            - "@event_dispatcher"
+            - "@trinity.notificaiton.event_dispatcher"
             - "@trinity.messages.message_sender"
 
     trinity.notification.notification_request_listener:
@@ -138,7 +148,7 @@ services:
             - '@trinity.messages.message_sender'
             - "@trinity.notification.entity_converter"
             - "@trinity.notification.utils"
-            - "%trinity.notification.entities%"
+            - "@trinity.notification.entity_alias_translator"
             - "%trinity.notification.is_client%"
 
     trinity.bunny.client:

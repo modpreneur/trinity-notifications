@@ -14,6 +14,7 @@ use Trinity\NotificationBundle\Annotations\AssociationSetter;
 use Trinity\NotificationBundle\Entity\Association;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
+use Trinity\NotificationBundle\Services\EntityAliasTranslator;
 
 /**
  * Class EntityAssociator.
@@ -41,41 +42,33 @@ class EntityAssociator
     /** @var  LoggerInterface */
     protected $logger;
 
-    /**
-     * @var array Indexed array of entities' aliases and real class names.
-     *            format:
-     *            [
-     *            "user" => "App\Entity\User,
-     *            "product" => "App\Entity\Product,
-     *            ....
-     *            ]
-     */
-    protected $entities;
+    /** @var  EntityAliasTranslator */
+    protected $entityAliasTranslator;
 
     /**
      * EntityAssociator constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param AnnotationsUtils       $annotationsUtils
-     * @param LoggerInterface        $logger
-     * @param bool                   $isClient
-     * @param string                 $serverIdField
-     * @param array                  $entities
+     * @param AnnotationsUtils $annotationsUtils
+     * @param LoggerInterface $logger
+     * @param EntityAliasTranslator $aliasTranslator
+     * @param bool $isClient
+     * @param string $serverIdField
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         AnnotationsUtils $annotationsUtils,
         LoggerInterface $logger,
+        EntityAliasTranslator $aliasTranslator,
         bool $isClient,
-        string $serverIdField,
-        array $entities
+        string $serverIdField
     ) {
         $this->isClient = $isClient;
         $this->entityManager = $entityManager;
         $this->annotationsUtils = $annotationsUtils;
         $this->logger = $logger;
+        $this->entityAliasTranslator = $aliasTranslator;
         $this->serverIdField = $serverIdField;
-        $this->entities = $entities;
         $this->getServerIdMethod = 'get'.ucfirst($serverIdField);
     }
 
@@ -138,11 +131,12 @@ class EntityAssociator
      * Associate given $entity with $associatedEntity.
      *
      * @param NotificationEntityInterface $entity
-     * @param Association                 $entityAssociation
+     * @param Association $entityAssociation
      * @param NotificationEntityInterface $associatedEntity
-     * @param array                       $entities
+     * @param array $entities
      *
      * @throws AssociationEntityNotFoundException
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
      */
     protected function associateEntity(
         NotificationEntityInterface $entity,
@@ -164,13 +158,26 @@ class EntityAssociator
             }
         }
 
+        $this->associationNotSuccessful($associatedEntity);
+    }
+
+    /**
+     * @param NotificationEntityInterface $associatedEntity
+     *
+     * @throws AssociationEntityNotFoundException
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
+     */
+    protected function associationNotSuccessful(NotificationEntityInterface $associatedEntity)
+    {
         //the entity was not associated
         //probably the entityToAssociate does not exist
         $associatedEntityClass = get_class($associatedEntity);
-        $entityName = array_search($associatedEntityClass, $this->entities, false);
-        $entityId = $associatedEntity->$getServerIdMethod();
+        $entityName = $this->entityAliasTranslator->getClassFromAlias($associatedEntityClass);
+        $entityId = $associatedEntity->getIdForNotifications();
+
         $exception = new AssociationEntityNotFoundException(
-            "Association entity with name: '$entityName' and class: '${associatedEntityClass}' with id '$entityId' was not found"
+            "Association entity with name: '$entityName' and class: '${associatedEntityClass}'"
+            ." with id '$entityId' was not found"
         );
         $exception->setEntityName($entityName);
         $exception->setEntityId($entityId);
@@ -239,7 +246,7 @@ class EntityAssociator
      * @param $className string Full classname(with namespace) of the entity. e.g.
      *                   AppBundle\\Entity\\Product\\StandardProduct
      *
-     * @return \Doctrine\ORM\EntityRepository|null
+     * @return \Doctrine\Common\Persistence\ObjectRepository
      */
     protected function getEntityRepository($className)
     {

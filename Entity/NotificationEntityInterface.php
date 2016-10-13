@@ -24,4 +24,11 @@ interface NotificationEntityInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * Get id which is used in the notification
+     *
+     * @return int
+     */
+    public function getIdForNotifications();
 }
