@@ -167,6 +167,8 @@ class Notification
     public function setIsForced(bool $isForced)
     {
         $this->isForced = $isForced;
+
+        return $this;
     }
 
     /**
@@ -183,6 +185,8 @@ class Notification
     public function setCreatedAt(int $createdAt)
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     /**
@@ -199,6 +203,8 @@ class Notification
     public function setClientId(string $clientId)
     {
         $this->clientId = $clientId;
+
+        return $this;
     }
 
     /**
@@ -215,6 +221,8 @@ class Notification
     public function setEntityName(string $entityName)
     {
         $this->entityName = $entityName;
+
+        return $this;
     }
 
     /**
@@ -231,6 +239,8 @@ class Notification
     public function setUid(string $uid)
     {
         $this->uid = $uid;
+
+        return $this;
     }
 
     /**
@@ -247,6 +257,8 @@ class Notification
     public function setEntityId(int $entityId)
     {
         $this->entityId = $entityId;
+
+        return $this;
     }
 
     /**

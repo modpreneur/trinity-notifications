@@ -7,13 +7,10 @@
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Drivers\NotificationDriverInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\Server;
-use Trinity\NotificationBundle\Event\AfterDriverExecuteEvent;
-use Trinity\NotificationBundle\Event\BeforeDriverExecuteEvent;
 
 /**
  * Class NotificationManager.
@@ -23,7 +20,7 @@ class NotificationManager
     /** @var  NotificationDriverInterface[] */
     protected $drivers;
 
-    /** @var  EventDispatcherInterface */
+    /** @var  NotificationEventDispatcher */
     protected $eventDispatcher;
 
     /** @var  string */
@@ -41,11 +38,11 @@ class NotificationManager
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param BatchManager             $batchManager
+     * @param NotificationEventDispatcher $eventDispatcher
+     * @param BatchManager                $batchManager
      */
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
+        NotificationEventDispatcher $eventDispatcher,
         BatchManager $batchManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -285,15 +282,7 @@ class NotificationManager
         $HTTPMethod = 'POST',
         array $options = []
     ) {
-        if ($this->eventDispatcher->hasListeners(BeforeDriverExecuteEvent::NAME)) {
-            $beforeDriverExecute = new BeforeDriverExecuteEvent($entity);
-            /** @var BeforeDriverExecuteEvent $beforeDriverExecute */
-            $beforeDriverExecute = $this->eventDispatcher->dispatch(
-                BeforeDriverExecuteEvent::NAME,
-                $beforeDriverExecute
-            );
-            $entity = $beforeDriverExecute->getEntity();
-        }
+        $this->eventDispatcher->dispatchBeforeDriverExecuteEvent($entity);
 
         //execute notification
         $driver
@@ -305,10 +294,6 @@ class NotificationManager
                 ['HTTPMethod' => $HTTPMethod, 'options' => $options]
             );
 
-        if ($this->eventDispatcher->hasListeners(AfterDriverExecuteEvent::NAME)) {
-            $afterDriverExecute = new AfterDriverExecuteEvent($entity);
-            /* @var AfterDriverExecuteEvent $afterDriverExecute */
-            $this->eventDispatcher->dispatch(AfterDriverExecuteEvent::NAME, $afterDriverExecute);
-        }
+        $this->eventDispatcher->dispatchAfterDriverExecuteEvent($entity);
     }
 }

@@ -18,6 +18,7 @@ use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\NotificationRequest;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Exception\AssociationEntityNotFoundException;
+use Trinity\NotificationBundle\Services\EntityAliasTranslator;
 
 /**
  * Class NotificationRequestHandler.
@@ -36,43 +37,26 @@ class NotificationRequestHandler
     /** @var  NotificationUtils */
     protected $notificationUtils;
 
-    /**
-     * @var array Indexed array of entities' aliases and real class names.
-     *            format:
-     *            [
-     *            "user" => "App\Entity\User,
-     *            "product" => "App\Entity\Product,
-     *            ....
-     *            ]
-     */
-    protected $entities;
+    /** @var  EntityAliasTranslator */
+    protected $entityAliasTranslator;
 
     /** @var  bool */
     protected $isClient;
 
-    /**
-     * NotificationRequestListener constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param MessageSender          $messageSender
-     * @param EntityConverter        $entityConverter
-     * @param NotificationUtils      $notificationUtils
-     * @param array                  $entities
-     * @param bool                   $isClient
-     */
+
     public function __construct(
         EntityManagerInterface $entityManager,
         MessageSender $messageSender,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
-        array $entities,
+        EntityAliasTranslator $aliasTranslator,
         bool $isClient
     ) {
         $this->messageSender = $messageSender;
         $this->entityManager = $entityManager;
         $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
-        $this->entities = $entities;
+        $this->entityAliasTranslator = $aliasTranslator;
         $this->isClient = $isClient;
     }
 
@@ -125,6 +109,7 @@ class NotificationRequestHandler
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
      */
     public function handleMissingEntityRequestMessage(Message $message)
     {
@@ -132,7 +117,7 @@ class NotificationRequestHandler
 
         //get association entity name
         //convert it into classname
-        $className = $this->entities[$requestMessage->getRequest()->getEntityName()];
+        $className = $this->entityAliasTranslator->getClassFromAlias($requestMessage->getRequest()->getEntityName());
 
         //get the association entity from database
         /** @var NotificationEntityInterface $entity */

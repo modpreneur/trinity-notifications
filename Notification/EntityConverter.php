@@ -9,7 +9,6 @@ namespace Trinity\NotificationBundle\Notification;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\NotificationException;
 
@@ -32,9 +31,6 @@ class EntityConverter
     /** @var EntityConverter */
     protected $entityConverter;
 
-    /** @var  EventDispatcherInterface */
-    protected $eventDispatcher;
-
     /** @var  string Name of the property of a entity which will be mapped to the Id from the notification */
     protected $entityIdFieldName;
 
@@ -53,19 +49,16 @@ class EntityConverter
      *
      * @param AnnotationsUtils         $annotationsUtils
      * @param LoggerInterface          $logger
-     * @param EventDispatcherInterface $eventDispatcher
      * @param string                   $entityIdFieldName
      * @param bool                     $isClient
      */
     public function __construct(
         AnnotationsUtils $annotationsUtils,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
         $entityIdFieldName = '',
         bool $isClient = false
     ) {
         $this->annotationsUtils = $annotationsUtils;
-        $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
         $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;

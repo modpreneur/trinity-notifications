@@ -86,8 +86,7 @@ abstract class NotificationStatusManager
         $entityStatus = new EntityStatus();
         $entityStatus->setClientId($clientId);
         $entityStatus->setEntityClass(get_class($entity));
-        //todo: change to serverId on client? add method getNotificationId to EntityInterface?
-        $entityStatus->setEntityId($entity->getId());
+        $entityStatus->setEntityId($entity->getIdForNotifications());
 
         $lastNotification = $this->getLastNotification($entity, $clientId);
         if (null === $lastNotification) {
@@ -156,18 +155,6 @@ abstract class NotificationStatusManager
         }
     }
 
-    /**
-     * Get entity class.
-     *
-     * @param NotificationEntityInterface $entity
-     *
-     * @return string
-     */
-    protected function getEntityClass(NotificationEntityInterface $entity)
-    {
-        //fix Doctrine proxy
-        return str_replace('Proxies\__CG__\\', '', get_class($entity));
-    }
 
     /**
      * @param ClientInterface|int $client

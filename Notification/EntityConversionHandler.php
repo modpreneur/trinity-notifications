@@ -7,21 +7,18 @@
  */
 namespace Trinity\NotificationBundle\Notification;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\InvalidDataException;
 use Trinity\NotificationBundle\Exception\UnexpectedEntityStateException;
+use Trinity\NotificationBundle\Services\EntityAliasTranslator;
 
 /**
  * Class EntityConversionHandler.
  */
 class EntityConversionHandler
 {
-    /** @var  EventDispatcherInterface */
-    protected $eventDispatcher;
-
     /** @var  FormFactoryInterface */
     protected $formFactory;
 
@@ -31,16 +28,8 @@ class EntityConversionHandler
     /** @var  array */
     protected $forms;
 
-    /**
-     * @var array Indexed array of entities' aliases and real class names.
-     *            format:
-     *            [
-     *            "user" => "App\Entity\User,
-     *            "product" => "App\Entity\Product,
-     *            ....
-     *            ]
-     */
-    protected $entities;
+    /** @var  EntityAliasTranslator */
+    protected $entityAliasTranslator;
 
     /** @var  string */
     protected $entityIdField;
@@ -48,43 +37,43 @@ class EntityConversionHandler
     /**
      * EntityConversionHandler constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param FormFactoryInterface     $formFactory
-     * @param EntityConverter          $entityConverter
-     * @param array                    $forms
-     * @param array                    $entities
-     * @param string                   $entityIdField
+     * @param FormFactoryInterface        $formFactory
+     * @param EntityConverter             $entityConverter
+     * @param EntityAliasTranslator       $aliasTranslator
+     * @param array                       $forms
+     * @param string                      $entityIdField
      */
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
         EntityConverter $entityConverter,
+        EntityAliasTranslator $aliasTranslator,
         array $forms,
-        array $entities,
         string $entityIdField
     ) {
-        $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->entityConverter = $entityConverter;
+        $this->entityAliasTranslator = $aliasTranslator;
         $this->forms = $forms;
-        $this->entities = $entities;
         $this->entityIdField = $entityIdField;
     }
 
     /**
      * @param NotificationEntityInterface $entity
+     * @param string                      $entityName
      * @param array                       $data
      * @param array                       $changeSet
      * @param bool                        $forceUpdate
      *
-     * @return NotificationEntityInterface
-     *
-     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
-     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
+     * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
+     *
+     * @return NotificationEntityInterface
      */
     public function performEntityUpdate(
         NotificationEntityInterface $entity,
+        string $entityName,
         array $data,
         array $changeSet,
         bool $forceUpdate = false
@@ -93,7 +82,7 @@ class EntityConversionHandler
             $this->validateCurrentEntityState($entity, $changeSet, $data);
         }
 
-        $this->useForm($entity, $data);
+        $this->useForm($entity, $entityName, $data);
 
         return $entity;
     }
@@ -105,36 +94,33 @@ class EntityConversionHandler
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
      *
      * @return NotificationEntityInterface
      */
     public function performEntityCreate(string $entityName, array $data) : NotificationEntityInterface
     {
         $entity = $this->createEntity($entityName);
-        $this->useForm($entity, $data);
+        $this->useForm($entity, $entityName, $data);
 
         return $entity;
     }
 
     /**
      * @param NotificationEntityInterface $entity
+     * @param string                      $entityName
      * @param array                       $data
      *
-     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      *
      * @return NotificationEntityInterface
-     *
-     * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      */
-    public function useForm(NotificationEntityInterface $entity, array $data) : NotificationEntityInterface
+    public function useForm(NotificationEntityInterface $entity, string $entityName, array $data)
+    : NotificationEntityInterface
     {
         $form = $this->createForm(
-            array_search(
-                str_replace('Proxies\__CG__\\', '', get_class($entity)),
-                $this->entities,
-                true
-            ),
+            $entityName,
             $entity
         );
 
@@ -149,16 +135,7 @@ class EntityConversionHandler
         }
 
         $form->submit($data, false);
-
-        if (!$form->isValid()) {
-            $errorStrings = [];
-            foreach ($form->getErrors(true) as $error) {
-                $errorStrings[] = $error->getOrigin()->getName().' with cause '.$error->getCause().
-                    ' caused message:'.$error->getMessage().'because of invalid value';
-            }
-
-            throw new InvalidDataException(implode(';', $errorStrings));
-        }
+        $this->checkIfFormIsValid($form);
 
         return $entity;
     }
@@ -184,6 +161,24 @@ class EntityConversionHandler
     }
 
     /**
+     * @param FormInterface $form
+     *
+     * @throws InvalidDataException
+     */
+    protected function checkIfFormIsValid(FormInterface $form)
+    {
+        if (!$form->isValid()) {
+            $errorStrings = [];
+            foreach ($form->getErrors(true) as $error) {
+                $errorStrings[] = $error->getOrigin()->getName().' with cause '.$error->getCause().
+                    ' caused message:'.$error->getMessage().'because of invalid value';
+            }
+
+            throw new InvalidDataException(implode(';', $errorStrings));
+        }
+    }
+
+    /**
      * Validate if the current entity state corresponds with the given changeset from the notification.
      *
      * @param NotificationEntityInterface $entity
@@ -191,6 +186,7 @@ class EntityConversionHandler
      * @param array                       $data
      *
      * @throws UnexpectedEntityStateException
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
      */
     protected function validateCurrentEntityState(NotificationEntityInterface $entity, array $changeSet, array $data)
     {
@@ -204,20 +200,34 @@ class EntityConversionHandler
 
         $violations = [];
         foreach ($changeSet as $propertyName => $values) {
-            $entityPropertyValue = $this->entityConverter
-                ->getPropertyValue($entity, $propertyName === 'id' ? $this->entityIdField : $propertyName)[$propertyName];
+            $entityPropertyValue = $this->entityConverter->getPropertyValue(
+                $entity,
+                $propertyName === 'id' ? $this->entityIdField : $propertyName
+            )[$propertyName];
             $changeSetOldValue = $values['old'];
 
             //the type unsafe comparision is used intentionally
+            /* @noinspection TypeUnsafeComparisonInspection */
             if ($entityPropertyValue != $changeSetOldValue) {
                 $violations[$propertyName] = ['expected' => $values['old'], 'actual' => $entityPropertyValue];
             }
         }
 
+        $this->checkViolations($entity, $violations);
+    }
+
+    /**
+     * @param NotificationEntityInterface $entity
+     * @param array                       $violations
+     *
+     * @throws UnexpectedEntityStateException
+     */
+    protected function checkViolations(NotificationEntityInterface $entity, array $violations)
+    {
         if (count($violations) > 0) {
             $exception = new UnexpectedEntityStateException(
-                'Entity of class '.get_class($entity).' with common id '.$entity->{'get'.ucfirst($this->entityIdField)}()
-                .' has unexpected state.'
+                'Entity of class '.get_class($entity).' with common id '.
+                $entity->{'get'.ucfirst($this->entityIdField)}().' has unexpected state.'
             );
             $exception->setViolations($violations);
             $exception->setEntity($entity);
@@ -233,6 +243,8 @@ class EntityConversionHandler
      * @param array  $constructorArguments
      *
      * @return NotificationEntityInterface
+     *
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
      */
     protected function createEntity(string $entityName, array $constructorArguments = []) : NotificationEntityInterface
     {
@@ -240,6 +252,7 @@ class EntityConversionHandler
             $this->getEntityClass($entityName)
         );
 
+        /* @var NotificationEntityInterface $entityClass */
         return $entityClass->newInstanceArgs($constructorArguments);
     }
 
@@ -278,9 +291,11 @@ class EntityConversionHandler
      * @param string $entityName
      *
      * @return string
+     *
+     * @throws \Trinity\NotificationBundle\Exception\EntityAliasNotFoundException
      */
     protected function getEntityClass(string $entityName) : string
     {
-        return $this->entities[$entityName];
+        return $this->entityAliasTranslator->getClassFromAlias($entityName);
     }
 }

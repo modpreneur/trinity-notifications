@@ -2,11 +2,11 @@
 
 namespace Trinity\NotificationBundle\Facades;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\StopSynchronizationForClientEvent;
 use Trinity\NotificationBundle\Exception\EntityAliasNotFoundException;
+use Trinity\NotificationBundle\Notification\NotificationEventDispatcher;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Services\EntityAliasTranslator;
 use Trinity\NotificationBundle\Services\SynchronizationStopper;
@@ -25,22 +25,22 @@ class NotificationFacade
     /** @var  EntityAliasTranslator */
     protected $aliasTranslator;
 
-    /** @var  EventDispatcherInterface */
+    /** @var  NotificationEventDispatcher */
     protected $eventDispatcher;
 
     /**
      * NotificationFacade constructor.
      *
-     * @param SynchronizationStopper   $synchronizationStopper
-     * @param NotificationManager      $notificationManager
-     * @param EntityAliasTranslator    $aliasTranslator
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param SynchronizationStopper      $synchronizationStopper
+     * @param NotificationManager         $notificationManager
+     * @param EntityAliasTranslator       $aliasTranslator
+     * @param NotificationEventDispatcher $eventDispatcher
      */
     public function __construct(
         SynchronizationStopper $synchronizationStopper,
         NotificationManager $notificationManager,
         EntityAliasTranslator $aliasTranslator,
-        EventDispatcherInterface $eventDispatcher
+        NotificationEventDispatcher $eventDispatcher
     ) {
         $this->synchronizationStopper = $synchronizationStopper;
         $this->notificationManager = $notificationManager;
@@ -159,8 +159,7 @@ class NotificationFacade
      */
     public function disableEntityListeningForClient(ClientInterface $client)
     {
-        $event = new StopSynchronizationForClientEvent($client);
-        $this->eventDispatcher->dispatch(StopSynchronizationForClientEvent::NAME, $event);
+        $this->eventDispatcher->dispatchStopSynchronizationForClientEvent($client);
     }
 
     /**
@@ -172,7 +171,6 @@ class NotificationFacade
      */
     public function allowEntityListeningForAllClients()
     {
-        $event = new StopSynchronizationForClientEvent(null);
-        $this->eventDispatcher->dispatch(StopSynchronizationForClientEvent::NAME, $event);
+        $this->eventDispatcher->dispatchStopSynchronizationForClientEvent(null);
     }
 }

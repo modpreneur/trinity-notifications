@@ -42,6 +42,8 @@ class EntityAliasTranslator
      */
     public function getAliasFromClass(string $class)
     {
+        //remove doctrine proxy namespace
+        $class = str_replace('Proxies\__CG__\\', '', $class);
         $alias = array_search($class, $this->entities, true);
 
         if ($alias === false) {

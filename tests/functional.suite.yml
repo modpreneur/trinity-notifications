@@ -9,4 +9,7 @@ modules:
     enabled:
         # add framework module here
         - \Helper\Functional
-        - Asserts
+        - Symfony
+        - Doctrine2:
+            depends: Symfony # connect to Symfony
+        - \Helper\Functional

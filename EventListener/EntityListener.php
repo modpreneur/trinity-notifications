@@ -9,17 +9,16 @@ namespace Trinity\NotificationBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
-use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\RepositoryInterfaceNotImplementedException;
 use Trinity\NotificationBundle\Exception\SourceException;
 use Trinity\NotificationBundle\Interfaces\NotificationEntityRepositoryInterface;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\EntityConverter;
+use Trinity\NotificationBundle\Notification\NotificationEventDispatcher;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
 
 /**
@@ -54,7 +53,7 @@ class EntityListener
     /** @var bool is listening enabled for this listener */
     protected $notificationEnabled = true;
 
-    /** @var  EventDispatcherInterface */
+    /** @var  NotificationEventDispatcher */
     protected $eventDispatcher;
 
     /** @var  AnnotationsUtils */
@@ -67,7 +66,7 @@ class EntityListener
     protected $entityDeletions = [];
 
     /**
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param NotificationEventDispatcher $eventDispatcher
      * @param NotificationUtils        $annotationProcessor
      * @param AnnotationsUtils         $annotationsUtils
      * @param EntityConverter          $entityConverter
@@ -76,7 +75,7 @@ class EntityListener
      * @internal param NotificationManager $notificationManager
      */
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
+        NotificationEventDispatcher $eventDispatcher,
         NotificationUtils $annotationProcessor,
         AnnotationsUtils $annotationsUtils,
         EntityConverter $entityConverter,
@@ -243,10 +242,7 @@ class EntityListener
             $columnsToNotify = array_keys(array_intersect_key($columns, $changeSet));
 
             if (count($columnsToNotify) > 0 || strtolower($method) === 'delete') {
-                $this->eventDispatcher->dispatch(
-                    SendNotificationEvent::NAME,
-                    new SendNotificationEvent($entity, $changeSet, $method, $options, false)
-                );
+                $this->eventDispatcher->dispatchSendNotificationEvent($entity, $changeSet, $method, $options, false);
             }
         }
     }

@@ -7,20 +7,17 @@
  */
 namespace Trinity\NotificationBundle\EventListener;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
-use Trinity\Bundle\MessagesBundle\Event\SetMessageStatusEvent;
-use Trinity\Bundle\MessagesBundle\Event\StatusMessageEvent;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
 use Trinity\NotificationBundle\Entity\NotificationRequestMessage;
 use Trinity\NotificationBundle\Entity\NotificationStatusMessage;
 use Trinity\NotificationBundle\Entity\StopSynchronizationForClientEvent;
-use Trinity\NotificationBundle\Event\NotificationRequestEvent;
 use Trinity\NotificationBundle\Event\SendNotificationEvent;
 use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
+use Trinity\NotificationBundle\Notification\NotificationEventDispatcher;
 use Trinity\NotificationBundle\Notification\NotificationManager;
 use Trinity\NotificationBundle\Notification\NotificationReader;
 
@@ -32,7 +29,7 @@ class NotificationEventsListener implements EventSubscriberInterface
     /** @var  NotificationReader */
     protected $notificationReader;
 
-    /** @var  EventDispatcherInterface */
+    /** @var  NotificationEventDispatcher */
     protected $eventDispatcher;
 
     /** @var  NotificationManager */
@@ -48,13 +45,13 @@ class NotificationEventsListener implements EventSubscriberInterface
      * NotificationEventsListener constructor.
      *
      * @param NotificationReader       $notificationReader
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param NotificationEventDispatcher $eventDispatcher
      * @param NotificationManager      $notificationManager
      * @param bool                     $isClient
      */
     public function __construct(
         NotificationReader $notificationReader,
-        EventDispatcherInterface $eventDispatcher,
+        NotificationEventDispatcher $eventDispatcher,
         NotificationManager $notificationManager,
         bool $isClient
     ) {
@@ -148,21 +145,17 @@ class NotificationEventsListener implements EventSubscriberInterface
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Exception
-     * @throws \Throwable                                                               Catches all catchable errors and exceptions and then throws them again
+     * @throws \Throwable  Catches all catchable errors and exceptions and then throws them again
      */
     protected function handleNotificationMessage(Message $message)
     {
         try {
+            $message = NotificationBatch::createFromMessage($message);
             $entities = $this->notificationReader->read($message);
-            $this->dispatchSetMessageStatusEvent(
-                $message,
-                StatusMessage::STATUS_OK,
-                'ok'
-            );
-
+            $this->eventDispatcher->dispatchSetMessageStatusEvent($message, StatusMessage::STATUS_OK, 'ok');
             return $entities;
         } catch (\Throwable $error) {
-            $this->dispatchSetMessageStatusEvent(
+            $this->eventDispatcher->dispatchSetMessageStatusEvent(
                 $message,
                 StatusMessage::STATUS_ERROR,
                 (string) $error
@@ -177,11 +170,7 @@ class NotificationEventsListener implements EventSubscriberInterface
      */
     protected function handleNotificationRequest(Message $message)
     {
-        $event = new NotificationRequestEvent($message);
-        if ($this->eventDispatcher->hasListeners(NotificationRequestEvent::NAME)) {
-            /* @var NotificationRequestEvent $event */
-            $this->eventDispatcher->dispatch(NotificationRequestEvent::NAME, $event);
-        }
+        $this->eventDispatcher->dispatchNotificationRequestEvent($message);
     }
 
     /**
@@ -190,14 +179,7 @@ class NotificationEventsListener implements EventSubscriberInterface
     protected function handleStatusMessage(Message $message)
     {
         $statusMessage = StatusMessage::createFromMessage($message);
-
-        if ($this->eventDispatcher->hasListeners(StatusMessageEvent::NAME)) {
-            /* @var StatusMessageEvent $event */
-            $this->eventDispatcher->dispatch(
-                StatusMessageEvent::NAME,
-                new StatusMessageEvent($statusMessage)
-            );
-        }
+        $this->eventDispatcher->dispatchStatusMessageEvent($statusMessage);
     }
 
     /**
@@ -207,13 +189,7 @@ class NotificationEventsListener implements EventSubscriberInterface
      */
     protected function dispatchSetMessageStatusEvent(Message $message, string $status, string $statusMessage)
     {
-        if ($this->eventDispatcher->hasListeners(SetMessageStatusEvent::NAME)) {
-            /* @var ReadMessageEvent $event */
-            $this->eventDispatcher->dispatch(
-                SetMessageStatusEvent::NAME,
-                new SetMessageStatusEvent($message, $status, $statusMessage)
-            );
-        }
+        $this->eventDispatcher->dispatchSetMessageStatusEvent($message, $status, $statusMessage);
     }
 
     /**
