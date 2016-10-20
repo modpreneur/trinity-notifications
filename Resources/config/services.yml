@@ -141,16 +141,6 @@ services:
             - "%trinity.notification.entities%"
             - "%trinity.notification.is_client%"
 
-    trinity.bunny.client:
-        class: Bunny\Client
-        arguments:
-            - host: "%rabbit_url%"
-            - port: "%rabbit_port%"
-            - user: "%rabbit_user%"
-            - password: "%rabbit_password%"
-            - persistent: 2
-            - path: "/"
-
     trinity.notification.entity_alias_translator:
         class: Trinity\NotificationBundle\Services\EntityAliasTranslator
         arguments:
