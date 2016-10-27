@@ -56,20 +56,14 @@ class NotificationEventsListener implements EventSubscriberInterface
         NotificationReader $notificationReader,
         EventDispatcherInterface $eventDispatcher,
         NotificationManager $notificationManager,
+        NotificationLoggerInterface $notificationLogger,
         bool $isClient
     ) {
         $this->notificationReader = $notificationReader;
         $this->eventDispatcher = $eventDispatcher;
         $this->notificationManager = $notificationManager;
-        $this->isClient = $isClient;
-    }
-
-    /**
-     * @param NotificationLoggerInterface $notificationLogger
-     */
-    public function setNotificationLogger(NotificationLoggerInterface $notificationLogger)
-    {
         $this->notificationLogger = $notificationLogger;
+        $this->isClient = $isClient;
     }
 
     /**

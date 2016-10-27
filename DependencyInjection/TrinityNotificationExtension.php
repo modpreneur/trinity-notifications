@@ -9,9 +9,7 @@ namespace Trinity\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -46,13 +44,11 @@ class TrinityNotificationExtension extends Extension
         } else {
             $loader->load('server/services.yml');
         }
-
-        $this->setMethodCalls($container, $config);
     }
 
     /**
      * @param ContainerBuilder $container
-     * @param array              $config
+     * @param array            $config
      */
     private function setShared(ContainerBuilder $container, array $config)
     {
@@ -98,47 +94,6 @@ class TrinityNotificationExtension extends Extension
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param array $config
-     */
-    private function setMethodCalls(ContainerBuilder $container, array $config)
-    {
-        $container->getDefinition('trinity.notification.notification_events_listener')
-            ->addMethodCall(
-                'setNotificationLogger',
-                [new Reference($config['notification_logger'])]
-            );
-
-        if ($container->has('trinity.notification.driver.rabbit.client')) {
-            $container->getDefinition('trinity.notification.driver.rabbit.client')
-                ->addMethodCall(
-                    'setNotificationLogger',
-                    [new Reference($config['notification_logger'])]
-                );
-        }
-
-        if ($container->has('trinity.notification.driver.rabbit.server')) {
-            $container->getDefinition('trinity.notification.driver.rabbit.server')
-                ->addMethodCall(
-                    'setNotificationLogger',
-                    [new Reference($config['notification_logger'])]
-                );
-        }
-
-        $container->getDefinition('trinity.notification.batch_manager')
-            ->addMethodCall(
-                'setNotificationLogger',
-                [new Reference($config['notification_logger'])]
-            );
-
-        $container->getDefinition('trinity.notification.reader')
-            ->addMethodCall(
-                'setNotificationLogger',
-                [new Reference($config['notification_logger'])]
-            );
-    }
-
-    /**
      * @param $array
      * @param $key
      *
@@ -150,6 +105,6 @@ class TrinityNotificationExtension extends Extension
             return $array[$key];
         }
 
-        return null;
+        return;
     }
 }

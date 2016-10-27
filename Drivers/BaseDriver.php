@@ -49,31 +49,26 @@ abstract class BaseDriver implements NotificationDriverInterface
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityConverter          $entityConverter
-     * @param NotificationUtils        $notificationUtils
-     * @param BatchManager             $batchManager
-     * @param AnnotationsUtils         $annotationsUtils
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param EntityConverter             $entityConverter
+     * @param NotificationUtils           $notificationUtils
+     * @param BatchManager                $batchManager
+     * @param AnnotationsUtils            $annotationsUtils
+     * @param NotificationLoggerInterface $notificationLogger
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         BatchManager $batchManager,
-        AnnotationsUtils $annotationsUtils
+        AnnotationsUtils $annotationsUtils,
+        NotificationLoggerInterface $notificationLogger
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityConverter = $entityConverter;
         $this->notificationUtils = $notificationUtils;
         $this->batchManager = $batchManager;
         $this->annotationsUtils = $annotationsUtils;
-    }
-
-    /**
-     * @param NotificationLoggerInterface $notificationLogger
-     */
-    public function setNotificationLogger(NotificationLoggerInterface $notificationLogger)
-    {
         $this->notificationLogger = $notificationLogger;
     }
 

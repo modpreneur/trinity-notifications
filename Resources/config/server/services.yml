@@ -7,5 +7,6 @@ services:
             - "@trinity.notification.utils"
             - "@trinity.notification.batch_manager"
             - "@trinity.notification.annotations.utils"
+            - "@trinity.notification.notification_logger"
         tags:
             - { name: trinity.notification.driver }

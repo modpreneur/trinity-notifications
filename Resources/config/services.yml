@@ -80,7 +80,7 @@ services:
             - "@trinity.notification.reader"
             - "@event_dispatcher"
             - "@trinity.notification.manager"
-#            - "@trinity.notification.notification_logger"
+            - "@trinity.notification.notification_logger"
             - "%trinity.notification.is_client%"
         tags:
             - { name: kernel.event_subscriber}
@@ -96,6 +96,8 @@ services:
     trinity.notification.batch_manager:
         class: Trinity\NotificationBundle\Notification\BatchManager
         parent: "trinity.messages.message_sender"
+        arguments: #appends the given arguments list to the parent's one
+            - "@trinity.notification.notification_logger"
 
     trinity.notification.entity_conversion_handler:
         class: Trinity\NotificationBundle\Notification\EntityConversionHandler
@@ -123,6 +125,7 @@ services:
             - "@trinity.notification.services.notification_parser"
             - "@event_dispatcher"
             - "@trinity.messages.message_sender"
+            - "@trinity.notification.notification_logger"
 
     trinity.notification.notification_request_listener:
         class: Trinity\NotificationBundle\EventListener\NotificationRequestListener
@@ -152,3 +155,23 @@ services:
             - "@trinity.messages.message_sender"
             - "@trinity.notification.entity_alias_translator"
 
+    trinity.notification.notification_logger:
+        class: Trinity\NotificationBundle\Services\NotificationLogger
+        arguments:
+            - "@trinity.logger.elastic_log_service_with_ttl"
+            - "@trinity.logger.elastic_read_log_service"
+            - "@logger"
+
+    trinity.notification.status_manager:
+        class: Trinity\NotificationBundle\Services\NotificationStatusManager
+        arguments:
+            - "@trinity.logger.elastic_read_log_service"
+            - "@trinity.logger.elastic_log_service_with_ttl"
+            - "@logger"
+            - "@trinity.notification.entity_alias_translator"
+
+    trinity.notification.message_logger:
+        class: Trinity\NotificationBundle\Services\MessageLogger
+        arguments:
+            - "@trinity.logger.elastic_log_service_with_ttl"
+            - "@trinity.logger.elastic_read_log_service"
