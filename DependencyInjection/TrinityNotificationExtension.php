@@ -97,7 +97,7 @@ class TrinityNotificationExtension extends Extension
             $this->getValue($config, 'disable_time_violations')
         );
 
-        $container->setAlias($config['unknown_entity_strategy'], 'trinity.notification.entity_name_strategy');
+        $container->setAlias('trinity.notification.entity_name_strategy', $config['unknown_entity_strategy']);
     }
 
     /**
