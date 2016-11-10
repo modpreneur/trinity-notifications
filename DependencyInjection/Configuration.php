@@ -7,6 +7,7 @@
 
 namespace Trinity\NotificationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -74,44 +75,90 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('entity_id_field')
                     ->cannotBeEmpty()
                 ->end()
-
-            //reference to a service - starting with '@'
-                ->scalarNode('client_secret_provider')
-                    ->cannotBeEmpty()
-                    ->beforeNormalization()
-            //if the string starts with @, e.g. @service.name
-                    ->ifTrue(
-                        function ($v) {
-                            return is_string($v) && 0 === strpos($v, '@');
-                        }
-                    )
-            //return it's name without '@', e.g. service.name
-                    ->then(function ($v) {
-                        return substr($v, 1);
-                    })
-                    ->end()
-                ->end()
-
-            //reference to a service - starting with '@'
-                ->scalarNode('notification_logger')
-                    ->cannotBeEmpty()
-                    ->isRequired()
-                    ->beforeNormalization()
-            //if the string starts with @, e.g. @service.name
-                    ->ifTrue(
-                        function ($v) {
-                            return is_string($v) && 0 === strpos($v, '@');
-                        }
-                    )
-            //return it's name without '@', e.g. service.name
-                    ->then(function ($v) {
-                        return substr($v, 1);
-                    })
-                    ->end()
-                ->end()
             ->end()
             ;
 
+        $this->addClientSecretProviderNode($rootNode);
+        $this->addClientUnknownEntityStrategyNode($rootNode);
+        $this->addClientSecretProviderNode($rootNode);
+
         return $treeBuilder;
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     *
+     * @throws \RuntimeException
+     */
+    protected function addClientSecretProviderNode(ArrayNodeDefinition $node)
+    {
+        //reference to a service - starting with '@'
+        $node->children()->scalarNode('client_secret_provider')
+            ->cannotBeEmpty()
+            ->beforeNormalization()
+            //if the string starts with @, e.g. @service.name
+            ->ifTrue(
+                function ($v) {
+                    return is_string($v) && 0 === strpos($v, '@');
+                }
+            )
+            //return it's name without '@', e.g. service.name
+            ->then(function ($v) {
+                return substr($v, 1);
+            })
+            ->end()
+        ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     *
+     * @throws \RuntimeException
+     */
+    protected function addClientUnknownEntityStrategyNode(ArrayNodeDefinition $node)
+    {
+        //reference to a service - starting with '@'
+        $node->children()->scalarNode('unknown_entity_strategy')
+            ->cannotBeEmpty()
+            ->defaultValue('@trinity.notification.unknown_entity_name_strategy')
+            ->beforeNormalization()
+            //if the string starts with @, e.g. @service.name
+            ->ifTrue(
+                function ($v) {
+                    return is_string($v) && 0 === strpos($v, '@');
+                }
+            )
+            //return it's name without '@', e.g. service.name
+            ->then(function ($v) {
+                return substr($v, 1);
+            })
+            ->end()
+        ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     *
+     * @throws \RuntimeException
+     */
+    protected function addNotificationLoggerNode(ArrayNodeDefinition $node)
+    {
+        //reference to a service - starting with '@'
+        $node->children()->scalarNode('notification_logger')
+            ->cannotBeEmpty()
+            ->isRequired()
+            ->beforeNormalization()
+        //if the string starts with @, e.g. @service.name
+            ->ifTrue(
+                function ($v) {
+                    return is_string($v) && 0 === strpos($v, '@');
+                }
+            )
+            //return it's name without '@', e.g. service.name
+            ->then(function ($v) {
+                return substr($v, 1);
+            })
+            ->end()
+        ->end();
     }
 }

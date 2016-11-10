@@ -25,6 +25,7 @@ services:
             - "@event_dispatcher"
             - "@doctrine.orm.entity_manager"
             - "@trinity.notification.entity_associator"
+            - "@trinity.notification.entity_name_strategy"
             - "%trinity.notification.entity_id_field%"
             - "%trinity.notification.is_client%"
             - "%trinity.notification.entities%"
@@ -152,3 +153,5 @@ services:
             - "@trinity.messages.message_sender"
             - "@trinity.notification.entity_alias_translator"
 
+    trinity.notification.unknown_entity_name_strategy:
+        class: Trinity\NotificationBundle\Notification\UnknownEntityNameStrategy

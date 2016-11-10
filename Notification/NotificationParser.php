@@ -16,6 +16,7 @@ use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
 use Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\UnexpectedEntityStateException;
+use Trinity\NotificationBundle\Interfaces\UnknownEntityNameStrategyInterface;
 
 /**
  * Responsible for parsing notification request and performing entity edits.
@@ -38,6 +39,9 @@ class NotificationParser
 
     /** @var  EntityAssociator */
     protected $entityAssociator;
+
+    /** @var  UnknownEntityNameStrategyInterface */
+    protected $unknownEntityStrategy;
 
     /** @var array Array of request data */
     protected $notificationData;
@@ -68,15 +72,16 @@ class NotificationParser
     /**
      * NotificationParser constructor.
      *
-     * @param LoggerInterface          $logger
-     * @param EntityConversionHandler  $conversionHandler
+     * @param LoggerInterface $logger
+     * @param EntityConversionHandler $conversionHandler
      * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManagerInterface   $entityManager
-     * @param EntityAssociator         $entityAssociator
-     * @param string                   $entityIdFieldName
-     * @param bool                     $isClient
-     * @param array                    $entities
-     * @param bool                     $disableTimeViolations
+     * @param EntityManagerInterface $entityManager
+     * @param EntityAssociator $entityAssociator
+     * @param UnknownEntityNameStrategyInterface $unknownEntityStrategy
+     * @param string $entityIdFieldName
+     * @param bool $isClient
+     * @param array $entities
+     * @param bool $disableTimeViolations
      */
     public function __construct(
         LoggerInterface $logger,
@@ -84,6 +89,7 @@ class NotificationParser
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager,
         EntityAssociator $entityAssociator,
+        UnknownEntityNameStrategyInterface $unknownEntityStrategy,
         string $entityIdFieldName,
         bool $isClient,
         array $entities,
@@ -121,10 +127,11 @@ class NotificationParser
             $entityName = $notification->getEntityName();
 
             if (!array_key_exists($entityName, $this->entities)) {
-                throw new NotificationException(
-                    "No classname found for entityName: '$entityName'.".
-                    'Have you defined it in the configuration under trinity_notification:entities?'
-                );
+                $this->unknownEntityStrategy->unknownEntityName($notification);
+
+                //the strategy could throw an exception and stop execution of the method
+                //otherwise we should continue to the next notification because this one would cause errors
+                continue;
             }
 
             $processedEntity = null;

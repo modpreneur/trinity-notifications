@@ -52,7 +52,8 @@ class TrinityNotificationExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param array              $config
+     * @param array $config
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     private function setShared(ContainerBuilder $container, array $config)
     {
@@ -95,6 +96,8 @@ class TrinityNotificationExtension extends Extension
             'trinity.notification.disable_time_violations',
             $this->getValue($config, 'disable_time_violations')
         );
+
+        $container->setAlias($config['unknown_entity_strategy'], 'trinity.notification.entity_name_strategy');
     }
 
     /**
