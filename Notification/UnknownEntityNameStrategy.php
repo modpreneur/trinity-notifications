@@ -17,6 +17,7 @@ class UnknownEntityNameStrategy implements UnknownEntityNameStrategyInterface
      *
      * @param Notification $notification The notification which has the unknown entity name
      *
+     * @return void nothing as the function only throws a exception
      * @throws NotificationException
      */
     public function unknownEntityName(Notification $notification)

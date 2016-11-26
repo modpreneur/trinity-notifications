@@ -80,7 +80,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addClientSecretProviderNode($rootNode);
         $this->addClientUnknownEntityStrategyNode($rootNode);
-        $this->addClientSecretProviderNode($rootNode);
+        $this->addNotificationLoggerNode($rootNode);
 
         return $treeBuilder;
     }
@@ -120,7 +120,7 @@ class Configuration implements ConfigurationInterface
         //reference to a service - starting with '@'
         $node->children()->scalarNode('unknown_entity_strategy')
             ->cannotBeEmpty()
-            ->defaultValue('@trinity.notification.unknown_entity_name_strategy')
+            ->defaultValue(null)
             ->beforeNormalization()
             //if the string starts with @, e.g. @service.name
             ->ifTrue(

@@ -40,8 +40,8 @@ class NotificationParser
     /** @var  EntityAssociator */
     protected $entityAssociator;
 
-    /** @var  UnknownEntityNameStrategyInterface */
-    protected $unknownEntityStrategy;
+    /** @var  UnknownEntityNameStrategyInterface[] */
+    protected $unknownEntityStrategies = [];
 
     /** @var array Array of request data */
     protected $notificationData;
@@ -77,7 +77,6 @@ class NotificationParser
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManagerInterface $entityManager
      * @param EntityAssociator $entityAssociator
-     * @param UnknownEntityNameStrategyInterface $unknownEntityStrategy
      * @param string $entityIdFieldName
      * @param bool $isClient
      * @param array $entities
@@ -89,7 +88,6 @@ class NotificationParser
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager,
         EntityAssociator $entityAssociator,
-        UnknownEntityNameStrategyInterface $unknownEntityStrategy,
         string $entityIdFieldName,
         bool $isClient,
         array $entities,
@@ -105,6 +103,16 @@ class NotificationParser
         $this->isClient = $isClient;
         $this->entities = $entities;
         $this->disableTimeViolations = $disableTimeViolations;
+    }
+
+    /**
+     * @param UnknownEntityNameStrategyInterface $strategy
+     */
+    public function addUnknownEntityStrategy(UnknownEntityNameStrategyInterface $strategy)
+    {
+        if (!in_array($strategy, $this->unknownEntityStrategies, true)) {
+            $this->unknownEntityStrategies[] = $strategy;
+        }
     }
 
     /**
@@ -127,11 +135,13 @@ class NotificationParser
             $entityName = $notification->getEntityName();
 
             if (!array_key_exists($entityName, $this->entities)) {
-                $this->unknownEntityStrategy->unknownEntityName($notification);
-
-                //the strategy could throw an exception and stop execution of the method
-                //otherwise we should continue to the next notification because this one would cause errors
-                continue;
+                if (true === $this->solveUnknownEntityName($notification)) {
+                    continue;
+                } else {
+                    throw new NotificationException(
+                        'No strategy was able to solve the unknown "'.$notification->getEntityName().'" entity name'
+                    );
+                }
             }
 
             $processedEntity = null;
@@ -166,10 +176,8 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotification(
-        Notification $notification,
-        string $fullClassName
-    ) {
+    public function parseNotification(Notification $notification, string $fullClassName)
+    {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
         if ($this->eventDispatcher->hasListeners(BeforeParseNotificationEvent::NAME)) {
@@ -343,5 +351,21 @@ class NotificationParser
                 '" has been updated after the notification message was created'
             );
         }
+    }
+
+    /**
+     * @param Notification $notification
+     * @return bool True if the situation was solved, false otherwise
+     */
+    protected function solveUnknownEntityName(Notification $notification)
+    {
+        foreach ($this->unknownEntityStrategies as $unknownEntityStrategy) {
+            //if solved, stop executing the strategies
+            if (true === $unknownEntityStrategy->unknownEntityName($notification)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

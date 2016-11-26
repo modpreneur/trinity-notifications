@@ -97,7 +97,17 @@ class TrinityNotificationExtension extends Extension
             $this->getValue($config, 'disable_time_violations')
         );
 
-        $container->setAlias('trinity.notification.entity_name_strategy', $config['unknown_entity_strategy']);
+        $parser = $container->getDefinition('trinity.notification.services.notification_parser');
+
+        //add the client strategy first so it will be called before the default one
+        if (null !== $config['unknown_entity_strategy']) {
+            $parser->addMethodCall('addUnknownEntityStrategy', [new Reference($config['unknown_entity_strategy'])]);
+        }
+
+        $parser->addMethodCall(
+            'addUnknownEntityStrategy',
+            [new Reference('trinity.notification.unknown_entity_name_strategy')]
+        );
     }
 
     /**
