@@ -152,3 +152,5 @@ services:
             - "@trinity.messages.message_sender"
             - "@trinity.notification.entity_alias_translator"
 
+    trinity.notification.unknown_entity_name_strategy:
+        class: Trinity\NotificationBundle\Notification\UnknownEntityNameStrategy

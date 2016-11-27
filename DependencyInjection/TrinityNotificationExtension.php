@@ -52,7 +52,8 @@ class TrinityNotificationExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param array              $config
+     * @param array $config
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     private function setShared(ContainerBuilder $container, array $config)
     {
@@ -94,6 +95,18 @@ class TrinityNotificationExtension extends Extension
         $container->setParameter(
             'trinity.notification.disable_time_violations',
             $this->getValue($config, 'disable_time_violations')
+        );
+
+        $parser = $container->getDefinition('trinity.notification.services.notification_parser');
+
+        //add the client strategy first so it will be called before the default one
+        if (null !== $config['unknown_entity_strategy']) {
+            $parser->addMethodCall('addUnknownEntityStrategy', [new Reference($config['unknown_entity_strategy'])]);
+        }
+
+        $parser->addMethodCall(
+            'addUnknownEntityStrategy',
+            [new Reference('trinity.notification.unknown_entity_name_strategy')]
         );
     }
 
