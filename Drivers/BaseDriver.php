@@ -103,7 +103,7 @@ abstract class BaseDriver implements NotificationDriverInterface
     }
 
     /**
-     * Change indexes in changeset. Change '0' to 'old' and '1' to 'new'.
+     * Change indexes in changeSet. Change '0' to 'old' and '1' to 'new'.
      *
      * @param array $changeSet
      *
@@ -111,7 +111,7 @@ abstract class BaseDriver implements NotificationDriverInterface
      */
     protected function changeIndexesInChangeSet(array $changeSet)
     {
-        //change indexes 0,1 in changeset to keys 'old' and 'new'
+        //change indexes 0,1 in changeSet to keys 'old' and 'new'
         foreach ($changeSet as $property => $item) {
             $changeSet[$property]['old'] = $item[0];
             /* @noinspection MultiAssignmentUsageInspection It is more readable this way*/
@@ -141,7 +141,7 @@ abstract class BaseDriver implements NotificationDriverInterface
      *
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    protected function prepareChangeset(NotificationEntityInterface $entity, array $changeSet)
+    protected function prepareChangeSet(NotificationEntityInterface $entity, array $changeSet)
     {
         //get all properties, which are in the @Source annotation
         $notifiedProperties = array_flip(
@@ -151,7 +151,7 @@ abstract class BaseDriver implements NotificationDriverInterface
         //remove properties, which should not be sent
         $changeSet = $this->removeNotNotifiedProperties($changeSet, $notifiedProperties);
 
-        //change indexes 0,1 in changeset to keys 'old' and 'new'
+        //change indexes 0,1 in changeSet to keys 'old' and 'new'
         return $this->changeIndexesInChangeSet($changeSet);
     }
 

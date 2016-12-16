@@ -85,7 +85,7 @@ class RabbitClientDriver extends BaseDriver
 
         $this->addEntityToNotifiedEntities($entity, 'server');
 
-        $changeSet = $this->prepareChangeset($entity, $changeSet);
+        $changeSet = $this->prepareChangeSet($entity, $changeSet);
 
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
@@ -127,7 +127,7 @@ class RabbitClientDriver extends BaseDriver
      *
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    protected function prepareChangeset(NotificationEntityInterface $entity, array $changeSet)
+    protected function prepareChangeSet(NotificationEntityInterface $entity, array $changeSet)
     {
         if (array_key_exists($this->entityIdField, $changeSet)) {
             $value = $changeSet[$this->entityIdField];
@@ -135,6 +135,6 @@ class RabbitClientDriver extends BaseDriver
             $changeSet['id'] = $value;
         }
 
-        return parent::prepareChangeset($entity, $changeSet);
+        return parent::prepareChangeSet($entity, $changeSet);
     }
 }

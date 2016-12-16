@@ -50,7 +50,7 @@ class BatchManager extends MessageSender
         $returnBatch = null;
 
         foreach ($this->messages as $batch) {
-            if ($batch->getClientId() == $clientId) {
+            if ($batch->getClientId() === $clientId) {
                 $returnBatch = $batch;
                 break;
             }
@@ -78,6 +78,7 @@ class BatchManager extends MessageSender
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
+     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      */
     public function sendMessage(Message $message)
     {

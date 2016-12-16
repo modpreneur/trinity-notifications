@@ -252,7 +252,7 @@ class EntityListener
     }
 
     /**
-     * Convert objects in changeset to scalars.
+     * Convert objects in changeSet to scalars.
      *
      * @param array $changeSet
      *

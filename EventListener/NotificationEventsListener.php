@@ -50,6 +50,7 @@ class NotificationEventsListener implements EventSubscriberInterface
      * @param NotificationReader       $notificationReader
      * @param EventDispatcherInterface $eventDispatcher
      * @param NotificationManager      $notificationManager
+     * @param NotificationLoggerInterface $notificationLogger
      * @param bool                     $isClient
      */
     public function __construct(
@@ -80,7 +81,6 @@ class NotificationEventsListener implements EventSubscriberInterface
     public function onMessageRead(ReadMessageEvent $event)
     {
         $message = $event->getMessage();
-
         /*
          * If the message type was recognized handle it.
          * If not just let it be because another listener may recognize it
@@ -115,6 +115,9 @@ class NotificationEventsListener implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @param StopSynchronizationForClientEvent $event
+     */
     public function onStopSynchronizationForClientEvent(StopSynchronizationForClientEvent $event)
     {
         $this->notificationManager->disableNotification($event->getClient());

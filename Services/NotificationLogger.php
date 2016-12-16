@@ -91,7 +91,7 @@ class NotificationLogger implements NotificationLoggerInterface
     /**
      * @param string $notificationId
      *
-     * @return array|null
+     * @return string
      */
     protected function getElasticId(string $notificationId)
     {

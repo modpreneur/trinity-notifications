@@ -82,6 +82,7 @@ class NotificationStatusManager extends AbstractNotificationStatusManager
             $result = $this->getResult(NotificationLog::TYPE, $query, 1);
 
             if (count($result) === 0) {
+                // TODO @JakubFajkus some specific Exception
                 throw new \Exception('No NotificationLog with id:'.$notification->getUid().' found!');
             }
 

@@ -36,6 +36,8 @@ class MessageLogger implements MessageLoggerInterface
         $this->readLog = $readLog;
     }
 
+
+    // TODO @JakubFajkus nice method to create empty message log
     /**
      * Log a message. This should log all incoming and outcoming messages.
      *

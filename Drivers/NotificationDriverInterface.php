@@ -16,7 +16,7 @@ interface NotificationDriverInterface
     /**
      * @param NotificationEntityInterface $entity
      * @param ClientInterface             $client
-     * @param bool                        $force     If the changeset should not been compared with the database.
+     * @param bool                        $force     If the changeSet should not been compared with the database.
      * @param array                       $changeSet
      * @param array                       $params
      *

@@ -45,7 +45,7 @@ class Notification
     /** @var string HTTP method of the message. */
     protected $method = '';
 
-    /** @var  bool If the notification is forced and should not be checked for any changeset violation */
+    /** @var  bool If the notification is forced and should not be checked for any changeSet violation */
     protected $isForced = false;
 
     /** @var  int */

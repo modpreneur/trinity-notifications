@@ -164,23 +164,23 @@ class EntityConversionHandler
     }
 
     /**
-     * When the changeset is empty there is need to create a fake one. It will contain no changes.
+     * When the changeSet is empty there is need to create a fake one. It will contain no changes.
      * This is required because of validation against the database.
-     * Without the changeset there would not be possibility to compare it to the database data.
+     * Without the changeSet there would not be possibility to compare it to the database data.
      *
      * @param array $entityArray
      *
      * @return array
      */
-    public function createFakeChangeset(array $entityArray)
+    public function createFakeChangeSet(array $entityArray)
     {
-        $changeset = [];
+        $changeSet = [];
 
         foreach ($entityArray as $property => $value) {
-            $changeset[$property] = ['old' => $value, 'new' => $value];
+            $changeSet[$property] = ['old' => $value, 'new' => $value];
         }
 
-        return $changeset;
+        return $changeSet;
     }
 
     /**
@@ -195,11 +195,11 @@ class EntityConversionHandler
     protected function validateCurrentEntityState(NotificationEntityInterface $entity, array $changeSet, array $data)
     {
         if (count($changeSet) === 0) {
-            $changeSet = $this->createFakeChangeset($data);
+            $changeSet = $this->createFakeChangeSet($data);
         }
 
-        //the changeset is in the format: ['propertyName' => ['old' => 'old-value', 'new' => 'new-value']
-        //iterate over the changeset and check if the entity's properties do match with the old changeset values
+        //the changeSet is in the format: ['propertyName' => ['old' => 'old-value', 'new' => 'new-value']
+        //iterate over the changeSet and check if the entity's properties do match with the old changeSet values
         //in the standard flow the entity has not been changed yet
 
         $violations = [];

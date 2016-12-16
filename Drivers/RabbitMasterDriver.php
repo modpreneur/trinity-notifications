@@ -16,8 +16,6 @@ use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
 use Trinity\NotificationBundle\Notification\NotificationUtils;
-use Trinity\NotificationBundle\Services\NotificationStatusManager;
-
 /**
  * Class RabbitMasterDriver.
  */
@@ -81,7 +79,7 @@ class RabbitMasterDriver extends BaseDriver
         //convert entity to array
         $entityArray = $this->entityConverter->toArray($entity);
 
-        $changeSet = $this->prepareChangeset($entity, $changeSet);
+        $changeSet = $this->prepareChangeSet($entity, $changeSet);
 
         //execute for given client
         if ($destinationClient !== null) {
