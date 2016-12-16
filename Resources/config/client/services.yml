@@ -7,6 +7,7 @@ services:
             - "@trinity.notification.utils"
             - "@trinity.notification.batch_manager"
             - "@trinity.notification.annotations.utils"
+            - "@trinity.notification.notification_logger"
             - "%trinity.notification.client.id%"
             - "%trinity.notification.entity_id_field%"
         tags:

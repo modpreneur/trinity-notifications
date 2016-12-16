@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
+use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
 use Trinity\NotificationBundle\Notification\AnnotationsUtils;
 use Trinity\NotificationBundle\Notification\BatchManager;
 use Trinity\NotificationBundle\Notification\EntityConverter;
@@ -28,25 +29,28 @@ class RabbitMasterDriver extends BaseDriver
     /**
      * NotificationManager constructor.
      *
-     * @param EventDispatcherInterface  $eventDispatcher
-     * @param EntityConverter           $entityConverter
-     * @param NotificationUtils         $notificationUtils
-     * @param BatchManager              $batchManager
-     * @param AnnotationsUtils          $annotationsUtils
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityConverter $entityConverter
+     * @param NotificationUtils $notificationUtils
+     * @param BatchManager $batchManager
+     * @param AnnotationsUtils $annotationsUtils
+     * @param NotificationLoggerInterface $notificationLogger
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         BatchManager $batchManager,
-        AnnotationsUtils $annotationsUtils
+        AnnotationsUtils $annotationsUtils,
+        NotificationLoggerInterface $notificationLogger
     ) {
         parent::__construct(
             $eventDispatcher,
             $entityConverter,
             $notificationUtils,
             $batchManager,
-            $annotationsUtils
+            $annotationsUtils,
+            $notificationLogger
         );
 
         $this->messages = [];

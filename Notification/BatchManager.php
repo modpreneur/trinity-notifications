@@ -2,6 +2,7 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Sender\MessageSender;
 use Trinity\NotificationBundle\Entity\Notification;
@@ -19,6 +20,21 @@ class BatchManager extends MessageSender
 
     /** @var  NotificationLoggerInterface */
     protected $notificationLogger;
+
+    /**
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param string                      $senderIdentification
+     * @param NotificationLoggerInterface $notificationLogger
+     */
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        string $senderIdentification,
+        NotificationLoggerInterface $notificationLogger
+    ) {
+        parent::__construct($eventDispatcher, $senderIdentification);
+
+        $this->notificationLogger = $notificationLogger;
+    }
 
     /**
      * Add notifications to the batch. Create a new batch if it does not exist.

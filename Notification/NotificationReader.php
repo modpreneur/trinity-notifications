@@ -42,18 +42,21 @@ class NotificationReader
     /**
      * NotificationReader constructor.
      *
-     * @param NotificationParser       $parser
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param MessageSender            $messageSender
+     * @param NotificationParser          $parser
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param MessageSender               $messageSender
+     * @param NotificationLoggerInterface $notificationLogger
      */
     public function __construct(
         NotificationParser $parser,
         EventDispatcherInterface $eventDispatcher,
-        MessageSender $messageSender
+        MessageSender $messageSender,
+        NotificationLoggerInterface $notificationLogger
     ) {
         $this->parser = $parser;
         $this->eventDispatcher = $eventDispatcher;
         $this->messageSender = $messageSender;
+        $this->notificationLogger = $notificationLogger;
     }
 
     /**
@@ -64,8 +67,8 @@ class NotificationReader
      * @param Message $message
      *
      * @return array
-     * @throws \InvalidArgumentException
      *
+     * @throws \InvalidArgumentException
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
@@ -114,10 +117,9 @@ class NotificationReader
         return $entities;
     }
 
-
     /**
      * @param NotificationEntityInterface[] $entities
-     * @param NotificationBatch $notificationBatch
+     * @param NotificationBatch             $notificationBatch
      */
     protected function dispatchChangesDoneEvent(array $entities, NotificationBatch $notificationBatch)
     {
@@ -150,7 +152,7 @@ class NotificationReader
 
     /**
      * @param NotificationBatch $batch
-     * @param \Exception $exception
+     * @param \Exception        $exception
      *
      * @throws \InvalidArgumentException
      */
@@ -162,8 +164,8 @@ class NotificationReader
 
     /**
      * @param NotificationBatch $batch
-     * @param string $status
-     * @param string $message
+     * @param string            $status
+     * @param string            $message
      *
      * @throws \InvalidArgumentException
      */
@@ -246,7 +248,7 @@ class NotificationReader
             }
         }
 
-        return null;
+        return;
     }
 
     /**
