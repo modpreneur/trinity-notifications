@@ -29,9 +29,6 @@ class EntityConverter
     /** @var  EntityManager */
     protected $entityManager;
 
-    /** @var EntityConverter */
-    protected $entityConverter;
-
     /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
 
