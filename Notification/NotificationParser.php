@@ -165,10 +165,11 @@ class NotificationParser
 
     /**
      * @param Notification $notification
-     * @param              $fullClassName string Full classname(with namespace) of the entity. e.g.
+     * @param              $fullClassName string Full className(with namespace) of the entity. e.g.
      *                                    AppBundle\\Entity\\Product\\StandardProduct
      *
      * @return null|object
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
@@ -268,7 +269,7 @@ class NotificationParser
     /**
      * Get existing entity or null.
      *
-     * @param $fullClassName string Full classname(with namespace) of the entity.
+     * @param $fullClassName string Full className(with namespace) of the entity.
      *                       e.g. AppBundle\\Entity\\Product\\StandardProduct
      *
      * @return null|NotificationEntityInterface
