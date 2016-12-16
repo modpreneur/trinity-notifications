@@ -16,6 +16,7 @@ use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
 use Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\UnexpectedEntityStateException;
+use Trinity\NotificationBundle\Interfaces\UnknownEntityNameStrategyInterface;
 
 /**
  * Responsible for parsing notification request and performing entity edits.
@@ -38,6 +39,9 @@ class NotificationParser
 
     /** @var  EntityAssociator */
     protected $entityAssociator;
+
+    /** @var  UnknownEntityNameStrategyInterface[] */
+    protected $unknownEntityStrategies = [];
 
     /** @var array Array of request data */
     protected $notificationData;
@@ -68,15 +72,15 @@ class NotificationParser
     /**
      * NotificationParser constructor.
      *
-     * @param LoggerInterface          $logger
-     * @param EntityConversionHandler  $conversionHandler
+     * @param LoggerInterface $logger
+     * @param EntityConversionHandler $conversionHandler
      * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManagerInterface   $entityManager
-     * @param EntityAssociator         $entityAssociator
-     * @param string                   $entityIdFieldName
-     * @param bool                     $isClient
-     * @param array                    $entities
-     * @param bool                     $disableTimeViolations
+     * @param EntityManagerInterface $entityManager
+     * @param EntityAssociator $entityAssociator
+     * @param string $entityIdFieldName
+     * @param bool $isClient
+     * @param array $entities
+     * @param bool $disableTimeViolations
      */
     public function __construct(
         LoggerInterface $logger,
@@ -102,6 +106,16 @@ class NotificationParser
     }
 
     /**
+     * @param UnknownEntityNameStrategyInterface $strategy
+     */
+    public function addUnknownEntityStrategy(UnknownEntityNameStrategyInterface $strategy)
+    {
+        if (!in_array($strategy, $this->unknownEntityStrategies, true)) {
+            $this->unknownEntityStrategies[] = $strategy;
+        }
+    }
+
+    /**
      * @param Notification[] $notifications
      *
      * @return array
@@ -121,10 +135,13 @@ class NotificationParser
             $entityName = $notification->getEntityName();
 
             if (!array_key_exists($entityName, $this->entities)) {
-                throw new NotificationException(
-                    "No classname found for entityName: '$entityName'.".
-                    'Have you defined it in the configuration under trinity_notification:entities?'
-                );
+                if (true === $this->solveUnknownEntityName($notification)) {
+                    continue;
+                } else {
+                    throw new NotificationException(
+                        'No strategy was able to solve the unknown "'.$notification->getEntityName().'" entity name'
+                    );
+                }
             }
 
             $processedEntity = null;
@@ -159,10 +176,8 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotification(
-        Notification $notification,
-        string $fullClassName
-    ) {
+    public function parseNotification(Notification $notification, string $fullClassName)
+    {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
         if ($this->eventDispatcher->hasListeners(BeforeParseNotificationEvent::NAME)) {
@@ -336,5 +351,21 @@ class NotificationParser
                 '" has been updated after the notification message was created'
             );
         }
+    }
+
+    /**
+     * @param Notification $notification
+     * @return bool True if the situation was solved, false otherwise
+     */
+    protected function solveUnknownEntityName(Notification $notification)
+    {
+        foreach ($this->unknownEntityStrategies as $unknownEntityStrategy) {
+            //if solved, stop executing the strategies
+            if (true === $unknownEntityStrategy->unknownEntityName($notification)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -27,15 +27,15 @@
 
     <testsuites>
         <testsuite name="Notification Test Suite">
-            <directory>./AppTests/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>/</directory>
+            <directory>./</directory>
             <exclude>
-                <directory suffix=".php">app/Tests/</directory>
+                <directory suffix=".php">app/tests/</directory>
             </exclude>
         </whitelist>
     </filter>

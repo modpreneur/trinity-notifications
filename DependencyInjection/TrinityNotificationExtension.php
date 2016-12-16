@@ -9,7 +9,9 @@ namespace Trinity\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -48,6 +50,8 @@ class TrinityNotificationExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
+     * @param array $config
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @param array            $config
      */
     private function setShared(ContainerBuilder $container, array $config)
@@ -90,6 +94,18 @@ class TrinityNotificationExtension extends Extension
         $container->setParameter(
             'trinity.notification.disable_time_violations',
             $this->getValue($config, 'disable_time_violations')
+        );
+
+        $parser = $container->getDefinition('trinity.notification.services.notification_parser');
+
+        //add the client strategy first so it will be called before the default one
+        if (null !== $config['unknown_entity_strategy']) {
+            $parser->addMethodCall('addUnknownEntityStrategy', [new Reference($config['unknown_entity_strategy'])]);
+        }
+
+        $parser->addMethodCall(
+            'addUnknownEntityStrategy',
+            [new Reference('trinity.notification.unknown_entity_name_strategy')]
         );
     }
 
