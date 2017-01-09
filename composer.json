@@ -23,7 +23,7 @@
     "trinity/logger": "dev-master",
     "trinity/utils": "dev-master",
     "trinity/search": "dev-master",
-    "trinity/settings": "dev-master",
+    "trinity/settings": "~1.1",
     "trinity/messages": "dev-master",
     "trinity/core-interfaces": "dev-master",
     "trinity/core-entities": "dev-master"
