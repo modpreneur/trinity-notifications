@@ -142,7 +142,7 @@ class EntityConverter
 
                 // if no exception thrown, the method getting was successful and there is no need to iterate again(most cases)
                 break;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 //if there is an exception, continue with the methods(there is no "getter", so try "isser" and so)
                 continue;
             }
