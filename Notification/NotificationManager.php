@@ -179,6 +179,10 @@ class NotificationManager
     public function clear()
     {
         $this->queuedNotifications = [];
+        foreach ($this->drivers as $driver) {
+            $driver->clear();
+        }
+
         $this->batchManager->clear();
     }
 

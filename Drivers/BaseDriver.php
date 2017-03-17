@@ -73,6 +73,14 @@ abstract class BaseDriver implements NotificationDriverInterface
     }
 
     /**
+     * Clears the inner state of the driver
+     */
+    public function clear()
+    {
+        $this->notifiedEntities = [];
+    }
+
+    /**
      * Add entity to notifiedEntities array.
      *
      * @param NotificationEntityInterface $entity

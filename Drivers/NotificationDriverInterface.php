@@ -36,4 +36,11 @@ interface NotificationDriverInterface
      * @return string
      */
     public function getName() : string;
+
+    /**
+     * Clears the inner state of the driver
+     *
+     * @return void
+     */
+    public function clear();
 }

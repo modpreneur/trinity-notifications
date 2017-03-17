@@ -106,6 +106,16 @@ class NotificationFacade
     }
 
     /**
+     * Clear the inner state of the library.
+     *
+     * This should free up the most of the allocated memory for the entities
+     */
+    public function clear()
+    {
+        $this->notificationManager->clear();
+    }
+
+    /**
      * Get alias from full class name.
      * Example: 'App\Entity\Product' => 'product'.
      *
