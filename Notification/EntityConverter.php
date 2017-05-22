@@ -132,18 +132,11 @@ class EntityConverter
         // Try all known methods - "getter", "isser" and "hasser"
         foreach ($methodNames as $methodName) {
             try {
-                if (property_exists($entity, $property)) {
-                    return $this->processProperty($entity, $property, $methodName);
-                } elseif (method_exists($entity, $methodName) || method_exists($entity, $property)) {
+                if (method_exists($entity, $methodName) || method_exists($entity, $property)) {
                     return $this->processMethod($entity, $property, $methodName);
-                } else {
-                    throw new NotificationException("No method or property $property.");
                 }
-
-                // if no exception thrown, the method getting was successful and there is no need to iterate again(most cases)
-                break;
             } catch (\Throwable $e) {
-                //if there is an exception, continue with the methods(there is no "getter", so try "isser" and so)
+                //if there is an exception, continue with the methods(the method invocation may failed)
                 continue;
             }
         }
@@ -189,34 +182,6 @@ class EntityConverter
     }
 
     /**
-     * Transform property to array.
-     *
-     * ([ 'property-name' => 'property-value' ]).
-     *
-     *
-     * @param object $entity
-     * @param string $property
-     * @param string $methodName
-     *
-     * @return array
-     */
-    private function processProperty($entity, $property, $methodName) : array
-    {
-        $reflectionProperty = new \ReflectionProperty($entity, $property);
-
-        $annotation = $this->annotationsUtils->getReader()->getPropertyAnnotation(
-            $reflectionProperty,
-            AnnotationsUtils::SERIALIZED_NAME
-        );
-
-        if ($annotation) {
-            $property = $annotation->name;
-        }
-
-        return $this->processGetMethod($entity, $property, $methodName);
-    }
-
-    /**
      * @param object $entity
      * @param string $name
      * @param string $longName (getName)
@@ -225,7 +190,7 @@ class EntityConverter
      */
     private function processGetMethod($entity, $name, $longName) : array
     {
-        $result = call_user_func_array([$entity, $longName], []);
+        $result = $entity->{$longName}();
 
         $resultArray[$name] = $this->convertToString($result);
 
