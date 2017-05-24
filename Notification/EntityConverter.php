@@ -124,6 +124,7 @@ class EntityConverter
     {
         $ucFirst = ucfirst($property);
         $methodNames = [
+            'direct' => $property, //the property may be method name, so try that first
             'get' => 'get'.$ucFirst,
             'is' => 'is'.$ucFirst,
             'has' => 'has'.$ucFirst,
@@ -156,7 +157,6 @@ class EntityConverter
     public function convertToString($value)
     {
         if ($value instanceof \DateTime) {
-            /* @noinspection PhpUndefinedMethodInspection */
             $value = $value->format(self::DATETIME_FORMAT);
         }
 
