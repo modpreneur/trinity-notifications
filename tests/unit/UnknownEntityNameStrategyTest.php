@@ -10,12 +10,14 @@ use Trinity\NotificationBundle\Notification\UnknownEntityNameStrategy;
 class UnknownEntityNameStrategyTest extends BaseTest
 {
     /**
-     * @param Notification $notification
+
      *
      * @expectedException Trinity\NotificationBundle\Exception\NotificationException
-     * @expectedExceptionMessage No classname found for entityName: 'testing name'. Have you defined it in the configuration under trinity_notification:entities?
+     * @expectedExceptionMessage
+     * No classname found for entityName: 'testing name'.
+     * Have you defined it in the configuration under trinity_notification:entities?
      */
-    public function testUnknownEntityName()
+    public function testUnknownEntityName(): void
     {
         $notification = new Notification();
         $notification->setEntityName('testing name');

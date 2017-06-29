@@ -1,26 +1,12 @@
-#!/bin/bash sh
-
+#!/bin/sh sh
 
 composer update
 
-vendor/codeception/codeception/codecept run
 phpunit
 
-#For run test uncomment
-while true; do sleep 1000; done
+vendor/codeception/codeception/codecept run
 
-#alias composer="php -n /usr/bin/composer"
-#
-#mkdir -p /var/app/NotificationBundle/Tests/app/cache
-#mkdir -p /var/app/NotificationBundle/Tests/app/logs
-#chmod -R 0777 /var/app/NotificationBundle/Tests/app/cache
-#chmod -R 0777 /var/app/NotificationBundle/Tests/app/logs
-#
-#exec apache2-foreground
+phpstan analyse Annotations/ appTests/ Controller/ DataFixtures/ DataTransformer/ DependencyInjection/ Drivers/ Entity/ Event/ EventListener/ Exception/ Facades/ Interfaces/ Notification/ Services/ --level=4
 
-#chmod -R 777 Tests/Functional/var/*
-#
-#php Tests/Functional/bin/console.php doctrine:database:create
-#php Tests/Functional/bin/console.php doctrine:schema:update --force
+tail -f /dev/null
 
-#phpunit

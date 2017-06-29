@@ -20,10 +20,10 @@ class UnknownEntityNameStrategy implements UnknownEntityNameStrategyInterface
      * @return void nothing as the function only throws a exception
      * @throws NotificationException
      */
-    public function unknownEntityName(Notification $notification)
+    public function unknownEntityName(Notification $notification): void
     {
         throw new NotificationException(
-            "No className found for entityName: '{$notification->getEntityName()}'.".
+            "No classname found for entityName: '{$notification->getEntityName()}'.".
             ' Have you defined it in the configuration under trinity_notification:entities?'
         );
     }

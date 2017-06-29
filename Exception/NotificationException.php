@@ -3,7 +3,7 @@
 namespace Trinity\NotificationBundle\Exception;
 
 /**
- * Class NotificationException.
+ * Class NotificationException
  */
 class NotificationException extends \Exception
 {
