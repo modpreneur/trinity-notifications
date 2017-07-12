@@ -248,7 +248,7 @@ class NotificationReader
             }
         }
 
-        return;
+        return null;
     }
 
     /**

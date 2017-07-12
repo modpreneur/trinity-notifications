@@ -239,7 +239,7 @@ class EntityAssociator
      * @param $className string Full classname(with namespace) of the entity. e.g.
      *                   AppBundle\\Entity\\Product\\StandardProduct
      *
-     * @return \Doctrine\ORM\EntityRepository|null
+     * @return \Doctrine\Common\Persistence\ObjectRepository|null
      */
     protected function getEntityRepository($className)
     {

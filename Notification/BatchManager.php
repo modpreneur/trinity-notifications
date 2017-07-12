@@ -56,7 +56,7 @@ class BatchManager extends MessageSender
             }
         }
 
-        if ($returnBatch) {
+        if (!is_null($returnBatch)) {
             $returnBatch->addNotifications($notifications);
         } else {
             $returnBatch = new NotificationBatch();

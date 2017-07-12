@@ -26,7 +26,7 @@ class AnnotationsUtils
     const FIX_NAMESPACE = 'Proxies\\__CG__\\';
     const ANNOTATION_DEPENDED_CLASS = '\\Trinity\\NotificationBundle\\Annotations\\DependentSources';
 
-    /** @var  AnnotationReader */
+    /** @var  AnnotationReader|Reader */
     protected $reader;
 
     /**
