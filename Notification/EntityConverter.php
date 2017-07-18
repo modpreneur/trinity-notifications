@@ -26,7 +26,7 @@ class EntityConverter
     /** @var  LoggerInterface */
     protected $logger;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     protected $entityManager;
 
     /** @var  EventDispatcherInterface */
@@ -152,7 +152,7 @@ class EntityConverter
      *
      * @param \DateTime|object|string|int $value
      *
-     * @return null|string
+     * @return int|mixed|string
      */
     public function convertToString($value)
     {

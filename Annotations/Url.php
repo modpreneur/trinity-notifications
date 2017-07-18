@@ -16,7 +16,7 @@ use Doctrine\Common\Annotations\AnnotationException;
  */
 class Url
 {
-    /** @var  string */
+    /** @var  string|null */
     protected $postfix;
 
     /** @var  array */
