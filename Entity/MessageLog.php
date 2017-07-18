@@ -44,11 +44,6 @@ class MessageLog extends Message implements EntityInterface
     protected $status;
     
     /**
-     * @var int
-     */
-    protected $ttl;
-    
-    /**
      * @var string
      */
     protected $error;
@@ -166,22 +161,6 @@ class MessageLog extends Message implements EntityInterface
     public function setError($error)
     {
         $this->error = $error;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTtl()
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * @param mixed $ttl
-     */
-    public function setTtl($ttl)
-    {
-        $this->ttl = $ttl;
     }
 
     /**

@@ -19,9 +19,6 @@ class NotificationLog extends Notification
     /** @var string */
     protected $id;
 
-    /** @var int */
-    protected $ttl = 0;
-
     /** @var  bool */
     protected $incoming = false;
 
@@ -61,22 +58,6 @@ class NotificationLog extends Notification
     public function setId(string $id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTtl(): int
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * @param int $ttl
-     */
-    public function setTtl(int $ttl)
-    {
-        $this->ttl = $ttl;
     }
 
     /**
