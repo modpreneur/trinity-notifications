@@ -8,5 +8,4 @@ vendor/codeception/codeception/codecept run
 
 phpstan analyse Annotations/ appTests/ Controller/ DataFixtures/ DataTransformer/ DependencyInjection/ Drivers/ Entity/ Event/ EventListener/ Exception/ Facades/ Interfaces/ Notification/ Services/ --level=4
 
-tail -f /dev/null
-
+#tail -f /dev/null

@@ -14,7 +14,6 @@
     "guzzlehttp/guzzle": "~6.0",
     "nette/utils": "~2.3",
     "sensio/framework-extra-bundle": "~3.0",
-    "fzaninotto/faker": "^1.5",
     "doctrine/orm": "~2.5",
     "symfony/console": "~2.8 | ~3",
     "symfony/event-dispatcher": "~2.8 | ~3",
@@ -25,11 +24,12 @@
     "trinity/search": "dev-master",
     "trinity/settings": "~1.1",
     "trinity/messages": "dev-master",
-    "trinity/core-interfaces": "dev-master",
-    "trinity/core-entities": "dev-master"
+    "trinity/core-interfaces": "~1.0",
+    "trinity/core-entities": "~1.0"
   },
   "require-dev": {
-    "braincrafted/testing-bundle": "@stable",
+    "fzaninotto/faker": "^1.5",
+    "braincrafted/testing-bundle": "~0.4",
     "friendsofsymfony/user-bundle": "~2.0",
     "sensio/generator-bundle": "~3.0",
     "phpunit/phpunit": "~6.0",
