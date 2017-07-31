@@ -19,7 +19,7 @@
     "symfony/event-dispatcher": "~2.8 | ~3",
     "symfony/form": "~2.8 | ~3",
 
-    "trinity/logger": "dev-master",
+    "trinity/logger": "~1.0",
     "trinity/utils": "dev-master",
     "trinity/search": "dev-master",
     "trinity/settings": "~1.1",
