@@ -158,7 +158,7 @@ services:
     trinity.notification.notification_logger:
         class: Trinity\NotificationBundle\Services\NotificationLogger
         arguments:
-            - "@trinity.logger.elastic_log_service_with_ttl"
+            - "@trinity.logger.elastic_log_service"
             - "@trinity.logger.elastic_read_log_service"
             - "@logger"
 
@@ -166,14 +166,14 @@ services:
         class: Trinity\NotificationBundle\Services\NotificationStatusManager
         arguments:
             - "@trinity.logger.elastic_read_log_service"
-            - "@trinity.logger.elastic_log_service_with_ttl"
+            - "@trinity.logger.elastic_log_service"
             - "@logger"
             - "@trinity.notification.entity_alias_translator"
 
     trinity.notification.message_logger:
         class: Trinity\NotificationBundle\Services\MessageLogger
         arguments:
-            - "@trinity.logger.elastic_log_service_with_ttl"
+            - "@trinity.logger.elastic_log_service"
             - "@trinity.logger.elastic_read_log_service"
 
     trinity.notification.unknown_entity_name_strategy:

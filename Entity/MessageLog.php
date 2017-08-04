@@ -10,6 +10,9 @@ use Trinity\Component\Core\Interfaces\EntityInterface;
  */
 class MessageLog extends Message implements EntityInterface
 {
+    const DEFAULT_TTL = 30;
+    const LOG_NAME = 'MessageLog';
+
     /**
      * @var string
      */
@@ -39,11 +42,6 @@ class MessageLog extends Message implements EntityInterface
      * @var string
      */
     protected $status;
-    
-    /**
-     * @var int
-     */
-    protected $ttl;
     
     /**
      * @var string
@@ -166,26 +164,31 @@ class MessageLog extends Message implements EntityInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getTtl()
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * @param mixed $ttl
-     */
-    public function setTtl($ttl)
-    {
-        $this->ttl = $ttl;
-    }
-
-    /**
      * @return string
      */
     public function __toString() : string
     {
         return $this->id;
+    }
+
+    /**
+     * Return a human readable string containing only characters.
+     * For example: ExceptionLog, IpnLog
+     *
+     * @return string
+     */
+    public static function getLogName(): string
+    {
+        return self::LOG_NAME;
+    }
+
+    /**
+     * Return a default tll in days.
+     *
+     * @return int
+     */
+    public static function getDefaultTtl(): int
+    {
+        return self::DEFAULT_TTL;
     }
 }

@@ -3,7 +3,7 @@
 namespace Trinity\NotificationBundle\Services;
 
 use Psr\Log\LoggerInterface;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogServiceWithTtl;
+use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
 use Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\Component\Core\Interfaces\ClientInterface;
@@ -20,7 +20,7 @@ abstract class AbstractNotificationStatusManager
     /** @var  ElasticReadLogService */
     protected $elasticReader;
 
-    /** @var  ElasticLogServiceWithTtl */
+    /** @var  ElasticLogService */
     protected $elasticWriter;
 
     /** @var  LoggerInterface */
@@ -30,12 +30,12 @@ abstract class AbstractNotificationStatusManager
      * NotificationStatusManager constructor.
      *
      * @param ElasticReadLogService    $elasticReader
-     * @param ElasticLogServiceWithTtl $elasticWriter
+     * @param ElasticLogService        $elasticWriter
      * @param LoggerInterface          $logger
      */
     public function __construct(
         ElasticReadLogService $elasticReader,
-        ElasticLogServiceWithTtl $elasticWriter,
+        ElasticLogService $elasticWriter,
         LoggerInterface $logger
     ) {
         $this->elasticReader = $elasticReader;

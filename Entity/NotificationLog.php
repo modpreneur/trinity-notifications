@@ -14,12 +14,10 @@ class NotificationLog extends Notification
     const STATUS_SENT = NotificationStatus::STATUS_SENT;
     const STATUS_UNKNOWN = 'unknown';
     const STATUSES = [self::STATUS_ERROR, self::STATUS_OK, self::STATUS_SENT, self::STATUS_UNKNOWN];
+    const DEFAULT_TTL = 30;
 
     /** @var string */
     protected $id;
-
-    /** @var int */
-    protected $ttl = 0;
 
     /** @var  bool */
     protected $incoming = false;
@@ -60,22 +58,6 @@ class NotificationLog extends Notification
     public function setId(string $id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTtl(): int
-    {
-        return $this->ttl;
-    }
-
-    /**
-     * @param int $ttl
-     */
-    public function setTtl(int $ttl)
-    {
-        $this->ttl = $ttl;
     }
 
     /**
@@ -177,5 +159,26 @@ class NotificationLog extends Notification
         $log->uid = $notification->uid;
 
         return $log;
+    }
+
+    /**
+     * Return a human readable string containing only characters.
+     * For example: ExceptionLog, IpnLog
+     *
+     * @return string
+     */
+    public static function getLogName(): string
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * Return a default tll in days.
+     *
+     * @return int
+     */
+    public static function getDefaultTtl(): int
+    {
+        return self::DEFAULT_TTL;
     }
 }
