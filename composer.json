@@ -15,9 +15,9 @@
     "nette/utils": "~2.3",
     "sensio/framework-extra-bundle": "~3.0",
     "doctrine/orm": "~2.5",
-    "symfony/console": "~2.8 | ~3",
-    "symfony/event-dispatcher": "~2.8 | ~3",
-    "symfony/form": "~2.8 | ~3",
+    "symfony/console": "~2.8 | ~3.0",
+    "symfony/event-dispatcher": "~2.8 | ~3.0",
+    "symfony/form": "~2.8 | ~3.0",
 
     "trinity/logger": "~1.0",
     "trinity/utils": "~1.0",

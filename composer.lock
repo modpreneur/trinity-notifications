@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f25cedc3da20b793d844c80459755dcc",
+    "content-hash": "a5b05cbacac1f822a466fe7aa7de3f08",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -3102,7 +3102,7 @@
         },
         {
             "name": "trinity/logger",
-            "version": "dev-master",
+            "version": "v1.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity-logger.git",
@@ -3160,7 +3160,7 @@
                 }
             ],
             "description": "Trinity Logger bundle",
-            "time": "2017-08-04 08:12:38"
+            "time": "2017-08-04T08:12:38+00:00"
         },
         {
             "name": "trinity/messages",
@@ -5893,7 +5893,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "trinity/logger": 20,
         "trinity/search": 20,
         "trinity/messages": 20
     },
