@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0cc3825dcb3c23335fdeee9507d2b6c",
+    "content-hash": "e42ef35878b1ad5346e6752ccf92af74",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -996,7 +996,7 @@
         },
         {
             "name": "trinity/messages",
-            "version": "dev-sf26",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modpreneur/trinity-messages.git",
@@ -1037,7 +1037,7 @@
                 }
             ],
             "description": "Trinity Messages bundle",
-            "time": "2017-08-10 09:54:54"
+            "time": "2017-08-10T09:54:54+00:00"
         },
         {
             "name": "twig/twig",
@@ -3407,9 +3407,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "trinity/messages": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
