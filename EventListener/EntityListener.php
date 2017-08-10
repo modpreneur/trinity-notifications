@@ -36,11 +36,8 @@ class EntityListener
     /** @var  bool */
     protected $defaultValueForEnabledController;
 
-    /** @var  object */
-    protected $entity;
-
     /** @var  NotificationUtils */
-    protected $processor;
+    protected $notificationUtils;
 
     /** @var  Request */
     protected $request;
@@ -82,7 +79,7 @@ class EntityListener
         EntityConverter $entityConverter,
         bool $isClient
     ) {
-        $this->processor = $annotationProcessor;
+        $this->notificationUtils = $annotationProcessor;
         $this->eventDispatcher = $eventDispatcher;
         $this->annotationsUtils = $annotationsUtils;
         $this->entityConverter = $entityConverter;
@@ -229,11 +226,11 @@ class EntityListener
      */
     protected function sendNotification(EntityManager $entityManager, $entity, string $method, array $options = [])
     {
-        if (!$this->processor->isNotificationEntity($entity)) {
+        if (!$this->notificationUtils->isNotificationEntity($entity)) {
             return;
         }
 
-        if ($this->processor->hasHTTPMethod($entity, strtolower($method))) {
+        if ($this->notificationUtils->hasHTTPMethod($entity, strtolower($method))) {
             $changeSet = $this->processChangeset($entityManager->getUnitOfWork()->getEntityChangeSet($entity));
 
             /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
@@ -292,7 +289,7 @@ class EntityListener
 
             list($controller, $action) = $split;
 
-            return !$this->processor->isControllerOrActionDisabled($controller, $action);
+            return !$this->notificationUtils->isControllerOrActionDisabled($controller, $action);
         }
 
         return $default;

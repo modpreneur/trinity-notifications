@@ -3,11 +3,11 @@
 namespace Trinity\NotificationBundle\Services;
 
 use Psr\Log\LoggerInterface;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
-use Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationLog;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
+use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
+use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
 use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
 
 /**
@@ -15,10 +15,10 @@ use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
  */
 class NotificationLogger implements NotificationLoggerInterface
 {
-    /** @var ElasticLogService */
+    /** @var ElasticLogServiceInterface */
     protected $esLogger;
 
-    /** @var ElasticReadLogService */
+    /** @var ElasticReadLogServiceInterface */
     protected $readLog;
 
     /** @var  LoggerInterface */
@@ -27,13 +27,13 @@ class NotificationLogger implements NotificationLoggerInterface
     /**
      * MessageLogger constructor.
      *
-     * @param ElasticLogService        $elasticLogger
-     * @param ElasticReadLogService    $readLog
-     * @param LoggerInterface          $logger
+     * @param ElasticLogServiceInterface     $elasticLogger
+     * @param ElasticReadLogServiceInterface $readLog
+     * @param LoggerInterface                $logger
      */
     public function __construct(
-        ElasticLogService $elasticLogger,
-        ElasticReadLogService $readLog,
+        ElasticLogServiceInterface $elasticLogger,
+        ElasticReadLogServiceInterface $readLog,
         LoggerInterface $logger
     ) {
         $this->esLogger = $elasticLogger;
@@ -88,52 +88,5 @@ class NotificationLogger implements NotificationLoggerInterface
         }
     }
 
-    /**
-     * @param string $notificationId
-     *
-     * @return string
-     */
-    protected function getElasticId(string $notificationId)
-    {
-        $query['query']['bool']['must'][] = ['match' => ['uid' => $notificationId]];
 
-        $result = $this->getResult(NotificationLog::TYPE, $query, 1);
-
-        //return the first result or null
-        $result = count($result) > 0 ? $result[0] : null;
-
-        if ($result === null) {
-            $this->logger->emergency('Trying to set notification status for notification with id:'
-                .$notificationId.' but the notification does not exist');
-        }
-        /* @var NotificationLog $result */
-
-        return $result->getId();
-    }
-
-    /**
-     * @param string $type
-     * @param array  $query
-     * @param int    $count
-     *
-     * @return array
-     */
-    protected function getResult(string $type, array $query, int $count)
-    {
-        try {
-            $result = $this->readLog->getMatchingEntities(
-                $type,
-                $query,
-                $count,
-                [],
-                [['createdAt' => ['order' => 'desc']]]
-            );
-        } catch (\Throwable $e) {
-            $this->logger->error($e);
-
-            return [];
-        }
-
-        return $result;
-    }
 }

@@ -252,8 +252,7 @@ class NotificationParser
         } else {
             throw new NotificationException(
                 "Unsupported combination of input conditions. Tried to apply method $HTTPMethod on ".
-                ($entityObject ? 'existing' : 'non existing').' entity. '.
-                'This may be because creation of entities on server is prohibited.'
+                ($entityObject ? 'existing' : 'non existing').' entity. '
             );
         }
     }

@@ -2,12 +2,12 @@
 
 namespace Trinity\NotificationBundle\Services;
 
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
-use Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService;
 use Trinity\Bundle\MessagesBundle\Interfaces\MessageLoggerInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Entity\MessageLog;
 use Trinity\NotificationBundle\Entity\Notification;
+use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
+use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
 
 /**
  * Class MessageLogger.
@@ -15,22 +15,22 @@ use Trinity\NotificationBundle\Entity\Notification;
 class MessageLogger implements MessageLoggerInterface
 {
     /**
-     * @var ElasticLogService
+     * @var ElasticLogServiceInterface
      */
     private $esLogger;
 
     /**
-     * @var ElasticReadLogService
+     * @var ElasticReadLogServiceInterface
      */
     private $readLog;
 
     /**
      * MessageLogger constructor.
      *
-     * @param ElasticLogService $logger
-     * @param ElasticReadLogService    $readLog
+     * @param ElasticLogServiceInterface $logger
+     * @param ElasticReadLogServiceInterface    $readLog
      */
-    public function __construct(ElasticLogService $logger, ElasticReadLogService $readLog)
+    public function __construct(ElasticLogServiceInterface $logger, ElasticReadLogServiceInterface $readLog)
     {
         $this->esLogger = $logger;
         $this->readLog = $readLog;

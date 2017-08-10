@@ -106,6 +106,9 @@ class TrinityNotificationExtension extends Extension
             'addUnknownEntityStrategy',
             [new Reference('trinity.notification.unknown_entity_name_strategy')]
         );
+
+        $container->setAlias('trinity.notification.elastic_log_service', $config['elastic_log_service']);
+        $container->setAlias('trinity.notification.elastic_read_log_service', $config['elastic_read_log_service']);
     }
 
     /**

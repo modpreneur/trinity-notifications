@@ -3,24 +3,24 @@
 namespace Trinity\NotificationBundle\Services;
 
 use Psr\Log\LoggerInterface;
-use Trinity\Bundle\LoggerBundle\Services\ElasticLogService;
-use Trinity\Bundle\LoggerBundle\Services\ElasticReadLogService;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\Component\Core\Interfaces\ClientInterface;
 use Trinity\NotificationBundle\Entity\EntityStatus;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
+use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
+use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
 
 /**
  * Class NotificationStatusManager.
  */
 abstract class AbstractNotificationStatusManager
 {
-    /** @var  ElasticReadLogService */
+    /** @var  ElasticReadLogServiceInterface */
     protected $elasticReader;
 
-    /** @var  ElasticLogService */
+    /** @var  ElasticLogServiceInterface */
     protected $elasticWriter;
 
     /** @var  LoggerInterface */
@@ -29,13 +29,13 @@ abstract class AbstractNotificationStatusManager
     /**
      * NotificationStatusManager constructor.
      *
-     * @param ElasticReadLogService    $elasticReader
-     * @param ElasticLogService        $elasticWriter
+     * @param ElasticReadLogServiceInterface    $elasticReader
+     * @param ElasticLogServiceInterface        $elasticWriter
      * @param LoggerInterface          $logger
      */
     public function __construct(
-        ElasticReadLogService $elasticReader,
-        ElasticLogService $elasticWriter,
+        ElasticReadLogServiceInterface $elasticReader,
+        ElasticLogServiceInterface $elasticWriter,
         LoggerInterface $logger
     ) {
         $this->elasticReader = $elasticReader;
