@@ -14,7 +14,7 @@
     "doctrine/orm": "~2.5",
     "symfony/event-dispatcher": "2.7.*",
     "symfony/form": "2.7.*",
-    "trinity/messages": "dev-sf26",
+    "trinity/messages": "dev-sf27",
     "trinity/core-interfaces": "~1.0"
   },
   "require-dev": {
