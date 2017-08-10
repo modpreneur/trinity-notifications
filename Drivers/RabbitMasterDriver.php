@@ -66,7 +66,7 @@ class RabbitMasterDriver extends BaseDriver
     public function execute(
         NotificationEntityInterface $entity,
         ClientInterface $destinationClient = null,
-        bool $force,
+        $force,
         array $changeSet = [],
         array $params = []
     ) {
@@ -105,7 +105,7 @@ class RabbitMasterDriver extends BaseDriver
         array $entityArray,
         array $changeSet,
         ClientInterface $client,
-        bool $force,
+        $force,
         array $params = []
     ) {
         //check if the client has enabled notifications
@@ -136,7 +136,7 @@ class RabbitMasterDriver extends BaseDriver
      *
      * @return string
      */
-    public function getName() : string
+    public function getName()
     {
         return 'rabbit_master_driver';
     }

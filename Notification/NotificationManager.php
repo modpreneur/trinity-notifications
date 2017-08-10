@@ -76,9 +76,9 @@ class NotificationManager
     public function queueEntity(
         NotificationEntityInterface $entity,
         array $changeSet,
-        bool $force,
-        string $HTTPMethod = 'GET',
-        bool $toClients = true,
+        $force,
+        $HTTPMethod = 'GET',
+        $toClients = true,
         array $options = []
     ) {
         $this->queuedNotifications[] = [
@@ -139,7 +139,7 @@ class NotificationManager
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      */
-    public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client, bool $force)
+    public function syncEntity(NotificationEntityInterface $entity, ClientInterface $client, $force)
     {
         foreach ($this->drivers as $driver) {
             $this->executeEntityInDriver($entity, $driver, $client, $force, [], 'PUT');
@@ -161,7 +161,7 @@ class NotificationManager
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      */
-    public function syncEntities(array $entities, ClientInterface $client, bool $force)
+    public function syncEntities(array $entities, ClientInterface $client, $force)
     {
         foreach ($this->drivers as $driver) {
             foreach ($entities as $entity) {
@@ -205,7 +205,7 @@ class NotificationManager
      */
     protected function sendToClients(
         NotificationEntityInterface $entity,
-        bool $force,
+        $force,
         array $changeSet,
         $HTTPMethod = 'PUT',
         array $options = []
@@ -236,7 +236,7 @@ class NotificationManager
      */
     protected function sendToServer(
         NotificationEntityInterface $entity,
-        bool $force,
+        $force,
         array $changeSet,
         $HTTPMethod = 'GET',
         array $options = []
@@ -256,7 +256,7 @@ class NotificationManager
      *
      * @return object[]
      */
-    protected function clientsToArray($clientsCollection) : array
+    protected function clientsToArray($clientsCollection)
     {
         $clients = [];
 
@@ -284,7 +284,7 @@ class NotificationManager
         NotificationEntityInterface $entity,
         NotificationDriverInterface $driver,
         ClientInterface $client,
-        bool $force,
+        $force,
         array $changeSet,
         $HTTPMethod = 'POST',
         array $options = []

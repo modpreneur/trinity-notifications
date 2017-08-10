@@ -58,7 +58,7 @@ class NotificationEventsListener implements EventSubscriberInterface
         EventDispatcherInterface $eventDispatcher,
         NotificationManager $notificationManager,
         NotificationLoggerInterface $notificationLogger,
-        bool $isClient
+        $isClient
     ) {
         $this->notificationReader = $notificationReader;
         $this->eventDispatcher = $eventDispatcher;
@@ -162,7 +162,7 @@ class NotificationEventsListener implements EventSubscriberInterface
             $this->dispatchSetMessageStatusEvent(
                 $message,
                 StatusMessage::STATUS_ERROR,
-                (string) $error
+                () $error
             );
 
             throw $error;
@@ -202,7 +202,7 @@ class NotificationEventsListener implements EventSubscriberInterface
      * @param string  $status
      * @param string  $statusMessage
      */
-    protected function dispatchSetMessageStatusEvent(Message $message, string $status, string $statusMessage)
+    protected function dispatchSetMessageStatusEvent(Message $message, $status, $statusMessage)
     {
         if ($this->eventDispatcher->hasListeners(SetMessageStatusEvent::NAME)) {
             /* @var ReadMessageEvent $event */

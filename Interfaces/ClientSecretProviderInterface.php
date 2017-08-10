@@ -18,5 +18,5 @@ interface ClientSecretProviderInterface
      *
      * @return string Client secret
      */
-    public function getClientSecret(string $clientId);
+    public function getClientSecret( $clientId);
 }

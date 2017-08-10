@@ -32,7 +32,7 @@ class Source
     /**
      * @return array
      */
-    public function getColumns() : array
+    public function getColumns()
     {
         return $this->columns;
     }
@@ -40,7 +40,7 @@ class Source
     /**
      * @return bool
      */
-    public function hasColumns() : bool
+    public function hasColumns()
     {
         return !empty($this->columns);
     }
@@ -50,7 +50,7 @@ class Source
      *
      * @return bool
      */
-    public function hasColumn(string $column) : bool
+    public function hasColumn( $column)
     {
         $cols = [];
         foreach ($this->columns as $c) {

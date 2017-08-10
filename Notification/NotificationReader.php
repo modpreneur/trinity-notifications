@@ -77,7 +77,7 @@ class NotificationReader
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Exception
      */
-    public function read(Message $message) : array
+    public function read(Message $message)
     {
         $notificationBatch = NotificationBatch::createFromMessage($message);
         $notifications = $notificationBatch->getNotifications()->toArray();
@@ -169,7 +169,7 @@ class NotificationReader
      *
      * @throws \InvalidArgumentException
      */
-    protected function logNotificationsStatus(NotificationBatch $batch, string $status, string $message)
+    protected function logNotificationsStatus(NotificationBatch $batch, $status, $message)
     {
         $statuses = [];
 

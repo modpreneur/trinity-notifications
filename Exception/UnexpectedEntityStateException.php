@@ -29,7 +29,7 @@ class UnexpectedEntityStateException extends NotificationException
     /**
      * @return array
      */
-    public function getViolations(): array
+    public function getViolations()
     {
         return $this->violations;
     }
@@ -38,7 +38,7 @@ class UnexpectedEntityStateException extends NotificationException
      * @param array $violations
      * @param bool  $recreateMessage
      */
-    public function setViolations(array $violations, bool $recreateMessage = false)
+    public function setViolations(array $violations, $recreateMessage = false)
     {
         $this->violations = $violations;
 
@@ -50,7 +50,7 @@ class UnexpectedEntityStateException extends NotificationException
     /**
      * @return NotificationEntityInterface
      */
-    public function getEntity(): NotificationEntityInterface
+    public function getEntity()
     {
         return $this->entity;
     }
@@ -66,7 +66,7 @@ class UnexpectedEntityStateException extends NotificationException
     /**
      * @return Notification
      */
-    public function getNotification(): Notification
+    public function getNotification()
     {
         return $this->notification;
     }

@@ -44,7 +44,7 @@ class NotificationBatch extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      */
-    public function pack(bool $getAsArray = false) : string
+    public function pack( $getAsArray = false)
     {
         $notificationsArray = [];
         /** @var Notification $notification */
@@ -62,7 +62,7 @@ class NotificationBatch extends Message
      *
      * @return array
      */
-    public function getArrayOfNotificationsConvertedToArray() : array
+    public function getArrayOfNotificationsConvertedToArray()
     {
         $data = [];
         /** @var Notification $notification */
@@ -76,7 +76,7 @@ class NotificationBatch extends Message
     /**
      * @return ArrayCollection<Notification>
      */
-    public function getNotifications() : ArrayCollection
+    public function getNotifications()
     {
         return $this->rawData;
     }
@@ -86,7 +86,7 @@ class NotificationBatch extends Message
      *
      * @return NotificationBatch
      */
-    public function addNotification(Notification $notification) : NotificationBatch
+    public function addNotification(Notification $notification)
     {
         if (!$this->rawData->contains($notification)) {
             $this->rawData->add($notification);
@@ -110,7 +110,7 @@ class NotificationBatch extends Message
      *
      * @return NotificationBatch
      */
-    public function removeNotification(Notification $notification) : NotificationBatch
+    public function removeNotification(Notification $notification)
     {
         $this->rawData->remove($notification);
 
@@ -122,7 +122,7 @@ class NotificationBatch extends Message
      *
      * @return NotificationBatch
      */
-    public static function createFromMessage(Message $message) : self
+    public static function createFromMessage(Message $message)
     {
         $notificationBatch = new self();
         $message->copyTo($notificationBatch);
@@ -153,7 +153,7 @@ class NotificationBatch extends Message
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
-    public static function unpack(string $messageJson) : self
+    public static function unpack( $messageJson)
     {
         return self::createFromMessage(parent::unpack($messageJson));
     }

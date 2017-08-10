@@ -37,7 +37,7 @@ class ChangesDoneEvent extends NotificationEvent
     /**
      * @return array
      */
-    public function getEntities() : array
+    public function getEntities()
     {
         return $this->entities;
     }

@@ -44,7 +44,7 @@ class AnnotationsUtils
     /**
      * @return AnnotationReader
      */
-    public function getReader() : AnnotationReader
+    public function getReader()
     {
         return $this->reader;
     }
@@ -54,7 +54,7 @@ class AnnotationsUtils
      *
      * @return string
      */
-    public function getEntityClass($entity) : string
+    public function getEntityClass($entity)
     {
         return str_replace(self::FIX_NAMESPACE, '', get_class($entity));
     }
@@ -89,7 +89,7 @@ class AnnotationsUtils
      *
      * @return array
      */
-    public function getClassAnnotations($entity, $annotationClass) : array
+    public function getClassAnnotations($entity, $annotationClass)
     {
         $class = $this->getEntityClass($entity);
         $reflectionObject = new \ReflectionClass($class);
@@ -138,7 +138,7 @@ class AnnotationsUtils
      *
      * @return array Array of arrays with items('method' => \ReflectionMethod, 'annotation' => Annotation)
      */
-    public function getNotificationSetterMethods($entity) : array
+    public function getNotificationSetterMethods($entity)
     {
         return $this->getClassMethodsWithAnnotation($entity, AssociationSetter::class);
     }
@@ -148,7 +148,7 @@ class AnnotationsUtils
      *
      * @return array Array of arrays with items('method' => \ReflectionMethod, 'annotation' => Annotation)
      */
-    public function getNotificationGetterMethods($entity) : array
+    public function getNotificationGetterMethods($entity)
     {
         return $this->getClassMethodsWithAnnotation($entity, AssociationGetter::class);
     }
@@ -159,7 +159,7 @@ class AnnotationsUtils
      *
      * @return array Array of arrays with items('method' => \ReflectionMethod, 'annotation' => Annotation)
      */
-    protected function getClassMethodsWithAnnotation($entity, string $annotationClass) : array
+    protected function getClassMethodsWithAnnotation($entity, $annotationClass)
     {
         $return = [];
         $class = $this->getEntityClass($entity);

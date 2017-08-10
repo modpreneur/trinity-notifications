@@ -28,7 +28,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
      * @param Notification $notification
      * @param string       $classname
      */
-    public function __construct(Notification $notification, string $classname)
+    public function __construct(Notification $notification, $classname)
     {
         $this->notification = $notification;
         $this->classname = $classname;
@@ -37,7 +37,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @return Notification
      */
-    public function getNotification(): Notification
+    public function getNotification()
     {
         return $this->notification;
     }
@@ -53,7 +53,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @return string
      */
-    public function getClassname(): string
+    public function getClassname()
     {
         return $this->classname;
     }
@@ -61,7 +61,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /**
      * @param string $classname
      */
-    public function setClassname(string $classname)
+    public function setClassname( $classname)
     {
         $this->classname = $classname;
     }

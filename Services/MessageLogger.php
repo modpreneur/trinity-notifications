@@ -51,11 +51,11 @@ class MessageLogger implements MessageLoggerInterface
      */
     public function logMessage(
         Message $messageObject = null,
-        string $messageJson = '',
-        string $source = '',
-        string $destination = '',
-        string $status = '',
-        string $error = ''
+        $messageJson = '',
+        $source = '',
+        $destination = '',
+        $status = '',
+        $error = ''
     ) {
         $log = new MessageLog();
 
@@ -102,9 +102,9 @@ class MessageLogger implements MessageLoggerInterface
      */
     public function logDeadLetteredMessage(
         Message $messageObject = null,
-        string $messageJson = '',
-        string $source = '',
-        string $destination = ''
+        $messageJson = '',
+        $source = '',
+        $destination = ''
     ) {
         $log = new MessageLog();
 
@@ -146,9 +146,9 @@ class MessageLogger implements MessageLoggerInterface
      *                              status).
      */
     public function setMessageStatus(
-        string $messageId,
-        string $status,
-        string $statusMessage
+        $messageId,
+        $status,
+        $statusMessage
     ) {
         $query['bool']['must'][] = ['match' => ['uid' => $messageId]];
 

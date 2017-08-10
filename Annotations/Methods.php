@@ -31,7 +31,7 @@ class Methods
      *
      * @return bool
      */
-    public function hasType($typeName) : bool
+    public function hasType($typeName)
     {
         return in_array(strtolower($typeName), $this->getTypes());
     }
@@ -39,7 +39,7 @@ class Methods
     /**
      * @return array
      */
-    public function getTypes() : array
+    public function getTypes()
     {
         return $this->types;
     }

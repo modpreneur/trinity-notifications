@@ -17,7 +17,7 @@ class UnknownEntityNameStrategyTest extends BaseTest
      * No classname found for entityName: 'testing name'.
      * Have you defined it in the configuration under trinity_notification:entities?
      */
-    public function testUnknownEntityName(): void
+    public function testUnknownEntityName()
     {
         $notification = new Notification();
         $notification->setEntityName('testing name');

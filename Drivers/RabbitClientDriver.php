@@ -47,8 +47,8 @@ class RabbitClientDriver extends BaseDriver
         BatchManager $batchManager,
         AnnotationsUtils $annotationsUtils,
         NotificationLoggerInterface $notificationLogger,
-        string $clientId,
-        string $entityIdField
+        $clientId,
+        $entityIdField
     ) {
         parent::__construct(
             $eventDispatcher,
@@ -75,7 +75,7 @@ class RabbitClientDriver extends BaseDriver
     public function execute(
         NotificationEntityInterface $entity,
         ClientInterface $client = null,
-        bool $force,
+        $force,
         array $changeSet = [],
         array $params = []
     ) {
@@ -114,7 +114,7 @@ class RabbitClientDriver extends BaseDriver
      *
      * @return string
      */
-    public function getName() : string
+    public function getName()
     {
         return 'rabbit_server_driver';
     }

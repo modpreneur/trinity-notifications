@@ -26,7 +26,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @return Message
      */
-    public function getMessageObject() : Message
+    public function getMessageObject()
     {
         return $this->messageObject;
     }
@@ -42,7 +42,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @return string
      */
-    public function getEntityName() : string
+    public function getEntityName()
     {
         return $this->entityName;
     }
@@ -50,7 +50,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @param string $entityName
      */
-    public function setEntityName(string $entityName)
+    public function setEntityName( $entityName)
     {
         $this->entityName = $entityName;
     }
@@ -58,7 +58,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @return string
      */
-    public function getEntityId() : string
+    public function getEntityId()
     {
         return $this->entityId;
     }
@@ -66,7 +66,7 @@ class AssociationEntityNotFoundException extends NotificationException
     /**
      * @param string $entityId
      */
-    public function setEntityId(string $entityId)
+    public function setEntityId( $entityId)
     {
         $this->entityId = $entityId;
     }

@@ -13,8 +13,10 @@ class NotificationLog extends Notification
     const STATUS_ERROR = NotificationStatus::STATUS_ERROR;
     const STATUS_SENT = NotificationStatus::STATUS_SENT;
     const STATUS_UNKNOWN = 'unknown';
-    const STATUSES = [self::STATUS_ERROR, self::STATUS_OK, self::STATUS_SENT, self::STATUS_UNKNOWN];
     const DEFAULT_TTL = 30;
+
+    /** @var  string[] */
+    protected $statuses;
 
     /** @var string */
     protected $id;
@@ -36,10 +38,11 @@ class NotificationLog extends Notification
      *
      * @param string $id
      */
-    public function __construct(string $id)
+    public function __construct( $id)
     {
         parent::__construct();
 
+        $this->statuses = [self::STATUS_ERROR, self::STATUS_OK, self::STATUS_SENT, self::STATUS_UNKNOWN];
         $this->id = $id;
         $this->status = self::STATUS_UNKNOWN;
     }
@@ -47,7 +50,7 @@ class NotificationLog extends Notification
     /**
      * @return string
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->id;
     }
@@ -55,7 +58,7 @@ class NotificationLog extends Notification
     /**
      * @param string $id
      */
-    public function setId(string $id)
+    public function setId( $id)
     {
         $this->id = $id;
     }
@@ -63,7 +66,7 @@ class NotificationLog extends Notification
     /**
      * @return bool
      */
-    public function isIncoming(): bool
+    public function isIncoming()
     {
         return $this->incoming;
     }
@@ -71,7 +74,7 @@ class NotificationLog extends Notification
     /**
      * @param bool $incoming
      */
-    public function setIncoming(bool $incoming)
+    public function setIncoming( $incoming)
     {
         $this->incoming = $incoming;
     }
@@ -79,7 +82,7 @@ class NotificationLog extends Notification
     /**
      * @return string
      */
-    public function getStatus(): string
+    public function getStatus()
     {
         return $this->status;
     }
@@ -89,11 +92,11 @@ class NotificationLog extends Notification
      *
      * @throws \InvalidArgumentException
      */
-    public function setStatus(string $status)
+    public function setStatus( $status)
     {
-        if (!in_array($status, self::STATUSES, true)) {
+        if (!in_array($status, $this->statuses, true)) {
             throw new \InvalidArgumentException(
-                'Notification status has to be one of: '.implode(', ', self::STATUSES).'. Given:'.$status
+                'Notification status has to be one of: '.implode(', ', $this->statuses).'. Given:'.$status
             );
         }
         $this->status = $status;
@@ -102,7 +105,7 @@ class NotificationLog extends Notification
     /**
      * @return string
      */
-    public function getStatusMessage(): string
+    public function getStatusMessage()
     {
         return $this->statusMessage;
     }
@@ -110,7 +113,7 @@ class NotificationLog extends Notification
     /**
      * @param string $statusMessage
      */
-    public function setStatusMessage(string $statusMessage)
+    public function setStatusMessage( $statusMessage)
     {
         $this->statusMessage = $statusMessage;
     }
@@ -118,7 +121,7 @@ class NotificationLog extends Notification
     /**
      * @return string
      */
-    public function getExtra(): string
+    public function getExtra()
     {
         return $this->extra;
     }
@@ -126,7 +129,7 @@ class NotificationLog extends Notification
     /**
      * @param string $extra
      */
-    public function setExtra(string $extra)
+    public function setExtra( $extra)
     {
         $this->extra = $extra;
     }
@@ -167,7 +170,7 @@ class NotificationLog extends Notification
      *
      * @return string
      */
-    public static function getLogName(): string
+    public static function getLogName()
     {
         return self::TYPE;
     }
@@ -177,7 +180,7 @@ class NotificationLog extends Notification
      *
      * @return int
      */
-    public static function getDefaultTtl(): int
+    public static function getDefaultTtl()
     {
         return self::DEFAULT_TTL;
     }

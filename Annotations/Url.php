@@ -45,7 +45,7 @@ class Url
     /**
      * @return string
      */
-    public function getPostfix() : string
+    public function getPostfix()
     {
         return $this->postfix;
     }
@@ -53,7 +53,7 @@ class Url
     /**
      * @return bool
      */
-    public function isWithoutMethods() : bool
+    public function isWithoutMethods()
     {
         return empty($this->getMethods()) || count($this->getMethods()) == 0;
     }
@@ -61,7 +61,7 @@ class Url
     /**
      * @return array
      */
-    public function getMethods() : array
+    public function getMethods()
     {
         return $this->methods;
     }
@@ -71,7 +71,7 @@ class Url
      *
      * @return bool
      */
-    public function hasMethod(string $method) : bool
+    public function hasMethod( $method)
     {
         if (empty($this->getMethods())) {
             return true;

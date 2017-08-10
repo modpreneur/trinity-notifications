@@ -86,7 +86,7 @@ abstract class BaseDriver implements NotificationDriverInterface
      * @param NotificationEntityInterface $entity
      * @param string                      $clientId
      */
-    protected function addEntityToNotifiedEntities(NotificationEntityInterface $entity, string $clientId)
+    protected function addEntityToNotifiedEntities(NotificationEntityInterface $entity, $clientId)
     {
         // add id to the entity array so it will not be notified again
         $this->notifiedEntities[$clientId][get_class($entity)][] = $entity->getId();
@@ -100,7 +100,7 @@ abstract class BaseDriver implements NotificationDriverInterface
      *
      * @return bool
      */
-    protected function isEntityAlreadyProcessed(NotificationEntityInterface $entity, string $clientId) : bool
+    protected function isEntityAlreadyProcessed(NotificationEntityInterface $entity, $clientId)
     {
         $class = get_class($entity);
 

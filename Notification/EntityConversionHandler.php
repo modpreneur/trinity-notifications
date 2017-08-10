@@ -61,7 +61,7 @@ class EntityConversionHandler
         EntityConverter $entityConverter,
         array $forms,
         array $entities,
-        string $entityIdField
+        $entityIdField
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -87,8 +87,8 @@ class EntityConversionHandler
         NotificationEntityInterface $entity,
         array $data,
         array $changeSet,
-        bool $forceUpdate = false
-    ) : NotificationEntityInterface {
+        $forceUpdate = false
+    ) {
         if (!$forceUpdate) {
             $this->validateCurrentEntityState($entity, $changeSet, $data);
         }
@@ -108,7 +108,7 @@ class EntityConversionHandler
      *
      * @return NotificationEntityInterface
      */
-    public function performEntityCreate(string $entityName, array $data) : NotificationEntityInterface
+    public function performEntityCreate( $entityName, array $data)
     {
         $entity = $this->createEntity($entityName);
         $this->useForm($entity, $data);
@@ -127,7 +127,7 @@ class EntityConversionHandler
      *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      */
-    public function useForm(NotificationEntityInterface $entity, array $data) : NotificationEntityInterface
+    public function useForm(NotificationEntityInterface $entity, array $data)
     {
         $form = $this->createForm(
             array_search(
@@ -235,7 +235,7 @@ class EntityConversionHandler
      *
      * @return NotificationEntityInterface
      */
-    protected function createEntity(string $entityName, array $constructorArguments = []) : NotificationEntityInterface
+    protected function createEntity( $entityName, array $constructorArguments = [])
     {
         $entityClass = new \ReflectionClass(
             $this->getEntityClass($entityName)
@@ -254,10 +254,10 @@ class EntityConversionHandler
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     protected function createForm(
-        string $entityName,
+        $entityName,
         NotificationEntityInterface $entity,
         array $options = []
-    ) : FormInterface {
+    ) {
         return $this->formFactory->create(
             $this->getFormClassName($entityName),
             $entity,
@@ -270,7 +270,7 @@ class EntityConversionHandler
      *
      * @return string
      */
-    protected function getFormClassName(string $entityName) : string
+    protected function getFormClassName( $entityName)
     {
         return $this->forms[$entityName];
     }
@@ -280,7 +280,7 @@ class EntityConversionHandler
      *
      * @return string
      */
-    protected function getEntityClass(string $entityName) : string
+    protected function getEntityClass( $entityName)
     {
         return $this->entities[$entityName];
     }

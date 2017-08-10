@@ -25,7 +25,7 @@ class AfterNotificationBatchProcessEvent extends NotificationEvent
      * @param string     $clientId
      * @param \Exception $exception
      */
-    public function __construct(string $userIdentification, string $clientId, \Exception $exception = null)
+    public function __construct( $userIdentification, $clientId, \Exception $exception = null)
     {
         $this->userIdentification = $userIdentification;
         $this->clientId = $clientId;
@@ -43,7 +43,7 @@ class AfterNotificationBatchProcessEvent extends NotificationEvent
     /**
      * @param string $userIdentification
      */
-    public function setUserIdentification(string $userIdentification)
+    public function setUserIdentification( $userIdentification)
     {
         $this->userIdentification = $userIdentification;
     }
@@ -59,7 +59,7 @@ class AfterNotificationBatchProcessEvent extends NotificationEvent
     /**
      * @param string $clientId
      */
-    public function setClientId(string $clientId)
+    public function setClientId( $clientId)
     {
         $this->clientId = $clientId;
     }

@@ -27,7 +27,7 @@ class NotificationRequest
      * @param string $entityName
      * @param string $associationEntityId
      */
-    public function __construct(string $entityName, string $associationEntityId)
+    public function __construct( $entityName, $associationEntityId)
     {
         $this->entityName = $entityName;
         $this->associationEntityId = $associationEntityId;
@@ -36,7 +36,7 @@ class NotificationRequest
     /**
      * @return string
      */
-    public function getEntityName() : string
+    public function getEntityName()
     {
         return $this->entityName;
     }
@@ -44,7 +44,7 @@ class NotificationRequest
     /**
      * @param string $entityName
      */
-    public function setEntityName(string $entityName)
+    public function setEntityName( $entityName)
     {
         $this->entityName = $entityName;
     }
@@ -52,7 +52,7 @@ class NotificationRequest
     /**
      * @return string
      */
-    public function getAssociationEntityId() : string
+    public function getAssociationEntityId()
     {
         return $this->associationEntityId;
     }
@@ -60,7 +60,7 @@ class NotificationRequest
     /**
      * @param string $associationEntityId
      */
-    public function setAssociationEntityId(string $associationEntityId)
+    public function setAssociationEntityId( $associationEntityId)
     {
         $this->associationEntityId = $associationEntityId;
     }
@@ -68,7 +68,7 @@ class NotificationRequest
     /**
      * @return array
      */
-    public function toArray() : array
+    public function toArray()
     {
         return [self::ENTITY_ID => $this->associationEntityId, self::ENTITY_NAME => $this->entityName];
     }
@@ -78,7 +78,7 @@ class NotificationRequest
      *
      * @return NotificationRequest
      */
-    public static function fromArray(array $data) : self
+    public static function fromArray(array $data)
     {
         return new self($data[self::ENTITY_NAME], $data[self::ENTITY_ID]);
     }

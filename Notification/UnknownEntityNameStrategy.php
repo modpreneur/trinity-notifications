@@ -20,7 +20,7 @@ class UnknownEntityNameStrategy implements UnknownEntityNameStrategyInterface
      * @return void nothing as the function only throws a exception
      * @throws NotificationException
      */
-    public function unknownEntityName(Notification $notification): void
+    public function unknownEntityName(Notification $notification)
     {
         throw new NotificationException(
             "No classname found for entityName: '{$notification->getEntityName()}'.".

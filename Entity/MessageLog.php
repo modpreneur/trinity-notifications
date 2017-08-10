@@ -62,7 +62,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return string
      */
-    public function getId() : string
+    public function getId()
     {
         return $this->id;
     }
@@ -86,7 +86,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return bool
      */
-    public function getIsDead() :bool
+    public function getIsDead()
     {
         return $this->isDead ?: false;
     }
@@ -94,7 +94,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @param bool $isDead
      */
-    public function setIsDead(bool $isDead)
+    public function setIsDead( $isDead)
     {
         $this->isDead = $isDead;
     }
@@ -166,7 +166,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString()
     {
         return $this->id;
     }
@@ -177,7 +177,7 @@ class MessageLog extends Message implements EntityInterface
      *
      * @return string
      */
-    public static function getLogName(): string
+    public static function getLogName()
     {
         return self::LOG_NAME;
     }
@@ -187,7 +187,7 @@ class MessageLog extends Message implements EntityInterface
      *
      * @return int
      */
-    public static function getDefaultTtl(): int
+    public static function getDefaultTtl()
     {
         return self::DEFAULT_TTL;
     }

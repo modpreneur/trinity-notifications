@@ -88,10 +88,10 @@ class NotificationParser
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager,
         EntityAssociator $entityAssociator,
-        string $entityIdFieldName,
-        bool $isClient,
+        $entityIdFieldName,
+        $isClient,
         array $entities,
-        bool $disableTimeViolations = true
+        $disableTimeViolations = true
     ) {
         $this->logger = $logger;
         $this->conversionHandler = $conversionHandler;
@@ -126,7 +126,7 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotifications(array $notifications) : array
+    public function parseNotifications(array $notifications)
     {
         $processedEntities = [];
 
@@ -177,7 +177,7 @@ class NotificationParser
      * @throws \Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException
      * @throws NotificationException
      */
-    public function parseNotification(Notification $notification, string $fullClassName)
+    public function parseNotification(Notification $notification, $fullClassName)
     {
         // If there are listeners for this event,
         // fire it and get the message from it(it allows changing the data, className and method)
@@ -260,7 +260,7 @@ class NotificationParser
     /**
      * @return \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException[]
      */
-    public function getNotificationExceptions(): array
+    public function getNotificationExceptions()
     {
         return $this->notificationExceptions;
     }
@@ -273,7 +273,7 @@ class NotificationParser
      *
      * @return null|NotificationEntityInterface
      */
-    protected function getEntityObject(string $fullClassName)
+    protected function getEntityObject( $fullClassName)
     {
         /** @var NotificationEntityInterface|null $entity */
         $entity = $this->entityManager->getRepository($fullClassName)->findOneBy(
@@ -294,8 +294,8 @@ class NotificationParser
      */
     public function checkLogicalViolations(
         $entityObject,
-        string $fullClassName,
-        string $method
+        $fullClassName,
+        $method
     ) {
         if ($entityObject === null && $method === 'DELETE') {
             throw new NotificationException(

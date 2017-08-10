@@ -66,8 +66,8 @@ class EntityAssociator
         EntityManagerInterface $entityManager,
         AnnotationsUtils $annotationsUtils,
         LoggerInterface $logger,
-        bool $isClient,
-        string $serverIdField,
+        $isClient,
+        $serverIdField,
         array $entities
     ) {
         $this->isClient = $isClient;
@@ -185,7 +185,7 @@ class EntityAssociator
      *
      * @return Association[]
      */
-    protected function getPreparedAssociations(NotificationEntityInterface $entity) : array
+    protected function getPreparedAssociations(NotificationEntityInterface $entity)
     {
         return $this->preparedAssociations[get_class($entity)];
     }

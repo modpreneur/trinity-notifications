@@ -30,7 +30,7 @@ abstract class DriverExecuteEvent extends NotificationEvent
     /**
      * @return NotificationEntityInterface
      */
-    public function getEntity() : NotificationEntityInterface
+    public function getEntity()
     {
         return $this->entity;
     }
