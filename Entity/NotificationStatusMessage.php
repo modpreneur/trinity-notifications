@@ -81,7 +81,7 @@ class NotificationStatusMessage extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack( $getAsArray = false)
+    public function pack(bool $getAsArray = false) : string
     {
         $statuses = [];
         /** @var NotificationStatus $status */
@@ -99,7 +99,7 @@ class NotificationStatusMessage extends Message
      *
      * @return NotificationStatusMessage
      */
-    public static function createFromMessage(Message $message)
+    public static function createFromMessage(Message $message) : self
     {
         $statusMessage = new self();
         $message->copyTo($statusMessage);

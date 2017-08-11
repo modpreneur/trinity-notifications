@@ -35,7 +35,7 @@ class AssociationSetter
     /**
      * @return string
      */
-    public function getTargetEntity()
+    public function getTargetEntity() : string
     {
         return $this->targetEntity;
     }

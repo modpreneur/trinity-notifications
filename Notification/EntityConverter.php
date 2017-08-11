@@ -59,7 +59,7 @@ class EntityConverter
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         $entityIdFieldName = '',
-        $isClient = false
+        bool $isClient = false
     ) {
         $this->annotationsUtils = $annotationsUtils;
         $this->eventDispatcher = $eventDispatcher;
@@ -85,7 +85,7 @@ class EntityConverter
      *
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    public function toArray(NotificationEntityInterface $entity, array $properties = [])
+    public function toArray(NotificationEntityInterface $entity, array $properties = []) : array
     {
         if (count($properties) === 0) {
             $properties = $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns();
@@ -120,7 +120,7 @@ class EntityConverter
      *
      * @throws NotificationException
      */
-    public function getPropertyValue(NotificationEntityInterface $entity, $property)
+    public function getPropertyValue(NotificationEntityInterface $entity, string $property)
     {
         $ucFirst = ucfirst($property);
         $methodNames = [
@@ -188,7 +188,7 @@ class EntityConverter
      *
      * @return array
      */
-    private function processGetMethod($entity, $name, $longName)
+    private function processGetMethod($entity, $name, $longName) : array
     {
         $result = $entity->{$longName}();
 
@@ -204,7 +204,7 @@ class EntityConverter
      *
      * @return array
      */
-    private function processMethod($entity, $method, $methodName)
+    private function processMethod($entity, $method, $methodName) : array
     {
         if (method_exists($entity, $method)) {
             $methodName = $method;

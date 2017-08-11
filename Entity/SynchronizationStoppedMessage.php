@@ -33,7 +33,7 @@ class SynchronizationStoppedMessage extends Message
      *
      * @return array
      */
-    public function getArrayOfNotificationsConvertedToArray()
+    public function getArrayOfNotificationsConvertedToArray() : array
     {
         $data = [];
         /** @var Notification $notification */
@@ -49,7 +49,7 @@ class SynchronizationStoppedMessage extends Message
      *
      * @return SynchronizationStoppedMessage
      */
-    public static function createFromMessage(Message $message)
+    public static function createFromMessage(Message $message) : self
     {
         $stoppedMessage = new self();
         $message->copyTo($stoppedMessage);
@@ -70,7 +70,7 @@ class SynchronizationStoppedMessage extends Message
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
-    public static function unpack( $messageJson)
+    public static function unpack(string $messageJson) : self
     {
         return self::createFromMessage(parent::unpack($messageJson));
     }
@@ -78,7 +78,7 @@ class SynchronizationStoppedMessage extends Message
     /**
      * @return string
      */
-    public function getEntityAlias()
+    public function getEntityAlias() : string
     {
         return $this->rawData[self::ENTITY_ALIAS_KEY];
     }
@@ -86,7 +86,7 @@ class SynchronizationStoppedMessage extends Message
     /**
      * @return string
      */
-    public function getEntityId()
+    public function getEntityId() : string
     {
         return $this->rawData[self::ENTITY_ID_KEY];
     }
@@ -94,7 +94,7 @@ class SynchronizationStoppedMessage extends Message
     /**
      * @param string $entityAlias
      */
-    public function setEntityAlias( $entityAlias)
+    public function setEntityAlias(string $entityAlias)
     {
         $this->rawData[self::ENTITY_ALIAS_KEY] = $entityAlias;
     }
@@ -102,7 +102,7 @@ class SynchronizationStoppedMessage extends Message
     /**
      * @param string $entityId
      */
-    public function setEntityId( $entityId)
+    public function setEntityId(string $entityId)
     {
         $this->rawData[self::ENTITY_ID_KEY] = $entityId;
     }

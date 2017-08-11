@@ -32,7 +32,7 @@ class AssociationEntityNotFoundEvent extends NotificationEvent
     /**
      * @return AssociationEntityNotFoundException
      */
-    public function getException()
+    public function getException() : AssociationEntityNotFoundException
     {
         return $this->exception;
     }

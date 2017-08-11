@@ -32,7 +32,7 @@ class NotificationStatus
     /**
      * @return string
      */
-    public function getNotificationId()
+    public function getNotificationId(): string
     {
         return $this->notificationId;
     }
@@ -40,7 +40,7 @@ class NotificationStatus
     /**
      * @param string $notificationId
      */
-    public function setNotificationId( $notificationId)
+    public function setNotificationId(string $notificationId)
     {
         $this->notificationId = $notificationId;
     }
@@ -48,7 +48,7 @@ class NotificationStatus
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -58,7 +58,7 @@ class NotificationStatus
      *
      * @throws \InvalidArgumentException
      */
-    public function setStatus( $status)
+    public function setStatus(string $status)
     {
         if (!in_array($status, self::STATUSES, true)) {
             throw new \InvalidArgumentException(
@@ -72,7 +72,7 @@ class NotificationStatus
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -80,7 +80,7 @@ class NotificationStatus
     /**
      * @param string $message
      */
-    public function setMessage( $message)
+    public function setMessage(string $message)
     {
         $this->message = $message;
     }
@@ -88,7 +88,7 @@ class NotificationStatus
     /**
      * @return array
      */
-    public function getExtra()
+    public function getExtra(): array
     {
         return $this->extra;
     }
@@ -104,7 +104,7 @@ class NotificationStatus
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray() : array
     {
         return [
             self::NOTIFICATION_ID_KEY => $this->notificationId,
@@ -121,7 +121,7 @@ class NotificationStatus
      *
      * @return NotificationStatus
      */
-    public static function fromArray(array $array = [])
+    public static function fromArray(array $array = []) : self
     {
         $notificationObject = new self();
 

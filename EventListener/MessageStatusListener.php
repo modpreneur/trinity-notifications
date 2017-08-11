@@ -31,7 +31,7 @@ class MessageStatusListener implements EventSubscriberInterface
      */
     public function __construct(
         MessageSender $messageSender,
-        $isClient
+        bool $isClient
     ) {
         $this->messageSender = $messageSender;
         $this->isClient = $isClient;

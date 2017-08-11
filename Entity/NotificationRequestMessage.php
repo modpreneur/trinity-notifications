@@ -47,7 +47,7 @@ class NotificationRequestMessage extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack( $getAsArray = false)
+    public function pack(bool $getAsArray = false) : string
     {
         $data = [];
         $data[self::REQUEST_KEY] = $this->request->toArray();
@@ -70,7 +70,7 @@ class NotificationRequestMessage extends Message
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
-    public static function unpack( $messageJson)
+    public static function unpack(string $messageJson) : self
     {
         return self::createFromMessage(parent::unpack($messageJson));
     }
@@ -80,7 +80,7 @@ class NotificationRequestMessage extends Message
      *
      * @return NotificationRequestMessage
      */
-    public static function createFromMessage(Message $message)
+    public static function createFromMessage(Message $message) : self
     {
         $requestMessage = new self();
         $message->copyTo($requestMessage);
@@ -96,7 +96,7 @@ class NotificationRequestMessage extends Message
     /**
      * @return Notification[]
      */
-    public function getPreviousNotifications()
+    public function getPreviousNotifications() : array
     {
         return $this->previousNotifications;
     }
@@ -120,7 +120,7 @@ class NotificationRequestMessage extends Message
     /**
      * @return NotificationRequest
      */
-    public function getRequest()
+    public function getRequest() : NotificationRequest
     {
         return $this->request;
     }

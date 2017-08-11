@@ -69,7 +69,7 @@ class Notification
     /**
      * @return string
      */
-    public function getMethod()
+    public function getMethod() : string
     {
         return $this->method;
     }
@@ -79,7 +79,7 @@ class Notification
      *
      * @return Notification
      */
-    public function setMethod( $method)
+    public function setMethod(string $method)
     {
         $this->method = $method;
 
@@ -89,7 +89,7 @@ class Notification
     /**
      * @return string
      */
-    public function getMessageId()
+    public function getMessageId() : string
     {
         return $this->messageId;
     }
@@ -99,7 +99,7 @@ class Notification
      *
      * @return Notification
      */
-    public function setMessageId( $messageId)
+    public function setMessageId(string $messageId)
     {
         $this->messageId = $messageId;
 
@@ -109,7 +109,7 @@ class Notification
     /**
      * @return array
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
     }
@@ -132,7 +132,7 @@ class Notification
     /**
      * @return array
      */
-    public function getChangeSet()
+    public function getChangeSet(): array
     {
         return $this->changeSet;
     }
@@ -156,7 +156,7 @@ class Notification
     /**
      * @return bool
      */
-    public function isForced()
+    public function isForced(): bool
     {
         return $this->isForced;
     }
@@ -164,7 +164,7 @@ class Notification
     /**
      * @param bool $isForced
      */
-    public function setIsForced( $isForced)
+    public function setIsForced(bool $isForced)
     {
         $this->isForced = $isForced;
     }
@@ -172,7 +172,7 @@ class Notification
     /**
      * @return int
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): int
     {
         return $this->createdAt;
     }
@@ -180,7 +180,7 @@ class Notification
     /**
      * @param int $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(int $createdAt)
     {
         $this->createdAt = $createdAt;
     }
@@ -188,7 +188,7 @@ class Notification
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
@@ -196,7 +196,7 @@ class Notification
     /**
      * @param string $clientId
      */
-    public function setClientId( $clientId)
+    public function setClientId(string $clientId)
     {
         $this->clientId = $clientId;
     }
@@ -204,7 +204,7 @@ class Notification
     /**
      * @return string
      */
-    public function getEntityName()
+    public function getEntityName(): string
     {
         return $this->entityName;
     }
@@ -212,7 +212,7 @@ class Notification
     /**
      * @param string $entityName
      */
-    public function setEntityName( $entityName)
+    public function setEntityName(string $entityName)
     {
         $this->entityName = $entityName;
     }
@@ -220,7 +220,7 @@ class Notification
     /**
      * @return string
      */
-    public function getUid()
+    public function getUid(): string
     {
         return $this->uid;
     }
@@ -228,7 +228,7 @@ class Notification
     /**
      * @param string $uid
      */
-    public function setUid( $uid)
+    public function setUid(string $uid)
     {
         $this->uid = $uid;
     }
@@ -236,7 +236,7 @@ class Notification
     /**
      * @return int
      */
-    public function getEntityId()
+    public function getEntityId(): int
     {
         return $this->entityId;
     }
@@ -244,7 +244,7 @@ class Notification
     /**
      * @param int $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId(int $entityId)
     {
         $this->entityId = $entityId;
     }
@@ -252,7 +252,7 @@ class Notification
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray() : array
     {
         return [
             self::MESSAGE_ID => $this->messageId,
@@ -275,7 +275,7 @@ class Notification
      *
      * @return Notification
      */
-    public static function fromArray(array $notificationArray = [])
+    public static function fromArray(array $notificationArray = []) : self
     {
         $notificationObject = new self();
 
@@ -300,7 +300,7 @@ class Notification
      *
      * @return array
      */
-    public static function fromJson( $json)
+    public static function fromJson(string $json)
     {
         /** @var array $notificationsArrays */
         $notificationsArrays = json_decode($json, true);

@@ -37,7 +37,7 @@ class NotificationUtils
      *
      * @return bool
      */
-    public function hasHTTPMethod($entity, $method)
+    public function hasHTTPMethod($entity, $method) : bool
     {
         /** @var Methods $classAnnotation */
         $classAnnotation = $this->annotationsUtils->getEntityAnnotation(
@@ -58,7 +58,7 @@ class NotificationUtils
      *
      * @throws NotificationException
      */
-    public function isNotificationEntity($entity)
+    public function isNotificationEntity($entity) : bool
     {
         $class = $this->annotationsUtils->getEntityClass($entity);
 
@@ -127,7 +127,7 @@ class NotificationUtils
      *
      * @throws SourceException
      */
-    public function hasSource($entity, $source)
+    public function hasSource($entity, string $source)
     {
         return $this->annotationsUtils->getClassSourceAnnotation($entity)->hasColumn($source);
     }
@@ -138,7 +138,7 @@ class NotificationUtils
      *
      * @return bool
      */
-    public function hasDependedSource($entity, $source)
+    public function hasDependedSource($entity, string $source) : bool
     {
         $annotation = $this->annotationsUtils->getClassDependedSourceAnnotation($entity);
         if ($annotation === null) {
@@ -190,7 +190,7 @@ class NotificationUtils
      *
      * @return bool
      */
-    public function isControllerOrActionDisabled($controller, $action = null)
+    public function isControllerOrActionDisabled($controller, $action = null) : bool
     {
         $annotations = $this->annotationsUtils->getClassAnnotation(
             $controller,

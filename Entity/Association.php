@@ -28,7 +28,7 @@ class Association
      * @param string $setterMethod
      * @param string $targetClassName
      */
-    public function __construct( $getterMethod, $setterMethod, $targetClassName)
+    public function __construct(string $getterMethod, string $setterMethod, string $targetClassName)
     {
         $this->getterMethod = $getterMethod;
         $this->setterMethod = $setterMethod;
@@ -38,7 +38,7 @@ class Association
     /**
      * @return string
      */
-    public function getGetterMethod()
+    public function getGetterMethod() : string
     {
         return $this->getterMethod;
     }
@@ -46,7 +46,7 @@ class Association
     /**
      * @param string $getterMethod
      */
-    public function setGetterMethod( $getterMethod)
+    public function setGetterMethod(string $getterMethod)
     {
         $this->getterMethod = $getterMethod;
     }
@@ -54,7 +54,7 @@ class Association
     /**
      * @return string
      */
-    public function getSetterMethod()
+    public function getSetterMethod() : string
     {
         return $this->setterMethod;
     }
@@ -62,7 +62,7 @@ class Association
     /**
      * @param string $setterMethod
      */
-    public function setSetterMethod( $setterMethod)
+    public function setSetterMethod(string $setterMethod)
     {
         $this->setterMethod = $setterMethod;
     }
@@ -70,7 +70,7 @@ class Association
     /**
      * @return string
      */
-    public function getTargetClassName()
+    public function getTargetClassName() : string
     {
         return $this->targetClassName;
     }

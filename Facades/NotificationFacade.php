@@ -81,7 +81,7 @@ class NotificationFacade
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      */
-    public function synchronizeEntity(NotificationEntityInterface $entity, ClientInterface $client, $force)
+    public function synchronizeEntity(NotificationEntityInterface $entity, ClientInterface $client, bool $force)
     {
         $this->notificationManager->syncEntity($entity, $client, $force);
     }
@@ -100,7 +100,7 @@ class NotificationFacade
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
      */
-    public function synchronizeEntities(array $entities, ClientInterface $client, $forced)
+    public function synchronizeEntities(array $entities, ClientInterface $client, bool $forced)
     {
         $this->notificationManager->syncEntities($entities, $client, $forced);
     }
@@ -125,7 +125,7 @@ class NotificationFacade
      *
      * @throws EntityAliasNotFoundException
      */
-    public function getAliasFromClass( $class)
+    public function getAliasFromClass(string $class)
     {
         return $this->aliasTranslator->getAliasFromClass($class);
     }
@@ -140,7 +140,7 @@ class NotificationFacade
      *
      * @throws EntityAliasNotFoundException
      */
-    public function getClassFromAlias( $alias)
+    public function getClassFromAlias(string $alias)
     {
         return $this->aliasTranslator->getAliasFromClass($alias);
     }

@@ -41,8 +41,8 @@ class NotificationTransformer implements DataTransformerInterface
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        $entityName,
-        $idFieldName
+        string $entityName,
+        string $idFieldName
     ) {
         $this->entityManager = $entityManager;
         $this->entityName = $entityName;

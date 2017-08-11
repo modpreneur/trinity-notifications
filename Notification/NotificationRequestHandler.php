@@ -66,7 +66,7 @@ class NotificationRequestHandler
         EntityConverter $entityConverter,
         NotificationUtils $notificationUtils,
         array $entities,
-        $isClient
+        bool $isClient
     ) {
         $this->messageSender = $messageSender;
         $this->entityManager = $entityManager;

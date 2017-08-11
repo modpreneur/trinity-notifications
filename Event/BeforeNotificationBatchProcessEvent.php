@@ -21,7 +21,7 @@ class BeforeNotificationBatchProcessEvent extends NotificationEvent
      * @param string $userIdentification
      * @param string $clientId
      */
-    public function __construct( $userIdentification, $clientId)
+    public function __construct(string $userIdentification, string $clientId)
     {
         $this->userIdentification = $userIdentification;
         $this->clientId = $clientId;

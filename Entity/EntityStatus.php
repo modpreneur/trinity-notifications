@@ -12,9 +12,8 @@ class EntityStatus
     const SYNCHRONIZATION_ERROR = 'SYNCHRONIZATION_ERROR';
     const SYNCHRONIZED = 'SYNCHRONIZED';
     const UNKNOWN = 'UNKNOWN';
-
-    /** @var  array */
-    protected $statuses = [];
+    const STATUSES = [ self::NOT_SYNCHRONIZED, self::SYNCHRONIZATION_IN_PROGRESS, self::SYNCHRONIZATION_ERROR,
+        self::SYNCHRONIZED, self::UNKNOWN];
 
     /** @var  string */
     protected $entityClass;
@@ -41,18 +40,9 @@ class EntityStatus
     protected $statusMessage;
 
     /**
-     * EntityStatus constructor.
-     */
-    public function __construct()
-    {
-        $this->statuses = [self::NOT_SYNCHRONIZED, self::SYNCHRONIZATION_IN_PROGRESS, self::SYNCHRONIZATION_ERROR,
-            self::SYNCHRONIZED, self::UNKNOWN];
-    }
-
-    /**
      * @return string
      */
-    public function getEntityClass()
+    public function getEntityClass(): string
     {
         return $this->entityClass;
     }
@@ -60,7 +50,7 @@ class EntityStatus
     /**
      * @param string $entityClass
      */
-    public function setEntityClass( $entityClass)
+    public function setEntityClass(string $entityClass)
     {
         $this->entityClass = $entityClass;
     }
@@ -68,7 +58,7 @@ class EntityStatus
     /**
      * @return int
      */
-    public function getEntityId()
+    public function getEntityId(): int
     {
         return $this->entityId;
     }
@@ -76,7 +66,7 @@ class EntityStatus
     /**
      * @param int $entityId
      */
-    public function setEntityId($entityId)
+    public function setEntityId(int $entityId)
     {
         $this->entityId = $entityId;
     }
@@ -84,7 +74,7 @@ class EntityStatus
     /**
      * @return int
      */
-    public function getClientId()
+    public function getClientId(): int
     {
         return $this->clientId;
     }
@@ -92,7 +82,7 @@ class EntityStatus
     /**
      * @param int $clientId
      */
-    public function setClientId($clientId)
+    public function setClientId(int $clientId)
     {
         $this->clientId = $clientId;
     }
@@ -100,7 +90,7 @@ class EntityStatus
     /**
      * @return string
      */
-    public function getMessageUid()
+    public function getMessageUid(): string
     {
         return $this->messageUid;
     }
@@ -108,7 +98,7 @@ class EntityStatus
     /**
      * @param string $messageUid
      */
-    public function setMessageUid( $messageUid)
+    public function setMessageUid(string $messageUid)
     {
         $this->messageUid = $messageUid;
     }
@@ -116,7 +106,7 @@ class EntityStatus
     /**
      * @return int
      */
-    public function getChangedAt()
+    public function getChangedAt(): int
     {
         return $this->changedAt;
     }
@@ -124,7 +114,7 @@ class EntityStatus
     /**
      * @param int $changedAt
      */
-    public function setChangedAt($changedAt)
+    public function setChangedAt(int $changedAt)
     {
         $this->changedAt = $changedAt;
     }
@@ -132,7 +122,7 @@ class EntityStatus
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -141,12 +131,12 @@ class EntityStatus
      * @param string $status
      * @throws \InvalidArgumentException
      */
-    public function setStatus( $status)
+    public function setStatus(string $status)
     {
-        if (!in_array($status, $this->statuses, true)
+        if (!in_array($status, self::STATUSES, true)
         ) {
             throw new \InvalidArgumentException(
-                "Status '$status' is not valid. Choose one from '". implode(',', $this->statuses)
+                "Status '$status' is not valid. Choose one from '". implode(',', self::STATUSES)
             );
         }
 
@@ -156,7 +146,7 @@ class EntityStatus
     /**
      * @return string
      */
-    public function getStatusMessage()
+    public function getStatusMessage(): string
     {
         return $this->statusMessage;
     }
@@ -164,7 +154,7 @@ class EntityStatus
     /**
      * @param string $statusMessage
      */
-    public function setStatusMessage( $statusMessage)
+    public function setStatusMessage(string $statusMessage)
     {
         $this->statusMessage = $statusMessage;
     }
@@ -172,7 +162,7 @@ class EntityStatus
     /**
      * @return string
      */
-    public function getNotificationId()
+    public function getNotificationId(): string
     {
         return $this->notificationId;
     }
@@ -180,7 +170,7 @@ class EntityStatus
     /**
      * @param string $notificationId
      */
-    public function setNotificationId( $notificationId)
+    public function setNotificationId(string $notificationId)
     {
         $this->notificationId = $notificationId;
     }

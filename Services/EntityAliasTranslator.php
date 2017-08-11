@@ -40,7 +40,7 @@ class EntityAliasTranslator
      *
      * @throws EntityAliasNotFoundException
      */
-    public function getAliasFromClass( $class)
+    public function getAliasFromClass(string $class)
     {
         $alias = array_search($class, $this->entities, true);
 
@@ -64,7 +64,7 @@ class EntityAliasTranslator
      *
      * @throws EntityAliasNotFoundException
      */
-    public function getClassFromAlias( $class)
+    public function getClassFromAlias(string $class)
     {
         if (!array_key_exists($class, $this->entities)) {
             $exception = new EntityAliasNotFoundException('Could not find an alias for class: '.$class);

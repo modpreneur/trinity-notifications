@@ -25,7 +25,7 @@ interface NotificationDriverInterface
     public function execute(
         NotificationEntityInterface $entity,
         ClientInterface $client,
-        $force,
+        bool $force,
         array $changeSet = [],
         array $params = []
     );
@@ -35,7 +35,7 @@ interface NotificationDriverInterface
      *
      * @return string
      */
-    public function getName() ;
+    public function getName() : string;
 
     /**
      * Clears the inner state of the driver

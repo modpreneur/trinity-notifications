@@ -77,7 +77,7 @@ class EntityListener
         NotificationUtils $annotationProcessor,
         AnnotationsUtils $annotationsUtils,
         EntityConverter $entityConverter,
-        $isClient
+        bool $isClient
     ) {
         $this->notificationUtils = $annotationProcessor;
         $this->eventDispatcher = $eventDispatcher;
@@ -224,7 +224,7 @@ class EntityListener
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
      * @throws \Trinity\NotificationBundle\Exception\SourceException
      */
-    protected function sendNotification(EntityManager $entityManager, $entity, $method, array $options = [])
+    protected function sendNotification(EntityManager $entityManager, $entity, string $method, array $options = [])
     {
         if (!$this->notificationUtils->isNotificationEntity($entity)) {
             return;
@@ -271,7 +271,7 @@ class EntityListener
      *
      * @return bool
      */
-    protected function isNotificationEnabledForController( $default = true)
+    protected function isNotificationEnabledForController(bool $default = true) : bool
     {
         //for testing...
         if ($this->defaultValueForEnabledController !== null) {

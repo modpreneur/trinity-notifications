@@ -15,7 +15,7 @@ class EntityAliasNotFoundException extends NotificationException
     /**
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
@@ -23,7 +23,7 @@ class EntityAliasNotFoundException extends NotificationException
     /**
      * @param string $class
      */
-    public function setClass( $class)
+    public function setClass(string $class)
     {
         $this->class = $class;
     }

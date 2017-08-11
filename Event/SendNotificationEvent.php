@@ -45,9 +45,9 @@ class SendNotificationEvent extends NotificationEvent
     public function __construct(
         NotificationEntityInterface $entity,
         array $changeSet,
-        $method,
+        string $method,
         array $options,
-        $forced
+        bool $forced
     ) {
         $this->entity = $entity;
         $this->changeSet = $changeSet;
@@ -75,7 +75,7 @@ class SendNotificationEvent extends NotificationEvent
     /**
      * @return array
      */
-    public function getChangeSet()
+    public function getChangeSet(): array
     {
         return $this->changeSet;
     }
@@ -99,7 +99,7 @@ class SendNotificationEvent extends NotificationEvent
     /**
      * @param string $method
      */
-    public function setMethod( $method)
+    public function setMethod(string $method)
     {
         $this->method = $method;
     }
@@ -123,7 +123,7 @@ class SendNotificationEvent extends NotificationEvent
     /**
      * @return bool
      */
-    public function getForced()
+    public function getForced(): bool
     {
         return $this->forced;
     }
@@ -131,7 +131,7 @@ class SendNotificationEvent extends NotificationEvent
     /**
      * @param bool $forced
      */
-    public function setForced( $forced)
+    public function setForced(bool $forced)
     {
         $this->forced = $forced;
     }

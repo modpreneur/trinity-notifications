@@ -130,7 +130,7 @@ class NotificationStatusManager extends AbstractNotificationStatusManager
      *
      * @return array
      */
-    public function getResult( $type, array $query, $count)
+    public function getResult(string $type, array $query, int $count)
     {
         try {
             $result = $this->elasticReader->getMatchingEntities(

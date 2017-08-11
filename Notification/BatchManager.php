@@ -28,7 +28,7 @@ class BatchManager extends MessageSender
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        $senderIdentification,
+        string $senderIdentification,
         NotificationLoggerInterface $notificationLogger
     ) {
         parent::__construct($eventDispatcher, $senderIdentification);
@@ -45,7 +45,7 @@ class BatchManager extends MessageSender
      *
      * @return NotificationBatch Created batch or batch which was added the data.
      */
-    public function createBatch( $clientId, array $notifications = [])
+    public function createBatch(string $clientId, array $notifications = [])
     {
         $returnBatch = null;
 
@@ -91,7 +91,7 @@ class BatchManager extends MessageSender
     /**
      * @return NotificationBatch[]
      */
-    public function getBatches()
+    public function getBatches() : array
     {
         return $this->messages;
     }

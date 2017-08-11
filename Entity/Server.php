@@ -28,7 +28,7 @@ class Server implements ClientInterface
     /**
      * @return bool
      */
-    public function isNotified()
+    public function isNotified() : bool
     {
         return $this->notified;
     }
@@ -36,7 +36,7 @@ class Server implements ClientInterface
     /**
      * @param bool $notified
      */
-    public function setNotified( $notified)
+    public function setNotified(bool $notified)
     {
         $this->notified = $notified;
     }
@@ -44,7 +44,7 @@ class Server implements ClientInterface
     /**
      * @return string
      */
-    public function getSecret()
+    public function getSecret() : string
     {
         return $this->secret;
     }
@@ -52,19 +52,19 @@ class Server implements ClientInterface
     /**
      * @param string $secret
      */
-    public function setSecret($secret)
+    public function setSecret($secret) : string
     {
         $this->secret = $secret;
     }
 
     /** @return string */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
     /** @return int */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -72,7 +72,7 @@ class Server implements ClientInterface
     /**
      * @param string $name
      */
-    public function setName( $name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -80,13 +80,13 @@ class Server implements ClientInterface
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId(int $id)
     {
         $this->id = $id;
     }
 
     /** @return string */
-    public function getNotificationUri()
+    public function getNotificationUri() : string
     {
         return '';
     }
