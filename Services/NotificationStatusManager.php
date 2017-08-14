@@ -9,8 +9,7 @@ use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\NotificationLog;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
-use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
-use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
+use Trinity\NotificationBundle\Interfaces\NotificationLogStorageInterface;
 
 /**
  * Class NotificationStatusManager.
@@ -23,23 +22,25 @@ class NotificationStatusManager extends AbstractNotificationStatusManager
     /** @var  EntityAliasTranslator */
     protected $aliasTranslator;
 
+    /** @var NotificationLogStorageInterface */
+    protected $logStorage;
+
     /**
      * NotificationStatusManager constructor.
      *
-     * @param ElasticReadLogServiceInterface    $elasticReader
-     * @param ElasticLogServiceInterface        $elasticWriter
-     * @param LoggerInterface          $logger
-     * @param EntityAliasTranslator    $aliasTranslator
+     * @param LoggerInterface $logger
+     * @param EntityAliasTranslator $aliasTranslator
+     * @param NotificationLogStorageInterface $logStorage
      */
     public function __construct(
-        ElasticReadLogServiceInterface $elasticReader,
-        ElasticLogServiceInterface $elasticWriter,
         LoggerInterface $logger,
-        EntityAliasTranslator $aliasTranslator
+        EntityAliasTranslator $aliasTranslator,
+        NotificationLogStorageInterface $logStorage
     ) {
-        parent::__construct($elasticReader, $elasticWriter, $logger);
+        parent::__construct($logger);
 
         $this->aliasTranslator = $aliasTranslator;
+        $this->logStorage = $logStorage;
     }
 
     /**
@@ -51,18 +52,7 @@ class NotificationStatusManager extends AbstractNotificationStatusManager
      */
     public function getStatusMessageFromNotification(Notification $notification)
     {
-        //get message, which parent is the message, which was the notification in and it's type is 'status'
-        $query['query']['bool']['must'][] = ['match' => ['parentMessageUid' => $notification->getMessageId()]];
-        $query['query']['bool']['must'][] = ['match' => ['type' => StatusMessage::MESSAGE_TYPE]];
-        //$statusMessage = query $batch
-        $result = $this->getResult(
-            'MessageLog',
-            $query,
-            1
-        );
-
-        //return the first result or null
-        return count($result) > 0 ? $result[0] : null;
+        return $this->logStorage->getStatusMessageForMessage($notification->getMessageId());
     }
 
     /**
@@ -78,15 +68,14 @@ class NotificationStatusManager extends AbstractNotificationStatusManager
     {
         if ($this->lastNotificationLog === null || $notification->getUid() !== $this->lastNotificationLog->getUid()) {
             //the NotificationLog for the notification was not queued yet
-            $query['query']['bool']['must'][] = ['match' => ['uid' => $notification->getUid()]];
-            $result = $this->getResult(NotificationLog::TYPE, $query, 1);
+            $result = $this->logStorage->getNotificationLog($notification->getUid());
 
-            if (count($result) === 0) {
+            if ($result === null) {
                 // TODO @JakubFajkus some specific Exception
                 throw new \Exception('No NotificationLog with id:'.$notification->getUid().' found!');
             }
 
-            $this->lastNotificationLog = $result[0];
+            $this->lastNotificationLog = $result;
         }
 
         $status = new NotificationStatus();
@@ -113,39 +102,6 @@ class NotificationStatusManager extends AbstractNotificationStatusManager
         $entityName = $this->aliasTranslator->getAliasFromClass($this->getEntityClass($entity));
 
         //query notifications storage and look for clientId && entityName && entityId and grab the newest one
-        $query['query']['bool']['must'][] = ['match' => ['entityName' => $entityName]];
-        $query['query']['bool']['must'][] = ['match' => ['entityId' => $entity->getId()]];
-        $query['query']['bool']['must'][] = ['match' => ['clientId' => $clientId]];
-
-        $result = $this->getResult(NotificationLog::TYPE, $query, 1);
-
-        //return the first result or null
-        return count($result) > 0 ? $result[0] : null;
-    }
-
-    /**
-     * @param string $type
-     * @param array  $query
-     * @param int    $count
-     *
-     * @return array
-     */
-    public function getResult(string $type, array $query, int $count)
-    {
-        try {
-            $result = $this->elasticReader->getMatchingEntities(
-                $type,
-                $query,
-                $count,
-                [],
-                [['createdAt' => ['order' => 'desc']]]
-            );
-        } catch (\Throwable $e) {
-            $this->logger->error($e);
-
-            return [];
-        }
-
-        return $result;
+        return $this->logStorage->getLastNotificationLogForEntity($entityName, $entity->getId(), $clientId);
     }
 }

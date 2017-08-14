@@ -1,15 +1,24 @@
 <?php
 
-namespace Trinity\NotificationBundle\Interfaces;
+namespace Trinity\NotificationBundle\Services;
 
-/**
- * Interface based on trinity/logger service
- *
- * Class ElasticReadLogService
- * @package Trinity\Bundle\LoggerBundle\Services
- */
-interface ElasticReadLogServiceInterface
+use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
+use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
+
+class DummyElasticService implements ElasticReadLogServiceInterface, ElasticLogServiceInterface
 {
+
+    /**
+     * @param string $typeName
+     * @param string $id
+     * @param array $types
+     * @param array $values
+     */
+    public function update($typeName, $id, array $types, array $values)
+    {
+
+    }
+
     /**
      * @param string $typeName
      * @param array $searchParams
@@ -25,7 +34,10 @@ interface ElasticReadLogServiceInterface
         $limit = 0,
         array $select = [],
         array $order = [['createdAt' => ['order' => 'desc']]]
-    );
+    )
+    {
+
+    }
 
     /**
      * Get the entities by the same query syntax as it is for doctrine repositories.
@@ -35,7 +47,10 @@ interface ElasticReadLogServiceInterface
      *
      * @return array
      */
-    public function getMatchingEntitiesSimple($typeName, array $parameters);
+    public function getMatchingEntitiesSimple($typeName, array $parameters)
+    {
+
+    }
 
     /**
      * @param string $typeName //log name
@@ -43,6 +58,8 @@ interface ElasticReadLogServiceInterface
      *
      * @return void
      */
-    public function writeIntoAsync(string $typeName, $entity): void;
+    public function writeIntoAsync(string $typeName, $entity): void
+    {
 
+    }
 }

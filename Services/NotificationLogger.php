@@ -6,39 +6,30 @@ use Psr\Log\LoggerInterface;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationLog;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
-use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
-use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
 use Trinity\NotificationBundle\Interfaces\NotificationLoggerInterface;
+use Trinity\NotificationBundle\Interfaces\NotificationLogStorageInterface;
 
 /**
  * Class NotificationLogger.
  */
 class NotificationLogger implements NotificationLoggerInterface
 {
-    /** @var ElasticLogServiceInterface */
-    protected $esLogger;
-
-    /** @var ElasticReadLogServiceInterface */
-    protected $readLog;
-
     /** @var  LoggerInterface */
     protected $logger;
+
+    /** @var NotificationLogStorageInterface */
+    protected $logStorage;
 
     /**
      * MessageLogger constructor.
      *
-     * @param ElasticLogServiceInterface     $elasticLogger
-     * @param ElasticReadLogServiceInterface $readLog
-     * @param LoggerInterface                $logger
+     * @param LoggerInterface $logger
+     * @param NotificationLogStorageInterface $logStorage
      */
-    public function __construct(
-        ElasticLogServiceInterface $elasticLogger,
-        ElasticReadLogServiceInterface $readLog,
-        LoggerInterface $logger
-    ) {
-        $this->esLogger = $elasticLogger;
-        $this->readLog = $readLog;
+    public function __construct(LoggerInterface $logger, NotificationLogStorageInterface $logStorage)
+    {
         $this->logger = $logger;
+        $this->logStorage = $logStorage;
     }
 
     /**
@@ -52,7 +43,7 @@ class NotificationLogger implements NotificationLoggerInterface
         $log->setIncoming(true);
         $log->setStatus(NotificationStatus::STATUS_SENT);
 
-        $this->esLogger->writeIntoAsync('NotificationLog', $log);
+        $this->logStorage->logNotification($log);
     }
 
     /**
@@ -66,7 +57,7 @@ class NotificationLogger implements NotificationLoggerInterface
         $log->setIncoming(false);
         $log->setStatus(NotificationLog::STATUS_SENT);
 
-        $this->esLogger->writeIntoAsync('NotificationLog', $log);
+        $this->logStorage->logNotification($log);
     }
 
     /**
@@ -76,17 +67,33 @@ class NotificationLogger implements NotificationLoggerInterface
      */
     public function setNotificationStatuses(array $statuses)
     {
-        foreach ($statuses as $status) {
-            $elasticId = $this->getElasticId($status->getNotificationId());
-
-            $this->esLogger->update(
-                NotificationLog::TYPE,
-                $elasticId,
-                ['status', 'statusMessage', 'extra'],
-                [$status->getStatus(), $status->getMessage(), json_encode($status->getExtra())]
-            );
-        }
+        $this->logStorage->updateNotificationStatuses($statuses);
     }
 
+//    /**
+//     * @param string $type
+//     * @param array  $query
+//     * @param int    $count
+//     *
+//     * @return array
+//     */
+//    protected function getResult(string $type, array $query, int $count)
+//    {
+//        try {
+//            $result = $this->readLog->getMatchingEntities(
+//                $type,
+//                $query,
+//                $count,
+//                [],
+//                [['createdAt' => ['order' => 'desc']]]
+//            );
+//        } catch (\Throwable $e) {
+//            $this->logger->error($e);
+//
+//            return [];
+//        }
+//
+//        return $result;
+//    }
 
 }

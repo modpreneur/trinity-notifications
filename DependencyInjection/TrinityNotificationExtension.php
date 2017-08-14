@@ -7,6 +7,7 @@
 
 namespace Trinity\NotificationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -21,12 +22,12 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class TrinityNotificationExtension extends Extension
 {
     /**
-     * @param array            $configs
+     * @param array $configs
      * @param ContainerBuilder $container
      *
-     * @throws \Exception
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     * @throws \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -51,7 +52,8 @@ class TrinityNotificationExtension extends Extension
      * @param ContainerBuilder $container
      * @param array $config
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @param array            $config
+     * @param array $config
+     * @throws \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     private function setShared(ContainerBuilder $container, array $config)
     {
@@ -107,8 +109,25 @@ class TrinityNotificationExtension extends Extension
             [new Reference('trinity.notification.unknown_entity_name_strategy')]
         );
 
-        $container->setAlias('trinity.notification.elastic_log_service', $config['elastic_log_service']);
-        $container->setAlias('trinity.notification.elastic_read_log_service', $config['elastic_read_log_service']);
+        if ($config['log_storage'] === 'elastic') {
+            $container->setAlias('trinity.notification.log_storage', 'trinity.notification.elastic_log_storage');
+
+            $container->setAlias('trinity.notification.elastic_log_service', $config['elastic_log_service']);
+            $container->setAlias('trinity.notification.elastic_read_log_service', $config['elastic_read_log_service']);
+        } else if ($config['log_storage'] === 'custom') {
+            if (!array_key_exists('log_storage_service', $config)) {
+                throw new InvalidConfigurationException(
+                    'The key log_storage_service must be configured, when log_storage=custom'
+                );
+            }
+
+            $container->setAlias('trinity.notification.log_storage', $config['log_storage_service']);
+
+            //these will not be used
+            $container->setAlias('trinity.notification.elastic_log_service', 'trinity.notification.dummy_elastic_service');
+            $container->setAlias('trinity.notification.elastic_read_log_service', 'trinity.notification.dummy_elastic_service');
+        }
+
     }
 
     /**

@@ -9,37 +9,22 @@ use Trinity\NotificationBundle\Entity\EntityStatus;
 use Trinity\NotificationBundle\Entity\Notification;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
-use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
-use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
 
 /**
  * Class NotificationStatusManager.
  */
 abstract class AbstractNotificationStatusManager
 {
-    /** @var  ElasticReadLogServiceInterface */
-    protected $elasticReader;
-
-    /** @var  ElasticLogServiceInterface */
-    protected $elasticWriter;
-
     /** @var  LoggerInterface */
     protected $logger;
 
     /**
      * NotificationStatusManager constructor.
      *
-     * @param ElasticReadLogServiceInterface    $elasticReader
-     * @param ElasticLogServiceInterface        $elasticWriter
      * @param LoggerInterface          $logger
      */
-    public function __construct(
-        ElasticReadLogServiceInterface $elasticReader,
-        ElasticLogServiceInterface $elasticWriter,
-        LoggerInterface $logger
-    ) {
-        $this->elasticReader = $elasticReader;
-        $this->elasticWriter = $elasticWriter;
+    public function __construct(LoggerInterface $logger)
+    {
         $this->logger = $logger;
     }
 

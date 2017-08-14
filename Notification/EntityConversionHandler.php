@@ -10,6 +10,7 @@ namespace Trinity\NotificationBundle\Notification;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Trinity\NotificationBundle\Entity\NotificationEntityInterface;
 use Trinity\NotificationBundle\Exception\InvalidDataException;
 use Trinity\NotificationBundle\Exception\UnexpectedEntityStateException;
@@ -258,11 +259,14 @@ class EntityConversionHandler
         NotificationEntityInterface $entity,
         array $options = []
     ) : FormInterface {
-        return $this->formFactory->create(
-            $this->getFormClassName($entityName),
-            $entity,
-            $options
-        );
+
+        //since 2.8, the form creation is different
+        if (Kernel::MAJOR_VERSION == 2 && Kernel::MINOR_VERSION <= 7) {
+            $class = $this->getFormClassName($entityName);
+            return $this->formFactory->create(new $class, $entity, $options);
+        }
+
+        return $this->formFactory->create($this->getFormClassName($entityName), $entity, $options);
     }
 
     /**

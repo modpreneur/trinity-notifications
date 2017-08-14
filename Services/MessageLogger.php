@@ -6,36 +6,25 @@ use Trinity\Bundle\MessagesBundle\Interfaces\MessageLoggerInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\NotificationBundle\Entity\MessageLog;
 use Trinity\NotificationBundle\Entity\Notification;
-use Trinity\NotificationBundle\Interfaces\ElasticLogServiceInterface;
-use Trinity\NotificationBundle\Interfaces\ElasticReadLogServiceInterface;
+use Trinity\NotificationBundle\Interfaces\NotificationLogStorageInterface;
 
 /**
  * Class MessageLogger.
  */
 class MessageLogger implements MessageLoggerInterface
 {
-    /**
-     * @var ElasticLogServiceInterface
-     */
-    private $esLogger;
-
-    /**
-     * @var ElasticReadLogServiceInterface
-     */
-    private $readLog;
+    /** @var  NotificationLogStorageInterface */
+    protected $logStorage;
 
     /**
      * MessageLogger constructor.
      *
-     * @param ElasticLogServiceInterface $logger
-     * @param ElasticReadLogServiceInterface    $readLog
+     * @param NotificationLogStorageInterface $logStorage
      */
-    public function __construct(ElasticLogServiceInterface $logger, ElasticReadLogServiceInterface $readLog)
+    public function __construct(NotificationLogStorageInterface $logStorage)
     {
-        $this->esLogger = $logger;
-        $this->readLog = $readLog;
+        $this->logStorage = $logStorage;
     }
-
 
     // TODO @JakubFajkus nice method to create empty message log
     /**
@@ -88,7 +77,8 @@ class MessageLogger implements MessageLoggerInterface
         //remove secret key from the message
         $log->setSecretKey('');
 
-        $this->esLogger->writeIntoAsync('MessageLog', $log);
+        $this->logStorage->createMessageLog($log);
+//        $this->esLogger->writeIntoAsync('MessageLog', $log);
     }
 
     /**
@@ -134,7 +124,7 @@ class MessageLogger implements MessageLoggerInterface
         //remove secret key from the message
         $log->setSecretKey('');
 
-        $this->esLogger->writeIntoAsync('MessageLog', $log);
+        $this->logStorage->createMessageLog($log);
     }
 
     /**
@@ -145,20 +135,8 @@ class MessageLogger implements MessageLoggerInterface
      * @param string $statusMessage Additional message to the status(practically additional information for 'error'
      *                              status).
      */
-    public function setMessageStatus(
-        string $messageId,
-        string $status,
-        string $statusMessage
-    ) {
-        $query['bool']['must'][] = ['match' => ['uid' => $messageId]];
-
-        $entities = $this->readLog->getMatchingEntities('MessageLog', ['query' => $query]);
-        if (count($entities) === 1) {
-            /** @var MessageLog $entity */
-            $entity = $entities[0];
-            $elasticKey = $entity->getId();
-
-            $this->esLogger->update('MessageLog', $elasticKey, ['status', 'error'], [$status, $statusMessage]);
-        }
+    public function setMessageStatus(string $messageId, string $status, string $statusMessage)
+    {
+        $this->logStorage->setMessageStatus($messageId, $status, $statusMessage);
     }
 }

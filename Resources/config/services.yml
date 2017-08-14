@@ -158,23 +158,31 @@ services:
     trinity.notification.notification_logger:
         class: Trinity\NotificationBundle\Services\NotificationLogger
         arguments:
-            - "@trinity.notification.elastic_log_service"
-            - "@trinity.notification.elastic_read_log_service"
             - "@logger"
+            - "@trinity.notification.log_storage"
 
     trinity.notification.status_manager:
         class: Trinity\NotificationBundle\Services\NotificationStatusManager
         arguments:
-            - "@trinity.notification.elastic_read_log_service"
-            - "@trinity.notification.elastic_log_service"
             - "@logger"
             - "@trinity.notification.entity_alias_translator"
+            - "@trinity.notification.log_storage"
 
     trinity.notification.message_logger:
         class: Trinity\NotificationBundle\Services\MessageLogger
         arguments:
-            - "@trinity.notification.elastic_log_service"
-            - "@trinity.notification.elastic_read_log_service"
+            - "@trinity.notification.log_storage"
 
     trinity.notification.unknown_entity_name_strategy:
         class: Trinity\NotificationBundle\Notification\UnknownEntityNameStrategy
+
+    trinity.notification.elastic_log_storage:
+        class: Trinity\NotificationBundle\Services\ElasticNotificationLogStorage
+        lazy: true
+        arguments:
+            - "@trinity.notification.elastic_log_service"
+            - "@trinity.notification.elastic_read_log_service"
+            - "@logger"
+
+    trinity.notification.dummy_elastic_service:
+        class: Trinity\NotificationBundle\Services\DummyElasticService

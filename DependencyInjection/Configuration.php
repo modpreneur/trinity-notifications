@@ -30,6 +30,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->enumNode('log_storage')
+                    ->values(['elastic', 'custom'])
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
                 ->arrayNode('entities')
                     ->normalizeKeys(false)
                     ->performNoDeepMerging()
@@ -83,6 +88,7 @@ class Configuration implements ConfigurationInterface
         $this->addNotificationLoggerNode($rootNode);
         $this->addElasticLogServiceNode($rootNode);
         $this->addElasticReadLogServiceNode($rootNode);
+        $this->addLogStorageServiceNode($rootNode);
 
         return $treeBuilder;
     }
@@ -174,7 +180,6 @@ class Configuration implements ConfigurationInterface
         //reference to a service - starting with '@'
         $node->children()->scalarNode('elastic_log_service')
             ->cannotBeEmpty()
-            ->isRequired()
             ->beforeNormalization()
         //if the string starts with @, e.g. @service.name
             ->ifTrue(
@@ -200,7 +205,31 @@ class Configuration implements ConfigurationInterface
         //reference to a service - starting with '@'
         $node->children()->scalarNode('elastic_read_log_service')
             ->cannotBeEmpty()
-            ->isRequired()
+            ->beforeNormalization()
+        //if the string starts with @, e.g. @service.name
+            ->ifTrue(
+                function ($v) {
+                    return is_string($v) && 0 === strpos($v, '@');
+                }
+            )
+            //return it's name without '@', e.g. service.name
+            ->then(function ($v) {
+                return substr($v, 1);
+            })
+            ->end()
+        ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     *
+     * @throws \RuntimeException
+     */
+    protected function addLogStorageServiceNode(ArrayNodeDefinition $node)
+    {
+        //reference to a service - starting with '@'
+        $node->children()->scalarNode('log_storage_service')
+            ->cannotBeEmpty()
             ->beforeNormalization()
         //if the string starts with @, e.g. @service.name
             ->ifTrue(
