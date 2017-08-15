@@ -3,10 +3,10 @@ sudo: required
 language: php
 
 php:
+  - '5.6'
   - '7.0'
+  - '7.1'
 
-services:
-  - docker
 
 before_script:
   - phpenv config-add travis.ini
@@ -15,8 +15,6 @@ before_script:
 
 
 script:
-  - docker-compose build
-  - docker-compose up
   - vendor/codeception/codeception/codecept run
 
 
