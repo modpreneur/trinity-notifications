@@ -121,10 +121,10 @@ class ElasticNotificationLogStorage implements NotificationLogStorageInterface
     }
 
     /**
-     * @param Message $message
+     * @param MessageLog $message
      * @return void
      */
-    public function createMessageLog(Message $message)
+    public function createMessageLog(MessageLog $message)
     {
         $this->logger->writeIntoAsync('MessageLog', $message);
     }

@@ -2,8 +2,8 @@
 
 namespace Trinity\NotificationBundle\Interfaces;
 
-use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
+use Trinity\NotificationBundle\Entity\MessageLog;
 use Trinity\NotificationBundle\Entity\NotificationLog;
 use Trinity\NotificationBundle\Entity\NotificationStatus;
 
@@ -47,10 +47,10 @@ interface NotificationLogStorageInterface
 
 
     /**
-     * @param Message $message
+     * @param MessageLog $message
      * @return void
      */
-    public function createMessageLog(Message $message);
+    public function createMessageLog(MessageLog $message);
 
     /**
      * Set status of the message with $messageId to $status.

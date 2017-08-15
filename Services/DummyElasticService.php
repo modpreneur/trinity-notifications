@@ -58,7 +58,7 @@ class DummyElasticService implements ElasticReadLogServiceInterface, ElasticLogS
      *
      * @return void
      */
-    public function writeIntoAsync(string $typeName, $entity): void
+    public function writeIntoAsync($typeName, $entity)
     {
 
     }

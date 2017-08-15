@@ -36,13 +36,4 @@ interface ElasticReadLogServiceInterface
      * @return array
      */
     public function getMatchingEntitiesSimple($typeName, array $parameters);
-
-    /**
-     * @param string $typeName //log name
-     * @param $entity //entity
-     *
-     * @return void
-     */
-    public function writeIntoAsync(string $typeName, $entity): void;
-
 }
