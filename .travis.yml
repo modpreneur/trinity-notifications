@@ -9,7 +9,6 @@ php:
 before_script:
   - phpenv config-add travis.ini
   - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta; echo yes | pecl install -f apcu; fi;
-    echo yes | pecl install apcu; fi;
   - composer install
 
 
