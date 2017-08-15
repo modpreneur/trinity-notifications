@@ -89,6 +89,7 @@ class Configuration implements ConfigurationInterface
         $this->addElasticLogServiceNode($rootNode);
         $this->addElasticReadLogServiceNode($rootNode);
         $this->addLogStorageServiceNode($rootNode);
+        $this->addDatabaseEntityFetcherServiceNode($rootNode);
 
         return $treeBuilder;
     }
@@ -131,32 +132,6 @@ class Configuration implements ConfigurationInterface
             ->defaultValue(null)
             ->beforeNormalization()
             //if the string starts with @, e.g. @service.name
-            ->ifTrue(
-                function ($v) {
-                    return is_string($v) && 0 === strpos($v, '@');
-                }
-            )
-            //return it's name without '@', e.g. service.name
-            ->then(function ($v) {
-                return substr($v, 1);
-            })
-            ->end()
-        ->end();
-    }
-
-    /**
-     * @param ArrayNodeDefinition $node
-     *
-     * @throws \RuntimeException
-     */
-    protected function addNotificationLoggerNode(ArrayNodeDefinition $node)
-    {
-        //reference to a service - starting with '@'
-        $node->children()->scalarNode('notification_logger')
-            ->cannotBeEmpty()
-            ->isRequired()
-            ->beforeNormalization()
-        //if the string starts with @, e.g. @service.name
             ->ifTrue(
                 function ($v) {
                     return is_string($v) && 0 === strpos($v, '@');
@@ -229,6 +204,31 @@ class Configuration implements ConfigurationInterface
     {
         //reference to a service - starting with '@'
         $node->children()->scalarNode('log_storage_service')
+            ->cannotBeEmpty()
+            ->beforeNormalization()
+        //if the string starts with @, e.g. @service.name
+            ->ifTrue(
+                function ($v) {
+                    return is_string($v) && 0 === strpos($v, '@');
+                }
+            )
+            //return it's name without '@', e.g. service.name
+            ->then(function ($v) {
+                return substr($v, 1);
+            })
+            ->end()
+        ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     *
+     * @throws \RuntimeException
+     */
+    protected function addDatabaseEntityFetcherServiceNode(ArrayNodeDefinition $node)
+    {
+        //reference to a service - starting with '@'
+        $node->children()->scalarNode('entity_fetcher_service')
             ->cannotBeEmpty()
             ->beforeNormalization()
         //if the string starts with @, e.g. @service.name

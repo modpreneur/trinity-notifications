@@ -128,6 +128,10 @@ class TrinityNotificationExtension extends Extension
             $container->setAlias('trinity.notification.elastic_read_log_service', 'trinity.notification.dummy_elastic_service');
         }
 
+        if (array_key_exists('entity_fetcher_service', $config)) {
+            $container->setAlias('trinity.notification.database_entity_fetcher', $config['entity_fetcher_service']);
+        }
+
     }
 
     /**

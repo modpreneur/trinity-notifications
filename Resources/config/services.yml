@@ -25,7 +25,7 @@ services:
             - "@event_dispatcher"
             - "@doctrine.orm.entity_manager"
             - "@trinity.notification.entity_associator"
-            - "%trinity.notification.entity_id_field%"
+            - '@trinity.notification.database_entity_fetcher'
             - "%trinity.notification.is_client%"
             - "%trinity.notification.entities%"
             - "%trinity.notification.disable_time_violations%"
@@ -186,3 +186,10 @@ services:
 
     trinity.notification.dummy_elastic_service:
         class: Trinity\NotificationBundle\Services\DummyElasticService
+
+    trinity.notification.database_entity_fetcher:
+        class: Trinity\NotificationBundle\Services\DefaultDatabaseEntityFetcher
+        arguments:
+            - "@trinity.notification.entity_alias_translator"
+            - "@doctrine.orm.entity_manager"
+            - "%trinity.notification.entity_id_field%"

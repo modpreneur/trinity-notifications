@@ -16,6 +16,7 @@ use Trinity\NotificationBundle\Event\BeforeParseNotificationEvent;
 use Trinity\NotificationBundle\Exception\EntityWasUpdatedBeforeException;
 use Trinity\NotificationBundle\Exception\NotificationException;
 use Trinity\NotificationBundle\Exception\UnexpectedEntityStateException;
+use Trinity\NotificationBundle\Interfaces\DatabaseEntityFetcherInterface;
 use Trinity\NotificationBundle\Interfaces\UnknownEntityNameStrategyInterface;
 
 /**
@@ -43,11 +44,11 @@ class NotificationParser
     /** @var  UnknownEntityNameStrategyInterface[] */
     protected $unknownEntityStrategies = [];
 
+    /** @var  DatabaseEntityFetcherInterface */
+    protected $databaseEntityFetcher;
+
     /** @var array Array of request data */
     protected $notificationData;
-
-    /** @var string Field name which will be mapped to the id from the notification request */
-    protected $entityIdFieldName;
 
     /** @var  bool */
     protected $isClient;
@@ -77,7 +78,6 @@ class NotificationParser
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManagerInterface $entityManager
      * @param EntityAssociator $entityAssociator
-     * @param string $entityIdFieldName
      * @param bool $isClient
      * @param array $entities
      * @param bool $disableTimeViolations
@@ -88,7 +88,7 @@ class NotificationParser
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager,
         EntityAssociator $entityAssociator,
-        string $entityIdFieldName,
+        DatabaseEntityFetcherInterface $databaseEntityFetcher,
         bool $isClient,
         array $entities,
         bool $disableTimeViolations = true
@@ -98,8 +98,8 @@ class NotificationParser
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
         $this->entityAssociator = $entityAssociator;
+        $this->databaseEntityFetcher = $databaseEntityFetcher;
         $this->notificationData = [];
-        $this->entityIdFieldName = $entityIdFieldName;
         $this->isClient = $isClient;
         $this->entities = $entities;
         $this->disableTimeViolations = $disableTimeViolations;
@@ -275,12 +275,7 @@ class NotificationParser
      */
     protected function getEntityObject(string $fullClassName)
     {
-        /** @var NotificationEntityInterface|null $entity */
-        $entity = $this->entityManager->getRepository($fullClassName)->findOneBy(
-            [$this->entityIdFieldName => $this->notificationData['id']]
-        );
-
-        return $entity;
+        return $this->databaseEntityFetcher->fetchEntity($fullClassName, $this->notificationData);
     }
 
     /**
@@ -292,11 +287,7 @@ class NotificationParser
      *
      * @throws NotificationException
      */
-    public function checkLogicalViolations(
-        $entityObject,
-        string $fullClassName,
-        string $method
-    ) {
+    public function checkLogicalViolations($entityObject, string $fullClassName, string $method) {
         if ($entityObject === null && $method === 'DELETE') {
             throw new NotificationException(
                 "Trying to delete entity of class $fullClassName with id ".$this->notificationData['id']
