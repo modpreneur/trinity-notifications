@@ -85,7 +85,6 @@ class Configuration implements ConfigurationInterface
 
         $this->addClientSecretProviderNode($rootNode);
         $this->addClientUnknownEntityStrategyNode($rootNode);
-        $this->addNotificationLoggerNode($rootNode);
         $this->addElasticLogServiceNode($rootNode);
         $this->addElasticReadLogServiceNode($rootNode);
         $this->addLogStorageServiceNode($rootNode);
