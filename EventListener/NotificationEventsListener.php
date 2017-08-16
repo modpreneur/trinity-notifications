@@ -9,9 +9,12 @@ namespace Trinity\NotificationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trinity\Bundle\MessagesBundle\Event\AfterUnpackMessageEvent;
+use Trinity\Bundle\MessagesBundle\Event\BeforeMessagePublishEvent;
 use Trinity\Bundle\MessagesBundle\Event\ReadMessageEvent;
 use Trinity\Bundle\MessagesBundle\Event\SetMessageStatusEvent;
 use Trinity\Bundle\MessagesBundle\Event\StatusMessageEvent;
+use Trinity\Bundle\MessagesBundle\Interfaces\MessageLoggerInterface;
 use Trinity\Bundle\MessagesBundle\Message\Message;
 use Trinity\Bundle\MessagesBundle\Message\StatusMessage;
 use Trinity\NotificationBundle\Entity\NotificationBatch;
@@ -44,20 +47,25 @@ class NotificationEventsListener implements EventSubscriberInterface
     /** @var  bool */
     protected $isClient;
 
+    /** @var MessageLoggerInterface */
+    protected $messageLogger;
+
     /**
      * NotificationEventsListener constructor.
      *
-     * @param NotificationReader       $notificationReader
+     * @param NotificationReader $notificationReader
      * @param EventDispatcherInterface $eventDispatcher
-     * @param NotificationManager      $notificationManager
+     * @param NotificationManager $notificationManager
      * @param NotificationLoggerInterface $notificationLogger
-     * @param bool                     $isClient
+     * @param MessageLoggerInterface $messageLogger
+     * @param bool $isClient
      */
     public function __construct(
         NotificationReader $notificationReader,
         EventDispatcherInterface $eventDispatcher,
         NotificationManager $notificationManager,
         NotificationLoggerInterface $notificationLogger,
+        MessageLoggerInterface $messageLogger,
         bool $isClient
     ) {
         $this->notificationReader = $notificationReader;
@@ -65,6 +73,7 @@ class NotificationEventsListener implements EventSubscriberInterface
         $this->notificationManager = $notificationManager;
         $this->notificationLogger = $notificationLogger;
         $this->isClient = $isClient;
+        $this->messageLogger = $messageLogger;
     }
 
     /**
@@ -124,6 +133,86 @@ class NotificationEventsListener implements EventSubscriberInterface
     }
 
     /**
+     * @param BeforeMessagePublishEvent $event
+     */
+    public function onBeforeMessagePublish(BeforeMessagePublishEvent $event)
+    {
+        if ($this->messageLogger !== null) {
+            $this->messageLogger->logMessage(
+                $event->getMessage(),
+                '',
+                'necktie',
+                'client_' . $event->getMessage()->getClientId(),
+                '',
+                ''
+            );
+        }
+    }
+
+
+    /**
+     * @param AfterUnpackMessageEvent $event
+     */
+    public function onAfterMessageUnpacked(AfterUnpackMessageEvent $event)
+    {
+        if ($this->messageLogger !== null) {
+            $source = $event->getSource();
+            //if it is a dead queue
+            if (\strpos($source, 'dead', 0) !== false) {
+                $this->messageLogger->logDeadLetteredMessage(
+                    $event->getMessageObject(),
+                    $event->getMessageJson(),
+                    $source,
+                    ''
+                );
+            } else {
+                $this->messageLogger->logMessage(
+                    $event->getMessageObject(),
+                    $event->getMessageJson(),
+                    $event->getSource(),
+                    'necktie',
+                    ($event->getException() === null) ? StatusMessage::STATUS_OK : StatusMessage::STATUS_ERROR,
+                    ($event->getException() === null) ? '' : $event->getException()->getMessage()
+                );
+            }
+        }
+    }
+
+    /**
+     * @param SetMessageStatusEvent $event
+     *
+     * this is triggered by incoming message(notification)
+     */
+    public function onSetMessageStatus(SetMessageStatusEvent $event)
+    {
+        if ($this->messageLogger !== null) {
+            $this->messageLogger->setMessageStatus(
+                $event->getMessage()->getUid(),
+                $event->getStatus(),
+                $event->getStatusMessage()
+            );
+        }
+    }
+
+    /**
+     * @param StatusMessageEvent $event
+     *
+     * Is triggered by incoming StatusMessage
+     *
+     * @throws \Exception
+     */
+    public function onStatusMessageEvent(StatusMessageEvent $event)
+    {
+        if ($this->messageLogger !== null) {
+            $this->messageLogger->setMessageStatus(
+                $event->getStatusMessage()->getParentMessageUid(),
+                $event->getStatusMessage()->getStatus(),
+                $event->getStatusMessage()->getStatusMessage()
+            );
+        }
+    }
+
+    /**
      * @param Message $message
      */
     protected function handleNotificationStatusMessage(Message $message)
@@ -145,7 +234,7 @@ class NotificationEventsListener implements EventSubscriberInterface
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Exception
-     * @throws \Throwable                                                               Catches all catchable errors and exceptions and then throws them again
+     * @throws \Throwable  Catches all catchable errors and exceptions and then throws them again
      */
     protected function handleNotificationMessage(Message $message)
     {
@@ -250,6 +339,10 @@ class NotificationEventsListener implements EventSubscriberInterface
             ReadMessageEvent::NAME => ['onMessageRead', 100],
             SendNotificationEvent::NAME => ['onSendNotificationEvent', 100],
             StopSynchronizationForClientEvent::NAME => ['onStopSynchronizationForClientEvent', 100],
+            BeforeMessagePublishEvent::NAME => ['onBeforeMessagePublish', 100],
+            AfterUnpackMessageEvent::NAME => ['onAfterMessageUnpacked', 100],
+            SetMessageStatusEvent::NAME => ['onSetMessageStatus', 100],
+            StatusMessageEvent::NAME => ['onStatusMessageEvent', 100],
         ];
     }
 }

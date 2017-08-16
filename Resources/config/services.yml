@@ -81,6 +81,7 @@ services:
             - "@event_dispatcher"
             - "@trinity.notification.manager"
             - "@trinity.notification.notification_logger"
+            - "@trinity.notification.message_logger"
             - "%trinity.notification.is_client%"
         tags:
             - { name: kernel.event_subscriber}
