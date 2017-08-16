@@ -7,6 +7,7 @@
  */
 namespace Trinity\NotificationBundle\Notification;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -46,20 +47,25 @@ class EntityConversionHandler
     /** @var  string */
     protected $entityIdField;
 
+    /** @var EntityManagerInterface */
+    protected $entityManager;
+
     /**
      * EntityConversionHandler constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param FormFactoryInterface     $formFactory
-     * @param EntityConverter          $entityConverter
-     * @param array                    $forms
-     * @param array                    $entities
-     * @param string                   $entityIdField
+     * @param FormFactoryInterface $formFactory
+     * @param EntityConverter $entityConverter
+     * @param EntityManagerInterface $entityManager
+     * @param array $forms
+     * @param array $entities
+     * @param string $entityIdField
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
         EntityConverter $entityConverter,
+        EntityManagerInterface $entityManager,
         array $forms,
         array $entities,
         string $entityIdField
@@ -70,6 +76,7 @@ class EntityConversionHandler
         $this->forms = $forms;
         $this->entities = $entities;
         $this->entityIdField = $entityIdField;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -136,7 +143,8 @@ class EntityConversionHandler
                 $this->entities,
                 true
             ),
-            $entity
+            $entity,
+            ['entityManager' => $this->entityManager]
         );
 
         /** @var array $keys */
