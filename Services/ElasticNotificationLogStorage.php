@@ -126,7 +126,10 @@ class ElasticNotificationLogStorage implements NotificationLogStorageInterface
      */
     public function createMessageLog(MessageLog $message)
     {
-        $this->logger->writeIntoAsync('MessageLog', $message);
+//        remove the raw data as it could contain anything and the elastic may not handle it
+        $message->setRawData(null);
+
+        $this->logger->writeIntoSync(MessageLog::getLogName(), $message);
     }
 
     /**
@@ -161,7 +164,7 @@ class ElasticNotificationLogStorage implements NotificationLogStorageInterface
      */
     public function logNotification(NotificationLog $log)
     {
-        $this->logger->writeIntoAsync(NotificationLog::getLogName(), $log);
+        $this->logger->writeIntoSync(NotificationLog::getLogName(), $log);
     }
 
 

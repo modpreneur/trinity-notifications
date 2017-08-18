@@ -78,7 +78,6 @@ class MessageLogger implements MessageLoggerInterface
         $log->setSecretKey('');
 
         $this->logStorage->createMessageLog($log);
-//        $this->esLogger->writeIntoAsync('MessageLog', $log);
     }
 
     /**

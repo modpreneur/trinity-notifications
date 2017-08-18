@@ -18,6 +18,14 @@ interface ElasticLogServiceInterface
     public function writeIntoAsync($typeName, $entity);
 
     /**
+     * @param string $typeName //log name
+     * @param $entity //entity
+     *
+     * @return void
+     */
+    public function writeIntoSync($typeName, $entity);
+
+    /**
      * @param string $typeName
      * @param string $id
      * @param array $types

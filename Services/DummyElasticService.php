@@ -62,4 +62,15 @@ class DummyElasticService implements ElasticReadLogServiceInterface, ElasticLogS
     {
 
     }
+
+    /**
+     * @param string $typeName //log name
+     * @param $entity //entity
+     *
+     * @return void
+     */
+    public function writeIntoSync($typeName, $entity)
+    {
+
+    }
 }
