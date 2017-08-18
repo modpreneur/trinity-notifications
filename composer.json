@@ -12,8 +12,8 @@
   "require": {
     "php": ">=7.1",
     "doctrine/orm": "~2.4",
-    "symfony/event-dispatcher": "2.7.*",
-    "symfony/form": "2.7.*",
+    "symfony/event-dispatcher": "2.7.* | 3.3.*",
+    "symfony/form": "2.7.*| 3.3.*",
     "trinity/messages": "~1.0",
     "trinity/core-interfaces": "~1.0"
   },
