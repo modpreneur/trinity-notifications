@@ -89,6 +89,9 @@ class EntityConverter
     {
         if (count($properties) === 0) {
             $properties = $this->annotationsUtils->getClassSourceAnnotation($entity)->getColumns();
+
+            //always add the id field as it must be there anyways and somebody could forget to add it to the annotation
+            $properties[] = $this->entityIdFieldName;
         }
 
         $entityArray = [];
@@ -96,6 +99,8 @@ class EntityConverter
         /** @var \Trinity\NotificationBundle\Annotations\Source $entityDataSource */
         $entityDataSource = $this->annotationsUtils->getClassSourceAnnotation($entity);
         $columns = $entityDataSource->getColumns();
+        //always add the id field as it must be there anyways and somebody could forget to add it to the annotation
+        $columns[] = $this->entityIdFieldName;
 
         foreach ($columns as $property) {
             if ($property === '*') {
