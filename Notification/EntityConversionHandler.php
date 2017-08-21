@@ -50,6 +50,9 @@ class EntityConversionHandler
     /** @var EntityManagerInterface */
     protected $entityManager;
 
+    /** @var bool */
+    protected $disableEntityStateViolations;
+
     /**
      * EntityConversionHandler constructor.
      *
@@ -60,6 +63,7 @@ class EntityConversionHandler
      * @param array $forms
      * @param array $entities
      * @param string $entityIdField
+     * @param bool $disableEntityStateViolations
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -68,7 +72,8 @@ class EntityConversionHandler
         EntityManagerInterface $entityManager,
         array $forms,
         array $entities,
-        string $entityIdField
+        string $entityIdField,
+        bool $disableEntityStateViolations
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
@@ -77,6 +82,7 @@ class EntityConversionHandler
         $this->entities = $entities;
         $this->entityIdField = $entityIdField;
         $this->entityManager = $entityManager;
+        $this->disableEntityStateViolations = $disableEntityStateViolations;
     }
 
     /**
@@ -97,7 +103,7 @@ class EntityConversionHandler
         array $changeSet,
         bool $forceUpdate = false
     ) : NotificationEntityInterface {
-        if (!$forceUpdate) {
+        if (!$forceUpdate && !$this->disableEntityStateViolations) {
             $this->validateCurrentEntityState($entity, $changeSet, $data);
         }
 

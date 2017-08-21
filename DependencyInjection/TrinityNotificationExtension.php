@@ -97,6 +97,11 @@ class TrinityNotificationExtension extends Extension
             $this->getValue($config, 'disable_time_violations')
         );
 
+        $container->setParameter(
+            'trinity.notification.disable_entity_state_violations',
+            $this->getValue($config, 'disable_entity_state_violations')
+        );
+
         $parser = $container->getDefinition('trinity.notification.services.notification_parser');
 
         //add the client strategy first so it will be called before the default one

@@ -110,6 +110,7 @@ services:
             - "%trinity.notification.forms%"
             - "%trinity.notification.entities%"
             - "%trinity.notification.entity_id_field%"
+            - "%trinity.notification.disable_entity_state_violations%"
 
     trinity.notification.entity_associator:
         class: Trinity\NotificationBundle\Notification\EntityAssociator
