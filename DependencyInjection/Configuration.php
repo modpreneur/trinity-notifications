@@ -78,7 +78,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
 
                 ->booleanNode('disable_entity_state_violations')
-                    ->cannotBeEmpty()
                     ->defaultFalse()
                 ->end()
 
