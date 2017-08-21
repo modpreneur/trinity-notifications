@@ -5,6 +5,7 @@
  * Date: 28.04.16
  * Time: 12:15.
  */
+
 namespace Trinity\NotificationBundle\Notification;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,9 +38,9 @@ class EntityConversionHandler
      * @var array Indexed array of entities' aliases and real class names.
      *            format:
      *            [
-     *            "user" => "App\Entity\User,
-     *            "product" => "App\Entity\Product,
-     *            ....
+     *              "user" => "App\Entity\User,
+     *              "product" => "App\Entity\Product,
+     *              ...
      *            ]
      */
     protected $entities;
@@ -57,13 +58,13 @@ class EntityConversionHandler
      * EntityConversionHandler constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param FormFactoryInterface $formFactory
-     * @param EntityConverter $entityConverter
-     * @param EntityManagerInterface $entityManager
-     * @param array $forms
-     * @param array $entities
-     * @param string $entityIdField
-     * @param bool $disableEntityStateViolations
+     * @param FormFactoryInterface     $formFactory
+     * @param EntityConverter          $entityConverter
+     * @param EntityManagerInterface   $entityManager
+     * @param array                    $forms
+     * @param array                    $entities
+     * @param string                   $entityIdField
+     * @param bool                     $disableEntityStateViolations
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -92,7 +93,8 @@ class EntityConversionHandler
      * @param bool                        $forceUpdate
      *
      * @return NotificationEntityInterface
-     *
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      * @throws \Trinity\NotificationBundle\Exception\UnexpectedEntityStateException
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
@@ -102,12 +104,15 @@ class EntityConversionHandler
         array $data,
         array $changeSet,
         bool $forceUpdate = false
-    ) : NotificationEntityInterface {
+    ): NotificationEntityInterface {
+        $form = $this->createFormForEntity($entity);
+        $data = $this->removeExtraNotificationData($data, $form);
+
         if (!$forceUpdate && !$this->disableEntityStateViolations) {
             $this->validateCurrentEntityState($entity, $changeSet, $data);
         }
 
-        $this->useForm($entity, $data);
+        $this->useForm($entity, $form, $data);
 
         return $entity;
     }
@@ -121,11 +126,16 @@ class EntityConversionHandler
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      *
      * @return NotificationEntityInterface
+     *
+     * @throws \ReflectionException
      */
-    public function performEntityCreate(string $entityName, array $data) : NotificationEntityInterface
+    public function performEntityCreate(string $entityName, array $data): NotificationEntityInterface
     {
         $entity = $this->createEntity($entityName);
-        $this->useForm($entity, $data);
+        $form = $this->createFormForEntity($entity);
+        $data = $this->removeExtraNotificationData($data, $form);
+
+        $this->useForm($entity, $form, $data);
 
         return $entity;
     }
@@ -141,9 +151,34 @@ class EntityConversionHandler
      *
      * @throws \Trinity\NotificationBundle\Exception\InvalidDataException
      */
-    public function useForm(NotificationEntityInterface $entity, array $data) : NotificationEntityInterface
+    protected function useForm(NotificationEntityInterface $entity, FormInterface $form, array $data): NotificationEntityInterface
     {
-        $form = $this->createForm(
+        $form->submit($data, false);
+
+        if (!$form->isValid()) {
+            $errorStrings = [];
+            foreach ($form->getErrors(true) as $error) {
+                $errorStrings[] = 'Validation of entity of class ' . get_class($entity) . ' with id ' . $data['id'] .
+                    ' failed for field: ' . $error->getOrigin()->getName() . ' with cause ' . $error->getCause() .
+                    ' caused message:' . $error->getMessage() . ' because of invalid value';
+            }
+
+            throw new InvalidDataException(implode(';', $errorStrings));
+        }
+
+        return $entity;
+    }
+
+    /**
+     * Create a form for the given entity
+     *
+     * @param NotificationEntityInterface $entity
+     * @return FormInterface
+     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     */
+    protected function createFormForEntity(NotificationEntityInterface $entity): FormInterface
+    {
+        return $this->createForm(
             array_search(
                 str_replace('Proxies\__CG__\\', '', get_class($entity)),
                 $this->entities,
@@ -152,7 +187,20 @@ class EntityConversionHandler
             $entity,
             ['entityManager' => $this->entityManager]
         );
+    }
 
+    /**
+     * Creates and returns a new array without the fields, that are not in the list of form inputs.
+     *
+     * The original array is not changed
+     *
+     * @param array         $data
+     * @param FormInterface $form
+     *
+     * @return array
+     */
+    protected function removeExtraNotificationData(array $data, FormInterface $form): array
+    {
         /** @var array $keys */
         $keys = array_keys($data);
 
@@ -163,63 +211,39 @@ class EntityConversionHandler
             }
         }
 
-        $form->submit($data, false);
-
-        if (!$form->isValid()) {
-            $errorStrings = [];
-            foreach ($form->getErrors(true) as $error) {
-                $errorStrings[] = 'Validation of entity of class ' . get_class($entity) . ' with id ' . $data['id'] .
-                    ' failed for field: ' . $error->getOrigin()->getName().' with cause '.$error->getCause() .
-                    ' caused message:'.$error->getMessage().' because of invalid value';
-            }
-
-            throw new InvalidDataException(implode(';', $errorStrings));
-        }
-
-        return $entity;
-    }
-
-    /**
-     * When the changeSet is empty there is need to create a fake one. It will contain no changes.
-     * This is required because of validation against the database.
-     * Without the changeSet there would not be possibility to compare it to the database data.
-     *
-     * @param array $entityArray
-     *
-     * @return array
-     */
-    public function createFakeChangeSet(array $entityArray)
-    {
-        $changeSet = [];
-
-        foreach ($entityArray as $property => $value) {
-            $changeSet[$property] = ['old' => $value, 'new' => $value];
-        }
-
-        return $changeSet;
+        return $data;
     }
 
     /**
      * Validate if the current entity state corresponds with the given changeset from the notification.
      *
      * @param NotificationEntityInterface $entity
-     * @param array                       $changeSet
-     * @param array                       $data
+     * @param array                       $changeSet Changeset in format: ['propertyName' => ['old' => 'old-value',
+     *     'new' => 'new-value']`
+     * @param array                       $data Notification data
      *
      * @throws UnexpectedEntityStateException
+     * @throws \Trinity\NotificationBundle\Exception\NotificationException
      */
     protected function validateCurrentEntityState(NotificationEntityInterface $entity, array $changeSet, array $data)
     {
         if (count($changeSet) === 0) {
-            $changeSet = $this->createFakeChangeSet($data);
+            //there is nothing to do or validate, the original entity state is gone
+            return;
         }
 
-        //the changeSet is in the format: ['propertyName' => ['old' => 'old-value', 'new' => 'new-value']
         //iterate over the changeSet and check if the entity's properties do match with the old changeSet values
         //in the standard flow the entity has not been changed yet
 
         $violations = [];
         foreach ($changeSet as $propertyName => $values) {
+
+            //skip the properties which are not in the data array
+            //validating the ignored properties causes errors
+            if (!array_key_exists($propertyName, $data)) {
+                continue;
+            }
+
             $entityPropertyValue = $this->entityConverter
                 ->getPropertyValue($entity, $propertyName === 'id' ? $this->entityIdField : $propertyName)[$propertyName];
             $changeSetOldValue = $values['old'];
@@ -232,8 +256,8 @@ class EntityConversionHandler
 
         if (count($violations) > 0) {
             $exception = new UnexpectedEntityStateException(
-                'Entity of class '.get_class($entity).' with common id '.$entity->{'get'.ucfirst($this->entityIdField)}()
-                .' has unexpected state.'
+                'Entity of class ' . get_class($entity) . ' with common id ' . $entity->{'get' . ucfirst($this->entityIdField)}()
+                . ' has unexpected state.'
             );
             $exception->setViolations($violations);
             $exception->setEntity($entity);
@@ -249,8 +273,9 @@ class EntityConversionHandler
      * @param array  $constructorArguments
      *
      * @return NotificationEntityInterface
+     * @throws \ReflectionException
      */
-    protected function createEntity(string $entityName, array $constructorArguments = []) : NotificationEntityInterface
+    protected function createEntity(string $entityName, array $constructorArguments = []): NotificationEntityInterface
     {
         $entityClass = new \ReflectionClass(
             $this->getEntityClass($entityName)
@@ -272,11 +297,11 @@ class EntityConversionHandler
         string $entityName,
         NotificationEntityInterface $entity,
         array $options = []
-    ) : FormInterface {
-
+    ): FormInterface {
         //since 2.8, the form creation is different
         if (Kernel::MAJOR_VERSION == 2 && Kernel::MINOR_VERSION <= 7) {
             $class = $this->getFormClassName($entityName);
+
             return $this->formFactory->create(new $class, $entity, $options);
         }
 
@@ -288,7 +313,7 @@ class EntityConversionHandler
      *
      * @return string
      */
-    protected function getFormClassName(string $entityName) : string
+    protected function getFormClassName(string $entityName): string
     {
         return $this->forms[$entityName];
     }
@@ -298,7 +323,7 @@ class EntityConversionHandler
      *
      * @return string
      */
-    protected function getEntityClass(string $entityName) : string
+    protected function getEntityClass(string $entityName): string
     {
         return $this->entities[$entityName];
     }

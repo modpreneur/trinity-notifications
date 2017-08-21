@@ -233,17 +233,21 @@ class NotificationParser
 
             $this->entityManager->remove($entityObject);
 
-            return;
+            return null;
+        // create an entity which is not in the DB
         } elseif ($entityObject === null && $HTTPMethod === 'POST') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
                 $notification->getData()
             );
+        // update an entity which is not in the DB - that's a bit strange
+        //but whatever.. it should be there, so get to work
         } elseif ($entityObject === null && $HTTPMethod === 'PUT') {
             return $this->conversionHandler->performEntityCreate(
                 array_search($fullClassName, $this->entities, true),
                 $notification->getData()
             );
+        //update an existing entity
         } elseif ($entityObject !== null && $HTTPMethod === 'PUT') {
             return $this->conversionHandler->performEntityUpdate(
                 $entityObject,
@@ -251,7 +255,7 @@ class NotificationParser
                 $notification->getChangeSet(),
                 $notification->isForced()
             );
-            //other strange combination of input conditions
+        //other strange combination of input conditions
         } else {
             throw new NotificationException(
                 "Unsupported combination of input conditions. Tried to apply method $HTTPMethod on ".
