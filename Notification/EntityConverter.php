@@ -6,7 +6,6 @@
 
 namespace Trinity\NotificationBundle\Notification;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -179,7 +178,7 @@ class EntityConverter
     }
 
     /**
-     * @param $entityManager
+     * @param EntityManagerInterface $entityManager
      */
     public function setEntityManager(EntityManagerInterface $entityManager)
     {

@@ -197,7 +197,9 @@ class NotificationParser
         $entityObject = $this->getEntityObject($fullClassName);
         //the doctrine may not return the newest DB data...
         //if the object was already fetched, it is returned without any refresh
-        $this->entityManager->refresh($entityObject);
+        if ($entityObject !== null) {
+            $this->entityManager->refresh($entityObject);
+        }
 
         /*
         exist  && delete   - delete entity, without form
