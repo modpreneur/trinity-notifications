@@ -22,6 +22,9 @@ class BeforeParseNotificationEvent extends NotificationEvent
     /** @var string */
     protected $classname;
 
+    /** @var  bool True will skip the notification process */
+    protected $ignoreNotification;
+
     /**
      * BeforeParseNotificationEvent constructor.
      *
@@ -64,5 +67,21 @@ class BeforeParseNotificationEvent extends NotificationEvent
     public function setClassname(string $classname)
     {
         $this->classname = $classname;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreNotification(): bool
+    {
+        return $this->ignoreNotification;
+    }
+
+    /**
+     * @param bool $ignoreNotification
+     */
+    public function setIgnoreNotification(bool $ignoreNotification)
+    {
+        $this->ignoreNotification = $ignoreNotification;
     }
 }

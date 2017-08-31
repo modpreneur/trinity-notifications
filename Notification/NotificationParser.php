@@ -188,6 +188,12 @@ class NotificationParser
                 BeforeParseNotificationEvent::NAME,
                 $event
             );
+
+            //the user can ignore some notification
+            //status of those messages will be 'ok'
+            if ($event->isIgnoreNotification()) {
+                return null;
+            }
         }
 
         $HTTPMethod = strtoupper($notification->getMethod());

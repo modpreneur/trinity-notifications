@@ -90,9 +90,7 @@ class NotificationReader
         $this->logNotifications($notifications);
 
         try {
-            $entities = $this->parser->parseNotifications(
-                $notifications
-            );
+            $entities = $this->parser->parseNotifications($notifications);
 
             $this->logNotificationsSuccess($notificationBatch);
             $this->sendStatusMessage($notificationBatch);
