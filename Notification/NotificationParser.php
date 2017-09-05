@@ -261,7 +261,8 @@ class NotificationParser
                 $entityObject,
                 $notification->getData(),
                 $notification->getChangeSet(),
-                $notification->isForced()
+                $notification->isForced(),
+                $notification->getEntityName()
             );
         //other strange combination of input conditions
         } else {

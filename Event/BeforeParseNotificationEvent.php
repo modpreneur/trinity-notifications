@@ -23,7 +23,7 @@ class BeforeParseNotificationEvent extends NotificationEvent
     protected $classname;
 
     /** @var  bool True will skip the notification process */
-    protected $ignoreNotification;
+    protected $ignoreNotification = false;
 
     /**
      * BeforeParseNotificationEvent constructor.

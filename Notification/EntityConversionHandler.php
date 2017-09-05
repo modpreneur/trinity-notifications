@@ -91,6 +91,7 @@ class EntityConversionHandler
      * @param array                       $data
      * @param array                       $changeSet
      * @param bool                        $forceUpdate
+     * @param string                      $entityName
      *
      * @return NotificationEntityInterface
      * @throws \Trinity\NotificationBundle\Exception\NotificationException
@@ -103,9 +104,10 @@ class EntityConversionHandler
         NotificationEntityInterface $entity,
         array $data,
         array $changeSet,
-        bool $forceUpdate = false
+        bool $forceUpdate = false,
+        string $entityName
     ): NotificationEntityInterface {
-        $form = $this->createFormForEntity($entity);
+        $form = $this->createFormForEntity($entity, $entityName);
         $data = $this->removeExtraNotificationData($data, $form);
 
         if (!$forceUpdate && !$this->disableEntityStateViolations) {
@@ -132,7 +134,7 @@ class EntityConversionHandler
     public function performEntityCreate(string $entityName, array $data): NotificationEntityInterface
     {
         $entity = $this->createEntity($entityName);
-        $form = $this->createFormForEntity($entity);
+        $form = $this->createFormForEntity($entity, $entityName);
         $data = $this->removeExtraNotificationData($data, $form);
 
         $this->useForm($entity, $form, $data);
@@ -173,17 +175,14 @@ class EntityConversionHandler
      * Create a form for the given entity
      *
      * @param NotificationEntityInterface $entity
+     * @param string $entityName
      * @return FormInterface
      * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
-    protected function createFormForEntity(NotificationEntityInterface $entity): FormInterface
+    protected function createFormForEntity(NotificationEntityInterface $entity, string $entityName): FormInterface
     {
         return $this->createForm(
-            array_search(
-                str_replace('Proxies\__CG__\\', '', get_class($entity)),
-                $this->entities,
-                true
-            ),
+            $entityName,
             $entity,
             ['entityManager' => $this->entityManager]
         );

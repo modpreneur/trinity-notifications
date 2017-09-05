@@ -214,7 +214,7 @@ class EntityConverter
             $methodName = $method;
         }
 
-        $reflectionMethod = new \ReflectionMethod($entity, $methodName);
+        $reflectionMethod = new \ReflectionMethod($this->annotationsUtils->getEntityClass($entity), $methodName);
 
         $annotation = $this->annotationsUtils->getReader()->getMethodAnnotation(
             $reflectionMethod,
