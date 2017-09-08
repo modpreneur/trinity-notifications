@@ -64,7 +64,7 @@ class NotificationUtils
 
         if (in_array('\Trinity\NotificationBundle\Entity\NotificationEntityInterface', class_implements($class))) {
             throw new NotificationException(
-                "Notification entity($class) must be extended via NotificationEntityInterface."
+                "Notification entity($class) must implement NotificationEntityInterface."
             );
         }
 
