@@ -106,7 +106,6 @@ services:
             - "@event_dispatcher"
             - "@form.factory"
             - "@trinity.notification.entity_converter"
-            - "@doctrine.orm.entity_manager"
             - "%trinity.notification.forms%"
             - "%trinity.notification.entities%"
             - "%trinity.notification.entity_id_field%"

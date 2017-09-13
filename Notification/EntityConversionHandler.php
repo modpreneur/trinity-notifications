@@ -48,9 +48,6 @@ class EntityConversionHandler
     /** @var  string */
     protected $entityIdField;
 
-    /** @var EntityManagerInterface */
-    protected $entityManager;
-
     /** @var bool */
     protected $disableEntityStateViolations;
 
@@ -60,7 +57,6 @@ class EntityConversionHandler
      * @param EventDispatcherInterface $eventDispatcher
      * @param FormFactoryInterface     $formFactory
      * @param EntityConverter          $entityConverter
-     * @param EntityManagerInterface   $entityManager
      * @param array                    $forms
      * @param array                    $entities
      * @param string                   $entityIdField
@@ -70,7 +66,6 @@ class EntityConversionHandler
         EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
         EntityConverter $entityConverter,
-        EntityManagerInterface $entityManager,
         array $forms,
         array $entities,
         string $entityIdField,
@@ -82,7 +77,6 @@ class EntityConversionHandler
         $this->forms = $forms;
         $this->entities = $entities;
         $this->entityIdField = $entityIdField;
-        $this->entityManager = $entityManager;
         $this->disableEntityStateViolations = $disableEntityStateViolations;
     }
 
@@ -183,8 +177,7 @@ class EntityConversionHandler
     {
         return $this->createForm(
             $entityName,
-            $entity,
-            ['entityManager' => $this->entityManager]
+            $entity
         );
     }
 
@@ -297,14 +290,13 @@ class EntityConversionHandler
         NotificationEntityInterface $entity,
         array $options = []
     ): FormInterface {
-        //since 2.8, the form creation is different
-        if (Kernel::MAJOR_VERSION == 2 && Kernel::MINOR_VERSION <= 7) {
-            $class = $this->getFormClassName($entityName);
+        // since 2.8, the form creation is different
+        // see http://symfony.com/doc/2.7/forms.html#creating-form-classes and
+        // http://symfony.com/doc/2.8/forms.html#creating-form-classes
+        //so, require that the form class is registered as a serviceRequire tha
+        $class = $this->getFormClassName($entityName);
 
-            return $this->formFactory->create(new $class, $entity, $options);
-        }
-
-        return $this->formFactory->create($this->getFormClassName($entityName), $entity, $options);
+        return $this->formFactory->create($class, $entity, $options);
     }
 
     /**
