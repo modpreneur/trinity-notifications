@@ -15,7 +15,7 @@ use Trinity\Bundle\MessagesBundle\Message\Message;
  */
 class NotificationBatch extends Message
 {
-    const MESSAGE_TYPE = 'notification';
+    public const MESSAGE_TYPE = 'notification';
 
     /** @var  ArrayCollection<Notification> */
     protected $rawData;
@@ -34,8 +34,6 @@ class NotificationBatch extends Message
     /**
      * Encode message to JSON or array.
      *
-     * @param bool $getAsArray
-     *
      * @return string
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
@@ -44,7 +42,7 @@ class NotificationBatch extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      */
-    public function pack(bool $getAsArray = false) : string
+    public function pack() : string
     {
         $notificationsArray = [];
         /** @var Notification $notification */
@@ -54,7 +52,7 @@ class NotificationBatch extends Message
 
         $this->jsonData = \json_encode($notificationsArray);
 
-        return parent::pack($getAsArray);
+        return parent::pack();
     }
 
     /**
@@ -122,7 +120,7 @@ class NotificationBatch extends Message
      *
      * @return NotificationBatch
      */
-    public static function createFromMessage(Message $message) : self
+    public static function createFromMessage(Message $message): Message
     {
         $notificationBatch = new self();
         $message->copyTo($notificationBatch);
@@ -133,7 +131,7 @@ class NotificationBatch extends Message
 
         $notifications = [];
         //conversion succeeded
-        if (is_array($notificationBatch->rawData)) {
+        if (\is_array($notificationBatch->rawData)) {
             foreach ($notificationBatch->rawData as $item) {
                 $notifications[] = Notification::fromArray($item);
             }
@@ -153,7 +151,7 @@ class NotificationBatch extends Message
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
-    public static function unpack(string $messageJson) : self
+    public static function unpack(string $messageJson): Message
     {
         return self::createFromMessage(parent::unpack($messageJson));
     }

@@ -49,7 +49,7 @@ class SynchronizationStoppedMessage extends Message
      *
      * @return SynchronizationStoppedMessage
      */
-    public static function createFromMessage(Message $message) : self
+    public static function createFromMessage(Message $message): Message
     {
         $stoppedMessage = new self();
         $message->copyTo($stoppedMessage);
@@ -70,7 +70,7 @@ class SynchronizationStoppedMessage extends Message
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
-    public static function unpack(string $messageJson) : self
+    public static function unpack(string $messageJson): Message
     {
         return self::createFromMessage(parent::unpack($messageJson));
     }

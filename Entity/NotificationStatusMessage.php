@@ -71,8 +71,6 @@ class NotificationStatusMessage extends Message
     /**
      * Encode message to JSON.
      *
-     * @param bool $getAsArray
-     *
      * @return string
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
@@ -81,7 +79,7 @@ class NotificationStatusMessage extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack(bool $getAsArray = false) : string
+    public function pack() : string
     {
         $statuses = [];
         /** @var NotificationStatus $status */
@@ -91,7 +89,7 @@ class NotificationStatusMessage extends Message
 
         $this->jsonData = json_encode($statuses);
 
-        return parent::pack($getAsArray);
+        return parent::pack();
     }
 
     /**
@@ -99,7 +97,7 @@ class NotificationStatusMessage extends Message
      *
      * @return NotificationStatusMessage
      */
-    public static function createFromMessage(Message $message) : self
+    public static function createFromMessage(Message $message): Message
     {
         $statusMessage = new self();
         $message->copyTo($statusMessage);
@@ -107,7 +105,7 @@ class NotificationStatusMessage extends Message
 
         $statuses = [];
         //conversion succeeded
-        if (is_array($decoded)) {
+        if (\is_array($decoded)) {
             foreach ($decoded as $item) {
                 $statuses[] = NotificationStatus::fromArray($item);
             }

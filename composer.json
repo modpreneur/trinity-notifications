@@ -13,7 +13,7 @@
     "php": ">=7.1",
     "guzzlehttp/guzzle": "~6.0",
     "nette/utils": "~2.3",
-    "sensio/framework-extra-bundle": "~3.0",
+    "sensio/framework-extra-bundle": "~3.0 | ~5.0",
     "doctrine/orm": "~2.5",
     "symfony/console": "~2.8 | ~3.0",
     "symfony/event-dispatcher": "~2.8 | ~3.0",
@@ -21,9 +21,9 @@
 
     "trinity/logger": "~1.0",
     "trinity/utils": "~1.0",
-    "trinity/search": "dev-master",
+    "trinity/search": "~1.0",
     "trinity/settings": "~1.1",
-    "trinity/messages": "dev-master",
+    "trinity/messages": "~1.0",
     "trinity/core-interfaces": "~1.0",
     "trinity/core-entities": "~1.0"
   },
