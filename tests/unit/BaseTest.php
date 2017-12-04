@@ -1,15 +1,18 @@
 <?php
 namespace Trinity\NotificationBundle\tests;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * {@inheritdoc}
  */
-abstract class BaseTest extends \PHPUnit_Framework_TestCase
+abstract class BaseTest extends TestCase
 {
     /**
      * Call protected/private method of a class.
      *
      * @param object &$object    Instantiated object that we will run method on.
+
      * @param string $methodName Method name to call
      * @param array  $parameters Array of parameters to pass into method.
      *

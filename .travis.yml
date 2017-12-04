@@ -3,20 +3,16 @@ sudo: required
 language: php
 
 php:
-  - '7.0'
+  - '7.1'
 
-services:
-  - docker
 
 before_script:
   - phpenv config-add travis.ini
-  - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta;
-    echo yes | pecl install apcu; fi;
+  - composer install
 
 
 script:
-  - docker-compose build
-  - docker-compose up
+  - vendor/phpunit/phpunit/phpunit --coverage-clover build/logs/clover.xml
   - vendor/codeception/codeception/codecept run
 
 

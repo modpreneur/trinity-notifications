@@ -11,7 +11,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="true"
-         bootstrap="AppTests/app/autoload.php"
+         bootstrap="appTests/app/autoload.php"
         >
     <php>
         <server name="SYMFONY" value="vendor"/>

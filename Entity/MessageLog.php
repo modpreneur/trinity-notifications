@@ -10,8 +10,8 @@ use Trinity\Component\Core\Interfaces\EntityInterface;
  */
 class MessageLog extends Message implements EntityInterface
 {
-    const DEFAULT_TTL = 30;
-    const LOG_NAME = 'MessageLog';
+    private const DEFAULT_TTL = 30;
+    private const LOG_NAME = 'MessageLog';
 
     /**
      * @var string
@@ -70,7 +70,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return int
      */
-    public function getLogCreatedAt()
+    public function getLogCreatedAt(): int
     {
         return $this->logCreatedAt;
     }
@@ -102,7 +102,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return string
      */
-    public function getMessageJson()
+    public function getMessageJson(): string
     {
         return $this->messageJson;
     }
@@ -118,7 +118,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return string
      */
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
@@ -134,7 +134,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -150,7 +150,7 @@ class MessageLog extends Message implements EntityInterface
     /**
      * @return string
      */
-    public function getError()
+    public function getError(): string
     {
         return $this->error;
     }

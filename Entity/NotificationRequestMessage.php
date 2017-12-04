@@ -14,9 +14,9 @@ use Trinity\Bundle\MessagesBundle\Message\Message;
  */
 class NotificationRequestMessage extends Message
 {
-    const REQUEST_KEY = 'request';
-    const NOTIFICATIONS_KEY = 'notifications';
-    const MESSAGE_TYPE = 'notificationRequest';
+    private const REQUEST_KEY = 'request';
+    private const NOTIFICATIONS_KEY = 'notifications';
+    public const MESSAGE_TYPE = 'notificationRequest';
 
     /** @var  Notification[] */
     protected $previousNotifications = [];
@@ -37,8 +37,6 @@ class NotificationRequestMessage extends Message
     /**
      * Encode message to JSON.
      *
-     * @param bool $getAsArray
-     *
      * @return string
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
@@ -47,7 +45,7 @@ class NotificationRequestMessage extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack(bool $getAsArray = false) : string
+    public function pack() : string
     {
         $data = [];
         $data[self::REQUEST_KEY] = $this->request->toArray();
@@ -58,7 +56,7 @@ class NotificationRequestMessage extends Message
 
         $this->jsonData = json_encode($data);
 
-        return parent::pack($getAsArray);
+        return parent::pack();
     }
 
     /**
@@ -70,7 +68,7 @@ class NotificationRequestMessage extends Message
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\DataNotValidJsonException
      */
-    public static function unpack(string $messageJson) : self
+    public static function unpack(string $messageJson): Message
     {
         return self::createFromMessage(parent::unpack($messageJson));
     }
@@ -80,7 +78,7 @@ class NotificationRequestMessage extends Message
      *
      * @return NotificationRequestMessage
      */
-    public static function createFromMessage(Message $message) : self
+    public static function createFromMessage(Message $message): Message
     {
         $requestMessage = new self();
         $message->copyTo($requestMessage);

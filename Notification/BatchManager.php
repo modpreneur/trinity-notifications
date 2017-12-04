@@ -74,13 +74,8 @@ class BatchManager extends MessageSender
      *
      * @throws \InvalidArgumentException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSendMessageListenerException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
-     * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      */
-    public function sendMessage(Message $message)
+    public function sendMessage(Message $message): void
     {
         parent::sendMessage($message);
         $message = NotificationBatch::createFromMessage($message);

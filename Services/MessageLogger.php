@@ -45,7 +45,7 @@ class MessageLogger implements MessageLoggerInterface
         string $destination = '',
         string $status = '',
         string $error = ''
-    ) {
+    ): void {
         $log = new MessageLog();
 
         if ($messageObject) {
@@ -53,7 +53,7 @@ class MessageLogger implements MessageLoggerInterface
 
             if (!$log->getJsonData() || $log->getJsonData() === '{}') {
                 $data = [];
-                if (is_array($log->getRawData()) || $log->getRawData() instanceof \Traversable) {
+                if (\is_array($log->getRawData()) || $log->getRawData() instanceof \Traversable) {
                     foreach ($log->getRawData() as $value) {
                         if ($value instanceof Notification) {
                             $data[] = $value->toArray();
@@ -94,7 +94,7 @@ class MessageLogger implements MessageLoggerInterface
         string $messageJson = '',
         string $source = '',
         string $destination = ''
-    ) {
+    ): void {
         $log = new MessageLog();
 
         if ($messageObject) {
@@ -102,7 +102,7 @@ class MessageLogger implements MessageLoggerInterface
 
             if (!$log->getJsonData() || $log->getJsonData() === '{}') {
                 $data = [];
-                if (is_array($log->getRawData()) || $log->getRawData() instanceof \Traversable) {
+                if (\is_array($log->getRawData()) || $log->getRawData() instanceof \Traversable) {
                     foreach ($log->getRawData() as $value) {
                         if ($value instanceof Notification) {
                             $data[] = json_encode($value->toArray());
@@ -125,6 +125,7 @@ class MessageLogger implements MessageLoggerInterface
 
         $this->logStorage->createMessageLog($log);
     }
+
 
     /**
      * Set status of the message with $messageId to $status.
