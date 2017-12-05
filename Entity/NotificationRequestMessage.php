@@ -36,7 +36,7 @@ class NotificationRequestMessage extends Message
 
     /**
      * Encode message to JSON.
-     *
+     * @param bool $getAsArray
      * @return string
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
@@ -45,7 +45,7 @@ class NotificationRequestMessage extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageDestinationException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack() : string
+    public function pack(bool $getAsArray = false) : string
     {
         $data = [];
         $data[self::REQUEST_KEY] = $this->request->toArray();
