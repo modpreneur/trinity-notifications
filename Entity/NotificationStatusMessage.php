@@ -70,7 +70,6 @@ class NotificationStatusMessage extends Message
 
     /**
      * Encode message to JSON.
-     * @param bool $getAsArray
      * @return string
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageUserException
@@ -79,7 +78,7 @@ class NotificationStatusMessage extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
      */
-    public function pack(bool $getAsArray = false) : string
+    public function pack() : string
     {
         $statuses = [];
         /** @var NotificationStatus $status */
