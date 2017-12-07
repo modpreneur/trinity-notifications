@@ -33,7 +33,6 @@ class NotificationBatch extends Message
 
     /**
      * Encode message to JSON or array.
-     * @param bool $getAsArray
      * @return string
      *
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingMessageTypeException
@@ -42,7 +41,7 @@ class NotificationBatch extends Message
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingClientIdException
      * @throws \Trinity\Bundle\MessagesBundle\Exception\MissingSecretKeyException
      */
-    public function pack(bool $getAsArray = false) : string
+    public function pack() : string
     {
         $notificationsArray = [];
         /** @var Notification $notification */
